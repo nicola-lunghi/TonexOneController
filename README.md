@@ -44,12 +44,49 @@ UI Design from Squareline Studio:
 - Connect 9V DC power supply to the pins on the Waveshare board
 - Switch on the power supply
 - The Waveshare board USB port will power the Tonex One. Do not connect 9 volts to it!
-- After a few seconds of boot time, the LCD display should now show the description for your Preset number 1 (it will automatically change the Tonex to preset 1 in order to syncronise with it)
 - Optional: switch on a M-vave Chocolate Midi pedal. After a few seconds it should connect and the Bluetooth icon should change from gray to blue
+
+![image](https://github.com/user-attachments/assets/30d92e47-8d4b-4b66-bce4-e5c8da3cd924)
+
+### Usage
+- After a few seconds of boot time, the LCD display should now show the description for your Preset number 1 (it will automatically change the Tonex to preset 1 in order to syncronise with it)
 - Change presets using one or more of the following methods
   1. Touch screen Next/Previous labels
   2. Dual footswitchs for next/previous preset
   3. M-Vave Chocolate footswitches. Bank 1 does presets 1,2,3,4. Bank 2 does presets 5,6,7,8. Etc.
+- The Ampfilier skin image is not stored in the Tonex One Pedal, hence this needs to be manually selected
+- To select an Amp skin and/or change the description text
+  1. Press and hold the Preset name for a few seconds
+  2. Navigation arrows will appear next to the amp skin image
+  3. Use the left/right arrows to navigate through the available amp skins
+  4. Press the description text. A keyboard will appear, allowing text to be entered
+  5. Press the green tick image to save the changes. Changes will be saved permanently and remembered when next powered on
  
+
+##Programming a pre-build release
+- Download the release zip file from the Releases folder and unzip it
+- Press and hold the "Boot" button on the Waveshare board
+- Connect a USB-C cable to the Waveshare board and a PC
+- Run the programmer exe (note: this is provided as a binary package by Espressif Systems)
+- Flash the image into the Waveshare module
+- When finished, disconnect the USB cable
+- Follow the Operation instructions
+
+##Building Custom sources
+Building the application requires some skill and patience.
+- Follow the instructions at https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B#ESP-IDF to install VS Code and ESP-IDF V5.06
+- Open the project Source folder using VS Code
+- Follow the instructions at https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B#Modify_COM_Port to select the correct comm port for your Waveshare board, and compile the app
+
+## 🙏 Acknowledgement
+
+- [LVGL graphics library]
+- [Waveshare board support files]([https://github.com/lifeiteng/vall-e](https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B)) for display and touch screen driver examples
+
+  
+## ©️ License
+
+The Tonex One Controller is under the Apache 2.0 license. It is free for both research and commercial use cases.
+  
      
  
