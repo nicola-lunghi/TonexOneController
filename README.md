@@ -11,3 +11,7 @@ It supports:
 - USB host control of the Tonex pedal
 
 The code is written in C, for the Espressif ESP-IDF development environment.
+
+
+UI Design from Squareline Studio:
+![image](https://github.com/user-attachments/assets/1246f6e0-0c00-4389-b063-a402bdf45432)
