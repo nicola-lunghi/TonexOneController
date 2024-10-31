@@ -23,7 +23,7 @@ For example, the 7" version uses the I2C IO Expander to enable the USB host port
 The code is written in C, for the Espressif ESP-IDF development environment, and using the FreeRTOS operating system.
 The LVGL library is used as the graphics engine.
 
-###Task overview:
+### Task overview:
 - Control task is the co-ordinator for all other tasks
 - Display task handles the LCD display and touch screen
 - Midi Control task handles Bleutooth link to Midi pedals
@@ -63,7 +63,7 @@ UI Design from Squareline Studio:
   5. Press the green tick image to save the changes. Changes will be saved permanently and remembered when next powered on
  
 
-##Programming a pre-build release
+## Programming a pre-build release
 - Download the release zip file from the Releases folder and unzip it
 - Press and hold the "Boot" button on the Waveshare board
 - Connect a USB-C cable to the Waveshare board and a PC
@@ -72,7 +72,7 @@ UI Design from Squareline Studio:
 - When finished, disconnect the USB cable
 - Follow the Operation instructions
 
-##Building Custom sources
+## Building Custom sources
 Building the application requires some skill and patience.
 - Follow the instructions at https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B#ESP-IDF to install VS Code and ESP-IDF V5.06
 - Open the project Source folder using VS Code
