@@ -82,7 +82,7 @@ limitations under the License.
 
 static const char *TAG = "app_main";
 SemaphoreHandle_t I2CMutex;
-
+static char full_path[300];
 static esp_err_t i2c_master_init(void);
 
 /****************************************************************************
@@ -103,10 +103,10 @@ esp_err_t i2c_master_reset(void)
 
     // nuke it
     i2c_reset_tx_fifo(I2C_MASTER_NUM);
-	i2c_reset_rx_fifo(I2C_MASTER_NUM);
+    i2c_reset_rx_fifo(I2C_MASTER_NUM);
     periph_module_disable(PERIPH_I2C0_MODULE);
-	periph_module_enable(PERIPH_I2C0_MODULE);
-	i2c_driver_delete(I2C_MASTER_NUM);
+    periph_module_enable(PERIPH_I2C0_MODULE);
+    i2c_driver_delete(I2C_MASTER_NUM);
 
     // manually clock the bus if SDA is stuck
     gpio_set_direction(scl_io, GPIO_MODE_OUTPUT_OD);
@@ -178,8 +178,8 @@ static esp_err_t i2c_master_init(void)
 *****************************************************************************/
 static void InitIOExpander(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 {
-	// init IO expander
-	if (CH422G_init(I2CNum, I2CMutex) == ESP_OK)
+    // init IO expander
+    if (CH422G_init(I2CNum, I2CMutex) == ESP_OK)
     {
         // set IO expander to output mode. Can't do mixed pins
         // For inputs, we will temporarily flip the mode
@@ -188,9 +188,9 @@ static void InitIOExpander(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
         ESP_LOGI(TAG, "IO Expander init OK");
     }
     else
-	{
-		ESP_LOGE(TAG, "Failed to init IO expander!");
-	}
+    {
+        ESP_LOGE(TAG, "Failed to init IO expander!");
+    }
 }
 
 /****************************************************************************
@@ -253,8 +253,75 @@ static void InitSDCard(void)
     // Card has been initialized, print its properties
     sdmmc_card_print_info(stdout, card);
 
+    // copy amp skin images from SD card to PSRAM. This is done mainly because the Waveshare
+    // boards use an I2C IO expander to drive the SD card chip select, which is not suppported
+    // by the ESP drivers. Would have to have some way of making LGVL call a custom function
+    // to clear/set CS via I2C before/after all transactions, which doesn't seem to be supported.
+    //
+    // By copying fromm SD to PSAM, we free up program memory (compared to internal storage) and
+    // also allow the user to add/changes skins without needing to compile. Plus PSRAM is faster
+    // to access than SD at run time
+
+    ESP_LOGI(TAG, "PSRAM free space before skin load %d", (int)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
+
+    struct dirent* dp;
+    struct stat st;
+    DIR* dir = opendir(MOUNT_POINT);
+
+    if (dir == NULL) 
+    {
+        ESP_LOGE(TAG, "Can't Open Dir.");
+    }
+    else
+    {
+        while ((dp = readdir(dir)) != NULL) 
+        {
+            ESP_LOGI(TAG, "%s", dp->d_name);
+
+            // check if file is a PNG image
+            if (strstr(strupr(dp->d_name), ".PNG") != NULL)
+            {
+                // get status of file            
+                sprintf(full_path, "%s/%s", MOUNT_POINT, dp->d_name);
+
+                if (stat(full_path, &st) == 0) 
+                {
+                    ESP_LOGI(TAG, "Found SD card png file %s. Size: %d", full_path, (int)st.st_size);
+
+                    if (st.st_size > 0)
+                    {
+                        // allocate buffer in PSRAM to hold it
+                        void* img_ptr = heap_caps_malloc(st.st_size, MALLOC_CAP_SPIRAM);
+                        if (img_ptr == NULL)
+                        {
+                            ESP_LOGE(TAG, "Unable to malloc space for amp skin %s", full_path);
+                            break;
+                        }
+                        else
+                        {
+                            // add to struct for future usage    
+                            //dp->d_name, img_ptr
+                        }
+                    }
+                }
+                else
+                {
+                    ESP_LOGE(TAG, "stat not zero %s", full_path);
+                }
+            }
+        }
+
+        closedir (dir);
+    }
+
     // deselect CS
     CH422G_write_output(SD_CS, 1);
+
+    ESP_LOGI(TAG, "PSRAM free space after skin load %d", (int)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
+
+    // unmount partition
+    esp_vfs_fat_sdcard_unmount(mount_point, card);
+    spi_bus_free(host.slot);
 }
 
 /****************************************************************************
@@ -284,7 +351,11 @@ void app_main(void)
     InitIOExpander(I2C_MASTER_NUM, I2CMutex);
     
     // Init SD card
-    InitSDCard();
+    // Note here: this was intended to be used to load Amp skin images
+    // from SD card, but 2 MB PSRAM not enough to load to ram, and
+    // SD card using IO expander for chip select makes direct LVGL load
+    // from SD really tricky.
+    //InitSDCard();
 
     // init control task
     ESP_LOGI(TAG, "Init Control");

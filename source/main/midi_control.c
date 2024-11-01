@@ -63,6 +63,8 @@ static uint8_t MidiCharacteristicUUIDByteReversed[] = {0xF3, 0x6B, 0x10, 0x9D, 0
 #define PROFILE_A_APP_ID    0
 #define INVALID_HANDLE      0
 
+#define BT_SCAN_DURATION    1800    // seconds
+
 // Declare static functions
 static void esp_gap_cb(esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t *param);
 static void esp_gattc_cb(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if, esp_ble_gattc_cb_param_t *param);
@@ -129,9 +131,7 @@ static void start_scan(void)
 {
     stop_scan_done = false;
     Isconnecting = false;
-    uint32_t duration = 30;
-
-    esp_ble_gap_start_scanning(duration);
+    esp_ble_gap_start_scanning(BT_SCAN_DURATION);
 }
 
 /****************************************************************************
@@ -491,8 +491,7 @@ static void esp_gap_cb(esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t *par
         case ESP_GAP_BLE_SCAN_PARAM_SET_COMPLETE_EVT: 
         {
             //the unit of the duration is second
-            uint32_t duration = 30;
-            esp_ble_gap_start_scanning(duration);
+            esp_ble_gap_start_scanning(BT_SCAN_DURATION);
             break;
         }
         

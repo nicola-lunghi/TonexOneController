@@ -185,7 +185,13 @@ static uint8_t process_control_command(tControlMessage* message)
 
             if (ControlData.USBStatus != 0)
             {
-                // device connected, sync to current preset
+                ESP_LOGI(TAG, "Load default preset after USB device connect");
+
+                // device connected. We need to determine the current preset index and name so we are in sync.
+                // There are probably USB commands to do this, but this is a bit of a hack.
+                // Set the preset to 2, and then set it back to 0. This has the effect of ensuring
+                // the preset changes, which gives us back the preset name
+                usb_set_preset(2);
                 usb_set_preset(ControlData.PresetIndex);
             }
         } break;
