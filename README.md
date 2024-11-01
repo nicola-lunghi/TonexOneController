@@ -2,6 +2,7 @@
 This project uses a low-cost embedded controller (Espessif ESP32-S3) to form a bridge to the IK Multimedia Tonex One guitar pedal (which does not have native Midi capability.)
 
 **Note: this project is not endorsed by IK Multimedia. Amplifier skin images copyright is owned by IK Multimedia.**
+**TONEX is a registered trademark of IK Multimedia Production Srl**
 
 ## ⭐ Key Features
 - LCD display with capactive touch screen.
