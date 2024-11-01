@@ -75,8 +75,12 @@ UI Design from Squareline Studio:
 - Connect a USB-C cable to the Waveshare board and a PC
 - Run the programmer exe on a Windows PC (note: this is provided as a binary package by Espressif Systems, refer to https://www.espressif.com/en/support/download/other-tools)
 - Note that Linux and Mac are supported via a Python script. Refer above link.
-- Flash the image into the Waveshare module
-- When finished, disconnect the USB cable
+- Set the Chip Type as "ESP32-S3"
+- Set the Work Mode as "Factory"
+- Set the Load Mode as "USB" (for devices like the recommended Waveshare module.) Some other PCBs that use a UART instead of the native USB port will need this set to "UART"
+- In Download Panel 1, select the Comm port corresponding to your ESP32-S3
+- Press the Start button to flash the image into the Waveshare module
+- When finished, close the app and disconnect the USB cable (the screen will be blank until the board has been power cycled)
 - Follow the Operation instructions
 
 ## Building Custom sources
