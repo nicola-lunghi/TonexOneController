@@ -87,13 +87,13 @@ UI Design:
 
 ## Building Custom sources
 Building the application requires some skill and patience.
-- Follow the instructions at https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B#ESP-IDF to install VS Code and ESP-IDF V5.06
+- Follow the instructions at https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B#ESP-IDF to install VS Code and ESP-IDF V5.02
 - Open the project Source folder using VS Code
 - Follow the instructions at https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B#Modify_COM_Port to select the correct comm port for your Waveshare board, and compile the app
 
 ## 🙏 Acknowledgement
 
-- [LVGL graphics library]
+- [LVGL graphics library] https://lvgl.io/
 - [Waveshare board support files]([https://github.com/lifeiteng/vall-e](https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B)) for display and touch screen driver examples
 
   
