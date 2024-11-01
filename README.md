@@ -73,6 +73,7 @@ UI Design from Squareline Studio:
 - Download the release zip file from the Releases folder and unzip it
 - Press and hold the "Boot" button on the Waveshare board
 - Connect a USB-C cable to the Waveshare board and a PC
+- After the USB connection, release the Boot button
 - Run the programmer exe on a Windows PC (note: this is provided as a binary package by Espressif Systems, refer to https://www.espressif.com/en/support/download/other-tools)
 - Note that Linux and Mac are supported via a Python script. Refer above link.
 - Set the Chip Type as "ESP32-S3"
