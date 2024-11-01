@@ -69,7 +69,7 @@ UI Design from Squareline Studio:
   5. Press the green tick image to save the changes. Changes will be saved permanently and remembered when next powered on
  
 
-## Programming a pre-build release
+## Programming a pre-built release
 - Download the release zip file from the Releases folder and unzip it
 - Press and hold the "Boot" button on the Waveshare board
 - Connect a USB-C cable to the Waveshare board and a PC
