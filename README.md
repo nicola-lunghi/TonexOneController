@@ -22,6 +22,8 @@ Other Waveshare moduels in the ESP32-S3 series may also be suitable, but will mo
 For example, the 7" version uses the I2C IO Expander to enable the USB host port.
 
 Other ESP32-S3 development boards could be utilised by changing the source code.
+Minimum SPI Flash size: 8 MB
+Minimum PSRAM size: 2 MB
 
 ## Development Info
 The code is written in C, for the Espressif ESP-IDF development environment, and using the FreeRTOS operating system.
