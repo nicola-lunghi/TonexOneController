@@ -9,7 +9,9 @@ This project uses a low-cost embedded controller (Espessif ESP32-S3) to form a b
 - The User can select an amplifier skin and also add descriptive text 
 - Use of simple dual footswitches to select next/previous preset
 - Use of the "M-Vave Chocolate" bluetooth Midi footswitch device to switch presets (4 buttons, bank up/down)
+- Other Bluetooth Midi controllers should be fairly easy to support with code changes, provided they use the standard Bletooth Midi service and characteristic
 - USB host control of the Tonex pedal
+- With simple code changes, it could become just a tiny bridge device without the LCD display and touch screen
 
 ## Hardware Platforms
 The recommended hardware platform to use is the Waveshare 4.3" LCD board.
@@ -18,6 +20,8 @@ https://www.waveshare.com/product/esp32-s3-touch-lcd-4.3b.htm?sku=28141
 This off-the-shelf modules provides the microcontroller, power supply suitable for 9v DC pedal board use, LCD screen, capacitive touch screen, and dual isolated inputs suitable for momentary foot switches.
 Other Waveshare moduels in the ESP32-S3 series may also be suitable, but will most likely require some code changes.
 For example, the 7" version uses the I2C IO Expander to enable the USB host port.
+
+Other ESP32-S3 development boards could be utilised by changing the source code.
 
 ## Development Info
 The code is written in C, for the Espressif ESP-IDF development environment, and using the FreeRTOS operating system.
@@ -67,7 +71,8 @@ UI Design from Squareline Studio:
 - Download the release zip file from the Releases folder and unzip it
 - Press and hold the "Boot" button on the Waveshare board
 - Connect a USB-C cable to the Waveshare board and a PC
-- Run the programmer exe (note: this is provided as a binary package by Espressif Systems)
+- Run the programmer exe on a Windows PC (note: this is provided as a binary package by Espressif Systems, refer to https://www.espressif.com/en/support/download/other-tools)
+- Note that Linux and Mac are supported via a Python script. Refer above link.
 - Flash the image into the Waveshare module
 - When finished, disconnect the USB cable
 - Follow the Operation instructions
