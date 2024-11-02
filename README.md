@@ -1,6 +1,8 @@
 # Tonex One Controller: An open-source controller and display interface for the IK Multimedia Tonex One guitar pedal
 This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a bridge to the IK Multimedia Tonex One guitar pedal (which does not have native Midi capability.)
 
+**Note: Version 1.0.0.2 has an issue with USB. It will overwrite the pedal global settings! use with caution and backup your pedal first. This issue is being worked on.**
+
 **Note: this project is not endorsed by IK Multimedia. Amplifier skin images copyright is owned by IK Multimedia.**
 **TONEX is a registered trademark of IK Multimedia Production Srl**
 
