@@ -46,16 +46,15 @@ limitations under the License.
 
 enum CommandEvents
 {
-    EVENT_SET_MAX_PRESETS,
     EVENT_PRESET_DOWN,
     EVENT_PRESET_UP,
     EVENT_PRESET_INDEX,
-    EVENT_SET_PRESET_NAME,
     EVENT_SET_PRESET_DETAILS,
     EVENT_SET_USB_STATUS,
     EVENT_SET_BT_STATUS,
     EVENT_SET_AMP_SKIN,
-    EVENT_SAVE_USER_DATA
+    EVENT_SAVE_USER_DATA,
+    EVENT_SET_USER_TEXT
 };
 
 typedef struct
@@ -75,7 +74,6 @@ typedef struct
 {
     uint32_t PresetIndex;                        // 0-based index
     char PresetName[MAX_TEXT_LENGTH];
-    uint32_t MaxPresets;
     uint32_t USBStatus;
     uint32_t BTStatus;
     tUserData UserData[MAX_PRESETS_DEFAULT];
@@ -102,78 +100,44 @@ static uint8_t process_control_command(tControlMessage* message)
     // check what we got
     switch (message->Event)
     {
-        case EVENT_SET_MAX_PRESETS:
-        {
-            ControlData.MaxPresets = message->Value;
-        } break;
-
         case EVENT_PRESET_DOWN:
         {
-            if (ControlData.PresetIndex > 0)
+            if (ControlData.USBStatus != 0)
             {
-                ControlData.PresetIndex--;
-
-                if (ControlData.USBStatus != 0)
-                {
-                    // send message to USB
-                    usb_set_preset(ControlData.PresetIndex);
-
-                    // change skin and user text
-                    UI_SetAmpSkin(ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex);
-                    UI_SetPresetDescription(ControlData.UserData[ControlData.PresetIndex].PresetDescription);
-                }
+                // send message to USB
+                usb_previous_preset();
             }
         } break;
 
         case EVENT_PRESET_UP:
         {
-            if (ControlData.PresetIndex < ControlData.MaxPresets)
+            if (ControlData.USBStatus != 0)
             {
-                ControlData.PresetIndex++;
-
-                if (ControlData.USBStatus != 0)
-                {
-                    // send message to USB
-                    usb_set_preset(ControlData.PresetIndex);
-
-                    // change skin and user text
-                    UI_SetAmpSkin(ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex);
-                    UI_SetPresetDescription(ControlData.UserData[ControlData.PresetIndex].PresetDescription);
-                }
+                // send message to USB
+                usb_next_preset();
             }
         } break;
 
         case EVENT_PRESET_INDEX:
         {
-            if (message->Value < ControlData.MaxPresets)
+            if (ControlData.USBStatus != 0)
             {
-                ControlData.PresetIndex = message->Value;
-
-                if (ControlData.USBStatus != 0)
-                {
-                    // send message to USB
-                    usb_set_preset(ControlData.PresetIndex);
-
-                    // change skin and user text
-                    UI_SetAmpSkin(ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex);
-                    UI_SetPresetDescription(ControlData.UserData[ControlData.PresetIndex].PresetDescription);
-                }
+                // send message to USB
+                usb_set_preset(message->Value);
             }
         } break;
 
-        case EVENT_SET_PRESET_NAME:
+        case EVENT_SET_PRESET_DETAILS:
         {
+            ControlData.PresetIndex = message->Value;
+
             memcpy((void*)ControlData.PresetName, (void*)message->Text, MAX_TEXT_LENGTH);
             ControlData.PresetName[MAX_TEXT_LENGTH - 1] = 0;
 
             // update UI
             UI_SetPresetLabel(ControlData.PresetName);
-        } break;
-
-        case EVENT_SET_PRESET_DETAILS:
-        {
-            memcpy((void*)ControlData.UserData[ControlData.PresetIndex].PresetDescription, (void*)message->Text, MAX_TEXT_LENGTH);
-            ControlData.UserData[ControlData.PresetIndex].PresetDescription[MAX_TEXT_LENGTH - 1] = 0;
+            UI_SetAmpSkin(ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex);
+            UI_SetPresetDescription(ControlData.UserData[ControlData.PresetIndex].PresetDescription);
         } break;
 
         case EVENT_SET_USB_STATUS:
@@ -182,22 +146,10 @@ static uint8_t process_control_command(tControlMessage* message)
 
             // update UI
             UI_SetUSBStatus(ControlData.USBStatus);
-
-            if (ControlData.USBStatus != 0)
-            {
-                ESP_LOGI(TAG, "Load default preset after USB device connect");
-
-                // device connected. We need to determine the current preset index and name so we are in sync.
-                // There are probably USB commands to do this, but this is a bit of a hack.
-                // Set the preset to 2, and then set it back to 0. This has the effect of ensuring
-                // the preset changes, which gives us back the preset name
-                usb_set_preset(2);
-                usb_set_preset(ControlData.PresetIndex);
-            }
         } break;
 
         case EVENT_SET_BT_STATUS:
-         {
+        {
             ControlData.BTStatus = message->Value;
 
             // update UI
@@ -216,6 +168,12 @@ static uint8_t process_control_command(tControlMessage* message)
         {
             // save it
             SaveUserData();
+        } break;
+
+        case EVENT_SET_USER_TEXT:
+        {
+            memcpy((void*)ControlData.UserData[ControlData.PresetIndex].PresetDescription, (void*)message->Text, MAX_TEXT_LENGTH);
+            ControlData.UserData[ControlData.PresetIndex].PresetDescription[MAX_TEXT_LENGTH - 1] = 0;
         } break;
     }
 
@@ -296,43 +254,21 @@ void control_request_preset_index(uint8_t index)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void control_set_preset_name(char* name)
+void control_sync_preset_details(uint16_t index, char* name)
 {
     tControlMessage message;
 
-    ESP_LOGI(TAG, "control_set_preset_name");            
-
-    message.Event = EVENT_SET_PRESET_NAME;
-    sprintf(message.Text, "%d: ", (int)ControlData.PresetIndex + 1);
-    strncat(message.Text, name, MAX_TEXT_LENGTH - 1);
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_preset_name queue send failed!");            
-    }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_preset_details(char* name)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_preset_details");            
+    ESP_LOGI(TAG, "control_sync_preset_details");            
 
     message.Event = EVENT_SET_PRESET_DETAILS;
+    message.Value = index;
+    sprintf(message.Text, "%d: ", (int)index + 1);
     strncat(message.Text, name, MAX_TEXT_LENGTH - 1);
 
     // send to queue
     if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
     {
-        ESP_LOGE(TAG, "control_set_preset_name queue send failed!");            
+        ESP_LOGE(TAG, "control_sync_preset_details queue send failed!");            
     }
 }
 
@@ -343,19 +279,19 @@ void control_set_preset_details(char* name)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void control_set_max_presets(uint32_t max)
+void control_set_user_text(char* text)
 {
     tControlMessage message;
 
-    ESP_LOGI(TAG, "control_set_max_presets");
+    ESP_LOGI(TAG, "control_set_user_text");            
 
-    message.Event = EVENT_SET_MAX_PRESETS;
-    message.Value = max;
+    message.Event = EVENT_SET_USER_TEXT;
+    strncat(message.Text, text, MAX_TEXT_LENGTH - 1);
 
     // send to queue
     if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
     {
-        ESP_LOGE(TAG, "control_set_max_presets queue send failed!");            
+        ESP_LOGE(TAG, "control_set_user_text queue send failed!");            
     }
 }
 
@@ -632,7 +568,6 @@ void control_init(void)
     esp_err_t ret;
 
     memset((void*)&ControlData, 0, sizeof(ControlData));
-    ControlData.MaxPresets = MAX_PRESETS_DEFAULT;
 
     // this will become init from Flash mem
     for (uint32_t loop = 0; loop < MAX_PRESETS_DEFAULT; loop++)

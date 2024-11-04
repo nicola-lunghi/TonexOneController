@@ -82,7 +82,7 @@ limitations under the License.
 
 static const char *TAG = "app_main";
 SemaphoreHandle_t I2CMutex;
-static char full_path[300];
+//static char full_path[300];
 static esp_err_t i2c_master_init(void);
 
 /****************************************************************************
@@ -200,6 +200,7 @@ static void InitIOExpander(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+#if 0
 static void InitSDCard(void)
 {
     esp_err_t ret;
@@ -323,6 +324,7 @@ static void InitSDCard(void)
     esp_vfs_fat_sdcard_unmount(mount_point, card);
     spi_bus_free(host.slot);
 }
+#endif
 
 /****************************************************************************
 * NAME:        

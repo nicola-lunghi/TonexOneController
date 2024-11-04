@@ -345,7 +345,7 @@ void PresetDescriptionChanged(lv_event_t * e)
 {
     char* text = (char*)lv_textarea_get_text(ui_PresetDetailsTextArea);
 
-    control_set_preset_details(text);      
+    control_set_user_text(text);      
 }
 
 /****************************************************************************

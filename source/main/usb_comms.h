@@ -28,7 +28,9 @@ extern "C" {
 
 enum USB_Commands
 {
-    USB_COMMAND_SET_PRESET
+    USB_COMMAND_SET_PRESET,
+    USB_COMMAND_NEXT_PRESET,
+    USB_COMMAND_PREVIOUS_PRESET
 };
 
 typedef struct 
@@ -49,6 +51,8 @@ void init_usb_comms(void);
 
 // thread safe public API
 void usb_set_preset(uint32_t preset);
+void usb_next_preset(void);
+void usb_previous_preset(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/

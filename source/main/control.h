@@ -60,12 +60,11 @@ enum AmpSkins
 void control_request_preset_up(void);
 void control_request_preset_down(void);
 void control_request_preset_index(uint8_t index);
-void control_set_preset_name(char* name);
-void control_set_preset_details(char* name);
-void control_set_max_presets(uint32_t max);
 void control_set_usb_status(uint32_t status);
 void control_set_bt_status(uint32_t status);
 void control_set_amp_skin_index(uint32_t status);
 void control_set_amp_skin_next(void);
 void control_set_amp_skin_previous(void);
 void control_save_user_data(void);
+void control_sync_preset_details(uint16_t index, char* name);
+void control_set_user_text(char* text);
