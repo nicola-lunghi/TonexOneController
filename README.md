@@ -56,7 +56,7 @@ UI Design:
 ![image](https://github.com/user-attachments/assets/30d92e47-8d4b-4b66-bce4-e5c8da3cd924)
 
 ### Usage
-- After a few seconds of boot time, the LCD display should now show the description for your Preset number 1 (it will automatically change the Tonex to preset 1 in order to syncronise with it)
+- After a few seconds of boot time, the LCD display should now show the description for your current Preset
 - Change presets using one or more of the following methods
   1. Touch screen Next/Previous labels
   2. Dual footswitchs for next/previous preset
