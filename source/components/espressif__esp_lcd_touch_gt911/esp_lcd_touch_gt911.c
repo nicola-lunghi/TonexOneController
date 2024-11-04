@@ -135,8 +135,6 @@ typedef struct
     uint8_t refresh;   // 0x8100  
 } __attribute__ ((packed)) tGTConfig ;
 
-static tGTConfig config_data;
-
 /*******************************************************************************
 * Function definitions
 *******************************************************************************/
@@ -162,7 +160,6 @@ static esp_err_t esp_lcd_touch_gt911_exit_sleep(esp_lcd_touch_handle_t tp);
 
 static esp_err_t touch_gt911_calc_checksum(uint8_t *buf, uint8_t len);
 static esp_err_t touch_gt911_read_config_checksum(esp_lcd_touch_handle_t tp, uint8_t* res);
-static esp_err_t touch_gt911_write_cfg(esp_lcd_touch_handle_t tp);
 
 /*******************************************************************************
 * Public API functions
@@ -468,17 +465,6 @@ static esp_err_t touch_gt911_read_cfg(esp_lcd_touch_handle_t tp)
 
     ESP_LOGI(TAG, "TouchPad_ID:0x%02x,0x%02x,0x%02x", buf[0], buf[1], buf[2]);
     ESP_LOGI(TAG, "TouchPad_Config_Version:%d", buf[3]);
-
-    // read full config
-    //ESP_RETURN_ON_ERROR(touch_gt911_i2c_read(tp, ESP_LCD_TOUCH_GT911_CONFIG_REG, (uint8_t *)&config_data, sizeof(config_data)), TAG, "GT911 read config error!");
-    //ESP_LOGI(TAG, "TouchPad_Config Touch Level: %d. Cfg size:%d", config_data.screenTouchLevel, sizeof(config_data));
-
-    // overwrite config to be less sensitive. Default is 110
-    // bugs here, values never take
-    //config_data.screenTouchLevel = 110;
-
-    // save config
-    //touch_gt911_write_cfg(tp);
     
     return ESP_OK;
 }
@@ -489,49 +475,6 @@ static esp_err_t touch_gt911_read_config_checksum(esp_lcd_touch_handle_t tp, uin
 
     ESP_RETURN_ON_ERROR(touch_gt911_i2c_read(tp, ESP_LCD_TOUCH_GT911_CONFIG_CRC, res, 1), TAG, "GT911 read error!");
     ESP_LOGI(TAG, "TouchPad_Config Checksum:%d", *res);
-
-    return ESP_OK;
-}
-
-static esp_err_t touch_gt911_write_cfg(esp_lcd_touch_handle_t tp)
-{
-    uint8_t chip_checksum;
-    uint8_t checksum;
-    
-    // -2 here because checksum doesn't count checksum itself or the refresh byte
-    checksum = touch_gt911_calc_checksum((uint8_t*)&config_data, sizeof(config_data) - 2);
-    touch_gt911_read_config_checksum(tp, &chip_checksum);
-
-    if (checksum != chip_checksum)
-    {
-        ESP_LOGI(TAG, "TouchPad_Config Checksum mismatch: %d %d", chip_checksum, checksum);
-
-        // upgrade the config version
-        config_data.configVersion += 1;
-
-        // update checksum
-        checksum = touch_gt911_calc_checksum((uint8_t*)&config_data, sizeof(config_data) - 2);
-
-        config_data.checksum = checksum;
-        config_data.refresh = 1;
-
-        touch_gt911_reset(tp);
-
-        // save config
-        ESP_RETURN_ON_ERROR(touch_gt911_i2c_write(tp, ESP_LCD_TOUCH_GT911_CONFIG_REG, (uint8_t*)&config_data, sizeof(config_data)), TAG, "GT911 cfg write error!");
-
-        // write refresh register
-        ESP_RETURN_ON_ERROR(touch_gt911_i2c_write(tp, ESP_LCD_TOUCH_GT911_CONFIG_REG, (uint8_t*)&config_data.refresh, 1), TAG, "GT911 cfg write refresh error!");
-
-        uint8_t val = 0;
-        ESP_RETURN_ON_ERROR(touch_gt911_i2c_write(tp, ESP_LCD_TOUCH_GT911_COMMAND_REG, &val, 1), TAG, "GT911 cfg command error!");
-
-        ESP_LOGI(TAG, "TouchPad_Config set OK");
-    }
-    else
-    {
-        ESP_LOGI(TAG, "TouchPad_Config Checksum match");
-    }
 
     return ESP_OK;
 }
