@@ -12,7 +12,8 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 - Use of the "M-Vave Chocolate" bluetooth Midi footswitch device to switch presets (4 buttons, bank up/down)
 - Other Bluetooth Midi controllers should be fairly easy to support with code changes, provided they use the standard Bletooth Midi service and characteristic
 - USB host control of the Tonex pedal
-- With simple code changes, it could become just a tiny bridge device without the LCD display and touch screen
+- Serial Midi support
+- Menu Config options to disable items like the display, so it could become just a tiny bridge device
 
 ## Hardware Platforms
 The recommended hardware platform to use is the Waveshare 4.3" LCD board.
@@ -90,6 +91,10 @@ Building the application requires some skill and patience.
 - Follow the instructions at https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B#ESP-IDF to install VS Code and ESP-IDF V5.02
 - Open the project Source folder using VS Code
 - Follow the instructions at https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B#Modify_COM_Port to select the correct comm port for your Waveshare board, and compile the app
+### Menu Config options
+Use the Menu Config system to select which components you wish to enable.
+![image](https://github.com/user-attachments/assets/593d48fb-aeea-4b20-87c7-dc9212952213)
+
 
 ## 🙏 Acknowledgement
 
