@@ -15,30 +15,14 @@ limitations under the License.
  
 */
 
-
-#ifndef _MAIN_H
-#define _MAIN_H
+#ifndef _MIDI_SERIAL_H
+#define _MIDI_SERIAL_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define APP_VERSION		"1.0.2.1"
-
-// IO defines
-// IO expander
-#define FOOTSWITCH_1		IO_EXPANDER_PIN_NUM_0
-#define TOUCH_RESET 		IO_EXPANDER_PIN_NUM_1
-#define LCD_BACKLIGHT		IO_EXPANDER_PIN_NUM_2
-#define LCD_RESET    		IO_EXPANDER_PIN_NUM_3
-#define SD_CS       		IO_EXPANDER_PIN_NUM_4
-#define FOOTSWITCH_2		IO_EXPANDER_PIN_NUM_5
-
-// Micro pins
-#define TOUCH_INT           GPIO_NUM_4    // touch panel interrupt
-
-esp_err_t i2c_master_reset(void);
-
+void midi_serial_init(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/

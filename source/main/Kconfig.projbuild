@@ -1,4 +1,38 @@
-menu "Example Configuration"
+menu "Tonex Controller Configuration"
+
+    choice TONEX_CONTROLLER_DISPLAY_TYPE
+        prompt "Tonex Controller Display Type"
+        default TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+    
+        config TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+            bool "Waveshare 800x480"
+
+        config TONEX_CONTROLLER_DISPLAY_NONE
+            bool "None"
+    endchoice
+
+    choice TONEX_CONTROLLER_USE_BLUETOOTH
+        prompt "Tonex Controller Bluetooth Support"
+        default TONEX_CONTROLLER_BLUETOOTH_ON  
+        
+        config TONEX_CONTROLLER_BLUETOOTH_ON
+            bool "Enabled"
+
+        config TONEX_CONTROLLER_BLUETOOTH_OFF
+            bool "Disabled"
+    endchoice
+
+    choice TONEX_CONTROLLER_USE_SERIAL_MIDI
+        prompt "Tonex Controller Serial Midi Support"
+        default TONEX_CONTROLLER_USE_SERIAL_MIDI_ON  
+        
+        config TONEX_CONTROLLER_USE_SERIAL_MIDI_ON
+            bool "Enabled"
+
+        config TONEX_CONTROLLER_USE_SERIAL_MIDI_OFF
+            bool "Disabled"
+    endchoice
+
     config EXAMPLE_DOUBLE_FB
         bool "Use double Frame Buffer"
         default "n"
@@ -18,4 +52,5 @@ menu "Example Configuration"
         help
             Enable this option, the example will use a pair of semaphores to avoid the tearing effect.
             Note, if the Double Frame Buffer is used, then we can also avoid the tearing effect without the lock.
+            
 endmenu

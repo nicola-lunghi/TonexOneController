@@ -54,6 +54,9 @@ limitations under the License.
 #include "footswitches.h"
 #include "task_priorities.h"
 
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+
 static const char *TAG = "app_display";
 
 #define DISPLAY_TASK_STACK_SIZE   (6 * 1024)
@@ -993,3 +996,5 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     // create display task
     xTaskCreatePinnedToCore(display_task, "Dsp", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, NULL, 1);
 }
+
+#endif  //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480

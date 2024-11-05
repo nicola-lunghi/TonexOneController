@@ -60,6 +60,7 @@ limitations under the License.
 #include "control.h"
 #include "midi_control.h"
 #include "CH422G.h"
+#include "midi_serial.h"
 
 #define I2C_MASTER_SCL_IO               9       /*!< GPIO number used for I2C master clock */
 #define I2C_MASTER_SDA_IO               8       /*!< GPIO number used for I2C master data  */
@@ -81,8 +82,11 @@ limitations under the License.
 
 
 static const char *TAG = "app_main";
+
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+
 SemaphoreHandle_t I2CMutex;
-//static char full_path[300];
 static esp_err_t i2c_master_init(void);
 
 /****************************************************************************
@@ -192,6 +196,7 @@ static void InitIOExpander(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
         ESP_LOGE(TAG, "Failed to init IO expander!");
     }
 }
+#endif  //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
 
 /****************************************************************************
 * NAME:        
@@ -337,6 +342,7 @@ void app_main(void)
 {
     ESP_LOGI(TAG, "ToneX One Controller App start");
 
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
     // create mutex for shared I2C bus
     I2CMutex = xSemaphoreCreateMutex();
     if (I2CMutex == NULL)
@@ -358,11 +364,13 @@ void app_main(void)
     // SD card using IO expander for chip select makes direct LVGL load
     // from SD really tricky.
     //InitSDCard();
+#endif
 
     // init control task
     ESP_LOGI(TAG, "Init Control");
     control_init();
 
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
     // init GUI
     ESP_LOGI(TAG, "Init display");
     display_init(I2C_MASTER_NUM, I2CMutex);
@@ -370,10 +378,19 @@ void app_main(void)
     // init Footswitches
     ESP_LOGI(TAG, "Init footswitches");
     footswitches_init();
+#endif
 
-    // init Midi
-    ESP_LOGI(TAG, "Init MIDI");
+#if CONFIG_TONEX_CONTROLLER_BLUETOOTH_ON
+    // init Midi Bluetooth
+    ESP_LOGI(TAG, "Init MIDI BT");
     midi_init();
+#endif 
+
+#if CONFIG_TONEX_CONTROLLER_USE_SERIAL_MIDI_ON
+    // init Midi serial
+    ESP_LOGI(TAG, "Init MIDI Serial");
+    midi_serial_init();
+#endif
 
     // init USB
     ESP_LOGI(TAG, "Init USB");
