@@ -48,13 +48,14 @@ UI Design:
 ## Operation
 ### Connections
 - Connect the USB-C port on the Waveshare board to the ToneX One USB-C port
-- Optional: connect dual footswitches to the isolated inputs on the Waveshare board
+- Optional: connect dual footswitches to the isolated inputs on the Waveshare board. GND to ground. DI0 for footswitch 1. DI1 for footwitch 2. Exact wiring depends on the footswitch but is usually a 6.5mm stereo jack
 - Connect 9V DC power supply to the terminals on the Waveshare board. The terminals are screw terminals, so most likely a DC jack to wires will be needed.
 - Switch on the power supply
 - The Waveshare board USB port will power the Tonex One. Do not connect 9 volts to it!
 - Optional: switch on a M-Vave Chocolate Midi pedal (https://www.cuvave.com/productinfo/724103.html). After a few seconds it should connect and the Bluetooth icon should change from gray to blue
 
-![image](https://github.com/user-attachments/assets/30d92e47-8d4b-4b66-bce4-e5c8da3cd924)
+![image](https://github.com/user-attachments/assets/68c643bd-fe83-4243-ab36-a437c5339e7d)
+
 
 ### Usage
 - After a few seconds of boot time, the LCD display should now show the description for your current Preset
