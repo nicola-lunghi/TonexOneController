@@ -137,7 +137,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_BTStatusDisconn, 301);
     lv_obj_set_y(ui_BTStatusDisconn, -2);
     lv_obj_set_align(ui_BTStatusDisconn, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_BTStatusDisconn, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_add_flag(ui_BTStatusDisconn, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_BTStatusDisconn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_USBStatusOK = lv_img_create(ui_TopPanel);
@@ -513,6 +513,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_add_event_cb(ui_NextButton, ui_event_NextButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_Footswitch2Label, ui_event_Footswitch2Label, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_NextContainer, ui_event_NextContainer, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_BTStatusDisconn, ui_event_BTStatusDisconn, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_PresetHeadingLabel, ui_event_PresetHeadingLabel, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_PresetDetailsTextArea, ui_event_PresetDetailsTextArea, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_LeftArrow, ui_event_LeftArrow, LV_EVENT_ALL, NULL);
