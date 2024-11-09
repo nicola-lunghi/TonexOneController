@@ -3226,7 +3226,7 @@
                   {
                     "nid": -1188808130,
                     "strtype": "OBJECT/Clickable",
-                    "strval": "False",
+                    "strval": "True",
                     "InheritedType": 2
                   },
                   {
@@ -3447,6 +3447,71 @@
                     "strtype": "IMAGE/Style_main",
                     "strval": "lv.PART.MAIN, Rectangle, Image, Transform",
                     "InheritedType": 11
+                  },
+                  {
+                    "disabled": false,
+                    "nid": 135892510,
+                    "strtype": "IMAGE/EventHandler",
+                    "strval": "LONG_PRESSED",
+                    "childs": [
+                      {
+                        "nid": -263036864,
+                        "strtype": "_event/name",
+                        "strval": "BTBondsClearRequest",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 426865541,
+                        "strtype": "_event/condition_C",
+                        "strval": "",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1977502132,
+                        "strtype": "_event/condition_P",
+                        "strval": "",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 838889979,
+                        "strtype": "_event/action",
+                        "strval": "CALL FUNCTION",
+                        "childs": [
+                          {
+                            "nid": 1982280892,
+                            "strtype": "CALL FUNCTION/Name",
+                            "strval": "CALL FUNCTION",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": -1069865775,
+                            "strtype": "CALL FUNCTION/Call",
+                            "strval": "<{Function_name}>( event_struct )",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 2011484240,
+                            "strtype": "CALL FUNCTION/CallC",
+                            "strval": "<{Function_name}>( e );",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 2128410508,
+                            "strtype": "CALL FUNCTION/Function_name",
+                            "strval": "BTBondsClearRequest",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": -1282037927,
+                            "strtype": "CALL FUNCTION/Dont_export_function",
+                            "strval": "False",
+                            "InheritedType": 2
+                          }
+                        ],
+                        "InheritedType": 10
+                      }
+                    ],
+                    "InheritedType": 4
                   }
                 ],
                 "saved_objtypeKey": "IMAGE"
@@ -17045,7 +17110,6 @@
               {
                 "disabled": false,
                 "nid": 1608561095,
-                "flags": 1048576,
                 "strtype": "_event/EventHandler",
                 "strval": "CLICKED",
                 "childs": [
@@ -17111,7 +17175,6 @@
               {
                 "disabled": false,
                 "nid": 962815520,
-                "flags": 1048576,
                 "strtype": "_event/EventHandler",
                 "strval": "CLICKED",
                 "childs": [
@@ -17645,7 +17708,7 @@
     "theme_color2": 0,
     "uiExportFolderPath": "D:\\projects\\TonexController\\source\\main\\ui_generated",
     "projectExportFolderPath": "D:\\projects\\TonexController\\source\\main\\ui_generated",
-    "backup_cnt": 253,
+    "backup_cnt": 256,
     "autosave_cnt": 0,
     "lvgl_version": "8.3.11",
     "callfuncsexport": "C_FILE",
