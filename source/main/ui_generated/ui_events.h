@@ -12,6 +12,7 @@ extern "C" {
 
 void PreviousClicked(lv_event_t * e);
 void NextClicked(lv_event_t * e);
+void BTBondsClearRequest(lv_event_t * e);
 void AmpSkinPrevious(lv_event_t * e);
 void AmpSkinNext(lv_event_t * e);
 void PresetDescriptionChanged(lv_event_t * e);

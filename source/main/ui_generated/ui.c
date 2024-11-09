@@ -28,6 +28,7 @@ lv_obj_t * ui_Footswitch2Label;
 lv_obj_t * ui_TopPanel;
 lv_obj_t * ui_IKLogo;
 lv_obj_t * ui_BTStatusConn;
+void ui_event_BTStatusDisconn(lv_event_t * e);
 lv_obj_t * ui_BTStatusDisconn;
 lv_obj_t * ui_USBStatusOK;
 lv_obj_t * ui_USBStatusFail;
@@ -144,6 +145,14 @@ void ui_event_Footswitch2Label(lv_event_t * e)
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_CLICKED) {
         NextClicked(e);
+    }
+}
+void ui_event_BTStatusDisconn(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        BTBondsClearRequest(e);
     }
 }
 void ui_event_PresetHeadingLabel(lv_event_t * e)

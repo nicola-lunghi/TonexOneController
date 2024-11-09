@@ -44,3 +44,8 @@ void SaveUserDataRequest(lv_event_t * e)
 {
 	// Your code here
 }
+
+void BTBondsClearRequest(lv_event_t * e)
+{
+	// Your code here
+}

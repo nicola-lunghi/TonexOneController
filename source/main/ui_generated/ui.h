@@ -34,6 +34,7 @@ extern lv_obj_t * ui_Footswitch2Label;
 extern lv_obj_t * ui_TopPanel;
 extern lv_obj_t * ui_IKLogo;
 extern lv_obj_t * ui_BTStatusConn;
+void ui_event_BTStatusDisconn(lv_event_t * e);
 extern lv_obj_t * ui_BTStatusDisconn;
 extern lv_obj_t * ui_USBStatusOK;
 extern lv_obj_t * ui_USBStatusFail;
