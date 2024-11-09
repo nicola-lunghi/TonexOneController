@@ -469,7 +469,7 @@ static esp_err_t touch_gt911_read_cfg(esp_lcd_touch_handle_t tp)
     return ESP_OK;
 }
 
-static esp_err_t touch_gt911_read_config_checksum(esp_lcd_touch_handle_t tp, uint8_t* res)
+static esp_err_t __attribute__((unused)) touch_gt911_read_config_checksum(esp_lcd_touch_handle_t tp, uint8_t* res)
 {
     assert(tp != NULL);
 
@@ -499,7 +499,7 @@ static esp_err_t touch_gt911_i2c_write(esp_lcd_touch_handle_t tp, uint16_t reg, 
     // *INDENT-ON*
 }
 
-static esp_err_t touch_gt911_calc_checksum(uint8_t *buf, uint8_t len) 
+static esp_err_t __attribute__((unused)) touch_gt911_calc_checksum(uint8_t *buf, uint8_t len) 
 {
   uint8_t ccsum = 0;
   
