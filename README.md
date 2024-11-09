@@ -48,6 +48,7 @@ UI Design:
 
 ## Operation
 ### Connections
+Note: the controller code relies on the Tonex One pedal being set to Stomp mode. Code is in place to do this automatically, but it seems it may have a bug. Manually enable Stomp mode on your pedal.
 - Connect the USB-C port on the Waveshare board to the ToneX One USB-C port
 - Optional: connect dual footswitches to the isolated inputs on the Waveshare board. GND to ground. DI0 for footswitch 1. DI1 for footwitch 2. Exact wiring depends on the footswitch but is usually a 6.5mm stereo jack
 - Connect 9V DC power supply to the terminals on the Waveshare board. The terminals are screw terminals, so most likely a DC jack to wires will be needed.
