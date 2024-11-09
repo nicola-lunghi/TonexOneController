@@ -9,8 +9,9 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 - Screen displays the name and number of the current preset.
 - The User can select an amplifier skin and also add descriptive text 
 - Use of simple dual footswitches to select next/previous preset
-- Use of the "M-Vave Chocolate" bluetooth Midi footswitch device to switch presets (4 buttons, bank up/down)
+- Bluetooth Client support. Use of the "M-Vave Chocolate" bluetooth Midi footswitch device to switch presets (4 buttons, bank up/down)
 - Other Bluetooth Midi controllers should be fairly easy to support with code changes, provided they use the standard Bletooth Midi service and characteristic
+- Coming in V1.0.2.2: Bluetooth server support. Pair your phone/tablet with the controller, and send standard Midi program changes, bridged through to the Tonex One pedal (note Server and Client cannot be used simultaneously)
 - USB host control of the Tonex pedal
 - Serial Midi support
 - Menu Config options to disable items like the display, so it could become just a tiny bridge device
