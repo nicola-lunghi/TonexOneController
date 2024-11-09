@@ -37,7 +37,6 @@ limitations under the License.
 #include "control.h"
 #include "task_priorities.h"
 
-static const char *TAG = "app_midi_serial";
 #define MIDI_SERIAL_TASK_STACK_SIZE             (3 * 1024)
 #define MIDI_SERIAL_BUFFER_SIZE                 128
 #define MIDI_CHANNEL                            2
@@ -48,6 +47,7 @@ static const char *TAG = "app_midi_serial";
 
 
 #if CONFIG_TONEX_CONTROLLER_USE_SERIAL_MIDI_ON
+static const char *TAG = "app_midi_serial";
 
 // Note: based on https://github.com/vit3k/tonex_controller/blob/main/main/midi.cpp
 

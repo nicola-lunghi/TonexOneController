@@ -35,7 +35,7 @@ extern "C" {
 #define FOOTSWITCH_2		IO_EXPANDER_PIN_NUM_5
 
 // Micro pins
-#define TOUCH_INT           GPIO_NUM_4    // touch panel interrupt
+#define TOUCH_INT               GPIO_NUM_4    // touch panel interrupt
 
 esp_err_t i2c_master_reset(void);
 

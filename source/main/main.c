@@ -364,6 +364,8 @@ void app_main(void)
     // SD card using IO expander for chip select makes direct LVGL load
     // from SD really tricky.
     //InitSDCard();
+#else    
+    ESP_LOGI(TAG, "Display disabled");
 #endif
 
     // init control task
@@ -380,16 +382,28 @@ void app_main(void)
     footswitches_init();
 #endif
 
-#if CONFIG_TONEX_CONTROLLER_BLUETOOTH_ON
+#if CONFIG_TONEX_CONTROLLER_BLUETOOTH_CLIENT
     // init Midi Bluetooth
-    ESP_LOGI(TAG, "Init MIDI BT");
+    ESP_LOGI(TAG, "Init MIDI BT Client");
     midi_init();
+#else    
+    ESP_LOGI(TAG, "MIDI BT client disabled");
+#endif 
+
+#if CONFIG_TONEX_CONTROLLER_BLUETOOTH_SERVER
+    // init Midi Bluetooth
+    ESP_LOGI(TAG, "Init MIDI BT Server");
+    midi_init();
+#else    
+    ESP_LOGI(TAG, "MIDI BT server disabled");
 #endif 
 
 #if CONFIG_TONEX_CONTROLLER_USE_SERIAL_MIDI_ON
     // init Midi serial
     ESP_LOGI(TAG, "Init MIDI Serial");
     midi_serial_init();
+#else    
+    ESP_LOGI(TAG, "Serial MIDI disabled");
 #endif
 
     // init USB

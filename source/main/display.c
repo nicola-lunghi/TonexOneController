@@ -53,7 +53,7 @@ limitations under the License.
 #include "control.h"
 #include "footswitches.h"
 #include "task_priorities.h"
-
+#include "midi_control.h"
 
 #if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
 
@@ -335,6 +335,19 @@ void AmpSkinNext(lv_event_t * e)
 void SaveUserDataRequest(lv_event_t * e)
 {
     control_save_user_data();
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void BTBondsClearRequest(lv_event_t * e)
+{
+    // request to clear bluetooth bonds
+    midi_delete_bluetooth_bonds();
 }
 
 /****************************************************************************

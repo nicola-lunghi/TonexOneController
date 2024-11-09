@@ -13,10 +13,15 @@ menu "Tonex Controller Configuration"
 
     choice TONEX_CONTROLLER_USE_BLUETOOTH
         prompt "Tonex Controller Bluetooth Support"
-        default TONEX_CONTROLLER_BLUETOOTH_ON  
-        
-        config TONEX_CONTROLLER_BLUETOOTH_ON
-            bool "Enabled"
+        default TONEX_CONTROLLER_BLUETOOTH_OFF  
+        help
+            Client for having the Tonex Controller connect to devices like M-Vave Chocolate foot switch. Server for pairing the Tonex Controller with a Bluetooth Midi controller device (like a Phone.)
+                
+        config TONEX_CONTROLLER_BLUETOOTH_CLIENT
+            bool "Bluetooth Client"
+
+        config TONEX_CONTROLLER_BLUETOOTH_SERVER
+            bool "Bluetooth Server"
 
         config TONEX_CONTROLLER_BLUETOOTH_OFF
             bool "Disabled"

@@ -24,6 +24,7 @@ extern "C" {
 #endif
 
 void midi_init(void);
+void midi_delete_bluetooth_bonds(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/

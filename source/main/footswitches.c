@@ -37,7 +37,7 @@ limitations under the License.
 #include "control.h"
 #include "task_priorities.h"
 
-#define FOOTSWITCH_DEBOUNCE_TIME			10	// * 5 msec
+#define FOOTSWITCH_SAMPLE_COUNT             20       // 5 msec per sample
 
 enum FootswitchStates
 {
@@ -51,7 +51,7 @@ static const char *TAG = "app_footswitches";
 typedef struct
 {
     uint8_t state;
-    uint32_t debounce_counter;
+    uint32_t sample_counter;
 } tFootswitchControl;
 
 static tFootswitchControl FootswitchControl;
@@ -67,11 +67,6 @@ void footswitches_handle(void)
 {
     uint8_t value;
  
-    if (FootswitchControl.debounce_counter > 0)
-    {
-        FootswitchControl.debounce_counter--;
-    }
-
     // note here: this function called from display task to help
     // avoid issues with IO expander. No blocking apart from I2C mutex
     switch (FootswitchControl.state)
@@ -90,55 +85,70 @@ void footswitches_handle(void)
                     control_request_preset_down();
 
                     // wait release	
-                    FootswitchControl.debounce_counter = FOOTSWITCH_DEBOUNCE_TIME;
+                    FootswitchControl.sample_counter = 0;
                     FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
                 }
             }
 
-            if (CH422G_read_input(FOOTSWITCH_2, &value) == ESP_OK)
+            if (FootswitchControl.state == FOOTSWITCH_IDLE)
             {
-                if (value == 0)
+                if (CH422G_read_input(FOOTSWITCH_2, &value) == ESP_OK)
                 {
-                    ESP_LOGI(TAG, "Footswitch 2 pressed");
+                    if (value == 0)
+                    {
+                        ESP_LOGI(TAG, "Footswitch 2 pressed");
 
-                    // foot switch 2 pressed, send event
-                    control_request_preset_up();
+                        // foot switch 2 pressed, send event
+                        control_request_preset_up();
 
-                    // wait release	
-                    FootswitchControl.debounce_counter = FOOTSWITCH_DEBOUNCE_TIME;
-                    FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_2;
+                        // wait release	
+                        FootswitchControl.sample_counter = 0;
+                        FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_2;
+                    }
                 }
-             }
+            }
         } break;
 
         case FOOTSWITCH_WAIT_RELEASE_1:
         {
-            if (FootswitchControl.debounce_counter == 0)
+            // read footswitch 1
+            if (CH422G_read_input(FOOTSWITCH_1, &value) == ESP_OK)
             {
-                // read footswitch 1
-                if (CH422G_read_input(FOOTSWITCH_1, &value) == ESP_OK)
+                if (value != 0)
                 {
-                    if (value != 0)
+                    FootswitchControl.sample_counter++;
+                    if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
                     {
                         // foot switch released
                         FootswitchControl.state = 	FOOTSWITCH_IDLE;		
                     }
+                }
+                else
+                {
+                    // reset counter
+                    FootswitchControl.sample_counter = 0;
                 }
             }
         } break;
 
         case FOOTSWITCH_WAIT_RELEASE_2:
         {
-            if (FootswitchControl.debounce_counter == 0)
+            // read footswitch 2
+            if (CH422G_read_input(FOOTSWITCH_2, &value) == ESP_OK)
             {
-                // read footswitch 2
-                if (CH422G_read_input(FOOTSWITCH_2, &value) == ESP_OK)
+                if (value != 0)
                 {
-                    if (value != 0)
+                    FootswitchControl.sample_counter++;
+                    if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
                     {
                         // foot switch released
-                        FootswitchControl.state = 	FOOTSWITCH_IDLE;		
-                    }
+                        FootswitchControl.state = 	FOOTSWITCH_IDLE;
+                    }                 
+                }
+                else
+                {
+                    // reset counter
+                    FootswitchControl.sample_counter = 0;
                 }
             }
         } break;

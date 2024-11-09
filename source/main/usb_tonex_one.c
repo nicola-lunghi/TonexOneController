@@ -379,7 +379,7 @@ static esp_err_t usb_tonex_one_request_state(void)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static esp_err_t usb_tonex_one_set_active_slot(Slot newSlot)
+static esp_err_t __attribute__((unused)) usb_tonex_one_set_active_slot(Slot newSlot)
 {
     uint16_t framed_length;
 
