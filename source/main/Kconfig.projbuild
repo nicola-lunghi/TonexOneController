@@ -27,6 +27,20 @@ menu "Tonex Controller Configuration"
             bool "Disabled"
     endchoice
 
+    if TONEX_CONTROLLER_BLUETOOTH_CLIENT
+        config TONEX_CONTROLLER_DEVICE_SUPPORT_MVAVE_CHOCOLATE
+            bool "Enable M-Vave Chocolate footswitch"
+            default n
+            help
+            Enable/Disable support for the M-Vave Chocolate Midi Bluetooth foot switch
+            
+        config TONEX_CONTROLLER_DEVICE_SUPPORT_XVIVE_MD1
+            bool "Enable Xvive MD1"
+            default n
+            help
+            Enable/Disable support for the Xvive Bluetooth Midi adaptor
+    endif # TONEX_CONTROLLER_BLUETOOTH_CLIENT
+    
     choice TONEX_CONTROLLER_USE_SERIAL_MIDI
         prompt "Tonex Controller Serial Midi Support"
         default TONEX_CONTROLLER_USE_SERIAL_MIDI_ON  

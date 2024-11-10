@@ -66,10 +66,11 @@ static uint8_t MidiCharacteristicUUIDByteReversed[] = {0xF3, 0x6B, 0x10, 0x9D, 0
 // 0000ae42-0000-1000-8000-00805f9b34fb - unknown
 // 0000ae02-0000-1000-8000-00805f9b34fb - unknown
 
-#define PROFILE_A_APP_ID    0
-#define INVALID_HANDLE      0
-
-#define BT_SCAN_DURATION    1800    // seconds
+#define PROFILE_A_APP_ID            0
+#define INVALID_HANDLE              0
+#define BT_SCAN_DURATION            1800    // seconds
+#define MAX_DEVICE_NAME_LENGTH      16
+#define MAX_DEVICE_NAMES            10
 
 // Declare static functions
 static void esp_gap_cb(esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t *param);
@@ -94,8 +95,8 @@ static uint16_t search_start_handle = 0xFFFF;
 static uint16_t search_end_handle = 0;
 static esp_gattc_descr_elem_t *descr_elem_result_a  = NULL;
 
-// M-vave Chocolate device name is 'FootCtrl'
-static const char remote_device_name[20] = {"FootCtrl"};
+static char remote_device_names[MAX_DEVICE_NAMES][MAX_DEVICE_NAME_LENGTH];
+static uint8_t remote_device_names_length = 0;
 
 static esp_ble_scan_params_t ble_scan_params = 
 {
@@ -1357,23 +1358,31 @@ static void esp_gap_cb(esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t *par
                 {
                     stop_scan_done = true;
                     esp_ble_gap_stop_scanning();
-                    ESP_LOGI(GATTC_TAG, "Device is connected, stoppiong scan");
+                    ESP_LOGI(GATTC_TAG, "Device is connected, stopping scan");
                     break;
                 }
                 
                 if (adv_name != NULL) 
                 {
-                    if (strlen(remote_device_name) == adv_name_len && strncmp((char *)adv_name, remote_device_name, adv_name_len) == 0) 
+                    if (remote_device_names_length > 0)
                     {
-                        if (conn_device_a == false) 
-                        {
-                            conn_device_a = true;
-                            ESP_LOGI(GATTC_TAG, "Searched device %s", remote_device_name);
-                            esp_ble_gap_stop_scanning();
-                            esp_ble_gattc_open(gl_profile_tab.gattc_if, scan_result->scan_rst.bda, scan_result->scan_rst.ble_addr_type, true);
-                            Isconnecting = true;
+                        // loop over list of enabled devices to connect to
+                        for (uint8_t loop = 0; loop < remote_device_names_length; loop++)
+                        {       
+                            //ESP_LOGI(GATTC_TAG, "Checking for device %s. len: %d %d", remote_device_names[loop], strlen(remote_device_names[loop]), adv_name_len);
+                            if ((strlen(remote_device_names[loop]) == adv_name_len) && (strncmp((char*)adv_name, remote_device_names[loop], adv_name_len)) == 0) 
+                            {
+                                if (conn_device_a == false) 
+                                {
+                                    conn_device_a = true;
+                                    ESP_LOGI(GATTC_TAG, "Searched device %s", remote_device_names[loop]);
+                                    esp_ble_gap_stop_scanning();
+                                    esp_ble_gattc_open(gl_profile_tab.gattc_if, scan_result->scan_rst.bda, scan_result->scan_rst.ble_addr_type, true);
+                                    Isconnecting = true;
+                                }
+                                break;
+                            }
                         }
-                        break;
                     }
                 }
                 break;
@@ -1449,6 +1458,34 @@ static void __attribute__((unused)) esp_gattc_cb(esp_gattc_cb_event_t event, esp
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+static void InitDeviceList(void)
+{
+    memset((void*)remote_device_names, 0, sizeof(remote_device_names));
+    remote_device_names_length = 0;
+
+    // build list of devices to scan for and connect to if found
+#if CONFIG_TONEX_CONTROLLER_DEVICE_SUPPORT_MVAVE_CHOCOLATE
+    // M-vave Chocolate device name is 'FootCtrl'
+    strncpy(remote_device_names[remote_device_names_length], "FootCtrl", MAX_DEVICE_NAME_LENGTH);
+    remote_device_names_length++;
+#endif    
+
+#if CONFIG_TONEX_CONTROLLER_DEVICE_SUPPORT_XVIVE_MD1
+    // Xvive Bluetooth Midi adaptor is 'Xvive MD1'
+    strncpy(remote_device_names[remote_device_names_length], "Xvive MD1", MAX_DEVICE_NAME_LENGTH);
+    remote_device_names_length++;
+#endif    
+
+    ESP_LOGI(GATTC_TAG, "Device List length: %d", remote_device_names_length);
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 static void init_BLE(void)
 {
     esp_err_t ret;
@@ -1497,6 +1534,8 @@ static void init_BLE(void)
 #if CONFIG_TONEX_CONTROLLER_BLUETOOTH_CLIENT
     // Client stuff
     ESP_LOGI(GATTC_TAG, "Enabling BT Client mode");
+
+    InitDeviceList();
 
     // register the callback function to the gattc module
     ret = esp_ble_gattc_register_callback(esp_gattc_cb);
