@@ -72,10 +72,10 @@ static const uint8_t ToneOnePresetByteMarker[] = {0xB9, 0x04, 0xB9, 0x02, 0xBC, 
 #define TONEX_ONE_RESP_OFFSET_PRESET_NAME_LEN       32
 
 // Tonex One can send quite large data quickly, so make a generous receive buffer
-#define RX_TEMP_BUFFER_SIZE                         2048
+#define RX_TEMP_BUFFER_SIZE                         3072
 
 #define TONEX_ONE_CDC_INTERFACE_INDEX               0
-#define MAX_RAW_DATA                                2048
+#define MAX_RAW_DATA                                3072
 
 // credit to https://github.com/vit3k/tonex_controller for some of the below details and implementation
 enum CommsState
@@ -395,8 +395,13 @@ static esp_err_t __attribute__((unused)) usb_tonex_one_set_active_slot(Slot newS
     // save the slot
     TonexData.Message.CurrentSlot = newSlot;
 
+    // firmware v1.1.4: offset needed is 12
+    // firmware v1.2.6: offset needed is 18
+    //todo could do version check and support multiple versions
+    uint8_t offset_from_end = 18;
+
     // modify the buffer with the new slot
-    TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - 5] = (uint8_t)newSlot;
+    TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - offset_from_end + 7] = (uint8_t)newSlot;
 
     // build total message
     memcpy((void*)TxBuffer, (void*)message, sizeof(message));
@@ -431,29 +436,34 @@ static esp_err_t usb_tonex_one_set_preset_in_slot(uint16_t preset, Slot newSlot,
 
     TonexData.Message.CurrentSlot = newSlot;
 
+    // firmware v1.1.4: offset needed is 12
+    // firmware v1.2.6: offset needed is 18
+    //todo could do version check and support multiple versions
+    uint8_t offset_from_end = 18;
+
     // set the preset index into the slot position
     switch (newSlot)
     {
         case A:
         {
-            TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - 12] = preset;
+            TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - offset_from_end] = preset;
         } break;
 
         case B:
         {
-            TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - 10] = preset;
+            TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - offset_from_end + 2] = preset;
         } break;
 
         case C:
         {
-            TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - 8] = preset;
+            TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - offset_from_end + 4] = preset;
         } break;
     }
 
     if (selectSlot)
     {
         // modify the buffer with the new slot
-        TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - 5] = (uint8_t)newSlot;
+        TonexData.Message.PedalData.RawData[TonexData.Message.PedalData.Length - offset_from_end + 7] = (uint8_t)newSlot;
     }
 
     //ESP_LOGI(TAG, "State Data after changes");
@@ -560,7 +570,12 @@ static Status usb_tonex_one_parse_state(uint8_t* unframed, uint16_t length, uint
     TonexData.Message.PedalData.Length = length - index;
     memcpy((void*)TonexData.Message.PedalData.RawData, (void*)&unframed[index], TonexData.Message.PedalData.Length);
 
-    index += (TonexData.Message.PedalData.Length - 12);
+    // firmware v1.1.4: offset needed is 12
+    // firmware v1.2.6: offset needed is 18
+    //todo could do version check and support multiple versions
+    uint8_t offset_from_end = 18;
+
+    index += (TonexData.Message.PedalData.Length - offset_from_end);
     TonexData.Message.SlotAPreset = unframed[index];
     index += 2;
     TonexData.Message.SlotBPreset = unframed[index];
