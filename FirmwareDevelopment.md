@@ -19,5 +19,24 @@ Building the application requires some skill and patience.
 - Follow the instructions at https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B#Modify_COM_Port to select the correct comm port for your Waveshare board, and compile the app
 
 ## Menu Config options
-Use the Menu Config system to select which components you wish to enable.
+Use the Menu Config system to select which components of the Controller you wish to enable.
 ![image](https://github.com/user-attachments/assets/593d48fb-aeea-4b20-87c7-dc9212952213)
+
+There are also a few settings that need changing between the Waveshare board with display and the Zero without a display, mainly due to the headless board having 4 MB flash versus 8MB on the display board:
+### Partition Table
+- Display board: "custom partition table csv"
+- No Display board: "single factory app, no OTA"
+
+### Serial Flasher Config
+Enable Octal Flash:
+- Display board: "ticked"
+- No Display board: "not ticked"
+
+Flash Spi Mode:
+- Display board: "OPI" (Octal mode)
+- No Display board: "QIO" (Quad mode)
+
+Flash Size:
+- No Display board: "8MB"
+- No Display board: "4MB"
+ 
