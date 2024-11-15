@@ -25,7 +25,7 @@ Use the Menu Config system to select which components of the Controller you wish
 There are also a few settings that need changing between the Waveshare board with display and the Zero without a display, mainly due to the headless board having 4 MB flash versus 8MB on the display board:
 ### Partition Table
 - Display board: "custom partition table csv"
-- No Display board: "single factory app, no OTA"
+- No Display board: "Factory app, two OTA definitions"
 
 ### Serial Flasher Config
 Enable Octal Flash:
