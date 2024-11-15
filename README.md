@@ -19,16 +19,7 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 - Menu Config options to disable items like the display, so it could become just a tiny bridge device
 
 ## Hardware Platforms
-The recommended hardware platform to use is the Waveshare 4.3" LCD board.
-https://www.waveshare.com/product/esp32-s3-touch-lcd-4.3b.htm?sku=28141
-
-This off-the-shelf modules provides the microcontroller, power input suitable for 9v DC pedal board use, LCD screen, capacitive touch screen, and dual isolated inputs suitable for momentary foot switches.
-Other Waveshare modules in the ESP32-S3 series may also be suitable, but will most likely require some code changes.
-For example, the 7" version uses the I2C IO Expander to enable the USB host port.
-
-Other ESP32-S3 development boards could be utilised by changing the source code.
-- Minimum SPI Flash size: 8 MB
-- Minimum PSRAM size: 2 MB
+For more information about the hardware platforms, refer to [Hardware Platforms](HardwarePlatforms.md)
 
 ## Development Info
 The code is written in C, for the Espressif ESP-IDF development environment version 5.0.2, and using the FreeRTOS operating system.
@@ -48,20 +39,7 @@ UI Design:
 ![image](https://github.com/user-attachments/assets/1246f6e0-0c00-4389-b063-a402bdf45432)
 
 
-## Operation
-### Connections
-Note: the controller code relies on the Tonex One pedal being set to Stomp mode. Code is in place to do this automatically, but it seems it may have a bug. Manually enable Stomp mode on your pedal.
-- Connect the USB-C port on the Waveshare board to the ToneX One USB-C port
-- Optional: connect dual footswitches to the isolated inputs on the Waveshare board. GND to ground. DI0 for footswitch 1. DI1 for footwitch 2. Exact wiring depends on the footswitch but is usually a 6.5mm stereo jack
-- Connect 9V DC power supply to the terminals on the Waveshare board. The terminals are screw terminals, so most likely a DC jack to wires will be needed.
-- Switch on the power supply
-- The Waveshare board USB port will power the Tonex One. Do not connect 9 volts to it!
-- Optional: switch on a M-Vave Chocolate Midi pedal (https://www.cuvave.com/productinfo/724103.html). After a few seconds it should connect and the Bluetooth icon should change from gray to blue
-
-![image](https://github.com/user-attachments/assets/68c643bd-fe83-4243-ab36-a437c5339e7d)
-
-
-### Usage
+## Usage
 - After a few seconds of boot time, the LCD display should now show the description for your current Preset
 - Change presets using one or more of the following methods
   1. Touch screen Next/Previous labels
