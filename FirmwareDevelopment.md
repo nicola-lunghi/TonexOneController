@@ -27,16 +27,17 @@ There are also a few settings that need changing between the Waveshare board wit
 - Display board: "custom partition table csv"
 - No Display board: "Factory app, two OTA definitions"
 
-### Serial Flasher Config
-Enable Octal Flash:
-- Display board: "ticked"
-- No Display board: "not ticked"
+### SPI RAM config
+Mode of SPI RAM chip in use:
+- Display board: "Octal Mode PSRAM"
+- No Display board: "Quad Mode PSRAM"
 
+### Serial Flasher Config
 Flash Spi Mode:
-- Display board: "OPI" (Octal mode)
-- No Display board: "QIO" (Quad mode)
+- Display board: "QIO" (Quad mode)
+- No Display board: "DIO" (Dual mode)
 
 Flash Size:
-- No Display board: "8MB"
+- Display board: "8MB"
 - No Display board: "4MB"
  
