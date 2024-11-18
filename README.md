@@ -53,10 +53,13 @@ UI Design:
   2. Bluetooth Server mode: Bluetooth Midi controller to send Program change messages 0 to 19
 
 ## Programming a pre-built release
+### Common Parts
 - Download the release zip file from the Releases folder and unzip it
 - Press and hold the "Boot" button on the Waveshare board
 - Connect a USB-C cable to the Waveshare board and a PC
 - After the USB connection, release the Boot button
+
+### Windows  
 - Run the programmer exe on a Windows PC (note: this is provided as a binary package by Espressif Systems, refer to https://www.espressif.com/en/support/download/other-tools)
 - Note that Linux and Mac are supported via a Python script. Refer above link.
 - Set the Chip Type as "ESP32-S3"
@@ -66,6 +69,12 @@ UI Design:
 - Press the Start button to flash the image into the Waveshare module
 - When finished, close the app and disconnect the USB cable (the screen will be blank until the board has been power cycled)
 - Follow the Operation instructions
+
+### Linux and MacOS
+- Download and install the esptool from https://www.espressif.com/en/support/download/other-tools
+- In the extracted release zip file, navigate to the bin folder
+- Identify which Com port the board is using (?? how??)
+- at a command line, run this command "python -m esptool --chip esp32s3 -b 460800 --before default_reset --after hard_reset --port COM13 write_flash --flash_mode dout --flash_size 8MB --flash_freq 80m 0x0 bootloader.bin 0x100000 TonexController.bin 0x8000 partition-table.bin 0xd000 ota_data_initial.bin" (replace the COM13 with your local value)
 
 
 ## 🙏 Acknowledgement
