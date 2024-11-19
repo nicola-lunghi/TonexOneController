@@ -7,9 +7,13 @@ Other ESP32-S3 platforms could be supported but would require code changes. They
 - Minimum PSRAM size: 2 MB
 - USB OTG port
 
-## Hardware Platform 1: Waveshare 4.3" LCD board (Display supported)
-This hardware platform uses this Waveshare 4.3" LCD board.
+## Hardware Platform 1: Waveshare 4.3" B LCD board (Display supported)
+This hardware platform uses this Waveshare 4.3" B LCD board.
 https://www.waveshare.com/product/esp32-s3-touch-lcd-4.3b.htm?sku=28141
+
+**Important note:** Waveshare have two very similar boards:
+- ESP32-S3-4.3: 2 USB-C ports. 5 volt power input. This board is **NOT RECOMMENDED** but can be made to work with a board modification (remove R19)
+- ESP32-S3-4.3**B**: 1 USB-C port and a terminal block for 9v power input. This is the recommended board and works without modification
 
 This module provides the microcontroller, power input suitable for 9v DC pedal board use, LCD screen, capacitive touch screen, and dual isolated inputs suitable for momentary foot switches.
 
@@ -29,8 +33,9 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 
 # Hardware Platform 2: Waveshare ESP32-S3 Zero (no Display support)
 This hardware platform uses this Waveshare Zero board.
-[https://www.waveshare.com/product/esp32-s3-touch-lcd-4.3b.htm?sku=28141](https://www.waveshare.com/product/esp32-s3-zero.htm)
+[https://www.waveshare.com/product/esp32-s3-zero.htm](https://www.waveshare.com/product/esp32-s3-zero.htm)
 
+**Ensure its the ESP32-S3FH4R2 with USB-C port. There are some similar boards with no USB-C or slightly different processor**
 This module is very low cost (around US$6) and does not support an LCD display. It requires a 5 volt DC power supply.
 Caution: do not connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!
 
