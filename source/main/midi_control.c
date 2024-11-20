@@ -583,20 +583,18 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
             ESP_LOGI(GATTS_TAG, "value len %d, value ", param->write.len);
             ESP_LOG_BUFFER_HEX(GATTS_TAG, param->write.value, param->write.len);
 
-            // check Midi data. Program change Should be 0x80 0x80 0xC0 XX (XX = preset index, 0-based)
+            // check Midi data. Program change Should be ?? ?? 0xC0 XX (XX = preset index, 0-based)
+            // first 2 bytes are header/timestamp bytes, values depend on host. Ignoring them here
             if (param->write.len >= 4)
             {
-                if ((param->write.value[0] == 0x80) && (param->write.value[1] == 0x80))
+                if (param->write.value[2] == 0xC0) 
                 {
-                    if (param->write.value[2] == 0xC0) 
-                    {
-                        // set preset
-                        control_request_preset_index(param->write.value[3]);
-                    }
-                    else if (param->write.value[2] == 0xB0) 
-                    {
-                        // bank change
-                    }
+                    // set preset
+                    control_request_preset_index(param->write.value[3]);
+                }
+                else if (param->write.value[2] == 0xB0) 
+                {
+                    // bank change, not needed
                 }
             }
 
@@ -1089,20 +1087,18 @@ static void __attribute__((unused)) gattc_profile_a_event_handler(esp_gattc_cb_e
             //ESP_LOGI(GATTC_TAG, "ESP_GATTC_NOTIFY_EVT, Receive notify value:");
             //esp_log_buffer_hex(GATTC_TAG, p_data->notify.value, p_data->notify.value_len);
 
-            // check Midi data. Program change Should be 0x80 0x80 0xC0 XX (XX = preset index, 0-based)
+            // check Midi data. Program change Should be ?? ?? 0xC0 XX (XX = preset index, 0-based)
+            // first 2 bytes are header/timestamp bytes, values depend on host. Ignoring them here
             if (p_data->notify.value_len >= 4)
             {
-                if ((p_data->notify.value[0] == 0x80) && (p_data->notify.value[1] == 0x80))
+                if (p_data->notify.value[2] == 0xC0) 
                 {
-                    if (p_data->notify.value[2] == 0xC0) 
-                    {
-                        // set preset
-                        control_request_preset_index(p_data->notify.value[3]);
-                    }
-                    else if (p_data->notify.value[2] == 0xB0) 
-                    {
-                        // bank change
-                    }
+                    // set preset
+                    control_request_preset_index(p_data->notify.value[3]);
+                }
+                else if (p_data->notify.value[2] == 0xB0) 
+                {
+                    // bank change
                 }
             }
             break;

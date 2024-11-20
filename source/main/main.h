@@ -23,7 +23,7 @@ limitations under the License.
 extern "C" {
 #endif
 
-#define APP_VERSION		"1.0.2.2"
+#define APP_VERSION		"1.0.3.1"
 
 // IO defines
 // IO expander
