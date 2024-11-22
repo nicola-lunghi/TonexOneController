@@ -1464,6 +1464,10 @@ static void InitDeviceList(void)
     // M-vave Chocolate device name is 'FootCtrl'
     strncpy(remote_device_names[remote_device_names_length], "FootCtrl", MAX_DEVICE_NAME_LENGTH);
     remote_device_names_length++;
+
+    // M-vave Chocolate Plus device name is 'FootCtrlPlus'
+    strncpy(remote_device_names[remote_device_names_length], "FootCtrlPlus", MAX_DEVICE_NAME_LENGTH);
+    remote_device_names_length++;
 #endif    
 
 #if CONFIG_TONEX_CONTROLLER_DEVICE_SUPPORT_XVIVE_MD1

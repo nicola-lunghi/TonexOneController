@@ -40,10 +40,10 @@ menu "Tonex Controller Configuration"
 
     if TONEX_CONTROLLER_BLUETOOTH_CLIENT
         config TONEX_CONTROLLER_DEVICE_SUPPORT_MVAVE_CHOCOLATE
-            bool "Enable M-Vave Chocolate footswitch"
+            bool "Enable M-Vave Chocolate series footswitches"
             default n
             help
-            Enable/Disable support for the M-Vave Chocolate Midi Bluetooth foot switch
+            Enable/Disable support for the M-Vave Chocolate/Chocolate Plus Midi Bluetooth foot switches
             
         config TONEX_CONTROLLER_DEVICE_SUPPORT_XVIVE_MD1
             bool "Enable Xvive MD1"
