@@ -30,3 +30,7 @@ def PresetDescriptionChanged(event_struct):
 def SaveUserDataRequest(event_struct):
     return
 
+
+def BTBondsClearRequest(event_struct):
+    return
+
