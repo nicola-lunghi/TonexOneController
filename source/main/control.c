@@ -66,7 +66,7 @@ typedef struct
 
 typedef struct
 {
-    uint16_t AmpSkinIndex;
+    uint16_t SkinIndex;
     char PresetDescription[MAX_TEXT_LENGTH];
 } tUserData;
 
@@ -137,7 +137,7 @@ static uint8_t process_control_command(tControlMessage* message)
 #if !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
             // update UI
             UI_SetPresetLabel(ControlData.PresetName);
-            UI_SetAmpSkin(ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex);
+            UI_SetAmpSkin(ControlData.UserData[ControlData.PresetIndex].SkinIndex);
             UI_SetPresetDescription(ControlData.UserData[ControlData.PresetIndex].PresetDescription);
 #endif //CONFIG_TONEX_CONTROLLER_DISPLAY_NONE            
         } break;
@@ -164,11 +164,11 @@ static uint8_t process_control_command(tControlMessage* message)
 
         case EVENT_SET_AMP_SKIN:
         {
-            ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex = message->Value;
+            ControlData.UserData[ControlData.PresetIndex].SkinIndex = message->Value;
 
 #if !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
             // update UI
-            UI_SetAmpSkin(ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex);
+            UI_SetAmpSkin(ControlData.UserData[ControlData.PresetIndex].SkinIndex);
 #endif //CONFIG_TONEX_CONTROLLER_DISPLAY_NONE                                    
         } break;
 
@@ -401,12 +401,12 @@ void control_set_amp_skin_index(uint32_t status)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void control_set_amp_skin_next(void)
+void control_set_skin_next(void)
 {
-    if (ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex < (AMP_SKIN_MAX - 1))
+    if (ControlData.UserData[ControlData.PresetIndex].SkinIndex < (SKIN_MAX - 1))
     {
-        ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex++;
-        control_set_amp_skin_index(ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex);
+        ControlData.UserData[ControlData.PresetIndex].SkinIndex++;
+        control_set_amp_skin_index(ControlData.UserData[ControlData.PresetIndex].SkinIndex);
     }
 }
 
@@ -417,13 +417,13 @@ void control_set_amp_skin_next(void)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void control_set_amp_skin_previous(void)
+void control_set_skin_previous(void)
 {
-    if (ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex > 0)
+    if (ControlData.UserData[ControlData.PresetIndex].SkinIndex > 0)
     {
-        ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex--;
+        ControlData.UserData[ControlData.PresetIndex].SkinIndex--;
     
-        control_set_amp_skin_index(ControlData.UserData[ControlData.PresetIndex].AmpSkinIndex);
+        control_set_amp_skin_index(ControlData.UserData[ControlData.PresetIndex].SkinIndex);
     }
 }
 

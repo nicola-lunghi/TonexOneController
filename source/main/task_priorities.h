@@ -29,6 +29,7 @@ extern "C" {
 #define CTRL_TASK_PRIORITY     		(tskIDLE_PRIORITY + 3)
 #define MIDI_TASK_PRIORITY     		(tskIDLE_PRIORITY + 1)
 #define MIDI_SERIAL_TASK_PRIORITY   (tskIDLE_PRIORITY + 2)
+#define FOOTSWITCH_TASK_PRIORITY    (tskIDLE_PRIORITY + 1)
 
 #ifdef __cplusplus
 } /*extern "C"*/

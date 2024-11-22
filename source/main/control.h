@@ -19,8 +19,10 @@ limitations under the License.
 
 void control_init(void);
 
-enum AmpSkins
+enum Skins
 {
+#if CONFIG_TONEX_CONTROLLER_SKINS_AMP    
+    // Amps
     AMP_SKIN_JCM800,
     AMP_SKIN_TWIN_REVERB,
     AMP_SKIN_2001RB,
@@ -53,7 +55,35 @@ enum AmpSkins
     AMP_SKIN_PINK_TACO,
     AMP_SKIN_SUPRO_50,
     AMP_SKIN_DIEZEL,
-    AMP_SKIN_MAX        // must be last
+#endif
+
+#if CONFIG_TONEX_CONTROLLER_SKINS_PEDAL
+    // Pedals
+    PEDAL_SKIN_ARION,
+    PEDAL_SKIN_BIGMUFF,
+    PEDAL_SKIN_DARKGLASS,
+    PEDAL_SKIN_DOD,
+    PEDAL_SKIN_EHX,
+    PEDAL_SKIN_FENDER,
+    PEDAL_SKIN_FULLTONE,
+    PEDAL_SKIN_FZS,
+    PEDAL_SKIN_JHS,
+    PEDAL_SKIN_KLON,
+    PEDAL_SKIN_LANDGRAF,
+    PEDAL_SKIN_MXR,
+    PEDAL_SKIN_MXR2,
+    PEDAL_SKIN_OD1,
+    PEDAL_SKIN_PLIMSOUL,
+    PEDAL_SKIN_ROGERMAYER,
+    PEDAL_SKIN_SEYMOUR,
+    PEDAL_SKIN_STRYMON,
+    PEDAL_SKIN_TREX,
+    PEDAL_SKIN_TUBESCREAMER,
+    PEDAL_SKIN_WAMPLER,
+    PEDAL_SKIN_ZVEX,
+#endif 
+
+    SKIN_MAX        // must be last
 };
 
 // thread safe public API
@@ -63,8 +93,8 @@ void control_request_preset_index(uint8_t index);
 void control_set_usb_status(uint32_t status);
 void control_set_bt_status(uint32_t status);
 void control_set_amp_skin_index(uint32_t status);
-void control_set_amp_skin_next(void);
-void control_set_amp_skin_previous(void);
+void control_set_skin_next(void);
+void control_set_skin_previous(void);
 void control_save_user_data(void);
 void control_sync_preset_details(uint16_t index, char* name);
 void control_set_user_text(char* text);

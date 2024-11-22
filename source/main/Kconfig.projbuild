@@ -11,6 +11,17 @@ menu "Tonex Controller Configuration"
             bool "None"
     endchoice
 
+    choice TONEX_CONTROLLER_SKINS
+        prompt "Tonex Controller Skins included (applies to Display Type only)"
+        default TONEX_CONTROLLER_SKINS_AMP
+    
+        config TONEX_CONTROLLER_SKINS_AMP
+            bool "Amp Skins"
+
+        config TONEX_CONTROLLER_SKINS_PEDAL
+            bool "Pedal Skins"
+    endchoice
+    
     choice TONEX_CONTROLLER_USE_BLUETOOTH
         prompt "Tonex Controller Bluetooth Support"
         default TONEX_CONTROLLER_BLUETOOTH_OFF  

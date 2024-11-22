@@ -376,11 +376,11 @@ void app_main(void)
     // init GUI
     ESP_LOGI(TAG, "Init display");
     display_init(I2C_MASTER_NUM, I2CMutex);
+#endif
 
     // init Footswitches
     ESP_LOGI(TAG, "Init footswitches");
     footswitches_init();
-#endif
 
 #if CONFIG_TONEX_CONTROLLER_BLUETOOTH_CLIENT
     // init Midi Bluetooth

@@ -19,4 +19,12 @@ idf_component_register(SRCS "midi_control.c" "control.c" "footswitches.c" "CH422
                             "ui_generated/images/ui_img_skin_diezel_png.c"
                             "ui_generated/images/ui_img_arrow_left_png.c" "ui_generated/images/ui_img_arrow_right_png.c" "ui_generated/images/ui_img_tick_png.c"
                             "ui_generated/images/ui_img_bt_conn_png.c" "ui_generated/images/ui_img_bt_disconn_png.c"
+                            "ui_generated/images/ui_img_pskin_arion_png.c" "ui_generated/images/ui_img_pskin_bigmuff_png.c" "ui_generated/images/ui_img_pskin_darkglass_png.c"
+                            "ui_generated/images/ui_img_pskin_dod_png.c" "ui_generated/images/ui_img_pskin_ehx_png.c" "ui_generated/images/ui_img_pskin_fender_png.c"
+                            "ui_generated/images/ui_img_pskin_fulltone_png.c" "ui_generated/images/ui_img_pskin_fzs_png.c" "ui_generated/images/ui_img_pskin_jhs_png.c"
+                            "ui_generated/images/ui_img_pskin_klon_png.c" "ui_generated/images/ui_img_pskin_landgraf_png.c" "ui_generated/images/ui_img_pskin_mxr_png.c"
+                            "ui_generated/images/ui_img_pskin_mxr2_png.c" "ui_generated/images/ui_img_pskin_od1_png.c" "ui_generated/images/ui_img_pskin_plimsoul_png.c"
+                            "ui_generated/images/ui_img_pskin_rogermayer_png.c" "ui_generated/images/ui_img_pskin_seymour_png.c" "ui_generated/images/ui_img_pskin_strymon_png.c"
+                            "ui_generated/images/ui_img_pskin_trex_png.c" "ui_generated/images/ui_img_pskin_tubescreamer_png.c" "ui_generated/images/ui_img_pskin_wampler_png.c"
+                            "ui_generated/images/ui_img_pskin_zvex_png.c"                                                       
                             INCLUDE_DIRS "." "./" "ui_generated")

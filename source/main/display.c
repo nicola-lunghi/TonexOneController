@@ -51,7 +51,6 @@ limitations under the License.
 #include "display.h"
 #include "CH422G.h"
 #include "control.h"
-#include "footswitches.h"
 #include "task_priorities.h"
 #include "midi_control.h"
 
@@ -130,14 +129,6 @@ typedef struct
     uint32_t Value;
     char Text[MAX_UI_TEXT];
 } tUIUpdate;
-
-typedef struct
-{
-    uint16_t TonexIndex;
-    lv_obj_t* SkinObject;
-} tAmpSkins;
-
-static tAmpSkins AmpSkins[AMP_SKIN_MAX];
 
 static SemaphoreHandle_t lvgl_mux = NULL;
 static QueueHandle_t ui_update_queue;
@@ -310,7 +301,7 @@ void NextClicked(lv_event_t * e)
 *****************************************************************************/
 void AmpSkinPrevious(lv_event_t * e)
 {
-    control_set_amp_skin_previous();
+    control_set_skin_previous();
 }
 
 /****************************************************************************
@@ -322,7 +313,7 @@ void AmpSkinPrevious(lv_event_t * e)
 *****************************************************************************/
 void AmpSkinNext(lv_event_t * e)
 {
-    control_set_amp_skin_next();
+    control_set_skin_next();
 }
 
 /****************************************************************************
@@ -486,6 +477,304 @@ void UI_SetPresetDescription(char* text)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+static lv_obj_t* ui_get_skin_image(uint16_t index)
+{
+    lv_obj_t* result;
+
+    switch (index)
+    {
+#if CONFIG_TONEX_CONTROLLER_SKINS_AMP        
+        // amps
+        case AMP_SKIN_JCM800:
+        {
+            result = (lv_obj_t*)&ui_img_skin_jcm800_png;            
+        } break;
+
+        case AMP_SKIN_TWIN_REVERB:
+        {
+            result = (lv_obj_t*)&ui_img_skin_twinreverb_png;
+        } break;
+
+        case AMP_SKIN_2001RB:
+        {
+            result = (lv_obj_t*)&ui_img_skin_2001rb_png;
+        } break;
+
+        case AMP_SKIN_5150:
+        {
+            result = (lv_obj_t*)&ui_img_skin_5150_png;
+        } break;
+
+        case AMP_SKIN_ACOUSTIC360:
+        {
+            result = (lv_obj_t*)&ui_img_skin_acoustic360_png;
+        } break;
+
+        case AMP_SKIN_B18N:
+        {
+            result = (lv_obj_t*)&ui_img_skin_b18n_png;
+        } break;
+
+        case AMP_SKIN_B15N:
+        {
+            result = (lv_obj_t*)&ui_img_skin_b51n_png;
+        } break;
+
+        case AMP_SKIN_BLUES_DELUXE:
+        {
+            result = (lv_obj_t*)&ui_img_skin_bluesdeluxe_png;
+        } break;
+
+        case AMP_SKIN_CUSTOM_DELUXE:
+        {
+            result = (lv_obj_t*)&ui_img_skin_customdeluxe_png;
+        } break;
+
+        case AMP_SKIN_DEVILLE:
+        {
+            result = (lv_obj_t*)&ui_img_skin_deville_png;
+        } break;
+
+        case AMP_SKIN_DUAL_RECTIFIER:
+        {
+            result = (lv_obj_t*)&ui_img_skin_dualrectifier_png;
+        } break;
+
+        case AMP_SKIN_GOLD_FINGER:
+        {
+            result = (lv_obj_t*)&ui_img_skin_goldfinger_png;
+        } break;
+
+        case AMP_SKIN_INVADER:
+        {
+            result = (lv_obj_t*)&ui_img_skin_invader_png;
+        } break;
+
+        case AMP_SKIN_JAZZ_CHORUS:
+        {
+            result = (lv_obj_t*)&ui_img_skin_jazzchorus_png;
+        } break;
+
+        case AMP_SKIN_OR_50:
+        {
+            result = (lv_obj_t*)&ui_img_skin_or50_png;
+        } break;
+
+        case AMP_SKIN_POWERBALL:
+        {
+            result = (lv_obj_t*)&ui_img_skin_powerball_png;
+        } break;
+
+        case AMP_SKIN_PRINCETON:
+        {
+            result = (lv_obj_t*)&ui_img_skin_princeton_png;
+        } break;
+
+        case AMP_SKIN_ROCKERVERB:
+        {
+            result = (lv_obj_t*)&ui_img_skin_rockerverb_png;
+        } break;
+
+        case AMP_SKIN_SVTCL:
+        {
+            result = (lv_obj_t*)&ui_img_skin_svtcl_png;
+        } break;
+
+        case AMP_SKIN_MAVERICK:
+        {
+            result = (lv_obj_t*)&ui_img_skin_maverick_png;
+        } break;
+
+        case AMP_SKIN_MK3:
+        {
+            result = (lv_obj_t*)&ui_img_skin_mk3_png;
+        } break;
+
+        case AMP_SKIN_SUPERBASS:
+        {
+            result = (lv_obj_t*)&ui_img_skin_superbass_png;
+        } break;
+
+        case AMP_SKIN_TRINITY:
+        {
+            result = (lv_obj_t*)&ui_img_skin_trinity_png;
+        } break;
+
+        case AMP_SKIN_DUMBLE:
+        {
+            result = (lv_obj_t*)&ui_img_skin_dumble_png;
+        } break;
+
+        case AMP_SKIN_JETCITY:
+        {
+            result = (lv_obj_t*)&ui_img_skin_jetcity_png;
+        } break;
+
+        case AMP_SKIN_AC30:
+        {
+            result = (lv_obj_t*)&ui_img_skin_ac30_png;
+        } break;
+
+        case AMP_SKIN_EVH5150:
+        {
+            result = (lv_obj_t*)&ui_img_skin_evh5150_png;
+        } break;
+
+        case AMP_SKIN_TINY_TERROR:
+        {
+            result = (lv_obj_t*)&ui_img_skin_tinyterror_png;
+        } break;
+
+        case AMP_SKIN_2020:
+        {
+            result = (lv_obj_t*)&ui_img_skin_2020_png;
+        } break;
+
+        case AMP_SKIN_PINK_TACO:
+        {
+            result = (lv_obj_t*)&ui_img_skin_pinktaco_png;
+        } break;
+
+        case AMP_SKIN_SUPRO_50:
+        {
+            result = (lv_obj_t*)&ui_img_skin_supro50_png;
+        } break;
+
+        case AMP_SKIN_DIEZEL:
+        {
+            result = (lv_obj_t*)&ui_img_skin_diezel_png;
+        } break;
+#endif  //CONFIG_TONEX_CONTROLLER_SKINS_AMP
+
+#if CONFIG_TONEX_CONTROLLER_SKINS_PEDAL
+        // pedals
+        case PEDAL_SKIN_ARION:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_arion_png;
+        } break;
+
+        case PEDAL_SKIN_BIGMUFF:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_bigmuff_png;
+        } break;
+
+        case PEDAL_SKIN_DARKGLASS:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_darkglass_png;
+        } break;
+
+        case PEDAL_SKIN_DOD:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_dod_png;
+        } break;
+
+        case PEDAL_SKIN_EHX:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_ehx_png;
+        } break;
+
+        case PEDAL_SKIN_FENDER:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_fender_png;
+        } break;
+
+        case PEDAL_SKIN_FULLTONE:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_fulltone_png;
+        } break;
+
+        case PEDAL_SKIN_FZS:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_fzs_png;
+        } break;
+
+        case PEDAL_SKIN_JHS:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_jhs_png;
+        } break;
+
+        case PEDAL_SKIN_KLON:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_klon_png;
+        } break;
+
+        case PEDAL_SKIN_LANDGRAF:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_landgraf_png;
+        } break;
+
+        case PEDAL_SKIN_MXR:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_mxr_png;
+        } break;
+
+        case PEDAL_SKIN_MXR2:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_mxr2_png;
+        } break;
+
+        case PEDAL_SKIN_OD1:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_od1_png;
+        } break;
+
+        case PEDAL_SKIN_PLIMSOUL:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_plimsoul_png;
+        } break;
+
+        case PEDAL_SKIN_ROGERMAYER:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_rogermayer_png;
+        } break;
+
+        case PEDAL_SKIN_SEYMOUR:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_seymour_png;
+        } break;
+
+        case PEDAL_SKIN_STRYMON:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_strymon_png;
+        } break;
+
+        case PEDAL_SKIN_TREX:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_trex_png;
+        } break;
+
+        case PEDAL_SKIN_TUBESCREAMER:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_tubescreamer_png;
+        } break;
+
+        case PEDAL_SKIN_WAMPLER:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_wampler_png;
+        } break;
+
+        case PEDAL_SKIN_ZVEX:
+        {
+            result = (lv_obj_t*)&ui_img_pskin_zvex_png;
+        } break;
+#endif //CONFIG_TONEX_CONTROLLER_SKINS_PEDAL
+
+        default:
+        {
+            result = (lv_obj_t*)&ui_img_skin_jcm800_png;            
+        } break;
+    }
+
+    return result;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 static uint8_t update_ui_element(tUIUpdate* update)
 {
     lv_obj_t* element_1 = NULL;
@@ -509,7 +798,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
         case UI_ELEMENT_AMP_SKIN:
         {
-            element_1 = ui_Ampjcm800;
+            element_1 = ui_SkinImage;
         } break;
 
         case UI_ELEMENT_PRESET_DESCRIPTION:
@@ -560,22 +849,10 @@ static uint8_t update_ui_element(tUIUpdate* update)
                     lv_obj_clear_flag(ui_BTStatusConn, LV_OBJ_FLAG_HIDDEN);
                 }
             }
-            else if (element_1 == ui_Ampjcm800)
+            else if (element_1 == ui_SkinImage)
             {
-                // set amp skin
-                for (uint16_t loop = 0; loop < AMP_SKIN_MAX; loop++)
-                {
-                    if (update->Value == loop) 
-                    {
-                        // unhide
-                        lv_obj_clear_flag(AmpSkins[loop].SkinObject, LV_OBJ_FLAG_HIDDEN);
-                    }
-                    else
-                    {
-                        // hide
-                        lv_obj_add_flag(AmpSkins[loop].SkinObject, LV_OBJ_FLAG_HIDDEN);
-                    }
-                }
+                // set skin
+                lv_img_set_src(ui_SkinImage, ui_get_skin_image(update->Value));
             }
         } break;
 
@@ -596,112 +873,6 @@ static uint8_t update_ui_element(tUIUpdate* update)
     }
 
     return 1;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-static void init_amp_skins(void)
-{
-    AmpSkins[AMP_SKIN_JCM800].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_JCM800].SkinObject = ui_Ampjcm800;
-
-    AmpSkins[AMP_SKIN_TWIN_REVERB].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_TWIN_REVERB].SkinObject = ui_Amptwinreverb;
-
-    AmpSkins[AMP_SKIN_2001RB].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_2001RB].SkinObject = ui_Amp2001rb;
-
-    AmpSkins[AMP_SKIN_5150].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_5150].SkinObject = ui_Amp5150;
-
-    AmpSkins[AMP_SKIN_ACOUSTIC360].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_ACOUSTIC360].SkinObject = ui_AmpAcoustic360;
-
-    AmpSkins[AMP_SKIN_B18N].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_B18N].SkinObject = ui_Ampb18n;
-
-    AmpSkins[AMP_SKIN_B15N].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_B15N].SkinObject = ui_Ampb15n;
-
-    AmpSkins[AMP_SKIN_BLUES_DELUXE].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_BLUES_DELUXE].SkinObject = ui_AmpbBluesdeluxe;
-
-    AmpSkins[AMP_SKIN_CUSTOM_DELUXE].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_CUSTOM_DELUXE].SkinObject = ui_AmpbCustomDeluxe;
-
-    AmpSkins[AMP_SKIN_DEVILLE].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_DEVILLE].SkinObject = ui_AmpbDeville;
-
-    AmpSkins[AMP_SKIN_DUAL_RECTIFIER].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_DUAL_RECTIFIER].SkinObject = ui_AmpbDualrectifier;
-
-    AmpSkins[AMP_SKIN_GOLD_FINGER].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_GOLD_FINGER].SkinObject = ui_AmpbGoldfinger;
-
-    AmpSkins[AMP_SKIN_INVADER].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_INVADER].SkinObject = ui_AmpbInvader;
-
-    AmpSkins[AMP_SKIN_JAZZ_CHORUS].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_JAZZ_CHORUS].SkinObject = ui_AmpJazzchorus;
-    
-    AmpSkins[AMP_SKIN_OR_50].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_OR_50].SkinObject = ui_AmpOr50;
-    
-    AmpSkins[AMP_SKIN_POWERBALL].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_POWERBALL].SkinObject = ui_AmpPowerball;
-    
-    AmpSkins[AMP_SKIN_PRINCETON].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_PRINCETON].SkinObject = ui_AmpPrinceton;
-    
-    AmpSkins[AMP_SKIN_ROCKERVERB].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_ROCKERVERB].SkinObject = ui_AmpRockerverb;
-    
-    AmpSkins[AMP_SKIN_SVTCL].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_SVTCL].SkinObject = ui_AmpSvtcl;
-
-    AmpSkins[AMP_SKIN_MAVERICK].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_MAVERICK].SkinObject = ui_AmpMaverick;
-
-    AmpSkins[AMP_SKIN_MK3].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_MK3].SkinObject = ui_AmpMk3;
-
-    AmpSkins[AMP_SKIN_SUPERBASS].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_SUPERBASS].SkinObject = ui_AmpSuperbass;
-
-    AmpSkins[AMP_SKIN_TRINITY].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_TRINITY].SkinObject = ui_AmpTrinity;
-
-    AmpSkins[AMP_SKIN_DUMBLE].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_DUMBLE].SkinObject = ui_AmpDumble;
-
-    AmpSkins[AMP_SKIN_JETCITY].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_JETCITY].SkinObject = ui_AmpJetcity;
-
-    AmpSkins[AMP_SKIN_AC30].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_AC30].SkinObject = ui_AmpAC30;
-
-    AmpSkins[AMP_SKIN_EVH5150].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_EVH5150].SkinObject = ui_AmpEvh5150;
-
-    AmpSkins[AMP_SKIN_TINY_TERROR].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_TINY_TERROR].SkinObject = ui_AmpTinyterror;
-
-    AmpSkins[AMP_SKIN_2020].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_2020].SkinObject = ui_Amp2020;
-
-    AmpSkins[AMP_SKIN_PINK_TACO].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_PINK_TACO].SkinObject = ui_AmpPinktaco;
-
-    AmpSkins[AMP_SKIN_SUPRO_50].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_SUPRO_50].SkinObject = ui_AmpSupro50;
-
-    AmpSkins[AMP_SKIN_DIEZEL].TonexIndex = 0;
-    AmpSkins[AMP_SKIN_DIEZEL].SkinObject = ui_AmpDiezel;
 }
 
 /****************************************************************************
@@ -733,12 +904,6 @@ void display_task(void *arg)
             // Release the mutex
             display_lvgl_unlock();
 	    }
-
-        // handle footswitch read here so we can safely flip the IO expander
-        // to inputs without there being an SD card operation being in progress
-        // (flipping IO expander to inputs would release the SD CD pin and screw 
-        // up the operation)
-        footswitches_handle();
 
         vTaskDelay(pdMS_TO_TICKS(5));
     }
@@ -1002,9 +1167,6 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     // init GUI
     ESP_LOGI(TAG, "Init scene");
     ui_init();
-
-    // init table of amp skins (must be after UI init)
-    init_amp_skins();
 
     // create display task
     xTaskCreatePinnedToCore(display_task, "Dsp", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, NULL, 1);

@@ -37,7 +37,8 @@ limitations under the License.
 #include "control.h"
 #include "task_priorities.h"
 
-#define FOOTSWITCH_SAMPLE_COUNT             20       // 5 msec per sample
+#define FOOTSWITCH_TASK_STACK_SIZE          (3 * 1024)
+#define FOOTSWITCH_SAMPLE_COUNT             5       // 20 msec per sample
 
 enum FootswitchStates
 {
@@ -63,95 +64,133 @@ static tFootswitchControl FootswitchControl;
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void footswitches_handle(void)
+static uint8_t read_footswitch_input(uint8_t number, uint8_t* switch_state)
 {
+    uint8_t result = false;
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+    // display board uses I2C IO expander
     uint8_t value;
- 
-    // note here: this function called from display task to help
-    // avoid issues with IO expander. No blocking apart from I2C mutex
-    switch (FootswitchControl.state)
+
+    if (CH422G_read_input(number, &value) == ESP_OK)
     {
-        case FOOTSWITCH_IDLE:
-        default:
+        result = true;
+        *switch_state = value;
+    }
+#else
+    // other boards can use direct IO pin
+    *switch_state = gpio_get_level(number);
+
+    result = true;
+#endif
+
+    return result;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void footswitch_task(void *arg)
+{
+    uint8_t value;   
+ 
+    ESP_LOGI(TAG, "Footswitch task start");
+
+    // let things settle
+    vTaskDelay(1000);
+
+    while (1)
+    {
+        switch (FootswitchControl.state)
         {
-            // read footswitches
-            if (CH422G_read_input(FOOTSWITCH_1, &value) == ESP_OK)
+            case FOOTSWITCH_IDLE:
+            default:
             {
-                if (value == 0)
-                {
-                    ESP_LOGI(TAG, "Footswitch 1 pressed");
-
-                    // foot switch 1 pressed
-                    control_request_preset_down();
-
-                    // wait release	
-                    FootswitchControl.sample_counter = 0;
-                    FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
-                }
-            }
-
-            if (FootswitchControl.state == FOOTSWITCH_IDLE)
-            {
-                if (CH422G_read_input(FOOTSWITCH_2, &value) == ESP_OK)
+                // read footswitches
+                if (read_footswitch_input(FOOTSWITCH_1, &value)) 
                 {
                     if (value == 0)
                     {
-                        ESP_LOGI(TAG, "Footswitch 2 pressed");
+                        ESP_LOGI(TAG, "Footswitch 1 pressed");
 
-                        // foot switch 2 pressed, send event
-                        control_request_preset_up();
+                        // foot switch 1 pressed
+                        control_request_preset_down();
 
                         // wait release	
                         FootswitchControl.sample_counter = 0;
-                        FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_2;
+                        FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
                     }
                 }
-            }
-        } break;
 
-        case FOOTSWITCH_WAIT_RELEASE_1:
-        {
-            // read footswitch 1
-            if (CH422G_read_input(FOOTSWITCH_1, &value) == ESP_OK)
-            {
-                if (value != 0)
+                if (FootswitchControl.state == FOOTSWITCH_IDLE)
                 {
-                    FootswitchControl.sample_counter++;
-                    if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
+                    if (read_footswitch_input(FOOTSWITCH_2, &value))
                     {
-                        // foot switch released
-                        FootswitchControl.state = 	FOOTSWITCH_IDLE;		
+                        if (value == 0)
+                        {
+                            ESP_LOGI(TAG, "Footswitch 2 pressed");
+
+                            // foot switch 2 pressed, send event
+                            control_request_preset_up();
+
+                            // wait release	
+                            FootswitchControl.sample_counter = 0;
+                            FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_2;
+                        }
                     }
                 }
-                else
-                {
-                    // reset counter
-                    FootswitchControl.sample_counter = 0;
-                }
-            }
-        } break;
+            } break;
 
-        case FOOTSWITCH_WAIT_RELEASE_2:
-        {
-            // read footswitch 2
-            if (CH422G_read_input(FOOTSWITCH_2, &value) == ESP_OK)
+            case FOOTSWITCH_WAIT_RELEASE_1:
             {
-                if (value != 0)
+                // read footswitch 1
+                if (read_footswitch_input(FOOTSWITCH_1, &value))
                 {
-                    FootswitchControl.sample_counter++;
-                    if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
+                    if (value != 0)
                     {
-                        // foot switch released
-                        FootswitchControl.state = 	FOOTSWITCH_IDLE;
-                    }                 
+                        FootswitchControl.sample_counter++;
+                        if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
+                        {
+                            // foot switch released
+                            FootswitchControl.state = FOOTSWITCH_IDLE;		
+                        }
+                    }
+                    else
+                    {
+                        // reset counter
+                        FootswitchControl.sample_counter = 0;
+                    }
                 }
-                else
+            } break;
+
+            case FOOTSWITCH_WAIT_RELEASE_2:
+            {
+                // read footswitch 2
+                if (read_footswitch_input(FOOTSWITCH_2, &value))
                 {
-                    // reset counter
-                    FootswitchControl.sample_counter = 0;
+                    if (value != 0)
+                    {
+                        FootswitchControl.sample_counter++;
+                        if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
+                        {
+                            // foot switch released
+                            FootswitchControl.state = FOOTSWITCH_IDLE;
+                        }                 
+                    }
+                    else
+                    {
+                        // reset counter
+                        FootswitchControl.sample_counter = 0;
+                    }
                 }
-            }
-        } break;
+            } break;
+        }
+
+        vTaskDelay(20);
     }
 }
 
@@ -166,4 +205,19 @@ void footswitches_init(void)
 {	
     memset((void*)&FootswitchControl, 0, sizeof(FootswitchControl));
     FootswitchControl.state = FOOTSWITCH_IDLE;
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
+    // init GPIO
+    gpio_config_t gpio_config_struct;
+
+    gpio_config_struct.pin_bit_mask = (((uint64_t)1 << FOOTSWITCH_1) | ((uint64_t)1 << FOOTSWITCH_2));
+    gpio_config_struct.mode = GPIO_MODE_INPUT;
+    gpio_config_struct.pull_up_en = GPIO_PULLUP_ENABLE;
+    gpio_config_struct.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    gpio_config_struct.intr_type = GPIO_INTR_DISABLE;
+    gpio_config(&gpio_config_struct);
+#endif
+
+    // create task
+    xTaskCreatePinnedToCore(footswitch_task, "FOOT", FOOTSWITCH_TASK_STACK_SIZE, NULL, FOOTSWITCH_TASK_PRIORITY, NULL, 1);
 }
