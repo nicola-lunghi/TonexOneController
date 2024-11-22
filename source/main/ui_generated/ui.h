@@ -39,39 +39,8 @@ extern lv_obj_t * ui_BTStatusDisconn;
 extern lv_obj_t * ui_USBStatusOK;
 extern lv_obj_t * ui_USBStatusFail;
 extern lv_obj_t * ui_ProjectHeadingLabel;
-extern lv_obj_t * ui_AmpSkins;
-extern lv_obj_t * ui_Ampjcm800;
-extern lv_obj_t * ui_Amptwinreverb;
-extern lv_obj_t * ui_Amp2001rb;
-extern lv_obj_t * ui_Amp5150;
-extern lv_obj_t * ui_AmpAcoustic360;
-extern lv_obj_t * ui_Ampb18n;
-extern lv_obj_t * ui_Ampb15n;
-extern lv_obj_t * ui_AmpbBluesdeluxe;
-extern lv_obj_t * ui_AmpbCustomDeluxe;
-extern lv_obj_t * ui_AmpbDeville;
-extern lv_obj_t * ui_AmpbDualrectifier;
-extern lv_obj_t * ui_AmpbGoldfinger;
-extern lv_obj_t * ui_AmpbInvader;
-extern lv_obj_t * ui_AmpJazzchorus;
-extern lv_obj_t * ui_AmpOr50;
-extern lv_obj_t * ui_AmpPowerball;
-extern lv_obj_t * ui_AmpPrinceton;
-extern lv_obj_t * ui_AmpRockerverb;
-extern lv_obj_t * ui_AmpSvtcl;
-extern lv_obj_t * ui_AmpMaverick;
-extern lv_obj_t * ui_AmpMk3;
-extern lv_obj_t * ui_AmpSuperbass;
-extern lv_obj_t * ui_AmpTrinity;
-extern lv_obj_t * ui_AmpDumble;
-extern lv_obj_t * ui_AmpJetcity;
-extern lv_obj_t * ui_AmpAC30;
-extern lv_obj_t * ui_AmpEvh5150;
-extern lv_obj_t * ui_AmpTinyterror;
-extern lv_obj_t * ui_Amp2020;
-extern lv_obj_t * ui_AmpPinktaco;
-extern lv_obj_t * ui_AmpSupro50;
-extern lv_obj_t * ui_AmpDiezel;
+extern lv_obj_t * ui_Skins;
+extern lv_obj_t * ui_SkinImage;
 void ui_event_PresetHeadingLabel(lv_event_t * e);
 extern lv_obj_t * ui_PresetHeadingLabel;
 void ui_event_PresetDetailsTextArea(lv_event_t * e);
@@ -98,42 +67,63 @@ LV_IMG_DECLARE(ui_img_bt_disconn_png);    // assets/bt_disconn.png
 LV_IMG_DECLARE(ui_img_usb_ok_png);    // assets/usb_ok.png
 LV_IMG_DECLARE(ui_img_usb_fail_png);    // assets/usb_fail.png
 LV_IMG_DECLARE(ui_img_skin_jcm800_png);    // assets/skin_jcm800.png
-LV_IMG_DECLARE(ui_img_skin_twinreverb_png);    // assets/skin_twinreverb.png
+LV_IMG_DECLARE(ui_img_arrow_left_png);    // assets/arrow_left.png
+LV_IMG_DECLARE(ui_img_arrow_right_png);    // assets/arrow_right.png
+LV_IMG_DECLARE(ui_img_tick_png);    // assets/tick.png
+LV_IMG_DECLARE(ui_img_logo_png);    // assets/logo.png
+LV_IMG_DECLARE(ui_img_pskin_arion_png);    // assets/pskin_arion.png
+LV_IMG_DECLARE(ui_img_pskin_bigmuff_png);    // assets/pskin_bigmuff.png
+LV_IMG_DECLARE(ui_img_pskin_darkglass_png);    // assets/pskin_darkglass.png
+LV_IMG_DECLARE(ui_img_pskin_dod_png);    // assets/pskin_dod.png
+LV_IMG_DECLARE(ui_img_pskin_ehx_png);    // assets/pskin_ehx.png
+LV_IMG_DECLARE(ui_img_pskin_fender_png);    // assets/pskin_fender.png
+LV_IMG_DECLARE(ui_img_pskin_fulltone_png);    // assets/pskin_fulltone.png
+LV_IMG_DECLARE(ui_img_pskin_fzs_png);    // assets/pskin_fzs.png
+LV_IMG_DECLARE(ui_img_pskin_jhs_png);    // assets/pskin_jhs.png
+LV_IMG_DECLARE(ui_img_pskin_klon_png);    // assets/pskin_klon.png
+LV_IMG_DECLARE(ui_img_pskin_landgraf_png);    // assets/pskin_landgraf.png
+LV_IMG_DECLARE(ui_img_pskin_mxr_png);    // assets/pskin_mxr.png
+LV_IMG_DECLARE(ui_img_pskin_mxr2_png);    // assets/pskin_mxr2.png
+LV_IMG_DECLARE(ui_img_pskin_od1_png);    // assets/pskin_od1.png
+LV_IMG_DECLARE(ui_img_pskin_plimsoul_png);    // assets/pskin_plimsoul.png
+LV_IMG_DECLARE(ui_img_pskin_rogermayer_png);    // assets/pskin_rogermayer.png
+LV_IMG_DECLARE(ui_img_pskin_seymour_png);    // assets/pskin_seymour.png
+LV_IMG_DECLARE(ui_img_pskin_strymon_png);    // assets/pskin_strymon.png
+LV_IMG_DECLARE(ui_img_pskin_trex_png);    // assets/pskin_trex.png
+LV_IMG_DECLARE(ui_img_pskin_tubescreamer_png);    // assets/pskin_tubescreamer.png
+LV_IMG_DECLARE(ui_img_pskin_wampler_png);    // assets/pskin_wampler.png
+LV_IMG_DECLARE(ui_img_pskin_zvex_png);    // assets/pskin_zvex.png
 LV_IMG_DECLARE(ui_img_skin_2001rb_png);    // assets/skin_2001rb.png
+LV_IMG_DECLARE(ui_img_skin_2020_png);    // assets/skin_2020.png
 LV_IMG_DECLARE(ui_img_skin_5150_png);    // assets/skin_5150.png
+LV_IMG_DECLARE(ui_img_skin_ac30_png);    // assets/skin_ac30.png
 LV_IMG_DECLARE(ui_img_skin_acoustic360_png);    // assets/skin_acoustic360.png
 LV_IMG_DECLARE(ui_img_skin_b18n_png);    // assets/skin_b18n.png
 LV_IMG_DECLARE(ui_img_skin_b51n_png);    // assets/skin_b51n.png
 LV_IMG_DECLARE(ui_img_skin_bluesdeluxe_png);    // assets/skin_bluesdeluxe.png
 LV_IMG_DECLARE(ui_img_skin_customdeluxe_png);    // assets/skin_customdeluxe.png
 LV_IMG_DECLARE(ui_img_skin_deville_png);    // assets/skin_deville.png
+LV_IMG_DECLARE(ui_img_skin_diezel_png);    // assets/skin_diezel.png
 LV_IMG_DECLARE(ui_img_skin_dualrectifier_png);    // assets/skin_dualrectifier.png
+LV_IMG_DECLARE(ui_img_skin_dumble_png);    // assets/skin_dumble.png
+LV_IMG_DECLARE(ui_img_skin_evh5150_png);    // assets/skin_evh5150.png
 LV_IMG_DECLARE(ui_img_skin_goldfinger_png);    // assets/skin_goldfinger.png
 LV_IMG_DECLARE(ui_img_skin_invader_png);    // assets/skin_invader.png
 LV_IMG_DECLARE(ui_img_skin_jazzchorus_png);    // assets/skin_jazzchorus.png
+LV_IMG_DECLARE(ui_img_skin_jetcity_png);    // assets/skin_jetcity.png
+LV_IMG_DECLARE(ui_img_skin_maverick_png);    // assets/skin_maverick.png
+LV_IMG_DECLARE(ui_img_skin_mk3_png);    // assets/skin_mk3.png
 LV_IMG_DECLARE(ui_img_skin_or50_png);    // assets/skin_or50.png
+LV_IMG_DECLARE(ui_img_skin_pinktaco_png);    // assets/skin_pinktaco.png
 LV_IMG_DECLARE(ui_img_skin_powerball_png);    // assets/skin_powerball.png
 LV_IMG_DECLARE(ui_img_skin_princeton_png);    // assets/skin_princeton.png
 LV_IMG_DECLARE(ui_img_skin_rockerverb_png);    // assets/skin_rockerverb.png
-LV_IMG_DECLARE(ui_img_skin_svtcl_png);    // assets/skin_svtcl.png
-LV_IMG_DECLARE(ui_img_skin_maverick_png);    // assets/skin_maverick.png
-LV_IMG_DECLARE(ui_img_skin_mk3_png);    // assets/skin_mk3.png
 LV_IMG_DECLARE(ui_img_skin_superbass_png);    // assets/skin_superbass.png
-LV_IMG_DECLARE(ui_img_skin_trinity_png);    // assets/skin_trinity.png
-LV_IMG_DECLARE(ui_img_skin_dumble_png);    // assets/skin_dumble.png
-LV_IMG_DECLARE(ui_img_skin_jetcity_png);    // assets/skin_jetcity.png
-LV_IMG_DECLARE(ui_img_skin_ac30_png);    // assets/skin_ac30.png
-LV_IMG_DECLARE(ui_img_skin_evh5150_png);    // assets/skin_evh5150.png
-LV_IMG_DECLARE(ui_img_skin_tinyterror_png);    // assets/skin_tinyterror.png
-LV_IMG_DECLARE(ui_img_skin_2020_png);    // assets/skin_2020.png
-LV_IMG_DECLARE(ui_img_skin_pinktaco_png);    // assets/skin_pinktaco.png
 LV_IMG_DECLARE(ui_img_skin_supro50_png);    // assets/skin_supro50.png
-LV_IMG_DECLARE(ui_img_skin_diezel_png);    // assets/skin_diezel.png
-LV_IMG_DECLARE(ui_img_arrow_left_png);    // assets/arrow_left.png
-LV_IMG_DECLARE(ui_img_arrow_right_png);    // assets/arrow_right.png
-LV_IMG_DECLARE(ui_img_tick_png);    // assets/tick.png
-
-
+LV_IMG_DECLARE(ui_img_skin_svtcl_png);    // assets/skin_svtcl.png
+LV_IMG_DECLARE(ui_img_skin_tinyterror_png);    // assets/skin_tinyterror.png
+LV_IMG_DECLARE(ui_img_skin_trinity_png);    // assets/skin_trinity.png
+LV_IMG_DECLARE(ui_img_skin_twinreverb_png);    // assets/skin_twinreverb.png
 
 
 
