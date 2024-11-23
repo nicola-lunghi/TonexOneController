@@ -4,6 +4,9 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 **Note: this project is not endorsed by IK Multimedia. Amplifier skin images copyright is owned by IK Multimedia.**
 **TONEX is a registered trademark of IK Multimedia Production Srl**
 
+## Demonstration Video
+https://youtu.be/j0I5G5-CXfg
+
 ## ⭐ Key Features
 - LCD display with capactive touch screen.
 - Screen displays the name and number of the current preset.
