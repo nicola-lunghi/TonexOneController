@@ -196,6 +196,10 @@ void class_driver_task(void *arg)
             else
             {
                 ESP_LOGI(TAG, "Found unexpected USB device");
+
+                usb_host_device_close(driver_obj.client_hdl, driver_obj.dev_hdl);
+                driver_obj.dev_hdl = NULL;
+                driver_obj.dev_addr = 0;
             }
 
             driver_obj.actions &= ~CLASS_DRIVER_ACTION_READ_DEV;

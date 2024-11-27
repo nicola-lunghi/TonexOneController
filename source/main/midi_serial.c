@@ -39,12 +39,17 @@ limitations under the License.
 
 #define MIDI_SERIAL_TASK_STACK_SIZE             (3 * 1024)
 #define MIDI_SERIAL_BUFFER_SIZE                 128
-#define MIDI_CHANNEL                            2
+#define MIDI_CHANNEL                            0       // is actually channel 1
 
-#define UART_PORT_NUM                           UART_NUM_1
-#define UART_TX_PIN                             GPIO_NUM_44
-#define UART_RX_PIN                             GPIO_NUM_43
-
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+    #define UART_PORT_NUM                           UART_NUM_1
+    #define UART_RX_PIN                             GPIO_NUM_16
+    // Waveshare 7" using ADC port
+    //#define UART_RX_PIN                           GPIO_NUM_6 
+#else
+    #define UART_PORT_NUM                           UART_NUM_1
+    #define UART_RX_PIN                             GPIO_NUM_5
+#endif
 
 #if CONFIG_TONEX_CONTROLLER_USE_SERIAL_MIDI_ON
 static const char *TAG = "app_midi_serial";
@@ -79,7 +84,7 @@ static void midi_serial_task(void *arg)
     int intr_alloc_flags = 0;
     ESP_ERROR_CHECK(uart_driver_install(UART_PORT_NUM, MIDI_SERIAL_BUFFER_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
     ESP_ERROR_CHECK(uart_param_config(UART_PORT_NUM, &uart_config));
-    ESP_ERROR_CHECK(uart_set_pin(UART_PORT_NUM, UART_TX_PIN, UART_RX_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
+    ESP_ERROR_CHECK(uart_set_pin(UART_PORT_NUM, UART_PIN_NO_CHANGE, UART_RX_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 
     while (1) 
     {
@@ -89,7 +94,7 @@ static void midi_serial_task(void *arg)
         if (rx_length != 0)
         {
             // ESP_LOG_BUFFER_HEXDUMP(TAG, data, rx_length, ESP_LOG_INFO);
-            ESP_LOGI(TAG, "Got %d bytes", rx_length);
+            ESP_LOGI(TAG, "Midi Serial Got %d bytes", rx_length);
 
             for (size_t i = 0; i < rx_length; i++)
             {
