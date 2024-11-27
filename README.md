@@ -86,7 +86,16 @@ UI Design:
 - https://github.com/vit3k/tonex_controller for great work on reverse engineering the Tonex One USB protocol
 
 ## Release Notes
+V1.0.3.2:
+- Changed partition table to fix issues with crashing on boot for some users
+- new build type with pedal skin images instead of amp skins
+- more efficient handling of skin images
+- fixed compatibility issue with Midi BT servers that sent time codes
+- support for dual wired footswitches on the Zero
+- added support for M-Vave Chocolate Plus footswitch
+
 V1.0.2.2:
+- WARNING: these files have been problematic for some users! Please use V1.0.3.2 instead
 - Updated to be compatible with Tonex 1.8.0 software
 - Support for Waveshare Zero low-cost PCB without display
 - Support for Bluetooth Server mode
