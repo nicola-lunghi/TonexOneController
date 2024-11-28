@@ -51,5 +51,13 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 
 ![wiring_waveshare_zero](https://github.com/user-attachments/assets/cca0ff6e-11d2-4288-8b18-8c177a992fd3)
 
+### Case
+With the Zero being a bare PCB, a case of some type is useful to protect it. User "xXGrimTagnBagXx" from Thingiverse has created a very compact case that can be 3D printed:
+https://www.thingiverse.com/thing:6758917
+
+Samples:
+
+![image](https://github.com/user-attachments/assets/f2e9d599-2a16-46a2-a6cc-e0513fba060c)  ![image](https://github.com/user-attachments/assets/6b73ba98-ac7b-4451-bd50-5ae10c71226b)
+
 
 
