@@ -8,18 +8,18 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 https://youtu.be/j0I5G5-CXfg
 
 ## ⭐ Key Features
-- LCD display with capactive touch screen.
+- LCD display with capactive touch screen (optional)
 - Screen displays the name and number of the current preset.
-- The User can select an amplifier skin and also add descriptive text 
+- The User can select an amplifier or pedal skin and also add descriptive text 
 - Use of simple dual footswitches to select next/previous preset
 - Bluetooth Client support. Use of the "M-Vave Chocolate" bluetooth Midi footswitch device to switch presets (4 buttons, bank up/down)
 - Other Bluetooth Midi controllers should be fairly easy to support with code changes, provided they use the standard Bletooth Midi service and characteristic
-- Coming in V1.0.2.2: Bluetooth server support. Pair your phone/tablet with the controller, and send standard Midi program changes, bridged through to the Tonex One pedal (note Server and Client cannot be used simultaneously)
+- Bluetooth server support. Pair your phone/tablet with the controller, and send standard Midi program changes, bridged through to the Tonex One pedal (note Server and Client cannot be used simultaneously)
 - USB host control of the Tonex pedal
-- Serial Midi support
+- Serial Midi support (coming soon)
 - Menu Config options to disable items like the display, so it could become just a tiny bridge device
 
-## Hardware Platforms
+## Hardware Platforms and Wiring
 For more information about the hardware platforms, refer to [Hardware Platforms](HardwarePlatforms.md)
 
 ## Development Info
@@ -27,8 +27,6 @@ For more information about the firmware development and customisation, refer to 
 
 ## User Interface
 For the hardware platform with and LCD display, a User Interface is shown. The User Interface design was done using Squareline Studio: https://squareline.io/
-
-UI Design:
 ![image](https://github.com/user-attachments/assets/1246f6e0-0c00-4389-b063-a402bdf45432)
 
 
@@ -77,7 +75,7 @@ UI Design:
 - Download and install the esptool from https://www.espressif.com/en/support/download/other-tools
 - In the extracted release zip file, navigate to the bin folder
 - Identify which Com port the board is using (?? how??)
-- at a command line, run this command "python -m esptool --chip esp32s3 -b 460800 --before default_reset --after hard_reset --port COM13 write_flash --flash_mode dout --flash_size 8MB --flash_freq 80m 0x0 bootloader.bin 0x100000 TonexController.bin 0x8000 partition-table.bin 0xd000 ota_data_initial.bin" (replace the COM13 with your local value)
+- at a command line, run this command "python -m esptool --chip esp32s3 -b 460800 --before default_reset --after hard_reset --port COM13 write_flash --flash_mode dout --flash_size 8MB --flash_freq 80m 0x0 bootloader.bin 0x10000 TonexController.bin 0x8000 partition-table.bin 0xd000 ota_data_initial.bin" (replace the COM13 with your local value)
 
 
 ## 🙏 Acknowledgement
