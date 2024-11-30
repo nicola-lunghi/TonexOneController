@@ -27,7 +27,9 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 - Optional: for the Bluetooth Client version of code, switch on a M-Vave Chocolate Midi pedal (https://www.cuvave.com/productinfo/724103.html). After a few seconds it should connect and the Bluetooth icon should change from gray to blue
 - Optional: for the Bluetooth Server version of code, the controller will be available as a peripheral for you to connect to via a Bluetooth Midi device. The Bluetooth icon should change from gray to blue when connected.
 
-![image](https://github.com/user-attachments/assets/68c643bd-fe83-4243-ab36-a437c5339e7d)
+![wiring_waveshare_display](https://github.com/user-attachments/assets/11cbf6da-e9bc-43a8-8228-f1e5ceb4b65a)
+
+
 
 
 
@@ -49,7 +51,14 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 - Optional: for the Bluetooth Client version of code, switch on a M-Vave Chocolate Midi pedal (https://www.cuvave.com/productinfo/724103.html). After a few seconds it should connect and the Bluetooth icon should change from gray to blue
 - Optional: for the Bluetooth Server version of code, the controller will be available as a peripheral for you to connect to via a Bluetooth Midi device. The Bluetooth icon should change from gray to blue when connected.
 
-![wiring_waveshare_zero](https://github.com/user-attachments/assets/cca0ff6e-11d2-4288-8b18-8c177a992fd3)
+![wiring_waveshare_zero](https://github.com/user-attachments/assets/da535002-edf8-408a-aef1-a764ca35cb47)
+
+### Wired Footswitches
+Wired dual footswitches can optionally be used to select the Next/Previous preset.
+The footswitch must be a "momentary" type that is only has its contacts closed when it is pressed.
+The common pin of the footswitch must connect to the Controller ground pin, and the other 2 wires connected as shown.
+![footswitches_waveshare_display](https://github.com/user-attachments/assets/5548f907-d769-4c65-8694-9b3ac25e7a86)
+![footswitches_waveshare_zero](https://github.com/user-attachments/assets/7eda9912-f905-4e34-b8fe-beb595e10608)
 
 ### Case
 With the Zero being a bare PCB, a case of some type is useful to protect it. User "xXGrimTagnBagXx" from Thingiverse has created a very compact case that can be 3D printed:
