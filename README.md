@@ -113,7 +113,7 @@ The Tonex One Controller is under the Apache 2.0 license. It is free for both re
 
 ## Donate
 Donations help fund the purchase of new equipment to use in development and testing.<br>
-[Donat via Paypal](https://www.paypal.com/donate/?business=RTRMTZA7L7KPC&no_recurring=0&currency_code=AUD)
+[Donate via Paypal](https://www.paypal.com/donate/?business=RTRMTZA7L7KPC&no_recurring=0&currency_code=AUD)
 <br><br>
 ![QR code](https://github.com/user-attachments/assets/331a7b08-e877-49a4-9d27-2b19a2ff762d)
 
