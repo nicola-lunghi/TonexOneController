@@ -3,7 +3,8 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 
 # Configuration and Settings
 New in firmware version V1.0.4.2 is the ability to change settings via WiFi/Web browser.
-![image](https://github.com/user-attachments/assets/a4e832b2-340f-4fb4-9565-aa6a7d77863e)
+
+![image](https://github.com/user-attachments/assets/ca8ef36a-1609-40ff-a95e-8b4c876425e4)
 
 ## Available Settings
 ### Bluetooth Mode
@@ -32,7 +33,9 @@ Important note: when this page is loaded, the default settings are shown. It doe
 If you are unsure what settings you have currently selected, just change them to what you need and save them.
 
 ## Entering Settings Mode
-The Controller enables a WiFi access point for the first 60 seconds after it is powered on. After 60 seconds, WiFi is disabled, to ensure it can never interfere with the normal operations, and to ensure some smart audience member doesn't mess around with your device.
+The Controller enables a WiFi access point for the first 60 seconds after it is powered on. After 60 seconds, if no device is connected, then WiFi is disabled. This is to ensure it can never interfere with the normal operations, and to ensure some smart audience member doesn't mess around with your device.<br>
+If you do connect to the controller, you should either Save Settings and Reboot (which will disconnect your device) or if not, manually disconnect from the controller. If you do not do this, your device will remain connected and WiFi will remain enabled.
+
 <br>
 To change settings:
 - Reboot the controller
@@ -41,8 +44,8 @@ To change settings:
 - The controller will automatically supply a network address for your device (DHCP is supported)
 - Note: some phones may attempt to use this network for Internet access, which will not be be available. Watch out for any messages asking you to confirm the connection (like the Samsung warning shown below)
 - Open a web browser on your device
-- In the address bar of the web browser, enter "192.168.4.1" (without the quotation marks.) You should see the web config screen
+- In the address bar of the web browser, enter "tonex.local" (without the quotation marks.) You should see the web config screen
 - Once you have saved the settings (or if you don't want to change anything) you can close the web browser
-
+<br>
 ![image](https://github.com/user-attachments/assets/fbd02f79-06c9-44e0-bb0a-ba67c129d41d)
 
