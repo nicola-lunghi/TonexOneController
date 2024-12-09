@@ -84,10 +84,9 @@ limitations under the License.
 
 static const char *TAG = "app_main";
 
+SemaphoreHandle_t I2CMutex;
 
 #if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
-
-SemaphoreHandle_t I2CMutex;
 static esp_err_t i2c_master_init(void);
 
 /****************************************************************************
@@ -368,8 +367,6 @@ void app_main(void)
     // SD card using IO expander for chip select makes direct LVGL load
     // from SD really tricky.
     //InitSDCard();
-#else    
-    ESP_LOGI(TAG, "Display disabled");
 #endif
 
     // init control task
@@ -378,7 +375,13 @@ void app_main(void)
 
 #if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
     // init GUI
-    ESP_LOGI(TAG, "Init display");
+    ESP_LOGI(TAG, "Init 43.B display");
+    display_init(I2C_MASTER_NUM, I2CMutex);
+#endif
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+    // init GUI
+    ESP_LOGI(TAG, "Init 1.69 display");
     display_init(I2C_MASTER_NUM, I2CMutex);
 #endif
 

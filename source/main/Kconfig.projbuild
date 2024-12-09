@@ -5,7 +5,10 @@ menu "Tonex Controller Configuration"
         default TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
     
         config TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
-            bool "Waveshare 800x480"
+            bool "Waveshare 800x480 4.3B"
+
+        config TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+            bool "Waveshare 240x280 1.69"
 
         config TONEX_CONTROLLER_DISPLAY_NONE
             bool "None"

@@ -40,16 +40,24 @@ limitations under the License.
 #define MIDI_SERIAL_TASK_STACK_SIZE             (3 * 1024)
 #define MIDI_SERIAL_BUFFER_SIZE                 128
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
-    #define UART_PORT_NUM                           UART_NUM_1
-    // to do here: finalise this
-    //#define UART_RX_PIN                             GPIO_NUM_43
+#define UART_PORT_NUM                           UART_NUM_1
 
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+    // Waveshare 4.3B RS485 port
+    //#define UART_RX_PIN                           GPIO_NUM_43
+
+    // Waveshare 7" using RS485 port
+    #define UART_RX_PIN                             GPIO_NUM_15 
+    #define UART_TX_PIN                             GPIO_NUM_16 
+    
     // Waveshare 7" using ADC port - development use
-    #define UART_RX_PIN                           GPIO_NUM_6 
+    //#define UART_RX_PIN                           GPIO_NUM_6 
+#elif CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+    #define UART_RX_PIN                             GPIO_NUM_18 
+    #define UART_TX_PIN                             GPIO_NUM_17 
 #else
-    #define UART_PORT_NUM                           UART_NUM_1
     #define UART_RX_PIN                             GPIO_NUM_5
+    #define UART_TX_PIN                             GPIO_NUM_7
 #endif
 
 static const char *TAG = "app_midi_serial";
@@ -85,7 +93,7 @@ static void midi_serial_task(void *arg)
     int intr_alloc_flags = 0;
     ESP_ERROR_CHECK(uart_driver_install(UART_PORT_NUM, MIDI_SERIAL_BUFFER_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
     ESP_ERROR_CHECK(uart_param_config(UART_PORT_NUM, &uart_config));
-    ESP_ERROR_CHECK(uart_set_pin(UART_PORT_NUM, UART_PIN_NO_CHANGE, UART_RX_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
+    ESP_ERROR_CHECK(uart_set_pin(UART_PORT_NUM, UART_TX_PIN, UART_RX_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 
     while (1) 
     {

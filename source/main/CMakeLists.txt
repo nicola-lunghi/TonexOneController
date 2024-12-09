@@ -1,4 +1,12 @@
-idf_component_register(SRCS "midi_control.c" "control.c" "footswitches.c" "CH422G.c" "display.c" "main.c" "usb_comms.c" "usb_tonex_one.c" "ui_generated/ui.c" "ui_generated/ui_helpers.c" "CH422G.c" "midi_serial.c" "wifi_config.c"
+
+idf_component_register(SRCS "midi_control.c" "control.c" "footswitches.c" "CH422G.c" "display.c" "main.c" "usb_comms.c" "usb_tonex_one.c" "CH422G.c" "midi_serial.c" "wifi_config.c"
+                            EMBED_TXTFILES index.html 
+                            INCLUDE_DIRS "." "./")
+                                                       
+if(CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480)
+    target_include_directories(${COMPONENT_LIB} PRIVATE include "ui_generated")
+
+    target_sources(${COMPONENT_LIB} PRIVATE "ui_generated/ui.c" "ui_generated/ui_helpers.c"
                             "ui_generated/images/ui_img_smythbuilt_png.c" "ui_generated/screens/ui_Screen1.c" "ui_generated/components/ui_comp_hook.c"
 			                "ui_generated/images/ui_img_usb_fail_png.c" "ui_generated/images/ui_img_next_png.c" "ui_generated/images/ui_img_previous_png.c" "ui_generated/images/ui_temporary_image.c"
                             "ui_generated/images/ui_img_usb_ok_png.c" "ui_generated/images/ui_img_next_down_png.c" "ui_generated/images/ui_img_previous_down_png.c"
@@ -25,6 +33,16 @@ idf_component_register(SRCS "midi_control.c" "control.c" "footswitches.c" "CH422
                             "ui_generated/images/ui_img_pskin_mxr2_png.c" "ui_generated/images/ui_img_pskin_od1_png.c" "ui_generated/images/ui_img_pskin_plimsoul_png.c"
                             "ui_generated/images/ui_img_pskin_rogermayer_png.c" "ui_generated/images/ui_img_pskin_seymour_png.c" "ui_generated/images/ui_img_pskin_strymon_png.c"
                             "ui_generated/images/ui_img_pskin_trex_png.c" "ui_generated/images/ui_img_pskin_tubescreamer_png.c" "ui_generated/images/ui_img_pskin_wampler_png.c"
-                            "ui_generated/images/ui_img_pskin_zvex_png.c"                                                       
-                            EMBED_TXTFILES index.html 
-                            INCLUDE_DIRS "." "./" "ui_generated")
+                            "ui_generated/images/ui_img_pskin_zvex_png.c")                                               
+endif()
+
+if(CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280)
+   target_include_directories(${COMPONENT_LIB} PRIVATE include "ui_generated_169")
+
+   target_sources(${COMPONENT_LIB} PRIVATE "ui_generated_169/ui.c" "ui_generated_169/ui_helpers.c"
+                            "ui_generated_169/images/ui_img_smythbuilt_png.c" "ui_generated_169/screens/ui_Screen1.c" "ui_generated_169/components/ui_comp_hook.c" "ui_generated_169/images/ui_img_usb_fail_png.c"
+                            "ui_generated_169/images/ui_img_usb_ok_png.c"
+                            "ui_generated_169/images/ui_img_bt_conn_png.c" "ui_generated_169/images/ui_img_bt_disconn_png.c")
+endif()
+
+

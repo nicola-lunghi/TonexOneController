@@ -32,8 +32,13 @@ limitations under the License.
 #include "nvs_flash.h"
 #include "driver/uart.h"
 #include "driver/gpio.h"
+#include "driver/spi_master.h"
 #include "lvgl.h"
 #include "demos/lv_demos.h"
+#include "esp_lvgl_port.h"
+#include "esp_lcd_panel_io.h"
+#include "esp_lcd_panel_vendor.h"
+#include "esp_lcd_panel_ops.h"
 #include "esp_vfs.h"
 #include "esp_vfs_fat.h"
 #include "esp_ota_ops.h"
@@ -44,6 +49,7 @@ limitations under the License.
 #include "esp_crc.h"
 #include "esp_now.h"
 #include "driver/i2c.h"
+#include "soc/lldesc.h"
 #include "esp_lcd_touch_gt911.h"
 #include "esp_intr_alloc.h"
 #include "main.h"
@@ -54,57 +60,84 @@ limitations under the License.
 #include "task_priorities.h"
 #include "midi_control.h"
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
-
 static const char *TAG = "app_display";
 
 #define DISPLAY_TASK_STACK_SIZE   (6 * 1024)
 
-// LCD panel config
-#define DISPLAY_LCD_PIXEL_CLOCK_HZ     (18 * 1000 * 1000)
-#define DISPLAY_LCD_BK_LIGHT_ON_LEVEL  1
-#define DISPLAY_LCD_BK_LIGHT_OFF_LEVEL !DISPLAY_LCD_BK_LIGHT_ON_LEVEL
-#define DISPLAY_PIN_NUM_BK_LIGHT       -1
-#define DISPLAY_PIN_NUM_HSYNC          46
-#define DISPLAY_PIN_NUM_VSYNC          3
-#define DISPLAY_PIN_NUM_DE             5
-#define DISPLAY_PIN_NUM_PCLK           7
-#define DISPLAY_PIN_NUM_DATA0          14 // B3
-#define DISPLAY_PIN_NUM_DATA1          38 // B4
-#define DISPLAY_PIN_NUM_DATA2          18 // B5
-#define DISPLAY_PIN_NUM_DATA3          17 // B6
-#define DISPLAY_PIN_NUM_DATA4          10 // B7
-#define DISPLAY_PIN_NUM_DATA5          39 // G2
-#define DISPLAY_PIN_NUM_DATA6          0 // G3
-#define DISPLAY_PIN_NUM_DATA7          45 // G4
-#define DISPLAY_PIN_NUM_DATA8          48 // G5
-#define DISPLAY_PIN_NUM_DATA9          47 // G6
-#define DISPLAY_PIN_NUM_DATA10         21 // G7
-#define DISPLAY_PIN_NUM_DATA11         1  // R3
-#define DISPLAY_PIN_NUM_DATA12         2  // R4
-#define DISPLAY_PIN_NUM_DATA13         42 // R5
-#define DISPLAY_PIN_NUM_DATA14         41 // R6
-#define DISPLAY_PIN_NUM_DATA15         40 // R7
-#define DISPLAY_PIN_NUM_DISP_EN        -1
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+    // LCD panel config
+    #define DISPLAY_LCD_PIXEL_CLOCK_HZ     (18 * 1000 * 1000)
+    #define DISPLAY_LCD_BK_LIGHT_ON_LEVEL  1
+    #define DISPLAY_LCD_BK_LIGHT_OFF_LEVEL !DISPLAY_LCD_BK_LIGHT_ON_LEVEL
+    #define DISPLAY_PIN_NUM_BK_LIGHT       -1
+    #define DISPLAY_PIN_NUM_HSYNC          46
+    #define DISPLAY_PIN_NUM_VSYNC          3
+    #define DISPLAY_PIN_NUM_DE             5
+    #define DISPLAY_PIN_NUM_PCLK           7
+    #define DISPLAY_PIN_NUM_DATA0          14 // B3
+    #define DISPLAY_PIN_NUM_DATA1          38 // B4
+    #define DISPLAY_PIN_NUM_DATA2          18 // B5
+    #define DISPLAY_PIN_NUM_DATA3          17 // B6
+    #define DISPLAY_PIN_NUM_DATA4          10 // B7
+    #define DISPLAY_PIN_NUM_DATA5          39 // G2
+    #define DISPLAY_PIN_NUM_DATA6          0 // G3
+    #define DISPLAY_PIN_NUM_DATA7          45 // G4
+    #define DISPLAY_PIN_NUM_DATA8          48 // G5
+    #define DISPLAY_PIN_NUM_DATA9          47 // G6
+    #define DISPLAY_PIN_NUM_DATA10         21 // G7
+    #define DISPLAY_PIN_NUM_DATA11         1  // R3
+    #define DISPLAY_PIN_NUM_DATA12         2  // R4
+    #define DISPLAY_PIN_NUM_DATA13         42 // R5
+    #define DISPLAY_PIN_NUM_DATA14         41 // R6
+    #define DISPLAY_PIN_NUM_DATA15         40 // R7
+    #define DISPLAY_PIN_NUM_DISP_EN        -1
 
-// The pixel number in horizontal and vertical
-#define DISPLAY_LCD_H_RES              800
-#define DISPLAY_LCD_V_RES              480
+    // The pixel number in horizontal and vertical
+    #define DISPLAY_LCD_H_RES              800
+    #define DISPLAY_LCD_V_RES              480
 
-#if CONFIG_DISPLAY_DOUBLE_FB
-#define DISPLAY_LCD_NUM_FB             2
-#else
-#define DISPLAY_LCD_NUM_FB             1
-#endif // CONFIG_DISPLAY_DOUBLE_FB
+    #if CONFIG_DISPLAY_DOUBLE_FB
+    #define DISPLAY_LCD_NUM_FB             2
+    #else
+    #define DISPLAY_LCD_NUM_FB             1
+    #endif // CONFIG_DISPLAY_DOUBLE_FB
+  
+#endif
 
-#define DISPLAY_LVGL_TICK_PERIOD_MS    2
-#define DISPLAY_LVGL_TASK_MAX_DELAY_MS 500
-#define DISPLAY_LVGL_TASK_MIN_DELAY_MS 1
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+    #define WAVESHARE_240_280_LCD_H_RES               (240)
+    #define WAVESHARE_240_280_LCD_V_RES               (280)
 
-#define BUF_SIZE (1024)
+    /* LCD settings */
+    #define WAVESHARE_240_280_LCD_SPI_NUM             (SPI3_HOST)
+    #define WAVESHARE_240_280_LCD_PIXEL_CLK_HZ        (40 * 1000 * 1000)
+    #define WAVESHARE_240_280_LCD_CMD_BITS            (8)
+    #define WAVESHARE_240_280_LCD_PARAM_BITS          (8)
+    #define WAVESHARE_240_280_LCD_COLOR_SPACE         (ESP_LCD_COLOR_SPACE_RGB)
+    #define WAVESHARE_240_280_LCD_BITS_PER_PIXEL      (16)
+    #define WAVESHARE_240_280_LCD_DRAW_BUFF_DOUBLE    (1)
+    #define WAVESHARE_240_280_LCD_DRAW_BUFF_HEIGHT    (50)
+    #define WAVESHARE_240_280_LCD_BL_ON_LEVEL         (1)
+
+    /* LCD pins */
+    #define WAVESHARE_240_280_LCD_GPIO_SCLK           (GPIO_NUM_6)
+    #define WAVESHARE_240_280_LCD_GPIO_MOSI           (GPIO_NUM_7)
+    #define WAVESHARE_240_280_LCD_GPIO_RST            (GPIO_NUM_8)
+    #define WAVESHARE_240_280_LCD_GPIO_DC             (GPIO_NUM_4)
+    #define WAVESHARE_240_280_LCD_GPIO_CS             (GPIO_NUM_5)
+    #define WAVESHARE_240_280_LCD_GPIO_BL             (GPIO_NUM_15)
+
+    static esp_lcd_panel_io_handle_t lcd_io = NULL;
+    static esp_lcd_panel_handle_t lcd_panel = NULL;
+    static lv_display_t *lvgl_disp = NULL;
+#endif
+
+#define DISPLAY_LVGL_TICK_PERIOD_MS     2
+#define DISPLAY_LVGL_TASK_MAX_DELAY_MS  500
+#define DISPLAY_LVGL_TASK_MIN_DELAY_MS  1
+#define BUF_SIZE                        (1024)
 #define I2C_MASTER_TIMEOUT_MS           1000
-
-#define MAX_UI_TEXT     130
+#define MAX_UI_TEXT                     130
 
 enum UIElements
 {
@@ -130,9 +163,12 @@ typedef struct
     char Text[MAX_UI_TEXT];
 } tUIUpdate;
 
-static SemaphoreHandle_t lvgl_mux = NULL;
 static QueueHandle_t ui_update_queue;
 static SemaphoreHandle_t I2CMutexHandle;
+static SemaphoreHandle_t lvgl_mux = NULL;
+
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
 
 // we use two semaphores to sync the VSYNC event and the LVGL task, to avoid potential tearing effect
 #if CONFIG_DISPLAY_AVOID_TEAR_EFFECT_WITH_SEM
@@ -179,46 +215,6 @@ static void display_lvgl_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_
     // pass the draw buffer to the driver
     esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
     lv_disp_flush_ready(drv);
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-static void display_increase_lvgl_tick(void *arg)
-{
-    /* Tell LVGL how many milliseconds has elapsed */
-    lv_tick_inc(DISPLAY_LVGL_TICK_PERIOD_MS);
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-bool display_lvgl_lock(int timeout_ms)
-{
-    // Convert timeout in milliseconds to FreeRTOS ticks
-    // If `timeout_ms` is set to -1, the program will block until the condition is met
-    const TickType_t timeout_ticks = (timeout_ms == -1) ? portMAX_DELAY : pdMS_TO_TICKS(timeout_ms);
-    return xSemaphoreTakeRecursive(lvgl_mux, timeout_ticks) == pdTRUE;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void display_lvgl_unlock(void)
-{
-    xSemaphoreGiveRecursive(lvgl_mux);
 }
 
 /****************************************************************************
@@ -354,6 +350,47 @@ void PresetDescriptionChanged(lv_event_t * e)
 
     control_set_user_text(text);      
 }
+#endif
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+static void display_increase_lvgl_tick(void *arg)
+{
+    /* Tell LVGL how many milliseconds has elapsed */
+    lv_tick_inc(DISPLAY_LVGL_TICK_PERIOD_MS);
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+bool display_lvgl_lock(int timeout_ms)
+{
+    // Convert timeout in milliseconds to FreeRTOS ticks
+    // If `timeout_ms` is set to -1, the program will block until the condition is met
+    const TickType_t timeout_ticks = (timeout_ms == -1) ? portMAX_DELAY : pdMS_TO_TICKS(timeout_ms);
+    return xSemaphoreTakeRecursive(lvgl_mux, timeout_ticks) == pdTRUE;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void display_lvgl_unlock(void)
+{
+    xSemaphoreGiveRecursive(lvgl_mux);
+}
 
 /****************************************************************************
 * NAME:        
@@ -469,6 +506,8 @@ void UI_SetPresetDescription(char* text)
         ESP_LOGE(TAG, "UI Update queue send failed!");            
     }
 }
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
 
 /****************************************************************************
 * NAME:        
@@ -737,6 +776,7 @@ static lv_obj_t* ui_get_skin_image(uint16_t index)
 
     return result;
 }
+#endif 
 
 /****************************************************************************
 * NAME:        
@@ -768,12 +808,16 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
         case UI_ELEMENT_AMP_SKIN:
         {
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
             element_1 = ui_SkinImage;
+#endif            
         } break;
 
         case UI_ELEMENT_PRESET_DESCRIPTION:
         {
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480            
             element_1 = ui_PresetDetailsTextArea;
+#endif            
         } break;
 
         default:
@@ -819,21 +863,54 @@ static uint8_t update_ui_element(tUIUpdate* update)
                     lv_obj_clear_flag(ui_BTStatusConn, LV_OBJ_FLAG_HIDDEN);
                 }
             }
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480            
             else if (element_1 == ui_SkinImage)
             {
                 // set skin
                 lv_img_set_src(ui_SkinImage, ui_get_skin_image(update->Value));
             }
+#endif            
         } break;
 
         case UI_ACTION_SET_LABEL_TEXT:
         {
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
             lv_label_set_text(element_1, update->Text);
+#elif CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+            if (element_1 == ui_PresetHeadingLabel)
+            {
+                // split up preset into 2 text lines.
+                // incoming has "XX: Name"
+                char preset_index[16];
+                char preset_name[33];
+
+                // get the preset number
+                sprintf(preset_index, "Preset: %d", atoi(update->Text));
+                lv_label_set_text(ui_PresetHeadingLabel, update->Text);
+
+                // get the preset name
+                for (uint8_t loop = 0; loop < 4; loop++)
+                {
+                    if (update->Text[loop] == ':')
+                    {
+                        strncpy(preset_name, (const char*)&update->Text[loop + 2], sizeof(preset_name) - 1);
+                        lv_label_set_text(ui_PresetHeadingLabel2, preset_name);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                lv_label_set_text(element_1, update->Text);
+            }
+#endif            
         } break;
 
         case UI_ACTION_SET_ENTRY_TEXT:
         {
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
             lv_textarea_set_text(element_1, update->Text);
+#endif            
         } break;
 
         default:
@@ -889,9 +966,6 @@ void display_task(void *arg)
 void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 {
     esp_err_t ret = ESP_OK;
-    static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
-    static lv_disp_drv_t disp_drv;      // contains callback functions
-    uint8_t touch_ok = 0;
     gpio_config_t gpio_config_struct;
 
     I2CMutexHandle = I2CMutex;
@@ -902,6 +976,14 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     {
         ESP_LOGE(TAG, "Failed to create UI update queue!");
     }
+
+    lvgl_mux = xSemaphoreCreateRecursiveMutex();
+    assert(lvgl_mux);
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480    
+    static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
+    static lv_disp_drv_t disp_drv;      // contains callback functions
+    uint8_t touch_ok = 0;
 
 #if CONFIG_DISPLAY_AVOID_TEAR_EFFECT_WITH_SEM
     ESP_LOGI(TAG, "Create semaphores");
@@ -1107,11 +1189,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
     ESP_LOGI(TAG, "Install LVGL tick timer");
     
-    // Tick interface for LVGL (using esp_timer to generate 2ms periodic event)
-    const esp_timer_create_args_t lvgl_tick_timer_args = {
-        .callback = &display_increase_lvgl_tick,
-        .name = "lvgl_tick"
-    };
+   
 
     if (touch_ok)
     {
@@ -1124,15 +1202,115 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
         lv_indev_drv_register(&indev_drv);
     }
+#endif  //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+    // switch off the buzzer
+    gpio_config_struct.pin_bit_mask = (uint64_t)1 << GPIO_NUM_42;
+    gpio_config_struct.mode = GPIO_MODE_OUTPUT;
+    gpio_config_struct.pull_up_en = GPIO_PULLUP_DISABLE;
+    gpio_config_struct.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    gpio_config_struct.intr_type = GPIO_INTR_DISABLE;
+    gpio_config(&gpio_config_struct);
+
+    gpio_set_level(GPIO_NUM_42, 0);
+
+    // LCD backlight
+    gpio_config_t bk_gpio_config = {
+        .mode = GPIO_MODE_OUTPUT,
+        .pin_bit_mask = 1ULL << WAVESHARE_240_280_LCD_GPIO_BL};
+    ESP_ERROR_CHECK(gpio_config(&bk_gpio_config));
+
+    /* LCD initialization */
+    ESP_LOGD(TAG, "Initialize SPI bus");
+    const spi_bus_config_t buscfg = {
+        .sclk_io_num = WAVESHARE_240_280_LCD_GPIO_SCLK,
+        .mosi_io_num = WAVESHARE_240_280_LCD_GPIO_MOSI,
+        .miso_io_num = GPIO_NUM_NC,
+        .quadwp_io_num = GPIO_NUM_NC,
+        .quadhd_io_num = GPIO_NUM_NC,
+        // note here: this value needs to be: WAVESHARE_240_280_LCD_H_RES * WAVESHARE_240_280_LCD_DRAW_BUFF_HEIGHT * sizeof(uint16_t)
+        // however, the ESP framework uses multiples of 4092 for DMA (LLDESC_MAX_NUM_PER_DESC).
+        // this theoretical number is 49.9 times the DMA size, which gets rounded down and ends up too small.
+        // so instead, manually setting it to a little larger (50 rather than 49.9)
+        .max_transfer_sz = 50 * LLDESC_MAX_NUM_PER_DESC,
+    };
+    spi_bus_initialize(WAVESHARE_240_280_LCD_SPI_NUM, &buscfg, SPI_DMA_CH_AUTO);
+
+    ESP_LOGD(TAG, "Install panel IO");
+    const esp_lcd_panel_io_spi_config_t io_config = {
+        .dc_gpio_num = WAVESHARE_240_280_LCD_GPIO_DC,
+        .cs_gpio_num = WAVESHARE_240_280_LCD_GPIO_CS,
+        .pclk_hz = WAVESHARE_240_280_LCD_PIXEL_CLK_HZ,
+        .lcd_cmd_bits = WAVESHARE_240_280_LCD_CMD_BITS,
+        .lcd_param_bits = WAVESHARE_240_280_LCD_PARAM_BITS,
+        .spi_mode = 0,
+        .trans_queue_depth = 10,
+    };
+    esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)WAVESHARE_240_280_LCD_SPI_NUM, &io_config, &lcd_io);
+
+    ESP_LOGD(TAG, "Install LCD driver");
+    const esp_lcd_panel_dev_config_t panel_config = {
+        .reset_gpio_num = WAVESHARE_240_280_LCD_GPIO_RST,
+        .color_space = WAVESHARE_240_280_LCD_COLOR_SPACE,
+        .bits_per_pixel = WAVESHARE_240_280_LCD_BITS_PER_PIXEL,
+    };
+    esp_lcd_new_panel_st7789(lcd_io, &panel_config, &lcd_panel);
+
+    esp_lcd_panel_reset(lcd_panel);
+    esp_lcd_panel_init(lcd_panel);
+    esp_lcd_panel_mirror(lcd_panel, true, true);
+    esp_lcd_panel_disp_on_off(lcd_panel, true);
+
+    // LCD backlight on 
+    ESP_ERROR_CHECK(gpio_set_level(WAVESHARE_240_280_LCD_GPIO_BL, WAVESHARE_240_280_LCD_BL_ON_LEVEL));
+
+    esp_lcd_panel_set_gap(lcd_panel, 0, 20);
+    esp_lcd_panel_invert_color(lcd_panel, true);
+
+    // Initialize LVGL
+    const lvgl_port_cfg_t lvgl_cfg = {
+        .task_priority = 4,       /* LVGL task priority */
+        .task_stack = 4096,       /* LVGL task stack size */
+        .task_affinity = -1,      /* LVGL task pinned to core (-1 is no affinity) */
+        .task_max_sleep_ms = 500, /* Maximum sleep in LVGL task */
+        .timer_period_ms = 5      /* LVGL timer tick period in ms */
+    };
+    lvgl_port_init(&lvgl_cfg);
+
+    // Add LCD screen 
+    ESP_LOGD(TAG, "Add LCD screen");
+    const lvgl_port_display_cfg_t disp_cfg = {
+        .io_handle = lcd_io,
+        .panel_handle = lcd_panel,
+        .buffer_size = WAVESHARE_240_280_LCD_H_RES * WAVESHARE_240_280_LCD_DRAW_BUFF_HEIGHT * sizeof(uint16_t),
+        .double_buffer = WAVESHARE_240_280_LCD_DRAW_BUFF_DOUBLE,
+        .hres = WAVESHARE_240_280_LCD_H_RES,
+        .vres = WAVESHARE_240_280_LCD_V_RES,
+        .monochrome = false,
+        /* Rotation values must be same as used in esp_lcd for initial settings of the screen */
+        .rotation = {
+            .swap_xy = false,
+            .mirror_x = false,
+            .mirror_y = false,
+        },
+        .flags = {
+            .buff_dma = true,
+        }};
+    lvgl_disp = lvgl_port_add_disp(&disp_cfg);
+#endif //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+
+    // Tick interface for LVGL (using esp_timer to generate 2ms periodic event)
+    const esp_timer_create_args_t lvgl_tick_timer_args = {
+        .callback = &display_increase_lvgl_tick,
+        .name = "lvgl_tick"
+    };
 
     esp_timer_handle_t lvgl_tick_timer = NULL;
     ESP_ERROR_CHECK(esp_timer_create(&lvgl_tick_timer_args, &lvgl_tick_timer));
     ESP_ERROR_CHECK(esp_timer_start_periodic(lvgl_tick_timer, DISPLAY_LVGL_TICK_PERIOD_MS * 1000));
 
     vTaskDelay(pdMS_TO_TICKS(10));
-    
-    lvgl_mux = xSemaphoreCreateRecursiveMutex();
-    assert(lvgl_mux);
 
     // init GUI
     ESP_LOGI(TAG, "Init scene");
@@ -1141,5 +1319,3 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     // create display task
     xTaskCreatePinnedToCore(display_task, "Dsp", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, NULL, 1);
 }
-
-#endif  //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
