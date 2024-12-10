@@ -1603,6 +1603,10 @@ static void init_BLE(void)
     {
         ESP_LOGE(GATTC_TAG, "set local  MTU failed, error code = %x", ret);
     }
+
+    // dump ram usage
+    //heap_caps_print_heap_info(MALLOC_CAP_INTERNAL);
+    //heap_caps_print_heap_info(MALLOC_CAP_SPIRAM);
 }
 
 /****************************************************************************
