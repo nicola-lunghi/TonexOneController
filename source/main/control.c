@@ -901,7 +901,7 @@ void control_load_config(void)
     ControlData.ConfigData.BTClientMvaveChocolateEnable = 1;
     ControlData.ConfigData.BTClientXviveMD1Enable = 1;
     ControlData.ConfigData.GeneralDoublePressToggleBypass = 0;
-    ControlData.ConfigData.MidiSerialEnable = 1;
+    ControlData.ConfigData.MidiSerialEnable = 0;
     ControlData.ConfigData.MidiChannel = 1;
 
     // Initialize NVS

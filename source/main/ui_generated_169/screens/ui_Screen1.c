@@ -18,7 +18,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_PresetHeadingLabel, -1);
     lv_obj_set_y(ui_PresetHeadingLabel, -53);
     lv_obj_set_align(ui_PresetHeadingLabel, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_PresetHeadingLabel, "Preset:\n");
+    lv_label_set_text(ui_PresetHeadingLabel, "?\n");
     lv_obj_set_style_text_color(ui_PresetHeadingLabel, lv_color_hex(0xD1A60C), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_PresetHeadingLabel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_align(ui_PresetHeadingLabel, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -26,8 +26,8 @@ void ui_Screen1_screen_init(void)
 
     ui_BottomContainer = lv_obj_create(ui_Screen1);
     lv_obj_remove_style_all(ui_BottomContainer);
-    lv_obj_set_width(ui_BottomContainer, 219);
-    lv_obj_set_height(ui_BottomContainer, 123);
+    lv_obj_set_width(ui_BottomContainer, 228);
+    lv_obj_set_height(ui_BottomContainer, 141);
     lv_obj_set_x(ui_BottomContainer, 0);
     lv_obj_set_y(ui_BottomContainer, 51);
     lv_obj_set_align(ui_BottomContainer, LV_ALIGN_CENTER);
@@ -37,20 +37,20 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_style_bg_opa(ui_BottomContainer, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_color(ui_BottomContainer, lv_color_hex(0x563F2A), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_opa(ui_BottomContainer, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(ui_BottomContainer, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_BottomContainer, 3, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_set_style_outline_color(ui_BottomContainer, lv_color_hex(0xFCA204), LV_PART_SCROLLBAR | LV_STATE_DEFAULT);
     lv_obj_set_style_outline_opa(ui_BottomContainer, 255, LV_PART_SCROLLBAR | LV_STATE_DEFAULT);
 
     ui_PresetHeadingLabel2 = lv_label_create(ui_BottomContainer);
-    lv_obj_set_width(ui_PresetHeadingLabel2, 195);
-    lv_obj_set_height(ui_PresetHeadingLabel2, 115);
+    lv_obj_set_width(ui_PresetHeadingLabel2, 212);
+    lv_obj_set_height(ui_PresetHeadingLabel2, 122);
     lv_obj_set_x(ui_PresetHeadingLabel2, -1);
     lv_obj_set_y(ui_PresetHeadingLabel2, 0);
     lv_obj_set_align(ui_PresetHeadingLabel2, LV_ALIGN_CENTER);
     lv_label_set_text(ui_PresetHeadingLabel2, "Preset Name\n");
     lv_obj_set_style_text_align(ui_PresetHeadingLabel2, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_PresetHeadingLabel2, &lv_font_montserrat_36, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_PresetHeadingLabel2, &lv_font_montserrat_30, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_TopPanel = lv_obj_create(ui_Screen1);
     lv_obj_remove_style_all(ui_TopPanel);

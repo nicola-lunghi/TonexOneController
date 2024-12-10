@@ -35,7 +35,6 @@ limitations under the License.
 #include "driver/spi_master.h"
 #include "lvgl.h"
 #include "demos/lv_demos.h"
-#include "esp_lvgl_port.h"
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_ops.h"
@@ -129,7 +128,6 @@ static const char *TAG = "app_display";
 
     static esp_lcd_panel_io_handle_t lcd_io = NULL;
     static esp_lcd_panel_handle_t lcd_panel = NULL;
-    static lv_display_t *lvgl_disp = NULL;
 #endif
 
 #define DISPLAY_LVGL_TICK_PERIOD_MS     2
@@ -166,7 +164,31 @@ typedef struct
 static QueueHandle_t ui_update_queue;
 static SemaphoreHandle_t I2CMutexHandle;
 static SemaphoreHandle_t lvgl_mux = NULL;
+static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
+static lv_disp_drv_t disp_drv;      // contains callback functions
 
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+static void display_lvgl_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+{
+    esp_lcd_panel_handle_t panel_handle = (esp_lcd_panel_handle_t) drv->user_data;
+    int offsetx1 = area->x1;
+    int offsetx2 = area->x2;
+    int offsety1 = area->y1;
+    int offsety2 = area->y2;
+#if CONFIG_DISPLAY_AVOID_TEAR_EFFECT_WITH_SEM
+    xSemaphoreGive(sem_gui_ready);
+    xSemaphoreTake(sem_vsync_end, portMAX_DELAY);
+#endif
+    // pass the draw buffer to the driver
+    esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
+    lv_disp_flush_ready(drv);
+}
 
 #if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
 
@@ -192,29 +214,6 @@ static bool display_on_vsync_event(esp_lcd_panel_handle_t panel, const esp_lcd_r
     }
 #endif
     return high_task_awoken == pdTRUE;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-static void display_lvgl_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
-{
-    esp_lcd_panel_handle_t panel_handle = (esp_lcd_panel_handle_t) drv->user_data;
-    int offsetx1 = area->x1;
-    int offsetx2 = area->x2;
-    int offsety1 = area->y1;
-    int offsety2 = area->y2;
-#if CONFIG_DISPLAY_AVOID_TEAR_EFFECT_WITH_SEM
-    xSemaphoreGive(sem_gui_ready);
-    xSemaphoreTake(sem_vsync_end, portMAX_DELAY);
-#endif
-    // pass the draw buffer to the driver
-    esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
-    lv_disp_flush_ready(drv);
 }
 
 /****************************************************************************
@@ -885,8 +884,8 @@ static uint8_t update_ui_element(tUIUpdate* update)
                 char preset_name[33];
 
                 // get the preset number
-                sprintf(preset_index, "Preset: %d", atoi(update->Text));
-                lv_label_set_text(ui_PresetHeadingLabel, update->Text);
+                sprintf(preset_index, "%d", atoi(update->Text));
+                lv_label_set_text(ui_PresetHeadingLabel, preset_index);
 
                 // get the preset name
                 for (uint8_t loop = 0; loop < 4; loop++)
@@ -981,8 +980,6 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     assert(lvgl_mux);
 
 #if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480    
-    static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
-    static lv_disp_drv_t disp_drv;      // contains callback functions
     uint8_t touch_ok = 0;
 
 #if CONFIG_DISPLAY_AVOID_TEAR_EFFECT_WITH_SEM
@@ -1189,8 +1186,6 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
     ESP_LOGI(TAG, "Install LVGL tick timer");
     
-   
-
     if (touch_ok)
     {
         static lv_indev_drv_t indev_drv;    // Input device driver (Touch)
@@ -1268,36 +1263,28 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     esp_lcd_panel_set_gap(lcd_panel, 0, 20);
     esp_lcd_panel_invert_color(lcd_panel, true);
 
-    // Initialize LVGL
-    const lvgl_port_cfg_t lvgl_cfg = {
-        .task_priority = 4,       /* LVGL task priority */
-        .task_stack = 4096,       /* LVGL task stack size */
-        .task_affinity = -1,      /* LVGL task pinned to core (-1 is no affinity) */
-        .task_max_sleep_ms = 500, /* Maximum sleep in LVGL task */
-        .timer_period_ms = 5      /* LVGL timer tick period in ms */
-    };
-    lvgl_port_init(&lvgl_cfg);
+    ESP_LOGI(TAG, "Initialize LVGL library");
+    lv_init();
 
-    // Add LCD screen 
-    ESP_LOGD(TAG, "Add LCD screen");
-    const lvgl_port_display_cfg_t disp_cfg = {
-        .io_handle = lcd_io,
-        .panel_handle = lcd_panel,
-        .buffer_size = WAVESHARE_240_280_LCD_H_RES * WAVESHARE_240_280_LCD_DRAW_BUFF_HEIGHT * sizeof(uint16_t),
-        .double_buffer = WAVESHARE_240_280_LCD_DRAW_BUFF_DOUBLE,
-        .hres = WAVESHARE_240_280_LCD_H_RES,
-        .vres = WAVESHARE_240_280_LCD_V_RES,
-        .monochrome = false,
-        /* Rotation values must be same as used in esp_lcd for initial settings of the screen */
-        .rotation = {
-            .swap_xy = false,
-            .mirror_x = false,
-            .mirror_y = false,
-        },
-        .flags = {
-            .buff_dma = true,
-        }};
-    lvgl_disp = lvgl_port_add_disp(&disp_cfg);
+    void *buf1 = NULL;
+    void *buf2 = NULL;
+    ESP_LOGI(TAG, "Allocate separate LVGL draw buffers from PSRAM");
+    buf1 = heap_caps_malloc(WAVESHARE_240_280_LCD_H_RES * 32 * sizeof(lv_color_t), MALLOC_CAP_SPIRAM);
+    assert(buf1);
+    buf2 = heap_caps_malloc(WAVESHARE_240_280_LCD_H_RES * 32 * sizeof(lv_color_t), MALLOC_CAP_SPIRAM);
+    assert(buf2);
+    lv_disp_draw_buf_init(&disp_buf, buf1, buf2, WAVESHARE_240_280_LCD_H_RES * 32);
+
+    ESP_LOGI(TAG, "Register display driver to LVGL");
+    lv_disp_drv_init(&disp_drv);
+    disp_drv.hor_res = WAVESHARE_240_280_LCD_H_RES;
+    disp_drv.ver_res = WAVESHARE_240_280_LCD_V_RES;
+    disp_drv.flush_cb = display_lvgl_flush_cb;
+    disp_drv.draw_buf = &disp_buf;
+    disp_drv.user_data = lcd_panel;
+
+    lv_disp_t *disp = lv_disp_drv_register(&disp_drv);
+
 #endif //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
 
     // Tick interface for LVGL (using esp_timer to generate 2ms periodic event)

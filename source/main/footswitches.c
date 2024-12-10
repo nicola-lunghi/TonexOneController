@@ -206,7 +206,7 @@ void footswitches_init(void)
     memset((void*)&FootswitchControl, 0, sizeof(FootswitchControl));
     FootswitchControl.state = FOOTSWITCH_IDLE;
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_NONE || CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_280_240
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_NONE || CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
     // init GPIO
     gpio_config_t gpio_config_struct;
 

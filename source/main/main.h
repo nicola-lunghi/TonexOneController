@@ -37,6 +37,12 @@ extern "C" {
 
     // Micro pins
     #define TOUCH_INT                   GPIO_NUM_4    // touch panel interrupt
+
+#elif CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+    // direct IO pins
+    #define FOOTSWITCH_1		GPIO_NUM_2
+    #define FOOTSWITCH_2		GPIO_NUM_3
+
 #else
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_4
