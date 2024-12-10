@@ -26,8 +26,12 @@ For more information about the hardware platforms, refer to [Hardware Platforms]
 For more information about the firmware development and customisation, refer to [Firmware Development](FirmwareDevelopment.md)
 
 ## User Interface
-For the hardware platform with and LCD display, a User Interface is shown. The User Interface design was done using Squareline Studio: https://squareline.io/
+For the hardware platform with an LCD display, a User Interface is shown.<br>
+4.3" LCD:<br>
 ![image](https://github.com/user-attachments/assets/1246f6e0-0c00-4389-b063-a402bdf45432)
+<br>
+1.69" LCD:<br>
+![image](https://github.com/user-attachments/assets/c6a682e9-fed7-4fce-b2df-4e55ab12d5f2)
 
 
 ## Usage 
