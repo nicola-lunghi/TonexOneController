@@ -27,11 +27,8 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 - Optional: for the Bluetooth Client version of code, switch on a M-Vave Chocolate Midi pedal (https://www.cuvave.com/productinfo/724103.html). After a few seconds it should connect and the Bluetooth icon should change from gray to blue
 - Optional: for the Bluetooth Server version of code, the controller will be available as a peripheral for you to connect to via a Bluetooth Midi device. The Bluetooth icon should change from gray to blue when connected.
 
-![wiring_waveshare_display](https://github.com/user-attachments/assets/11cbf6da-e9bc-43a8-8228-f1e5ceb4b65a)
-
-
-
-
+![wiring_waveshare_display](https://github.com/user-attachments/assets/717fbc0d-771c-485d-a75e-c54493094e96)
+<br><br>
 
 # Hardware Platform 2: Waveshare ESP32-S3 Zero (no Display support)
 This hardware platform uses this Waveshare Zero board.
@@ -52,7 +49,26 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 - Optional: for the Bluetooth Server version of code, the controller will be available as a peripheral for you to connect to via a Bluetooth Midi device. The Bluetooth icon should change from gray to blue when connected.
 
 ![wiring_waveshare_zero](https://github.com/user-attachments/assets/da535002-edf8-408a-aef1-a764ca35cb47)
+<br><br>
 
+
+# Hardware Platform 3: Waveshare ESP32-S3 1.69" Display board (no touch)
+This hardware platform uses this Waveshare ESP32-S3 1.69" LCD board.
+[https://www.waveshare.com/esp32-s3-lcd-1.69.htm](https://www.waveshare.com/esp32-s3-lcd-1.69.htm)
+
+This module is low cost (around US$16) and supports an LCD display, about the same size as an Apple Watch. It requires a 5 volt DC power supply.
+Caution: do not connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!
+
+### Connections
+Note: the controller code relies on the Tonex One pedal being set to Stomp mode. Code is in place to do this automatically, but it seems it may have a bug. Manually enable Stomp mode on your pedal.
+- Solder a DC jack to the PCB, as shown below. Note the positive and negative polarity must match your power supply
+- Connect the USB-C port on the Waveshare board to the ToneX One USB-C port
+- Connect 5 volts DC to the power input jack that you soldered in the first step
+- Switch on the power supply
+- The Waveshare board USB port will power the Tonex One. Do not connect 9 volts to it!
+![wiring_waveshare_169](https://github.com/user-attachments/assets/965cd6c7-d6b0-45d0-afee-5e885e486180)
+
+<br><br>
 ### Wired Footswitches
 Wired dual footswitches can optionally be used to select the Next/Previous preset.
 The footswitch must be a "momentary" type that is only has its contacts closed when it is pressed.
