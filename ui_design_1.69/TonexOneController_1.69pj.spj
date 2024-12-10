@@ -112,7 +112,7 @@
               {
                 "nid": -1932596886,
                 "strtype": "LABEL/Text",
-                "strval": "Preset:\\n",
+                "strval": "?\\n",
                 "InheritedType": 10
               },
               {
@@ -218,8 +218,8 @@
                     "flags": 17,
                     "strtype": "OBJECT/Size",
                     "intarray": [
-                      195,
-                      115
+                      212,
+                      122
                     ],
                     "InheritedType": 7
                   },
@@ -299,7 +299,7 @@
                           {
                             "nid": 834306698,
                             "strtype": "_style/Text_Font",
-                            "strval": "montserrat_36",
+                            "strval": "montserrat_30",
                             "InheritedType": 3
                           }
                         ],
@@ -363,8 +363,8 @@
                 "flags": 17,
                 "strtype": "OBJECT/Size",
                 "intarray": [
-                  219,
-                  123
+                  228,
+                  141
                 ],
                 "InheritedType": 7
               },
@@ -449,7 +449,7 @@
                       {
                         "nid": -1749899549,
                         "strtype": "_style/Border width",
-                        "integer": 2,
+                        "integer": 3,
                         "InheritedType": 6
                       }
                     ],
@@ -1525,7 +1525,7 @@
     "uiExportFolderPath": "D:\\projects\\TonexController\\TonexOneController\\source\\main\\ui_generated_169",
     "projectExportFolderPath": "D:\\projects\\TonexController\\TonexOneController\\source\\main\\ui_generated_169",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 24,
+    "backup_cnt": 27,
     "autosave_cnt": 0,
     "lvgl_version": "8.3.11",
     "callfuncsexport": "C_FILE",
