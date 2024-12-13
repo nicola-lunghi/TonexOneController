@@ -7,6 +7,9 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 ## Demonstration Video
 https://youtu.be/j0I5G5-CXfg
 
+### Full Tutorial Video (in Spanish) thanks to Marcelo
+https://www.youtube.com/watch?v=qkOs5gk3bcQ
+
 ## ⭐ Key Features
 - LCD display with capactive touch screen (optional)
 - Screen displays the name and number of the current preset.
