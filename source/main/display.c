@@ -52,7 +52,9 @@ limitations under the License.
 #include "esp_lcd_touch_gt911.h"
 #include "esp_intr_alloc.h"
 #include "main.h"
-#include "ui.h"
+#if !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
+    #include "ui.h"
+#endif
 #include "display.h"
 #include "CH422G.h"
 #include "control.h"
@@ -786,6 +788,7 @@ static lv_obj_t* ui_get_skin_image(uint16_t index)
 *****************************************************************************/
 static uint8_t update_ui_element(tUIUpdate* update)
 {
+#if !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE    
     lv_obj_t* element_1 = NULL;
 
     switch (update->ElementID)
@@ -917,6 +920,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
             ESP_LOGE(TAG, "Unknown display action");
         } break;
     }
+#endif //  !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
 
     return 1;
 }
@@ -1287,6 +1291,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
 #endif //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
 
+#if !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
     // Tick interface for LVGL (using esp_timer to generate 2ms periodic event)
     const esp_timer_create_args_t lvgl_tick_timer_args = {
         .callback = &display_increase_lvgl_tick,
@@ -1305,4 +1310,5 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
     // create display task
     xTaskCreatePinnedToCore(display_task, "Dsp", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, NULL, 1);
+#endif // !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE    
 }

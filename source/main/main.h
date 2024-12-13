@@ -40,7 +40,7 @@ extern "C" {
 
 #elif CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
     // direct IO pins
-    #define FOOTSWITCH_1		GPIO_NUM_2
+    #define FOOTSWITCH_1		GPIO_NUM_16
     #define FOOTSWITCH_2		GPIO_NUM_3
 
 #else

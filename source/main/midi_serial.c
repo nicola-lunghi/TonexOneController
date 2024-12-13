@@ -44,14 +44,12 @@ limitations under the License.
 
 #if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
     // Waveshare 4.3B RS485 port
-    //#define UART_RX_PIN                           GPIO_NUM_43
+    #define UART_RX_PIN                             GPIO_NUM_43
+    #define UART_TX_PIN                             GPIO_NUM_44 
 
     // Waveshare 7" using RS485 port
-    #define UART_RX_PIN                             GPIO_NUM_15 
-    #define UART_TX_PIN                             GPIO_NUM_16 
-    
-    // Waveshare 7" using ADC port - development use
-    //#define UART_RX_PIN                           GPIO_NUM_6 
+    //#define UART_RX_PIN                             GPIO_NUM_15 
+    //#define UART_TX_PIN                             GPIO_NUM_16 
 #elif CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
     #define UART_RX_PIN                             GPIO_NUM_18 
     #define UART_TX_PIN                             GPIO_NUM_17 
@@ -156,7 +154,7 @@ static void midi_serial_task(void *arg)
             }
 
             // don't hog the CPU
-            vTaskDelay(pdMS_TO_TICKS(2));
+            vTaskDelay(pdMS_TO_TICKS(5));
         }
     }
 }

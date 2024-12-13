@@ -873,7 +873,7 @@ void control_task(void *arg)
         }
 
         // don't hog the CPU
-        vTaskDelay(pdMS_TO_TICKS(1));
+        vTaskDelay(pdMS_TO_TICKS(3));
 	}
 }
 
