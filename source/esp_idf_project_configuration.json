@@ -1,0 +1,107 @@
+{
+  "WS169": {
+    "build": {
+      "compileArgs": [],
+      "ninjaArgs": [],
+      "buildDirectoryPath": "${workspaceFolder}/build_ws169",
+      "sdkconfigDefaults": [
+        "sdkconfig.ws169",
+        "sdkconfig.defaults"
+      ],
+      "sdkconfigFilePath": "${workspaceFolder}/build_ws169"
+    },
+    "env": {},
+    "flashBaudRate": "",
+    "monitorBaudRate": "",
+    "openOCD": {
+      "debugLevel": 0,
+      "configs": [],
+      "args": []
+    },
+    "tasks": {
+      "preBuild": "",
+      "preFlash": "",
+      "postBuild": "",
+      "postFlash": ""
+    }
+  },
+  "WS43B_AS": {
+    "build": {
+      "compileArgs": [],
+      "ninjaArgs": [],
+      "buildDirectoryPath": "${workspaceFolder}/build_ws43b_as",
+      "sdkconfigDefaults": [
+        "sdkconfig.ws43b_as",
+        "sdkconfig.defaults"
+      ],
+      "sdkconfigFilePath": "${workspaceFolder}/build_ws43b_as"
+    },
+    "env": {},
+    "flashBaudRate": "",
+    "monitorBaudRate": "",
+    "openOCD": {
+      "debugLevel": 0,
+      "configs": [],
+      "args": []
+    },
+    "tasks": {
+      "preBuild": "",
+      "preFlash": "",
+      "postBuild": "",
+      "postFlash": ""
+    }
+  },
+  "WS43B_PS": {
+    "build": {
+      "compileArgs": [],
+      "ninjaArgs": [],
+      "buildDirectoryPath": "${workspaceFolder}/build_ws43b_ps",
+      "sdkconfigDefaults": [
+        "sdkconfig.ws43b_ps",
+        "sdkconfig.defaults"
+      ],
+      "sdkconfigFilePath": "${workspaceFolder}/build_ws43b_ps"
+    },
+    "env": {},
+    "flashBaudRate": "",
+    "monitorBaudRate": "",
+    "openOCD": {
+      "debugLevel": 0,
+      "configs": [],
+      "args": []
+    },
+    "tasks": {
+      "preBuild": "",
+      "preFlash": "",
+      "postBuild": "",
+      "postFlash": ""
+    }
+  },
+
+  "WSZERO": {
+    "build": {
+      "compileArgs": [],
+      "ninjaArgs": [],
+      "buildDirectoryPath": "${workspaceFolder}/build_wszero",
+      "sdkconfigDefaults": [
+        "sdkconfig.wszero",
+        "sdkconfig.defaults"
+      ],
+      "sdkconfigFilePath": "${workspaceFolder}/build_wszero"
+    },
+    "env": {},
+    "flashBaudRate": "",
+    "monitorBaudRate": "",
+    "openOCD": {
+      "debugLevel": 0,
+      "configs": [],
+      "args": []
+    },
+    "tasks": {
+      "preBuild": "",
+      "preFlash": "",
+      "postBuild": "",
+      "postFlash": ""
+    }
+  }
+}
