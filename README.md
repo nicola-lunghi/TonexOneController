@@ -1,16 +1,29 @@
 # Tonex One Controller: An open-source controller and display interface for the IK Multimedia Tonex One guitar pedal
 This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a bridge to the IK Multimedia Tonex One guitar pedal (which does not have native Midi capability.)
+<br>It allows selection of the 20 different presets in the pedal, by any or all of touch screen, wired footswitches, bluetooth footswitches, bluetooth servers, and midi programs.
+<br>A variety of hardware is supported, from a $6 board with no display, up to a $40 board with a 4.3" touch screen LCD and a pretty graphical user interface.
 
 **Note: this project is not endorsed by IK Multimedia. Amplifier skin images copyright is owned by IK Multimedia.**
 **TONEX is a registered trademark of IK Multimedia Production Srl**
 
-## Demonstration Video
+# Table of Contents
+ 1. [Demonstration Videos](#demonstration_videos)
+ 2. [Key Features](#key_features)
+ 3. [Meet the Family](#meet_family)
+ 4. [Hardware Platforms and Wiring Diagrams](#hardware_platforms)
+ 5. [Uploading/Programming Firmware Releases](#firmware_uploading)
+ 6. [Firmware Development Information](#development_info)
+ 7. [Usage Instructions](#usage_instructions)
+ 8. [Acknowledgements](#acknowledgements)
+ 9. [Donations](#donations)
+
+## Demonstration Videos <a name="demonstration_videos"></a>
 https://youtu.be/j0I5G5-CXfg
 
 ### Full Tutorial Video (in Spanish) thanks to Marcelo
 https://www.youtube.com/watch?v=qkOs5gk3bcQ
 
-## ⭐ Key Features
+## ⭐ Key Features <a name="key_features"></a>
 - LCD display with capactive touch screen (optional)
 - Screen displays the name and number of the current preset.
 - The User can select an amplifier or pedal skin and also add descriptive text 
@@ -22,22 +35,21 @@ https://www.youtube.com/watch?v=qkOs5gk3bcQ
 - Serial Midi support (coming soon)
 - Menu Config options to disable items like the display, so it could become just a tiny bridge device
 
-## Hardware Platforms and Wiring
+## Meet the Family <a name="meet_family"></a>
+This project can run on any of three different hardware platforms, varying in size and cost. All platforms support Bluetooth, WiFi, wired footswitches, and wired Midi.
+- 4.3" LCD board, supporting touch screen and advanced graphics including customisable amp/pedal skins and text
+- 1.69" LCD board. Similar to an Apple Watch, this small board displays the preset name and number
+- "Zero" board with no display, is the smallest and cheapest option
+![meet_family](https://github.com/user-attachments/assets/96e540f4-02d9-4f90-9323-bfc03e967f16)
+
+
+## Hardware Platforms and Wiring <a name="hardware_platforms"></a>
 For more information about the hardware platforms, refer to [Hardware Platforms](HardwarePlatforms.md)
 
-## Development Info
+## Firmware Development Infomation <a name="development_info"></a>
 For more information about the firmware development and customisation, refer to [Firmware Development](FirmwareDevelopment.md)
 
-## User Interface
-For the hardware platform with an LCD display, a User Interface is shown.<br>
-4.3" LCD:<br>
-![image](https://github.com/user-attachments/assets/1246f6e0-0c00-4389-b063-a402bdf45432)
-<br>
-1.69" LCD:<br>
-![image](https://github.com/user-attachments/assets/c6a682e9-fed7-4fce-b2df-4e55ab12d5f2)
-
-
-## Usage 
+## Usage Instructions <a name="usage_instructions"></a>
 ### Hardware platform with Display
 - Connect power
 - After a few seconds of boot time, the LCD display should now show the description for your current Preset
@@ -60,37 +72,14 @@ For the hardware platform with an LCD display, a User Interface is shown.<br>
   1. Bluetooth Client mode: M-Vave Chocolate footswitches. Bank 1 does presets 1,2,3,4. Bank 2 does presets 5,6,7,8. Etc.
   2. Bluetooth Server mode: Bluetooth Midi controller to send Program change messages 0 to 19
 
-## Programming a pre-built release
-### Common Parts
-- Download the release zip file from the Releases folder and unzip it
-- Press and hold the "Boot" button on the Waveshare board
-- Connect a USB-C cable to the Waveshare board and a PC
-- After the USB connection, release the Boot button
+## Uploading/Programming Firmware Releases <a name="firmware_uploading"></a>
+For more information about the hardware platforms, refer to [Hardware Platforms](FirmwareUploading.md)
 
-### Windows  
-- Run the programmer exe on a Windows PC (note: this is provided as a binary package by Espressif Systems, refer to https://www.espressif.com/en/support/download/other-tools)
-- Note that Linux and Mac are supported via a Python script. Refer above link.
-- Set the Chip Type as "ESP32-S3"
-- Set the Work Mode as "Factory"
-- Set the Load Mode as "USB" (for devices like the recommended Waveshare module.) Some other PCBs that use a UART instead of the native USB port will need this set to "UART"
-- In Download Panel 1, select the Comm port corresponding to your ESP32-S3. This can be determined by checking on the Windows Control Panel, Device Manager, under Ports
-- Press the Start button to flash the image into the Waveshare module
-- When finished, close the app and disconnect the USB cable (the screen will be blank until the board has been power cycled)
-- Follow the Operation instructions
-
-### Linux and MacOS
-- Download and install the esptool from https://www.espressif.com/en/support/download/other-tools
-- In the extracted release zip file, navigate to the bin folder
-- Identify which Com port the board is using (?? how??)
-- at a command line, run this command "python -m esptool --chip esp32s3 -b 460800 --before default_reset --after hard_reset --port COM13 write_flash --flash_mode dout --flash_size 8MB --flash_freq 80m 0x0 bootloader.bin 0x10000 TonexController.bin 0x8000 partition-table.bin 0xd000 ota_data_initial.bin" (replace the COM13 with your local value)
-
-
-## 🙏 Acknowledgement
-- [LVGL graphics library] https://lvgl.io/
+## 🙏 Acknowledgements <a name="acknowledgements"></a>
 - [Waveshare board support files]([https://github.com/lifeiteng/vall-e](https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B)) for display and touch screen driver examples
 - https://github.com/vit3k/tonex_controller for great work on reverse engineering the Tonex One USB protocol
 
-## Release Notes
+## Firmware Release Notes
 V1.0.3.2:
 - Changed partition table to fix issues with crashing on boot for some users
 - new build type with pedal skin images instead of amp skins
@@ -118,7 +107,7 @@ V1.0.0.2:
 
 The Tonex One Controller is under the Apache 2.0 license. It is free for both research and commercial use cases.
 
-## Donate
+## Donations <a name="donations"></a>
 Donations help fund the purchase of new equipment to use in development and testing.<br>
 [Donate via Paypal](https://www.paypal.com/donate/?business=RTRMTZA7L7KPC&no_recurring=0&currency_code=AUD)
 <br><br>
