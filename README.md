@@ -73,7 +73,7 @@ For more information about the firmware development and customisation, refer to 
   2. Bluetooth Server mode: Bluetooth Midi controller to send Program change messages 0 to 19
 
 ## Uploading/Programming Firmware Releases <a name="firmware_uploading"></a>
-For more information about the hardware platforms, refer to [Hardware Platforms](FirmwareUploading.md)
+For more information about uploading firmware to the boards, refer to [Firmware Uploading](FirmwareUploading.md)
 
 ## 🙏 Acknowledgements <a name="acknowledgements"></a>
 - [Waveshare board support files]([https://github.com/lifeiteng/vall-e](https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-4.3B)) for display and touch screen driver examples
