@@ -75,25 +75,40 @@ The footswitch must be a "momentary" type that is only has its contacts closed w
 The common pin of the footswitch must connect to the Controller ground pin, and the other 2 wires connected as shown.
 ![footswitches_waveshare_display](https://github.com/user-attachments/assets/5548f907-d769-4c65-8694-9b3ac25e7a86)
 ![footswitches_waveshare_zero](https://github.com/user-attachments/assets/7eda9912-f905-4e34-b8fe-beb595e10608)
+![footswitches_waveshare_169](https://github.com/user-attachments/assets/13c69700-2a45-4fa6-9988-395d67583455)
 
-### Wired Midi (firmware version V1.0.4.2 or above required)
-Wired Midi is supported. A extra PCB is required, an "Adafruit Midi FeatherWing kit", for US$7.<br> 
+### Wired Midi (firmware version V1.0.4.1 or above required)
+Wired Midi is supported. A extra PCB is required for all supported platforms, an "Adafruit Midi FeatherWing kit", for US$7.<br> 
 https://www.adafruit.com/product/4740 <br>
 This Midi board supports both 5-pin DIN sockets (included in kit) and 3.5mm jacks (not included in kit.)<br>
-The Waveshare Zero can directly connect to this PCB. The Waveshare 4.3B requires another small interface. Details coming soon.
+<br>
+The Waveshare Zero and 1.69" LCD boards can directly connect to the Midi Featherwing PCB.<br>
+The Waveshare 4.3B, due to hardware limitations, requires another small interface. This a common, low cost "TTL to RS485" adaptor.<br>
+Typical examples of this PCB:
+https://www.amazon.com/HiLetgo-Reciprocal-Hardware-Automatic-Converter/dp/B082Y19KV9 
+<br>
+https://www.amazon.com.au/dp/B0DDLBYFJB
+<br>
+![image](https://github.com/user-attachments/assets/bf2ebf51-a250-4fb7-a3b0-ec1d87a9d7db)
+<br>
+Midi Featherwing:<br>
 ![midi_featherwing](https://github.com/user-attachments/assets/532d7d81-ae7e-485b-8d59-77ff6056e331)
 
-Connect the Midi FeatherWing to the Controller as per the below diagrams (4.3B coming soon.)
+Waveshare Zero to Midi Featherwing:<br>
 ![midi_waveshare_zero](https://github.com/user-attachments/assets/f5e34873-5ccb-4041-aa00-5f0a18ad4609)
 
+Waveshare 1.69" to Midi Featherwing:<br>
+![midi_waveshare_169](https://github.com/user-attachments/assets/177d3a3f-ab64-433c-8db7-4f5ac382712e)
 
-### Case
-With the Zero being a bare PCB, a case of some type is useful to protect it. User "xXGrimTagnBagXx" from Thingiverse has created a very compact case that can be 3D printed:
+Waveshare 4.3B to Midi Featherwing via the TTL to RS485 adaptor:<br>
+![midi_waveshare_43b](https://github.com/user-attachments/assets/abafd33b-d659-43fd-b096-62b0b64a157a)
+
+
+### Cases
+With the Zero being a bare PCB, a case of some type is useful to protect it. Here are some links to 3D printed options.
+<br>
+Community member "AlmaMaterFL" designed this one:
+https://www.printables.com/model/1110479-esp32-s3-zero-m-case-pin-version
+<br><br>
+User "xXGrimTagnBagXx" from Thingiverse designed a generic case for the Zero:
 https://www.thingiverse.com/thing:6758917
-
-Samples:
-
-![image](https://github.com/user-attachments/assets/f2e9d599-2a16-46a2-a6cc-e0513fba060c)  ![image](https://github.com/user-attachments/assets/6b73ba98-ac7b-4451-bd50-5ae10c71226b)
-
-
-
