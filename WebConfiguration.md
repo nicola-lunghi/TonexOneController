@@ -17,7 +17,7 @@ New in firmware version V1.0.4.2 is the ability to change settings via WiFi/Web 
 - Enable support for the X-Vive MD1 Midi bridge device (default: on)
 
 ### Wired Midi
-- Enable support for wired Midi
+- Enable support for wired Midi. CAUTION: this should only be enabled when the correct hardware has been connected. If not, random preset switching may occur!
 - Midi channel: select the desired Midi channel to use with Wired Midi. 
 
 ### Preset Twice Toggle
