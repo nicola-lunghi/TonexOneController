@@ -78,7 +78,12 @@ The common pin of the footswitch must connect to the Controller ground pin, and 
 ![footswitches_waveshare_169](https://github.com/user-attachments/assets/13c69700-2a45-4fa6-9988-395d67583455)
 
 ### Wired Midi (firmware version V1.0.4.1 or above required)
-Wired Midi is supported. A extra PCB is required for all supported platforms, an "Adafruit Midi FeatherWing kit", for US$7.<br> 
+Note: Wired Midi is disabled by default. If it is enabled without the proper hardware (detailed below) being fitted, you may get "phantom" preset changes, due to the serial input "floating".
+Only enable wired Midi when hardware is connected!<br>
+Refer here for details on how to enable it, and set the Midi channel:
+https://github.com/Builty/TonexOneController/blob/main/WebConfiguration.md
+<br><br>
+Wired Midi is supported on all platforms. A extra PCB is required for all platforms, an "Adafruit Midi FeatherWing kit", for US$7.<br> 
 https://www.adafruit.com/product/4740 <br>
 This Midi board supports both 5-pin DIN sockets (included in kit) and 3.5mm jacks (not included in kit.)<br>
 <br>
