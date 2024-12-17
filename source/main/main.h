@@ -23,7 +23,7 @@ limitations under the License.
 extern "C" {
 #endif
 
-#define APP_VERSION		"1.0.4.1"
+#define APP_VERSION		"1.0.4.2"
 
 // IO defines
 #if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480

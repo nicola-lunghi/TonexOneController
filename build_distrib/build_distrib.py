@@ -75,19 +75,19 @@ def build_distribution(template, target_folder, include_ota, out_filename):
     print('Build complete\n\n')
     
 # Build Waveshare 1.69" 
-zip_name = 'TonexOneController_V' + version + '_Waveshare_1_69.zip'
+zip_name = 'TonexOneController_V' + version + '_Waveshare_1_69'
 build_distribution('template_cust_partition', 'build_ws169', True, zip_name)
 
 # Build Waveshare 4.3B with Amp skins
-zip_name = 'TonexOneController_V' + version + '_Waveshare_4_3B_Display_Amp_Skins.zip'
+zip_name = 'TonexOneController_V' + version + '_Waveshare_4_3B_Display_Amp_Skins'
 build_distribution('template_cust_partition', 'build_ws43b_as', True, zip_name)
 
 # Build Waveshare 4.3B with Pedal skins
-zip_name = 'TonexOneController_V' + version + '_Waveshare_4_3B_Display_Pedal_Skins.zip'
+zip_name = 'TonexOneController_V' + version + '_Waveshare_4_3B_Display_Pedal_Skins'
 build_distribution('template_cust_partition', 'build_ws43b_ps', True, zip_name)
 
 # Build Waveshare Zero
-zip_name = 'TonexOneController_V' + version + '_Waveshare_Zero.zip'
+zip_name = 'TonexOneController_V' + version + '_Waveshare_Zero'
 build_distribution('template_def_partition', 'build_wszero', False, zip_name)
 
 print('All done')
