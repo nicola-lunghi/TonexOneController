@@ -1204,16 +1204,16 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 #endif  //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
 
 #if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
-    // switch off the buzzer. GPIO42 on PCB V2, GPIO33 on PCB V1
-    gpio_config_struct.pin_bit_mask = ((uint64_t)1 << GPIO_NUM_42) | ((uint64_t)1 << GPIO_NUM_33);
+    // switch off the buzzer. GPIO42 on PCB V2. GPIO33 on PCV V1.
+    // note here: GPIO33 used on V1 PCB conflicts with Octal mode PSRAM, so can't use that
+    ESP_LOGI(TAG, "Buzzer off");
+    gpio_config_struct.pin_bit_mask = (uint64_t)1 << GPIO_NUM_42;
     gpio_config_struct.mode = GPIO_MODE_OUTPUT;
     gpio_config_struct.pull_up_en = GPIO_PULLUP_DISABLE;
     gpio_config_struct.pull_down_en = GPIO_PULLDOWN_DISABLE;
     gpio_config_struct.intr_type = GPIO_INTR_DISABLE;
     gpio_config(&gpio_config_struct);
-
     gpio_set_level(GPIO_NUM_42, 0);
-    gpio_set_level(GPIO_NUM_33, 0);
 
     // LCD backlight
     gpio_config_t bk_gpio_config = {
@@ -1291,6 +1291,11 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     lv_disp_t *disp = lv_disp_drv_register(&disp_drv);
 
 #endif //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+
+#if CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
+    // for the Zero, flash the RGB led
+    // to do
+#endif
 
 #if !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
     // Tick interface for LVGL (using esp_timer to generate 2ms periodic event)
