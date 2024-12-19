@@ -56,6 +56,13 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 This hardware platform uses this Waveshare ESP32-S3 1.69" LCD board.
 [https://www.waveshare.com/esp32-s3-lcd-1.69.htm](https://www.waveshare.com/esp32-s3-lcd-1.69.htm)
 
+Important note: Waveshare have a V1 and a V2 PCB. The V2 has a small sticker on the USB-C port.
+<br>The V2 works very well, but on the V1, due to an error in Waveshare's design, the onboard Buzzer will make some noise.
+<br>This issue is being investigated to find a work-around.
+<br>It is recommended to check with your supplier if the board has the V2 sticker, and try to only purchase this V2 version.
+![image](https://github.com/user-attachments/assets/12c0c7ca-7d92-4596-969f-53fc22a1ddf0)
+
+
 This module is low cost (around US$16) and supports an LCD display, about the same size as an Apple Watch. It requires a 5 volt DC power supply.
 Caution: do not connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!
 
