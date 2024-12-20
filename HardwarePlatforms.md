@@ -1,13 +1,21 @@
 # Tonex One Controller: An open-source controller and display interface for the IK Multimedia Tonex One guitar pedal
 # Hardware Platforms and Wiring Details
-Two hardware platforms are recommended. 
+# Table of Contents
+ 1. [Hardware Platform 1 Waveshare 4.3B](#waveshare_43B)
+ 2. [Hardware Platform 2 Waveshare Zero](#waveshare_zero)
+ 3. [Hardware Platform 3 Waveshare 1.69](#waveshare_169)
+ 4. [Wired Footswitches](#footswitches)
+ 5. [Wired Midi](#midi)
+ 6. [Cases](#cases)
 
-Other ESP32-S3 platforms could be supported but would require code changes. They would need to meet the minimum requirements:
+Three hardware platforms are supported. Other ESP32-S3 platforms could be supported but would require code changes. 
+<br>
+They would need to meet the minimum requirements:
 - Minimum SPI Flash size: 8 MB with display, 4 MB without
 - Minimum PSRAM size: 2 MB
 - USB OTG port
 
-## Hardware Platform 1: Waveshare 4.3" B LCD board (Display supported)
+## Hardware Platform 1: Waveshare 4.3" B LCD board (Display supported) <a name="waveshare_43B"></a>
 This hardware platform uses this Waveshare 4.3" B LCD board.
 https://www.waveshare.com/product/esp32-s3-touch-lcd-4.3b.htm?sku=28141
 
@@ -30,7 +38,7 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 ![wiring_waveshare_display](https://github.com/user-attachments/assets/717fbc0d-771c-485d-a75e-c54493094e96)
 <br><br>
 
-# Hardware Platform 2: Waveshare ESP32-S3 Zero (no Display support)
+# Hardware Platform 2: Waveshare ESP32-S3 Zero (no Display support) <a name="waveshare_zero"></a>
 This hardware platform uses this Waveshare Zero board.
 [https://www.waveshare.com/product/esp32-s3-zero.htm](https://www.waveshare.com/product/esp32-s3-zero.htm)
 
@@ -52,7 +60,7 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 <br><br>
 
 
-# Hardware Platform 3: Waveshare ESP32-S3 1.69" Display board (no touch)
+# Hardware Platform 3: Waveshare ESP32-S3 1.69" Display board (no touch) <a name="waveshare_169"></a>
 This hardware platform uses this Waveshare ESP32-S3 1.69" LCD board.
 [https://www.waveshare.com/esp32-s3-lcd-1.69.htm](https://www.waveshare.com/esp32-s3-lcd-1.69.htm)
 
@@ -76,7 +84,7 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 ![wiring_waveshare_169](https://github.com/user-attachments/assets/965cd6c7-d6b0-45d0-afee-5e885e486180)
 
 <br><br>
-### Wired Footswitches
+## Wired Footswitches <a name="footswitches"></a>
 Wired dual footswitches can optionally be used to select the Next/Previous preset.
 The footswitch must be a "momentary" type that is only has its contacts closed when it is pressed.
 The common pin of the footswitch must connect to the Controller ground pin, and the other 2 wires connected as shown.
@@ -84,7 +92,7 @@ The common pin of the footswitch must connect to the Controller ground pin, and 
 ![footswitches_waveshare_zero](https://github.com/user-attachments/assets/7eda9912-f905-4e34-b8fe-beb595e10608)
 ![footswitches_waveshare_169](https://github.com/user-attachments/assets/13c69700-2a45-4fa6-9988-395d67583455)
 
-### Wired Midi (firmware version V1.0.4.1 or above required)
+## Wired Midi (firmware version V1.0.4.1 or above required) <a name="midi"></a>
 Note: Wired Midi is disabled by default. If it is enabled without the proper hardware (detailed below) being fitted, you may get "phantom" preset changes, due to the serial input "floating".
 Only enable wired Midi when hardware is connected!<br>
 Refer here for details on how to enable it, and set the Midi channel:
@@ -116,11 +124,18 @@ Waveshare 4.3B to Midi Featherwing via the TTL to RS485 adaptor:<br>
 ![midi_waveshare_43b](https://github.com/user-attachments/assets/abafd33b-d659-43fd-b096-62b0b64a157a)
 
 
-### Cases
-With the Zero being a bare PCB, a case of some type is useful to protect it. Here are some links to 3D printed options.
+## Cases <a name="cases"></a>
+With the Zero and 1.69" boards being bare PCBs, a case of some type is useful to protect it. Here are some links to 3D printed options.
 <br>
+### Waveshare Zero
 Community member "AlmaMaterFL" designed this one:
 https://www.printables.com/model/1110479-esp32-s3-zero-m-case-pin-version
-<br><br>
-User "xXGrimTagnBagXx" from Thingiverse designed a generic case for the Zero:
-https://www.thingiverse.com/thing:6758917
+![image](https://github.com/user-attachments/assets/57f8d28c-1519-48c2-a8f1-efc36a1a4ada)
+![image](https://github.com/user-attachments/assets/5079b8be-012a-4d2d-86a6-2c4f35423682)
+<br>
+### Waveshare 1.69"
+Community member "AlmaMaterFL" designed this one:
+https://www.printables.com/model/1114384-esp32-s3-169inch-case
+![image](https://github.com/user-attachments/assets/b09e51fb-da3f-41dd-a42f-305c141e3812)
+![image](https://github.com/user-attachments/assets/0cd594f5-fb4c-4e16-bc39-dd08e65308cc)
+
