@@ -64,12 +64,15 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 This hardware platform uses this Waveshare ESP32-S3 1.69" LCD board.
 [https://www.waveshare.com/esp32-s3-lcd-1.69.htm](https://www.waveshare.com/esp32-s3-lcd-1.69.htm)
 
-Important note: Waveshare have a V1 and a V2 PCB. The V2 has a small sticker on the USB-C port.
+**Important note**: Waveshare have a V1 and a V2 PCB. The V2 has a small sticker on the USB-C port.
 <br>The V2 works very well, but on the V1, due to an error in Waveshare's design, the onboard Buzzer will make some noise.
-<br>This issue is being investigated to find a work-around.
 <br>It is recommended to check with your supplier if the board has the V2 sticker, and try to only purchase this V2 version.
 ![image](https://github.com/user-attachments/assets/12c0c7ca-7d92-4596-969f-53fc22a1ddf0)
-
+<br>
+If you have already purchased and received a V1 (no V2 sticker on the USB-C port) then there are two options to address the buzzer noise:
+- Cover the small hole on the buzzer. It is square plastic component next to the USB-C port. Cover the hole with tape, or a small amount of glue or similar. This should reduce the noise, but may still be audible
+- Using the below diagram, remove the resistor shown using a soldering iron. Note that this will void the PCB warranty, but being so cheap the return postage cost for a warranty claim would probably cost more than the PCB anyway. This modification will completely disable the buzzer permanently and eliminate all noise from it
+![Waveshare_169_V1_mod](https://github.com/user-attachments/assets/bd9aac38-cc4c-44a8-8f61-732791c53abc)
 
 This module is low cost (around US$16) and supports an LCD display, about the same size as an Apple Watch. It requires a 5 volt DC power supply.
 Caution: do not connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!
