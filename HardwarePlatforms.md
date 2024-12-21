@@ -7,6 +7,7 @@
  4. [Wired Footswitches](#footswitches)
  5. [Wired Midi](#midi)
  6. [Cases](#cases)
+ 7. [9 volt Power for Zero and 1.69](#9v_power)
 
 Three hardware platforms are supported. Other ESP32-S3 platforms could be supported but would require code changes. 
 <br>
@@ -44,7 +45,8 @@ This hardware platform uses this Waveshare Zero board.
 
 **Ensure its the ESP32-S3FH4R2 with USB-C port. There are some similar boards with no USB-C or slightly different processor**
 This module is very low cost (around US$6) and does not support an LCD display. It requires a 5 volt DC power supply.
-Caution: do not connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!
+Caution: do not directly connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!<br>
+If you do wish to use 9v power, refer to [9 volt Power for Zero and 1.69](#9v_power)
 
 ### Connections
 Note: the controller code relies on the Tonex One pedal being set to Stomp mode. Code is in place to do this automatically, but it seems it may have a bug. Manually enable Stomp mode on your pedal.
@@ -75,7 +77,8 @@ If you have already purchased and received a V1 (no V2 sticker on the USB-C port
 ![Waveshare_169_V1_mod](https://github.com/user-attachments/assets/bd9aac38-cc4c-44a8-8f61-732791c53abc)
 
 This module is low cost (around US$16) and supports an LCD display, about the same size as an Apple Watch. It requires a 5 volt DC power supply.
-Caution: do not connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!
+Caution: do not directly connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!<br>
+If you do wish to use 9v power, refer to [9 volt Power for Zero and 1.69](#9v_power)
 
 ### Connections
 Note: the controller code relies on the Tonex One pedal being set to Stomp mode. Code is in place to do this automatically, but it seems it may have a bug. Manually enable Stomp mode on your pedal.
@@ -142,3 +145,19 @@ https://www.printables.com/model/1114384-esp32-s3-169inch-case
 ![image](https://github.com/user-attachments/assets/b09e51fb-da3f-41dd-a42f-305c141e3812)
 ![image](https://github.com/user-attachments/assets/0cd594f5-fb4c-4e16-bc39-dd08e65308cc)
 
+## 9 volt Power for Zero and 1.69 <a name="9v_power"></a>
+The 4.3B model can accept the standard 9 volt pedalboard power, however the Zero and the 1.69" boards are a maximum of 5 volts input.
+<br>It is still possible however to run them from a 9 volt power supply, with the additional of another low cost off-the-shelf PCB.
+<br>**Caution:** This section requires some more advanced skills, such as using a multimeter to measure voltage. Incorrect voltage setting or polarity could cause damage to the PCB and/or your Tonex pedal.
+<br><br>Various electronic shops, and also suppliers like Amazon, often have low cost "switching regulators." These are a compact circuit that can convert the 9 volt pedalboard power down to the 5 volts required by the Zero and the 1.69. Sample photos are shown below.<br>
+Some of these may be a fixed voltage, in which case you must select one with a 5 volt output. Most models however are adjustable, using a small "trimpot."
+<br>For the adjustable types, it is necessary to set it to 5 volts output **before** connecting to the controller PCB.
+<br>
+- Connect the 9 volt input to the input terminals on the voltage regulator PCB. Ensure the positive and negative the right way around. The standard for pedal boards is usually negative to the centre pin of the DC jack, but this should be checked
+- Set the multimeter to measure DC voltage, then connect the multimeter probes to the voltage regulator output terminals
+- Adjust the trimpot on the voltage regulator PCB to achieve close to 5 volts. I doesn't have to be exactly 5 volts, but should be in the range of 4.95v to 5.05v
+- Once this has been achieved, connect the voltage regulator output terminals to the Waveshare Zero or 1.69" boards, in the same locations as shown in the prior wiring diagrams
+- Keep the Tonex pedal disconnected, and power on the Waveshare board. Check that it boots up and runs normally
+- Once this test has passed, then you can connect the Tonex pedal
+![image](https://github.com/user-attachments/assets/e59673c5-f741-4516-b471-5af0eb685d12)
+![image](https://github.com/user-attachments/assets/472394d5-a2c9-492d-909c-792480abcb4c)
