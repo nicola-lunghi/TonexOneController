@@ -41,8 +41,9 @@ limitations under the License.
 #define CTRL_TASK_STACK_SIZE   (3 * 1024)
 #define NVS_USERDATA_NAME       "userdata"        
 
-#define MAX_TEXT_LENGTH                         128
-#define MAX_PRESETS_DEFAULT                     20
+#define MAX_TEXT_LENGTH        128
+#define MAX_PRESETS_DEFAULT    20
+#define MAX_BT_CUSTOM_NAME     25                 
 
 enum CommandEvents
 {
@@ -58,6 +59,8 @@ enum CommandEvents
     EVENT_SET_CONFIG_BT_MODE,
     EVENT_SET_CONFIG_MV_CHOC_ENABLE,
     EVENT_SET_CONFIG_XV_MD1_ENABLE,
+    EVENT_SET_CONFIG_CUSTOM_BT_ENABLE,
+    EVENT_SET_CONFIG_BT_CUSTOM_NAME,
     EVENT_SET_CONFIG_MIDI_ENABLE,
     EVENT_SET_CONFIG_MIDI_CHANNEL,
     EVENT_SET_CONFIG_TOGGLE_BYPASS
@@ -85,7 +88,8 @@ typedef struct __attribute__ ((packed))
     // bt client flags
     uint16_t BTClientMvaveChocolateEnable: 1;
     uint16_t BTClientXviveMD1Enable: 1;
-    uint16_t BTClientSpares: 14;
+    uint16_t BTClientCustomEnable: 1;
+    uint16_t BTClientSpares: 13;
 
     // serial Midi flags
     uint8_t MidiSerialEnable: 1;
@@ -98,6 +102,7 @@ typedef struct __attribute__ ((packed))
     uint16_t GeneralSpare: 15;
 
     uint8_t Spare;
+    char BTClientCustomName[MAX_BT_CUSTOM_NAME];
 } tConfigData;
 
 typedef struct 
@@ -237,6 +242,19 @@ static uint8_t process_control_command(tControlMessage* message)
         {
             ESP_LOGI(TAG, "Config set XV MD1 enable %d", (int)message->Value);
             ControlData.ConfigData.BTClientXviveMD1Enable = (uint8_t)message->Value;
+        } break;
+
+        case EVENT_SET_CONFIG_CUSTOM_BT_ENABLE:
+        {
+            ESP_LOGI(TAG, "Config set custom BT enable %d", (int)message->Value);
+            ControlData.ConfigData.BTClientCustomEnable = (uint8_t)message->Value;
+        } break;
+
+        case EVENT_SET_CONFIG_BT_CUSTOM_NAME:
+        {
+            ESP_LOGI(TAG, "Config set custom BT name %s", message->Text);
+            strncpy(ControlData.ConfigData.BTClientCustomName, message->Text, MAX_BT_CUSTOM_NAME - 1);
+            ControlData.ConfigData.BTClientCustomName[MAX_BT_CUSTOM_NAME - 1] = 0;
         } break;
 
         case EVENT_SET_CONFIG_MIDI_ENABLE:
@@ -536,7 +554,30 @@ void control_set_config_xv_md1_enable(uint32_t status)
         ESP_LOGE(TAG, "control_set_config_xv_md1_enable queue send failed!");            
     }
 }
- 
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void control_set_config_bt_custom_enable(uint32_t status)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_config_bt_custom_enable");
+
+    message.Event = EVENT_SET_CONFIG_CUSTOM_BT_ENABLE;
+    message.Value = status;
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_config_bt_custom_enable queue send failed!");            
+    }
+}
+
 /****************************************************************************
 * NAME:        
 * DESCRIPTION: 
@@ -582,6 +623,29 @@ void control_set_config_serial_midi_channel(uint32_t status)
         ESP_LOGE(TAG, "control_set_config_serial_midi_channel queue send failed!");            
     }
 }        
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void control_set_config_custom_bt_name(char* name)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_config_custom_bt_name");
+
+    message.Event = EVENT_SET_CONFIG_BT_CUSTOM_NAME;
+    strncpy(message.Text, name, MAX_BT_CUSTOM_NAME - 1);
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_config_custom_bt_name queue send failed!");            
+    }
+}
 
 /****************************************************************************
 * NAME:        
@@ -673,6 +737,31 @@ uint8_t control_get_config_bt_mvave_choc_enable(void)
 uint8_t control_get_config_bt_xvive_md1_enable(void)
 {
     return ControlData.ConfigData.BTClientXviveMD1Enable;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+uint8_t control_get_config_bt_custom_enable(void)
+{
+    return ControlData.ConfigData.BTClientCustomEnable;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void control_get_config_custom_bt_name(char* name)
+{
+    strncpy(name, ControlData.ConfigData.BTClientCustomName, MAX_BT_CUSTOM_NAME - 1);
+    name[MAX_BT_CUSTOM_NAME - 1] = 0;
 }
 
 /****************************************************************************
@@ -842,6 +931,8 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config BT Mode: %d", (int)ControlData.ConfigData.BTMode);
     ESP_LOGI(TAG, "Config BT Mvave Choc: %d", (int)ControlData.ConfigData.BTClientMvaveChocolateEnable);
     ESP_LOGI(TAG, "Config BT Xvive MD1: %d", (int)ControlData.ConfigData.BTClientMvaveChocolateEnable);
+    ESP_LOGI(TAG, "Config BT Custom Client Enable: %d", (int)ControlData.ConfigData.BTClientCustomEnable);
+    ESP_LOGI(TAG, "Config BT Custom Client Name: %s", ControlData.ConfigData.BTClientCustomName);
     ESP_LOGI(TAG, "Config Midi enable: %d", (int)ControlData.ConfigData.MidiSerialEnable);
     ESP_LOGI(TAG, "Config Midi channel: %d", (int)ControlData.ConfigData.MidiChannel);
     ESP_LOGI(TAG, "Config Toggle bypass: %d", (int)ControlData.ConfigData.GeneralDoublePressToggleBypass);
@@ -900,9 +991,11 @@ void control_load_config(void)
     ControlData.ConfigData.BTMode = BT_MODE_CENTRAL;
     ControlData.ConfigData.BTClientMvaveChocolateEnable = 1;
     ControlData.ConfigData.BTClientXviveMD1Enable = 1;
+    ControlData.ConfigData.BTClientCustomEnable = 0;
     ControlData.ConfigData.GeneralDoublePressToggleBypass = 0;
     ControlData.ConfigData.MidiSerialEnable = 0;
     ControlData.ConfigData.MidiChannel = 1;
+    memset((void*)ControlData.ConfigData.BTClientCustomName, 0, sizeof(ControlData.ConfigData.BTClientCustomName));
 
     // Initialize NVS
     ret = nvs_flash_init();

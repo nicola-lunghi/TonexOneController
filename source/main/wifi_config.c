@@ -204,7 +204,7 @@ uint8_t get_submitted_value(char* dest, char* ptr)
 ****************************************************************************/
 static esp_err_t update_post_handler(httpd_req_t* req)
 {
-    char value[20] = {0};
+    char value[32] = {0};
     char* ptr;
     uint8_t temp_val;
 
@@ -332,6 +332,35 @@ static esp_err_t update_post_handler(httpd_req_t* req)
         }
     }
     control_set_config_xv_md1_enable(temp_val);
+
+
+    // look for custom BT device enable
+    ptr = strstr(buf, "custombte=");    
+    temp_val = 0;
+    if (ptr != NULL)
+    {
+        // skip up to =
+        ptr += strlen("custombte=");
+        get_submitted_value(value, ptr);
+
+        if (strcmp(value, "on") == 0)
+        {
+            temp_val = 1;
+        }
+    }   
+    control_set_config_bt_custom_enable(temp_val);
+
+    // look for custom BT name
+    ptr = strstr(buf, "custombt=");    
+    if (ptr != NULL)
+    {
+        // skip up to =
+        ptr += strlen("custombt=");
+        get_submitted_value(value, ptr);
+
+        control_set_config_custom_bt_name(value);
+    }
+
     free(buf);
 
     // Send a simple response

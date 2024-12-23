@@ -954,7 +954,7 @@ void display_task(void *arg)
             // Release the mutex
             display_lvgl_unlock();
 	    }
-
+        
         vTaskDelay(pdMS_TO_TICKS(5));
     }
 }

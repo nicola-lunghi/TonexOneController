@@ -69,7 +69,7 @@ static uint8_t MidiCharacteristicUUIDByteReversed[] = {0xF3, 0x6B, 0x10, 0x9D, 0
 #define PROFILE_A_APP_ID            0
 #define INVALID_HANDLE              0
 #define BT_SCAN_DURATION            1800    // seconds
-#define MAX_DEVICE_NAME_LENGTH      16
+#define MAX_DEVICE_NAME_LENGTH      25
 #define MAX_DEVICE_NAMES            10
 
 // Declare static functions
@@ -1472,6 +1472,13 @@ static void InitDeviceList(void)
     {
         // Xvive Bluetooth Midi adaptor is 'Xvive MD1'
         strncpy(remote_device_names[remote_device_names_length], "Xvive MD1", MAX_DEVICE_NAME_LENGTH);
+        remote_device_names_length++;
+    }
+
+    if (control_get_config_bt_custom_enable())
+    {
+        // Custom Bluetooth device name
+        control_get_config_custom_bt_name(remote_device_names[remote_device_names_length]);
         remote_device_names_length++;
     }
 
