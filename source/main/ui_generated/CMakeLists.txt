@@ -1,4 +1,5 @@
 SET(SOURCES screens/ui_Screen1.c
+    screens/ui_Settings.c
     ui.c
     components/ui_comp_hook.c
     ui_helpers.c
@@ -7,6 +8,7 @@ SET(SOURCES screens/ui_Screen1.c
     images/ui_img_previous_down_png.c
     images/ui_img_next_png.c
     images/ui_img_next_down_png.c
+    images/ui_img_settings_png.c
     images/ui_img_smythbuilt_png.c
     images/ui_img_bt_conn_png.c
     images/ui_img_bt_disconn_png.c
@@ -62,7 +64,6 @@ SET(SOURCES screens/ui_Screen1.c
     images/ui_img_skin_superbass_png.c
     images/ui_img_skin_supro50_png.c
     images/ui_img_skin_svtcl_png.c
-    images/ui_img_skin_twinreverb_png.c
-    ui_temporary_image.c)
+    images/ui_img_skin_twinreverb_png.c)
 
 add_library(ui ${SOURCES})

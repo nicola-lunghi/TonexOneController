@@ -7,9 +7,9 @@ if(CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480)
     target_include_directories(${COMPONENT_LIB} PRIVATE include "ui_generated")
 
     target_sources(${COMPONENT_LIB} PRIVATE "ui_generated/ui.c" "ui_generated/ui_helpers.c"
-                            "ui_generated/images/ui_img_smythbuilt_png.c" "ui_generated/screens/ui_Screen1.c" "ui_generated/components/ui_comp_hook.c"
+                            "ui_generated/images/ui_img_smythbuilt_png.c" "ui_generated/screens/ui_Screen1.c" "ui_generated/screens/ui_Settings.c" "ui_generated/components/ui_comp_hook.c"
 			                "ui_generated/images/ui_img_usb_fail_png.c" "ui_generated/images/ui_img_next_png.c" "ui_generated/images/ui_img_previous_png.c" "ui_generated/images/ui_temporary_image.c"
-                            "ui_generated/images/ui_img_usb_ok_png.c" "ui_generated/images/ui_img_next_down_png.c" "ui_generated/images/ui_img_previous_down_png.c"
+                            "ui_generated/images/ui_img_usb_ok_png.c" "ui_generated/images/ui_img_next_down_png.c" "ui_generated/images/ui_img_previous_down_png.c" "ui_generated/images/ui_img_settings_png.c"
                             "ui_generated/images/ui_img_skin_2001rb_png.c" "ui_generated/images/ui_img_skin_5150_png.c" 
                             "ui_generated/images/ui_img_skin_b18n_png.c" "ui_generated/images/ui_img_skin_bluesdeluxe_png.c"
                             "ui_generated/images/ui_img_skin_deville_png.c" "ui_generated/images/ui_img_skin_dualrectifier_png.c"
