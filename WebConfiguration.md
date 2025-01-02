@@ -4,7 +4,8 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 # Configuration and Settings
 New in firmware version V1.0.4.2 is the ability to change settings via WiFi/Web browser.
 
-![image](https://github.com/user-attachments/assets/ca8ef36a-1609-40ff-a95e-8b4c876425e4)
+![image](https://github.com/user-attachments/assets/0beb0d12-d1bb-4d75-bfcd-79be5025feae)
+
 
 ## Available Settings
 ### Bluetooth Mode
@@ -15,6 +16,7 @@ New in firmware version V1.0.4.2 is the ability to change settings via WiFi/Web 
 ### Bluetooth Devices
 - Enable support for the M-Vave Chocolate and Chocolate Plus bluetooth footswitch controllers (default: on)
 - Enable support for the X-Vive MD1 Midi bridge device (default: on)
+- Enable support for some other Bluetooth Midi peripheral. Enter its device name, and check the checkbox to enable it (default: off)
 
 ### Wired Midi
 - Enable support for wired Midi. CAUTION: this should only be enabled when the correct hardware has been connected. If not, random preset switching may occur!
