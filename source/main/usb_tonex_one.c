@@ -515,6 +515,48 @@ static esp_err_t usb_tonex_one_request_state(void)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+static esp_err_t usb_tonex_one_send_parameters(void)
+{
+#if 0    
+    // disabled section due to being non-functional
+    
+    uint16_t framed_length;
+
+    // Build message, length to 0 for now                    len LSB  len MSB
+    uint8_t message[] = {0xb9, 0x03, 0x81, 0x03, 0x03, 0x82, 0,       0,       0x80, 0x0b, 0x03};
+
+    // set length 
+    message[6] = TonexData.Message.PedalData.PresetDataLength & 0xFF;
+    message[7] = (TonexData.Message.PedalData.PresetDataLength >> 8) & 0xFF;
+
+    // test
+    //TonexData.Message.PedalData.PresetData[2] = 1;
+    //TonexData.Message.PedalData.PresetData[7] = 4;
+
+    // build total message
+    memcpy((void*)TxBuffer, (void*)message, sizeof(message));
+    memcpy((void*)&TxBuffer[sizeof(message)], (void*)TonexData.Message.PedalData.PresetData, TonexData.Message.PedalData.PresetDataLength);
+
+    // add framing
+    framed_length = addFraming(TxBuffer, sizeof(message) + TonexData.Message.PedalData.PresetDataLength, FramedBuffer);
+
+    // debug
+    //ESP_LOG_BUFFER_HEXDUMP(TAG, FramedBuffer, framed_length, ESP_LOG_INFO);
+
+    // send it
+    return usb_tonex_one_transmit(FramedBuffer, framed_length);
+#endif
+
+    return ESP_FAIL;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 static esp_err_t __attribute__((unused)) usb_tonex_one_set_active_slot(Slot newSlot)
 {
     uint16_t framed_length;
@@ -703,6 +745,51 @@ static esp_err_t usb_tonex_one_transmit(uint8_t* tx_data, uint16_t tx_len)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+static esp_err_t usb_tonex_one_modify_parameter(uint16_t index, float value)
+{
+    uint32_t byte_offset;
+    uint8_t* temp_ptr;
+
+    ESP_LOGI(TAG, "usb_tonex_one_modify_parameter index: %d value: %02f", (int)index, value);   
+
+    if (index >= TONEX_PARAM_LAST)
+    {
+        ESP_LOGE(TAG, "usb_tonex_one_modify_parameters invalid index %d", (int)index);   
+        return ESP_FAIL;
+    }
+
+    // calculate the offset to the parameter. +1 for the 0x88 marker
+    byte_offset = TonexData.Message.PedalData.PresetParameterStartOffset + (index * (sizeof(float) + 1));
+    temp_ptr = &TonexData.Message.PedalData.PresetData[byte_offset];
+    
+    // safety check on the index
+    if (*temp_ptr == 0x88)
+    {
+        // skip the marker
+        temp_ptr++;
+
+        // update the local copy
+        memcpy((void*)&TonexParameters[index].Value, (void*)&value, sizeof(float));
+
+        // update the raw data
+        memcpy((void*)temp_ptr, (void*)&value, sizeof(float));
+
+        return ESP_OK;
+    }
+    else
+    {
+        ESP_LOGE(TAG, "usb_tonex_one_modify_parameters invalid ptr. Offset %d Value %d", (int)byte_offset, (int)*temp_ptr);   
+        return ESP_FAIL;
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 uint16_t usb_tonex_one_parse_value(uint8_t* message, uint8_t* index)
 {
     uint16_t value = 0;
@@ -778,7 +865,7 @@ static Status usb_tonex_one_parse_preset_details(uint8_t* unframed, uint16_t len
     memcpy((void*)TonexData.Message.PedalData.PresetData, (void*)&unframed[index], TonexData.Message.PedalData.PresetDataLength);
     ESP_LOGI(TAG, "Saved Preset Details: %d", TonexData.Message.PedalData.PresetDataLength);
 
-    //ESP_LOGI(TAG, "Preset Data Rx: %d %d", (int)length, (int)index);
+    ESP_LOGI(TAG, "Preset Data Rx: %d %d", (int)length, (int)index);
     //ESP_LOG_BUFFER_HEXDUMP(TAG, TonexData.Message.PedalData.PresetData, TonexData.Message.PedalData.PresetDataLength, ESP_LOG_INFO);
 
     return STATUS_OK;
@@ -1199,6 +1286,12 @@ void usb_tonex_one_handle(class_driver_t* driver_obj)
                             }
                         }
                     } break;
+
+                    case USB_COMMAND_MODIFY_PARAMETER:
+                    {
+                        usb_tonex_one_modify_parameter(message.Payload, message.PayloadFloat);
+                        usb_tonex_one_send_parameters();
+                    } break;
                 }
             }
         } break;
@@ -1221,9 +1314,10 @@ void usb_tonex_one_handle(class_driver_t* driver_obj)
         uint16_t bytes_consumed = 0;
         uint8_t* rx_entry_ptr = rx_entry.Data;
 
+        // process all messages received (may be multiple messages appended)
         do
         {    
-            // +1 here to skip the start marker which is same as end marker
+            // locate the end of the message
             end_marker_pos = usb_tonex_one_locate_message_end(rx_entry_ptr, rx_entry.Length);
 
             if (end_marker_pos == 0)
@@ -1240,6 +1334,7 @@ void usb_tonex_one_handle(class_driver_t* driver_obj)
             // debug
             //ESP_LOG_BUFFER_HEXDUMP(TAG, rx_entry_ptr, end_marker_pos + 1, ESP_LOG_INFO);
 
+            // process it
             if (usb_tonex_one_process_single_message(rx_entry_ptr, end_marker_pos + 1) != ESP_OK)
             {
                 break;    
@@ -1249,7 +1344,7 @@ void usb_tonex_one_handle(class_driver_t* driver_obj)
             rx_entry_ptr += (end_marker_pos + 1);
             bytes_consumed += (end_marker_pos + 1);
 
-            ESP_LOGI(TAG, "After message, pos %d cons %d len %d", (int)end_marker_pos, (int)bytes_consumed, (int)rx_entry.Length);
+            //ESP_LOGI(TAG, "After message, pos %d cons %d len %d", (int)end_marker_pos, (int)bytes_consumed, (int)rx_entry.Length);
         } while (bytes_consumed < rx_entry.Length);
     } 
 }
@@ -1331,7 +1426,7 @@ void usb_tonex_one_init(class_driver_t* driver_obj, QueueHandle_t comms_queue)
     // set the config
     const cdc_acm_host_device_config_t dev_config = {
         .connection_timeout_ms = 1000,
-        .out_buffer_size = 1024,
+        .out_buffer_size = 3072,
         .in_buffer_size = RX_TEMP_BUFFER_SIZE,
         .user_arg = NULL,
         .event_cb = NULL,

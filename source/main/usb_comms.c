@@ -435,6 +435,35 @@ void usb_previous_preset(void)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+void usb_modify_parameter(uint16_t index, float value)
+{
+    tUSBMessage message;
+
+    if (usb_input_queue == NULL)
+    {
+        ESP_LOGE(TAG, "usb_modify_parameter queue null");            
+    }
+    else
+    {
+        message.Command = USB_COMMAND_MODIFY_PARAMETER;
+        message.Payload = index;
+        message.PayloadFloat = value;
+
+        // send to queue
+        if (xQueueSend(usb_input_queue, (void*)&message, 0) != pdPASS)
+        {
+            ESP_LOGE(TAG, "usb_modify_parameter queue send failed!");            
+        }
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 void init_usb_comms(void)
 {
     // init USB

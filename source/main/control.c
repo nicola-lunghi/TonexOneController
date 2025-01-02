@@ -36,6 +36,7 @@ limitations under the License.
 #include "footswitches.h"
 #include "display.h"
 #include "usb_comms.h"
+#include "usb_tonex_one.h"
 #include "task_priorities.h"
 
 #define CTRL_TASK_STACK_SIZE   (3 * 1024)
