@@ -132,25 +132,25 @@
                       {
                         "nid": -1699478295,
                         "strtype": "IMGBUTTON/Image_disabled",
-                        "strval": "",
+                        "strval": "-",
                         "InheritedType": 5
                       },
                       {
                         "nid": 1011608136,
                         "strtype": "IMGBUTTON/Image_checked_released",
-                        "strval": "",
+                        "strval": "-",
                         "InheritedType": 5
                       },
                       {
                         "nid": -1608472123,
                         "strtype": "IMGBUTTON/Image_checked_pressed",
-                        "strval": "",
+                        "strval": "-",
                         "InheritedType": 5
                       },
                       {
                         "nid": 478219001,
                         "strtype": "IMGBUTTON/Image_checked_disabled",
-                        "strval": "",
+                        "strval": "-",
                         "InheritedType": 5
                       },
                       {
@@ -1291,6 +1291,12 @@
                     "flags": 1048576,
                     "strtype": "OBJECT/Flags",
                     "InheritedType": 1
+                  },
+                  {
+                    "nid": 100,
+                    "strtype": "OBJECT/Hidden",
+                    "strval": "True",
+                    "InheritedType": 2
                   },
                   {
                     "nid": 150,
@@ -15262,6 +15268,48 @@
                 "part": " lv.PART.ITEMS",
                 "childs": [
                   {
+                    "nid": 10000,
+                    "strtype": "_style/StyleState",
+                    "strval": "DEFAULT",
+                    "childs": [
+                      {
+                        "nid": 10410,
+                        "strtype": "_style/Text_Color",
+                        "intarray": [
+                          192,
+                          192,
+                          192,
+                          255
+                        ],
+                        "InheritedType": 7
+                      },
+                      {
+                        "nid": 10710,
+                        "strtype": "_style/Border_Color",
+                        "intarray": [
+                          55,
+                          55,
+                          55,
+                          255
+                        ],
+                        "InheritedType": 7
+                      },
+                      {
+                        "nid": 10720,
+                        "strtype": "_style/Border width",
+                        "integer": 2,
+                        "InheritedType": 6
+                      },
+                      {
+                        "nid": 10730,
+                        "strtype": "_style/Border side",
+                        "strval": "LEFT",
+                        "InheritedType": 3
+                      }
+                    ],
+                    "InheritedType": 1
+                  },
+                  {
                     "nid": 20000,
                     "strtype": "_style/StyleState",
                     "strval": "CHECKED",
@@ -15270,9 +15318,9 @@
                         "nid": 20410,
                         "strtype": "_style/Text_Color",
                         "intarray": [
-                          253,
                           251,
-                          251,
+                          146,
+                          48,
                           255
                         ],
                         "InheritedType": 7
@@ -15281,9 +15329,9 @@
                         "nid": 20520,
                         "strtype": "_style/Bg_Color",
                         "intarray": [
+                          81,
                           61,
-                          61,
-                          61,
+                          43,
                           255
                         ],
                         "InheritedType": 7
@@ -15292,9 +15340,9 @@
                         "nid": 20710,
                         "strtype": "_style/Border_Color",
                         "intarray": [
-                          141,
-                          128,
-                          26,
+                          251,
+                          146,
+                          48,
                           255
                         ],
                         "InheritedType": 7
@@ -15683,7 +15731,7 @@
     "uiExportFolderPath": "D:\\projects\\TonexController\\TonexOneController\\source\\main\\ui_generated",
     "projectExportFolderPath": "D:\\projects\\TonexController\\TonexOneController\\source\\main\\ui_generated",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 377,
+    "backup_cnt": 379,
     "autosave_cnt": 0,
     "lvgl_version": "8.3.11",
     "callfuncsexport": "C_FILE",
