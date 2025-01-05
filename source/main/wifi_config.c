@@ -361,6 +361,30 @@ static esp_err_t update_post_handler(httpd_req_t* req)
         control_set_config_custom_bt_name(value);
     }
 
+    // look for footswitch mode
+    ptr = strstr(buf, "footmode=");    
+    if (ptr != NULL)
+    {
+        // skip up to =
+        ptr += strlen("footmode=");
+        get_submitted_value(value, ptr);
+ 
+        uint8_t mode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
+        if (strcmp(value, "Dual Next/Previous") == 0)
+        {
+            mode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
+        }
+        else if (strcmp(value, "Quad Banked") == 0)
+        {
+            mode = FOOTSWITCH_MODE_QUAD_BANKED;
+        }
+        else if (strcmp(value, "Quad Binary") == 0)
+        {
+            mode = FOOTSWITCH_MODE_QUAD_BINARY;
+        }
+        control_set_config_footswitch_mode(mode);
+    }
+
     free(buf);
 
     // Send a simple response

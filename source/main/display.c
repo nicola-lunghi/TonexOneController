@@ -70,29 +70,7 @@ static const char *TAG = "app_display";
     #define DISPLAY_LCD_PIXEL_CLOCK_HZ     (18 * 1000 * 1000)
     #define DISPLAY_LCD_BK_LIGHT_ON_LEVEL  1
     #define DISPLAY_LCD_BK_LIGHT_OFF_LEVEL !DISPLAY_LCD_BK_LIGHT_ON_LEVEL
-    #define DISPLAY_PIN_NUM_BK_LIGHT       -1
-    #define DISPLAY_PIN_NUM_HSYNC          46
-    #define DISPLAY_PIN_NUM_VSYNC          3
-    #define DISPLAY_PIN_NUM_DE             5
-    #define DISPLAY_PIN_NUM_PCLK           7
-    #define DISPLAY_PIN_NUM_DATA0          14 // B3
-    #define DISPLAY_PIN_NUM_DATA1          38 // B4
-    #define DISPLAY_PIN_NUM_DATA2          18 // B5
-    #define DISPLAY_PIN_NUM_DATA3          17 // B6
-    #define DISPLAY_PIN_NUM_DATA4          10 // B7
-    #define DISPLAY_PIN_NUM_DATA5          39 // G2
-    #define DISPLAY_PIN_NUM_DATA6          0 // G3
-    #define DISPLAY_PIN_NUM_DATA7          45 // G4
-    #define DISPLAY_PIN_NUM_DATA8          48 // G5
-    #define DISPLAY_PIN_NUM_DATA9          47 // G6
-    #define DISPLAY_PIN_NUM_DATA10         21 // G7
-    #define DISPLAY_PIN_NUM_DATA11         1  // R3
-    #define DISPLAY_PIN_NUM_DATA12         2  // R4
-    #define DISPLAY_PIN_NUM_DATA13         42 // R5
-    #define DISPLAY_PIN_NUM_DATA14         41 // R6
-    #define DISPLAY_PIN_NUM_DATA15         40 // R7
-    #define DISPLAY_PIN_NUM_DISP_EN        -1
-
+    
     // The pixel number in horizontal and vertical
     #define DISPLAY_LCD_H_RES              800
     #define DISPLAY_LCD_V_RES              480
@@ -119,14 +97,6 @@ static const char *TAG = "app_display";
     #define WAVESHARE_240_280_LCD_DRAW_BUFF_DOUBLE    (1)
     #define WAVESHARE_240_280_LCD_DRAW_BUFF_HEIGHT    (50)
     #define WAVESHARE_240_280_LCD_BL_ON_LEVEL         (1)
-
-    /* LCD pins */
-    #define WAVESHARE_240_280_LCD_GPIO_SCLK           (GPIO_NUM_6)
-    #define WAVESHARE_240_280_LCD_GPIO_MOSI           (GPIO_NUM_7)
-    #define WAVESHARE_240_280_LCD_GPIO_RST            (GPIO_NUM_8)
-    #define WAVESHARE_240_280_LCD_GPIO_DC             (GPIO_NUM_4)
-    #define WAVESHARE_240_280_LCD_GPIO_CS             (GPIO_NUM_5)
-    #define WAVESHARE_240_280_LCD_GPIO_BL             (GPIO_NUM_15)
 
     static esp_lcd_panel_io_handle_t lcd_io = NULL;
     static esp_lcd_panel_handle_t lcd_panel = NULL;
@@ -1208,10 +1178,9 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
     gpio_config_t gpio_config_struct;
 
-    // switch off the buzzer. GPIO42 on PCB V2. GPIO33 on PCV V1.
-    // note here: GPIO33 used on V1 PCB conflicts with Octal mode PSRAM, so can't use that
+    // switch off the buzzer. 
     ESP_LOGI(TAG, "Buzzer off");
-    gpio_config_struct.pin_bit_mask = (uint64_t)1 << GPIO_NUM_42;
+    gpio_config_struct.pin_bit_mask = (uint64_t)1 << WAVESHARE_240_280_BUZZER;
     gpio_config_struct.mode = GPIO_MODE_OUTPUT;
     gpio_config_struct.pull_up_en = GPIO_PULLUP_DISABLE;
     gpio_config_struct.pull_down_en = GPIO_PULLDOWN_DISABLE;

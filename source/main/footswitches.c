@@ -94,99 +94,203 @@ static uint8_t read_footswitch_input(uint8_t number, uint8_t* switch_state)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void footswitch_task(void *arg)
+static void footswitch_handle_dual_mode(void)
 {
     uint8_t value;   
+
+    switch (FootswitchControl.state)
+    {
+        case FOOTSWITCH_IDLE:
+        default:
+        {
+            // read footswitches
+            if (read_footswitch_input(FOOTSWITCH_1, &value)) 
+            {
+                if (value == 0)
+                {
+                    ESP_LOGI(TAG, "Footswitch 1 pressed");
+
+                    // foot switch 1 pressed
+                    control_request_preset_down();
+
+                    // wait release	
+                    FootswitchControl.sample_counter = 0;
+                    FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
+                }
+            }
+
+            if (FootswitchControl.state == FOOTSWITCH_IDLE)
+            {
+                if (read_footswitch_input(FOOTSWITCH_2, &value))
+                {
+                    if (value == 0)
+                    {
+                        ESP_LOGI(TAG, "Footswitch 2 pressed");
+
+                        // foot switch 2 pressed, send event
+                        control_request_preset_up();
+
+                        // wait release	
+                        FootswitchControl.sample_counter = 0;
+                        FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_2;
+                    }
+                }
+            }
+        } break;
+
+        case FOOTSWITCH_WAIT_RELEASE_1:
+        {
+            // read footswitch 1
+            if (read_footswitch_input(FOOTSWITCH_1, &value))
+            {
+                if (value != 0)
+                {
+                    FootswitchControl.sample_counter++;
+                    if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
+                    {
+                        // foot switch released
+                        FootswitchControl.state = FOOTSWITCH_IDLE;		
+                    }
+                }
+                else
+                {
+                    // reset counter
+                    FootswitchControl.sample_counter = 0;
+                }
+            }
+        } break;
+
+        case FOOTSWITCH_WAIT_RELEASE_2:
+        {
+            // read footswitch 2
+            if (read_footswitch_input(FOOTSWITCH_2, &value))
+            {
+                if (value != 0)
+                {
+                    FootswitchControl.sample_counter++;
+                    if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
+                    {
+                        // foot switch released
+                        FootswitchControl.state = FOOTSWITCH_IDLE;
+                    }                 
+                }
+                else
+                {
+                    // reset counter
+                    FootswitchControl.sample_counter = 0;
+                }
+            }
+        } break;
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+static void footswitch_handle_quad_banked(void)
+{
+    uint8_t value;
+
+    // to do
+    // Choc pedal changes preset when the switch is released
+    // Changes banks when both pressed, does nothing when both released
+    // states: 1 pressed, wait release or for another pressed?
+    
+    // check for A+B
+    // else check for C+D
+    // else check for A,B,C,D singles
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+static void footswitch_handle_quad_binary(void)
+{
+    uint8_t value;
+    uint8_t binary_val = 0;
+    static uint8_t last_binary_val = 0;
+
+    // read all 4 switches
+    read_footswitch_input(FOOTSWITCH_1, &value);
+    binary_val |= value << 0;
+
+    read_footswitch_input(FOOTSWITCH_2, &value);
+    binary_val |= value << 1;
+
+    read_footswitch_input(FOOTSWITCH_3, &value);
+    binary_val |= value << 2;
+
+    read_footswitch_input(FOOTSWITCH_4, &value);
+    binary_val |= value << 3;
+
+    // has it changed?
+    if (binary_val != last_binary_val)
+    {
+        last_binary_val = binary_val;
+
+        // set preset
+        control_request_preset_index(binary_val);
+
+        ESP_LOGI(TAG, "Footswitch binary set preset %d", binary_val);
+    }
+
+    // wait a little longer, so we don't jump around presets while inputs are being set
+    vTaskDelay(pdMS_TO_TICKS(180));
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void footswitch_task(void *arg)
+{    
+    uint8_t mode;   
  
     ESP_LOGI(TAG, "Footswitch task start");
 
     // let things settle
-    vTaskDelay(1000);
+    vTaskDelay(pdMS_TO_TICKS(1000));
+
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+    // 4.3B doesn't have enough IO, only supports dual mode
+    mode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
+#else
+    // others, get the currently configured mode from web config
+    mode = control_get_config_footswitch_mode();
+#endif
 
     while (1)
     {
-        switch (FootswitchControl.state)
+        switch (mode) 
         {
-            case FOOTSWITCH_IDLE:
+            case FOOTSWITCH_MODE_DUAL_UP_DOWN:
             default:
             {
-                // read footswitches
-                if (read_footswitch_input(FOOTSWITCH_1, &value)) 
-                {
-                    if (value == 0)
-                    {
-                        ESP_LOGI(TAG, "Footswitch 1 pressed");
-
-                        // foot switch 1 pressed
-                        control_request_preset_down();
-
-                        // wait release	
-                        FootswitchControl.sample_counter = 0;
-                        FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
-                    }
-                }
-
-                if (FootswitchControl.state == FOOTSWITCH_IDLE)
-                {
-                    if (read_footswitch_input(FOOTSWITCH_2, &value))
-                    {
-                        if (value == 0)
-                        {
-                            ESP_LOGI(TAG, "Footswitch 2 pressed");
-
-                            // foot switch 2 pressed, send event
-                            control_request_preset_up();
-
-                            // wait release	
-                            FootswitchControl.sample_counter = 0;
-                            FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_2;
-                        }
-                    }
-                }
+                // run dual mode next/previous
+                footswitch_handle_dual_mode();
             } break;
 
-            case FOOTSWITCH_WAIT_RELEASE_1:
+            case FOOTSWITCH_MODE_QUAD_BANKED:
             {
-                // read footswitch 1
-                if (read_footswitch_input(FOOTSWITCH_1, &value))
-                {
-                    if (value != 0)
-                    {
-                        FootswitchControl.sample_counter++;
-                        if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
-                        {
-                            // foot switch released
-                            FootswitchControl.state = FOOTSWITCH_IDLE;		
-                        }
-                    }
-                    else
-                    {
-                        // reset counter
-                        FootswitchControl.sample_counter = 0;
-                    }
-                }
+                // run 4 switch with bank up/down
+                footswitch_handle_quad_banked();
             } break;
 
-            case FOOTSWITCH_WAIT_RELEASE_2:
+            case FOOTSWITCH_MODE_QUAD_BINARY:
             {
-                // read footswitch 2
-                if (read_footswitch_input(FOOTSWITCH_2, &value))
-                {
-                    if (value != 0)
-                    {
-                        FootswitchControl.sample_counter++;
-                        if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
-                        {
-                            // foot switch released
-                            FootswitchControl.state = FOOTSWITCH_IDLE;
-                        }                 
-                    }
-                    else
-                    {
-                        // reset counter
-                        FootswitchControl.sample_counter = 0;
-                    }
-                }
+                // run 4 switch binary mode
+                footswitch_handle_quad_binary();
             } break;
         }
 
@@ -206,11 +310,11 @@ void footswitches_init(void)
     memset((void*)&FootswitchControl, 0, sizeof(FootswitchControl));
     FootswitchControl.state = FOOTSWITCH_IDLE;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_DEVKITC
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC
     // init GPIO
     gpio_config_t gpio_config_struct;
 
-    gpio_config_struct.pin_bit_mask = (((uint64_t)1 << FOOTSWITCH_1) | ((uint64_t)1 << FOOTSWITCH_2));
+    gpio_config_struct.pin_bit_mask = (((uint64_t)1 << FOOTSWITCH_1) | ((uint64_t)1 << FOOTSWITCH_2) | ((uint64_t)1 << FOOTSWITCH_3) | ((uint64_t)1 << FOOTSWITCH_4));
     gpio_config_struct.mode = GPIO_MODE_INPUT;
     gpio_config_struct.pull_up_en = GPIO_PULLUP_ENABLE;
     gpio_config_struct.pull_down_en = GPIO_PULLDOWN_DISABLE;

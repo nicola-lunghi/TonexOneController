@@ -88,6 +88,14 @@ enum BluetoothModes
     BT_MODE_PERIPHERAL,
 };
 
+enum FootswitchModes
+{
+    FOOTSWITCH_MODE_DUAL_UP_DOWN,       // next/previous
+    FOOTSWITCH_MODE_QUAD_BANKED,        // like Mvave Choc with bank select from 1+2 and 3+4
+    FOOTSWITCH_MODE_QUAD_BINARY,        // direct binary selection from 4 switches
+    FOOTSWITCH_MODE_LAST
+};
+
 // thread safe public API
 void control_request_preset_up(void);
 void control_request_preset_down(void);
@@ -110,6 +118,7 @@ void control_set_config_custom_bt_name(char* name);
 void control_set_config_serial_midi_enable(uint32_t status);
 void control_set_config_serial_midi_channel(uint32_t status);
 void control_set_config_toggle_bypass(uint32_t status);
+void control_set_config_footswitch_mode(uint32_t mode);
 
 uint8_t control_get_config_bt_mode(void);
 uint8_t control_get_config_bt_mvave_choc_enable(void);
@@ -119,3 +128,4 @@ void control_get_config_custom_bt_name(char* name);
 uint8_t control_get_config_double_toggle(void);
 uint8_t control_get_config_midi_serial_enable(void);
 uint8_t control_get_config_midi_channel(void);
+uint8_t control_get_config_footswitch_mode(void);

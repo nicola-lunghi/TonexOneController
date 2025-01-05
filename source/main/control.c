@@ -64,7 +64,8 @@ enum CommandEvents
     EVENT_SET_CONFIG_BT_CUSTOM_NAME,
     EVENT_SET_CONFIG_MIDI_ENABLE,
     EVENT_SET_CONFIG_MIDI_CHANNEL,
-    EVENT_SET_CONFIG_TOGGLE_BYPASS
+    EVENT_SET_CONFIG_TOGGLE_BYPASS,
+    EVENT_SET_CONFIG_FOOTSWITCH_MODE
 };
 
 typedef struct
@@ -102,7 +103,7 @@ typedef struct __attribute__ ((packed))
     uint16_t GeneralDoublePressToggleBypass: 1;
     uint16_t GeneralSpare: 15;
 
-    uint8_t Spare;
+    uint8_t FootswitchMode;
     char BTClientCustomName[MAX_BT_CUSTOM_NAME];
 } tConfigData;
 
@@ -274,6 +275,12 @@ static uint8_t process_control_command(tControlMessage* message)
         {
             ESP_LOGI(TAG, "Config set Toggle Bypass %d", (int)message->Value);
             ControlData.ConfigData.GeneralDoublePressToggleBypass = (uint8_t)message->Value;
+        } break;
+
+        case EVENT_SET_CONFIG_FOOTSWITCH_MODE:
+        {
+            ESP_LOGI(TAG, "Config set Footswitch Mode %d", (int)message->Value);
+            ControlData.ConfigData.FootswitchMode = (uint8_t)message->Value;
         } break;
     }
 
@@ -678,6 +685,29 @@ void control_set_config_toggle_bypass(uint32_t status)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+void control_set_config_footswitch_mode(uint32_t mode)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_config_footswitch_mode");
+
+    message.Event = EVENT_SET_CONFIG_FOOTSWITCH_MODE;
+    message.Value = mode;
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_config_footswitch_mode queue send failed!");            
+    }
+}        
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 void control_set_skin_next(void)
 {
     if (ControlData.ConfigData.UserData[ControlData.PresetIndex].SkinIndex < (SKIN_MAX - 1))
@@ -808,6 +838,18 @@ uint8_t control_get_config_midi_channel(void)
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
+uint8_t control_get_config_footswitch_mode(void)
+{
+    return ControlData.ConfigData.FootswitchMode;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
 static uint8_t SaveUserData(void)
 {
     esp_err_t err;
@@ -924,6 +966,13 @@ static uint8_t LoadUserData(void)
         save_needed = 1;
     }
 
+    if (ControlData.ConfigData.FootswitchMode >= FOOTSWITCH_MODE_LAST)
+    {
+        ESP_LOGW(TAG, "Config Footswitch mode invalid");
+        ControlData.ConfigData.FootswitchMode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
+        save_needed = 1;
+    }
+
     if (save_needed)
     {
         SaveUserData();
@@ -937,6 +986,7 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config Midi enable: %d", (int)ControlData.ConfigData.MidiSerialEnable);
     ESP_LOGI(TAG, "Config Midi channel: %d", (int)ControlData.ConfigData.MidiChannel);
     ESP_LOGI(TAG, "Config Toggle bypass: %d", (int)ControlData.ConfigData.GeneralDoublePressToggleBypass);
+    ESP_LOGI(TAG, "Config Footswitch Mode: %d", (int)ControlData.ConfigData.FootswitchMode);
 
     // status    
     return result;
@@ -996,6 +1046,7 @@ void control_load_config(void)
     ControlData.ConfigData.GeneralDoublePressToggleBypass = 0;
     ControlData.ConfigData.MidiSerialEnable = 0;
     ControlData.ConfigData.MidiChannel = 1;
+    ControlData.ConfigData.FootswitchMode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
     memset((void*)ControlData.ConfigData.BTClientCustomName, 0, sizeof(ControlData.ConfigData.BTClientCustomName));
 
     // Initialize NVS

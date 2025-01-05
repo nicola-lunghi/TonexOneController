@@ -33,6 +33,7 @@ limitations under the License.
 #include "sys/param.h"
 #include "esp_log.h"
 #include "driver/i2c.h"
+#include "main.h"
 #include "midi_serial.h"
 #include "control.h"
 #include "task_priorities.h"
@@ -41,22 +42,6 @@ limitations under the License.
 #define MIDI_SERIAL_BUFFER_SIZE                 128
 
 #define UART_PORT_NUM                           UART_NUM_1
-
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
-    // Waveshare 4.3B RS485 port
-    #define UART_RX_PIN                             GPIO_NUM_43
-    #define UART_TX_PIN                             GPIO_NUM_44 
-
-    // Waveshare 7" using RS485 port
-    //#define UART_RX_PIN                             GPIO_NUM_15 
-    //#define UART_TX_PIN                             GPIO_NUM_16 
-#elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
-    #define UART_RX_PIN                             GPIO_NUM_18 
-    #define UART_TX_PIN                             GPIO_NUM_17 
-#else
-    #define UART_RX_PIN                             GPIO_NUM_5
-    #define UART_TX_PIN                             GPIO_NUM_7
-#endif
 
 static const char *TAG = "app_midi_serial";
 
