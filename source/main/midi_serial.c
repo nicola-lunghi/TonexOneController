@@ -42,7 +42,7 @@ limitations under the License.
 
 #define UART_PORT_NUM                           UART_NUM_1
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     // Waveshare 4.3B RS485 port
     #define UART_RX_PIN                             GPIO_NUM_43
     #define UART_TX_PIN                             GPIO_NUM_44 
@@ -50,7 +50,7 @@ limitations under the License.
     // Waveshare 7" using RS485 port
     //#define UART_RX_PIN                             GPIO_NUM_15 
     //#define UART_TX_PIN                             GPIO_NUM_16 
-#elif CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+#elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
     #define UART_RX_PIN                             GPIO_NUM_18 
     #define UART_TX_PIN                             GPIO_NUM_17 
 #else

@@ -88,7 +88,7 @@ static esp_err_t stop_webserver(void);
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
-static esp_err_t get_handler(httpd_req_t *req)
+static esp_err_t __attribute__((unused)) get_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "get_handler\n");
 

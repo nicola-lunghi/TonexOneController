@@ -86,7 +86,7 @@ static const char *TAG = "app_main";
 
 SemaphoreHandle_t I2CMutex;
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
 static esp_err_t i2c_master_init(void);
 
 /****************************************************************************
@@ -196,7 +196,7 @@ static void InitIOExpander(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
         ESP_LOGE(TAG, "Failed to init IO expander!");
     }
 }
-#endif  //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
 
 /****************************************************************************
 * NAME:        
@@ -345,7 +345,7 @@ void app_main(void)
     // load the config first
     control_load_config();
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     // create mutex for shared I2C bus
     I2CMutex = xSemaphoreCreateMutex();
     if (I2CMutex == NULL)
@@ -373,13 +373,13 @@ void app_main(void)
     ESP_LOGI(TAG, "Init Control");
     control_init();
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     // init GUI
     ESP_LOGI(TAG, "Init 43.B display");
     display_init(I2C_MASTER_NUM, I2CMutex);
 #endif
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
     // init GUI
     ESP_LOGI(TAG, "Init 1.69 display");
     display_init(I2C_MASTER_NUM, I2CMutex);

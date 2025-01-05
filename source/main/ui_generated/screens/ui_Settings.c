@@ -35,13 +35,22 @@ void ui_Settings_screen_init(void)
                               LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(lv_tabview_get_tab_btns(ui_SettingsTabview), 255,  LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_text_color(lv_tabview_get_tab_btns(ui_SettingsTabview), lv_color_hex(0xFDFBFB),
+    lv_obj_set_style_text_color(lv_tabview_get_tab_btns(ui_SettingsTabview), lv_color_hex(0xC0C0C0),
+                                LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(lv_tabview_get_tab_btns(ui_SettingsTabview), 255,  LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(lv_tabview_get_tab_btns(ui_SettingsTabview), lv_color_hex(0x373737),
+                                  LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_opa(lv_tabview_get_tab_btns(ui_SettingsTabview), 255,  LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(lv_tabview_get_tab_btns(ui_SettingsTabview), 2,  LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_side(lv_tabview_get_tab_btns(ui_SettingsTabview), LV_BORDER_SIDE_LEFT,
+                                 LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(lv_tabview_get_tab_btns(ui_SettingsTabview), lv_color_hex(0xFB9230),
                                 LV_PART_ITEMS | LV_STATE_CHECKED);
     lv_obj_set_style_text_opa(lv_tabview_get_tab_btns(ui_SettingsTabview), 255,  LV_PART_ITEMS | LV_STATE_CHECKED);
-    lv_obj_set_style_bg_color(lv_tabview_get_tab_btns(ui_SettingsTabview), lv_color_hex(0x3D3D3D),
+    lv_obj_set_style_bg_color(lv_tabview_get_tab_btns(ui_SettingsTabview), lv_color_hex(0x513D2B),
                               LV_PART_ITEMS | LV_STATE_CHECKED);
     lv_obj_set_style_bg_opa(lv_tabview_get_tab_btns(ui_SettingsTabview), 255,  LV_PART_ITEMS | LV_STATE_CHECKED);
-    lv_obj_set_style_border_color(lv_tabview_get_tab_btns(ui_SettingsTabview), lv_color_hex(0x8D801A),
+    lv_obj_set_style_border_color(lv_tabview_get_tab_btns(ui_SettingsTabview), lv_color_hex(0xFB9230),
                                   LV_PART_ITEMS | LV_STATE_CHECKED);
     lv_obj_set_style_border_opa(lv_tabview_get_tab_btns(ui_SettingsTabview), 255,  LV_PART_ITEMS | LV_STATE_CHECKED);
 

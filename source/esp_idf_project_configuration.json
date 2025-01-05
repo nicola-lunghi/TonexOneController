@@ -103,5 +103,32 @@
       "postBuild": "",
       "postFlash": ""
     }
+  },
+  
+  "DEVKITC": {
+    "build": {
+      "compileArgs": [],
+      "ninjaArgs": [],
+      "buildDirectoryPath": "${workspaceFolder}/build_devkitc",
+      "sdkconfigDefaults": [
+        "sdkconfig.devkitc",
+        "sdkconfig.defaults"
+      ],
+      "sdkconfigFilePath": "${workspaceFolder}/build_devkitc"
+    },
+    "env": {},
+    "flashBaudRate": "",
+    "monitorBaudRate": "",
+    "openOCD": {
+      "debugLevel": 0,
+      "configs": [],
+      "args": []
+    },
+    "tasks": {
+      "preBuild": "",
+      "preFlash": "",
+      "postBuild": "",
+      "postFlash": ""
+    }
   }
 }

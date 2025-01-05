@@ -3,7 +3,7 @@ idf_component_register(SRCS "midi_control.c" "control.c" "footswitches.c" "CH422
                             EMBED_TXTFILES index.html 
                             INCLUDE_DIRS "." "./")
                                                        
-if(CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480)
+if(CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B)
     target_include_directories(${COMPONENT_LIB} PRIVATE include "ui_generated")
 
     target_sources(${COMPONENT_LIB} PRIVATE "ui_generated/ui.c" "ui_generated/ui_helpers.c"
@@ -36,7 +36,7 @@ if(CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480)
                             "ui_generated/images/ui_img_pskin_zvex_png.c")                                               
 endif()
 
-if(CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280)
+if(CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169)
    target_include_directories(${COMPONENT_LIB} PRIVATE include "ui_generated_169")
 
    target_sources(${COMPONENT_LIB} PRIVATE "ui_generated_169/ui.c" "ui_generated_169/ui_helpers.c"

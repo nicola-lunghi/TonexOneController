@@ -1,17 +1,21 @@
 menu "Tonex Controller Configuration"
 
-    choice TONEX_CONTROLLER_DISPLAY_TYPE
-        prompt "Tonex Controller Display Type"
-        default TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+    choice TONEX_CONTROLLER_HARDWARE_PLATFORM
+        prompt "Tonex Controller Hardware Platform"
+        default TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     
-        config TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
-            bool "Waveshare 800x480 4.3B"
+        config TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+            bool "Waveshare 4.3B"
 
-        config TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
-            bool "Waveshare 240x280 1.69"
+        config TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
+            bool "Waveshare 1.69"
 
-        config TONEX_CONTROLLER_DISPLAY_NONE
-            bool "None"
+        config TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO
+            bool "Waveshare Zero"
+            
+        config TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC
+            bool "Espressif DevKitC"
+            
     endchoice
 
     choice TONEX_CONTROLLER_SKINS

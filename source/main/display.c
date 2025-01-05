@@ -52,7 +52,7 @@ limitations under the License.
 #include "esp_lcd_touch_gt911.h"
 #include "esp_intr_alloc.h"
 #include "main.h"
-#if !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     #include "ui.h"
 #endif
 #include "display.h"
@@ -65,7 +65,7 @@ static const char *TAG = "app_display";
 
 #define DISPLAY_TASK_STACK_SIZE   (6 * 1024)
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     // LCD panel config
     #define DISPLAY_LCD_PIXEL_CLOCK_HZ     (18 * 1000 * 1000)
     #define DISPLAY_LCD_BK_LIGHT_ON_LEVEL  1
@@ -105,7 +105,7 @@ static const char *TAG = "app_display";
   
 #endif
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
     #define WAVESHARE_240_280_LCD_H_RES               (240)
     #define WAVESHARE_240_280_LCD_V_RES               (280)
 
@@ -166,8 +166,11 @@ typedef struct
 static QueueHandle_t ui_update_queue;
 static SemaphoreHandle_t I2CMutexHandle;
 static SemaphoreHandle_t lvgl_mux = NULL;
-static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
-static lv_disp_drv_t disp_drv;      // contains callback functions
+
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+    static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
+    static lv_disp_drv_t disp_drv;      // contains callback functions
+#endif
 
 /****************************************************************************
 * NAME:        
@@ -176,7 +179,7 @@ static lv_disp_drv_t disp_drv;      // contains callback functions
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static void display_lvgl_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
+static void __attribute__((unused)) display_lvgl_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_map)
 {
     esp_lcd_panel_handle_t panel_handle = (esp_lcd_panel_handle_t) drv->user_data;
     int offsetx1 = area->x1;
@@ -192,7 +195,7 @@ static void display_lvgl_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_
     lv_disp_flush_ready(drv);
 }
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
 
 // we use two semaphores to sync the VSYNC event and the LVGL task, to avoid potential tearing effect
 #if CONFIG_DISPLAY_AVOID_TEAR_EFFECT_WITH_SEM
@@ -360,7 +363,7 @@ void PresetDescriptionChanged(lv_event_t * e)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static void display_increase_lvgl_tick(void *arg)
+static void __attribute__((unused)) display_increase_lvgl_tick(void *arg)
 {
     /* Tell LVGL how many milliseconds has elapsed */
     lv_tick_inc(DISPLAY_LVGL_TICK_PERIOD_MS);
@@ -508,7 +511,7 @@ void UI_SetPresetDescription(char* text)
     }
 }
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
 
 /****************************************************************************
 * NAME:        
@@ -788,7 +791,7 @@ static lv_obj_t* ui_get_skin_image(uint16_t index)
 *****************************************************************************/
 static uint8_t update_ui_element(tUIUpdate* update)
 {
-#if !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE    
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     lv_obj_t* element_1 = NULL;
 
     switch (update->ElementID)
@@ -810,14 +813,14 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
         case UI_ELEMENT_AMP_SKIN:
         {
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
             element_1 = ui_SkinImage;
 #endif            
         } break;
 
         case UI_ELEMENT_PRESET_DESCRIPTION:
         {
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480            
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B            
             element_1 = ui_PresetDetailsTextArea;
 #endif            
         } break;
@@ -865,7 +868,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
                     lv_obj_clear_flag(ui_BTStatusConn, LV_OBJ_FLAG_HIDDEN);
                 }
             }
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480            
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B            
             else if (element_1 == ui_SkinImage)
             {
                 // set skin
@@ -876,9 +879,9 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
         case UI_ACTION_SET_LABEL_TEXT:
         {
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
             lv_label_set_text(element_1, update->Text);
-#elif CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+#elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
             if (element_1 == ui_PresetHeadingLabel)
             {
                 // split up preset into 2 text lines.
@@ -910,7 +913,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
         case UI_ACTION_SET_ENTRY_TEXT:
         {
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
             lv_textarea_set_text(element_1, update->Text);
 #endif            
         } break;
@@ -920,7 +923,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
             ESP_LOGE(TAG, "Unknown display action");
         } break;
     }
-#endif //  !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
+#endif 
 
     return 1;
 }
@@ -967,10 +970,7 @@ void display_task(void *arg)
 * NOTES:       
 *****************************************************************************/
 void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
-{
-    esp_err_t ret = ESP_OK;
-    gpio_config_t gpio_config_struct;
-
+{    
     I2CMutexHandle = I2CMutex;
 
     // create queue for UI updates from other threads
@@ -983,8 +983,10 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     lvgl_mux = xSemaphoreCreateRecursiveMutex();
     assert(lvgl_mux);
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480    
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B    
     uint8_t touch_ok = 0;
+    esp_err_t ret = ESP_OK;
+    gpio_config_t gpio_config_struct;
 
 #if CONFIG_DISPLAY_AVOID_TEAR_EFFECT_WITH_SEM
     ESP_LOGI(TAG, "Create semaphores");
@@ -1201,9 +1203,11 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
         lv_indev_drv_register(&indev_drv);
     }
-#endif  //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
+    gpio_config_t gpio_config_struct;
+
     // switch off the buzzer. GPIO42 on PCB V2. GPIO33 on PCV V1.
     // note here: GPIO33 used on V1 PCB conflicts with Octal mode PSRAM, so can't use that
     ESP_LOGI(TAG, "Buzzer off");
@@ -1290,14 +1294,14 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
     lv_disp_t *disp = lv_disp_drv_register(&disp_drv);
 
-#endif //CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+#endif //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO
     // for the Zero, flash the RGB led
     // to do
 #endif
 
-#if !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     // Tick interface for LVGL (using esp_timer to generate 2ms periodic event)
     const esp_timer_create_args_t lvgl_tick_timer_args = {
         .callback = &display_increase_lvgl_tick,
@@ -1316,5 +1320,5 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
     // create display task
     xTaskCreatePinnedToCore(display_task, "Dsp", DISPLAY_TASK_STACK_SIZE, NULL, DISPLAY_TASK_PRIORITY, NULL, 1);
-#endif // !CONFIG_TONEX_CONTROLLER_DISPLAY_NONE    
+#endif
 }

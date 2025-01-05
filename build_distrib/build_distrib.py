@@ -90,4 +90,8 @@ build_distribution('template_cust_partition', 'build_ws43b_ps', True, zip_name)
 zip_name = 'TonexOneController_V' + version + '_Waveshare_Zero'
 build_distribution('template_def_partition', 'build_wszero', False, zip_name)
 
+# Build Devkit C
+zip_name = 'TonexOneController_V' + version + '_DevKitC'
+build_distribution('template_cust_partition', 'build_devkitc', False, zip_name)
+
 print('All done')

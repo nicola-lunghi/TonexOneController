@@ -26,7 +26,7 @@ extern "C" {
 #define APP_VERSION		"1.0.5.1"
 
 // IO defines
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     // IO expander
     #define FOOTSWITCH_1		IO_EXPANDER_PIN_NUM_0
     #define TOUCH_RESET 		IO_EXPANDER_PIN_NUM_1
@@ -38,7 +38,7 @@ extern "C" {
     // Micro pins
     #define TOUCH_INT                   GPIO_NUM_4    // touch panel interrupt
 
-#elif CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+#elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_16
     #define FOOTSWITCH_2		GPIO_NUM_3

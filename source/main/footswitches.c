@@ -68,7 +68,7 @@ static uint8_t read_footswitch_input(uint8_t number, uint8_t* switch_state)
 {
     uint8_t result = false;
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_800_480
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     // display board uses I2C IO expander
     uint8_t value;
 
@@ -206,7 +206,7 @@ void footswitches_init(void)
     memset((void*)&FootswitchControl, 0, sizeof(FootswitchControl));
     FootswitchControl.state = FOOTSWITCH_IDLE;
 
-#if CONFIG_TONEX_CONTROLLER_DISPLAY_NONE || CONFIG_TONEX_CONTROLLER_DISPLAY_WAVESHARE_240_280
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_DEVKITC
     // init GPIO
     gpio_config_t gpio_config_struct;
 
