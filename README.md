@@ -88,6 +88,17 @@ For more information about the firmware development and customisation, refer to 
 - https://github.com/vit3k/tonex_controller for great work on reverse engineering the Tonex One USB protocol
 
 ## Firmware Release Notes <a name="release_notes"></a>
+V1.0.4.2:
+- Added support for 1.69" version
+- New web configuration system
+- Unified the BT client/server versions and renamed the modes to Central/Peripheral
+- Added custom name text for connecting to other BT peripherals
+- Full support for Wired Midi on all platforms
+- Updated build system so all platforms use their own build directory and SDK config files
+- Created sub-projects so platform can be selected straight from VS Code
+- Added Python script to automate creation of release Zip files
+- Memory optimisations and latency reduction/performance tuning
+
 V1.0.3.2:
 - NOTE: 1.69" version is not supported in this release! 
 - Changed partition table to fix issues with crashing on boot for some users
