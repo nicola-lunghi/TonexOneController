@@ -37,7 +37,7 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 - Optional: for the Bluetooth Client version of code, switch on a M-Vave Chocolate Midi pedal (https://www.cuvave.com/productinfo/724103.html). After a few seconds it should connect and the Bluetooth icon should change from gray to blue
 - Optional: for the Bluetooth Server version of code, the controller will be available as a peripheral for you to connect to via a Bluetooth Midi device. The Bluetooth icon should change from gray to blue when connected.
 
-![wiring_waveshare_display](https://github.com/user-attachments/assets/717fbc0d-771c-485d-a75e-c54493094e96)
+![wiring_waveshare_display](https://github.com/user-attachments/assets/f5edb5a8-f0d5-4b56-b29a-38f75dfab98c)
 <br><br>
 
 # Hardware Platform 2: Waveshare ESP32-S3 Zero (no Display support) <a name="waveshare_zero"></a>
@@ -59,7 +59,7 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 - Optional: for the Bluetooth Client version of code, switch on a M-Vave Chocolate Midi pedal (https://www.cuvave.com/productinfo/724103.html). After a few seconds it should connect and the Bluetooth icon should change from gray to blue
 - Optional: for the Bluetooth Server version of code, the controller will be available as a peripheral for you to connect to via a Bluetooth Midi device. The Bluetooth icon should change from gray to blue when connected.
 
-![wiring_waveshare_zero](https://github.com/user-attachments/assets/da535002-edf8-408a-aef1-a764ca35cb47)
+![wiring_waveshare_zero](https://github.com/user-attachments/assets/3e439e78-9e7d-4b95-9563-c71eceb17eb9)
 <br><br>
 
 
@@ -88,7 +88,7 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 - Connect 5 volts DC to the power input jack that you soldered in the first step
 - Switch on the power supply
 - The Waveshare board USB port will power the Tonex One. Do not connect 9 volts to it!
-![wiring_waveshare_169](https://github.com/user-attachments/assets/965cd6c7-d6b0-45d0-afee-5e885e486180)
+![wiring_waveshare_169](https://github.com/user-attachments/assets/104c7423-a844-4c03-878e-3543ede0bc2d)
 
 # Hardware Platform 4: Espressif ESP32-S3 DevKit-C (no Display support) <a name="esp_devkitc"></a>
 This hardware platform uses the Espressif ESP32-S3 Devkit-C board (8MB flash, 2 MB PSRAM version.) 
@@ -106,7 +106,7 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 - The board USB port will power the Tonex One. Do not connect 9 volts to it!
 - Optional: for the Bluetooth Client version of code, switch on a M-Vave Chocolate Midi pedal (https://www.cuvave.com/productinfo/724103.html). After a few seconds it should connect and the Bluetooth icon should change from gray to blue
 - Optional: for the Bluetooth Server version of code, the controller will be available as a peripheral for you to connect to via a Bluetooth Midi device. The Bluetooth icon should change from gray to blue when connected.
-
+![wiring_devkitc](https://github.com/user-attachments/assets/0cf7c7f0-d597-41b4-967e-2e2ea810b26d)
 <br><br>
 
 <br><br>
@@ -114,9 +114,11 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 Wired dual footswitches can optionally be used to select the Next/Previous preset.
 The footswitch must be a "momentary" type that is only has its contacts closed when it is pressed.
 The common pin of the footswitch must connect to the Controller ground pin, and the other 2 wires connected as shown.
-![footswitches_waveshare_display](https://github.com/user-attachments/assets/5548f907-d769-4c65-8694-9b3ac25e7a86)
-![footswitches_waveshare_zero](https://github.com/user-attachments/assets/7eda9912-f905-4e34-b8fe-beb595e10608)
-![footswitches_waveshare_169](https://github.com/user-attachments/assets/13c69700-2a45-4fa6-9988-395d67583455)
+![footswitches_waveshare_zero](https://github.com/user-attachments/assets/1ed772de-b2cb-4a14-bd3b-fc2c0a8cf521)
+![footswitches_waveshare_display](https://github.com/user-attachments/assets/86eb1e71-8dcc-4611-86b2-6d031162ef02)
+![footswitches_waveshare_169](https://github.com/user-attachments/assets/d44656de-f70b-4132-a334-699200ff26f1)
+![footswitches_devkitc](https://github.com/user-attachments/assets/350fa1db-0ac4-4049-8106-4e0e357055b1)
+
 
 ## Wired Midi (firmware version V1.0.4.1 or above required) <a name="midi"></a>
 Note: Wired Midi is disabled by default. If it is enabled without the proper hardware (detailed below) being fitted, you may get "phantom" preset changes, due to the serial input "floating".
@@ -141,13 +143,20 @@ Midi Featherwing:<br>
 ![midi_featherwing](https://github.com/user-attachments/assets/532d7d81-ae7e-485b-8d59-77ff6056e331)
 
 Waveshare Zero to Midi Featherwing:<br>
-![midi_waveshare_zero](https://github.com/user-attachments/assets/f5e34873-5ccb-4041-aa00-5f0a18ad4609)
+![midi_waveshare_zero](https://github.com/user-attachments/assets/8b49dc76-28e3-4bfd-9a68-63ca2e453aa0)
+
 
 Waveshare 1.69" to Midi Featherwing:<br>
-![midi_waveshare_169](https://github.com/user-attachments/assets/177d3a3f-ab64-433c-8db7-4f5ac382712e)
+![midi_waveshare_169](https://github.com/user-attachments/assets/f9c58088-8730-4ef9-908b-d7cda44d5c9c)
+
+
+Espressif Devkit-C to Midi Featherwing:<br>
+![midi_devkitc](https://github.com/user-attachments/assets/8dde8924-ea4e-435f-b1ed-c2cb99568b2e)
+
 
 Waveshare 4.3B to Midi Featherwing via the TTL to RS485 adaptor:<br>
-![midi_waveshare_43b](https://github.com/user-attachments/assets/abafd33b-d659-43fd-b096-62b0b64a157a)
+![midi_waveshare_43b](https://github.com/user-attachments/assets/61f27686-6097-4534-b7a8-9f42f3c1282c)
+
 
 
 ## Cases <a name="cases"></a>
