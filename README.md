@@ -27,13 +27,15 @@ https://youtu.be/j0I5G5-CXfg
 https://www.youtube.com/watch?v=qkOs5gk3bcQ
 
 ## Meet the Family <a name="meet_family"></a>
-This project can run on any of three different hardware platforms, varying in size and cost. All of them are "off-the-shelf" development boards supplied by the company "Waveshare."
-The code could be adapted to run on other brand ESP32-S3 boards, but to make things easy, pre-built releases are provided for the Waveshare modules.
+This project can run on any of four different hardware platforms, varying in size and cost. All of them are "off-the-shelf" development boards supplied either by the company "Waveshare", or Espressif.
+The code could be adapted to run on other brand ESP32-S3 boards, but to make things easy, pre-built releases are provided for the supported modules.
 <br>All platforms support Bluetooth, WiFi, wired footswitches, and wired Midi.
 - 4.3" LCD board, supporting touch screen and advanced graphics including customisable amp/pedal skins and text
 - 1.69" LCD board. Similar to an Apple Watch, this small board displays the preset name and number
 - "Zero" board with no display, is the smallest and cheapest option
-![meet_family](https://github.com/user-attachments/assets/96e540f4-02d9-4f90-9323-bfc03e967f16)
+- "DevKit-C" board with no display
+![meet_family](https://github.com/user-attachments/assets/a2f4ad41-d5b8-4b3d-b800-b53b116014e7)
+
 
 ## ⭐ Key Features <a name="key_features"></a>
 The supported features vary a little depending on the chosen hardware platform.
@@ -74,7 +76,7 @@ For more information about changing configuration and settings, for example to c
   4. Press the description text. A keyboard will appear, allowing text to be entered
   5. Press the green tick image to save the changes. Changes will be saved permanently and remembered when next powered on
  
-### Hardware platform without Display
+### Hardware platforms without Display
 - Connect power
 - Change presets using one or more of the following methods
   1. Bluetooth Client mode: M-Vave Chocolate footswitches. Bank 1 does presets 1,2,3,4. Bank 2 does presets 5,6,7,8. Etc.
@@ -126,6 +128,7 @@ V1.0.0.2:
 ## ©️ License <a name="license"></a>
 The Tonex One Controller is under the Apache 2.0 license. It is free for both research and commercial use cases.
 <br>However, if you are stealing this work and commercialising it, you are a bad person and you should feel bad.
+<br>As per the terms of the Apache license, you are also required to provide "attribution" if you use any parts of the project (link to this project from your project.)
 
 ## Donations <a name="donations"></a>
 Donations help fund the purchase of new equipment to use in development and testing.<br>
