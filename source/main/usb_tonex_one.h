@@ -24,6 +24,7 @@ extern "C" {
 #endif
 
 #define MAX_PARAM_NAME          12
+#define MAX_PRESETS             20
 
 typedef struct
 {

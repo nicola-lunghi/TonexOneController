@@ -36,9 +36,14 @@ limitations under the License.
 #include "CH422G.h"
 #include "control.h"
 #include "task_priorities.h"
+#include "usb/usb_host.h"
+#include "usb_comms.h"
+#include "usb_tonex_one.h"
 
 #define FOOTSWITCH_TASK_STACK_SIZE          (3 * 1024)
 #define FOOTSWITCH_SAMPLE_COUNT             5       // 20 msec per sample
+#define BANK_MODE_BUTTONS                   4
+#define BANK_MAXIMUM                        (MAX_PRESETS / BANK_MODE_BUTTONS)
 
 enum FootswitchStates
 {
@@ -53,6 +58,9 @@ typedef struct
 {
     uint8_t state;
     uint32_t sample_counter;
+    uint8_t last_binary_val;
+    uint8_t current_bank;
+    uint8_t index_pending;
 } tFootswitchControl;
 
 static tFootswitchControl FootswitchControl;
@@ -194,15 +202,118 @@ static void footswitch_handle_dual_mode(void)
 static void footswitch_handle_quad_banked(void)
 {
     uint8_t value;
+    uint8_t binary_val = 0;    
 
-    // to do
-    // Choc pedal changes preset when the switch is released
-    // Changes banks when both pressed, does nothing when both released
-    // states: 1 pressed, wait release or for another pressed?
+    // read all 4 switches (and swap so 1 is pressed)
+    read_footswitch_input(FOOTSWITCH_1, &value);
+    if (value == 0)
+    {
+        binary_val |= 1;
+    }
+
+    read_footswitch_input(FOOTSWITCH_2, &value);
+    if (value == 0)
+    {
+        binary_val |= 2;
+    }
+
+    read_footswitch_input(FOOTSWITCH_3, &value);
+    if (value == 0)
+    {
+        binary_val |= 4;
+    }
+
+    read_footswitch_input(FOOTSWITCH_4, &value);
+    if (value == 0)
+    {
+        binary_val |= 8;
+    }
     
-    // check for A+B
-    // else check for C+D
-    // else check for A,B,C,D singles
+    // handle state
+    switch (FootswitchControl.state)
+    {
+        case FOOTSWITCH_IDLE:
+        {
+            // any buttons pressed?
+            if (binary_val != 0)
+            {
+                // check if A+B is pressed
+                if (binary_val == 0x03)
+                {
+                    if (FootswitchControl.current_bank > 0)
+                    {
+                        // bank down
+                        FootswitchControl.current_bank--;   
+                        ESP_LOGI(TAG, "Footswitch banked down %d", FootswitchControl.current_bank);
+                    }
+
+                    FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
+                }
+                // check if C+D is pressed
+                else if (binary_val == 0x0C)
+                {
+                    if (FootswitchControl.current_bank < BANK_MAXIMUM)
+                    {
+                        // bank up
+                        FootswitchControl.current_bank++;
+                        ESP_LOGI(TAG, "Footswitch banked up %d", FootswitchControl.current_bank);
+                    }
+
+                    FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
+                }
+                else
+                {
+                    // single button pressed, just store it. Preset select only happens on button release
+                    FootswitchControl.index_pending = binary_val;
+                }
+            }
+            else
+            {
+                if (FootswitchControl.index_pending != 0)
+                {
+                    uint8_t new_preset = FootswitchControl.current_bank * BANK_MODE_BUTTONS;
+
+                    // get the index from the bit set
+                    if ((FootswitchControl.index_pending & 0x01) != 0)
+                    {
+                        // nothing needed
+                    }
+                    else if ((FootswitchControl.index_pending & 0x02) != 0)
+                    {
+                        new_preset += 1;
+                    }
+                    else if ((FootswitchControl.index_pending & 0x04) != 0)
+                    {
+                        new_preset += 2;
+                    }
+                    else if ((FootswitchControl.index_pending & 0x08) != 0)
+                    {
+                        new_preset += 3;
+                    }
+                    
+                    // set the preset
+                    control_request_preset_index(new_preset);
+                    FootswitchControl.index_pending = 0;
+
+                    // give a little debounce time
+                    vTaskDelay(pdMS_TO_TICKS(100));
+                }
+            }
+        } break;
+
+        case FOOTSWITCH_WAIT_RELEASE_1:
+        {
+            // check if all buttons released
+            if (binary_val == 0)
+            {
+                FootswitchControl.state = FOOTSWITCH_IDLE;
+                FootswitchControl.index_pending = 0;
+
+                // give a little debounce time
+                vTaskDelay(pdMS_TO_TICKS(100));
+            }
+        } break;
+    }
 }
 
 /****************************************************************************
@@ -215,26 +326,37 @@ static void footswitch_handle_quad_banked(void)
 static void footswitch_handle_quad_binary(void)
 {
     uint8_t value;
-    uint8_t binary_val = 0;
-    static uint8_t last_binary_val = 0;
+    uint8_t binary_val = 0;    
 
-    // read all 4 switches
+    // read all 4 switches (and swap so 1 is pressed)
     read_footswitch_input(FOOTSWITCH_1, &value);
-    binary_val |= value << 0;
+    if (value == 0)
+    {
+        binary_val |= 1;
+    }
 
     read_footswitch_input(FOOTSWITCH_2, &value);
-    binary_val |= value << 1;
+    if (value == 0)
+    {
+        binary_val |= 2;
+    }
 
     read_footswitch_input(FOOTSWITCH_3, &value);
-    binary_val |= value << 2;
+    if (value == 0)
+    {
+        binary_val |= 4;
+    }
 
     read_footswitch_input(FOOTSWITCH_4, &value);
-    binary_val |= value << 3;
+    if (value == 0)
+    {
+        binary_val |= 8;
+    }
 
     // has it changed?
-    if (binary_val != last_binary_val)
+    if (binary_val != FootswitchControl.last_binary_val)
     {
-        last_binary_val = binary_val;
+        FootswitchControl.last_binary_val = binary_val;
 
         // set preset
         control_request_preset_index(binary_val);

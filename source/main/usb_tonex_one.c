@@ -61,7 +61,6 @@ limitations under the License.
 
 static const char *TAG = "app_TonexOne";
 
-#define MAX_PRESETS         20
 #define MAX_TX_SIZE         64
 
 // Response from Tonex One to a preset change is about 1202, 1352, 1361 bytes with details of the preset. 
