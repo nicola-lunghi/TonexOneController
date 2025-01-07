@@ -4,7 +4,7 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 # Configuration and Settings
 New in firmware version V1.0.4.2 is the ability to change settings via WiFi/Web browser.
 
-![image](https://github.com/user-attachments/assets/0beb0d12-d1bb-4d75-bfcd-79be5025feae)
+![image](https://github.com/user-attachments/assets/07d6cdf1-bab2-421f-a68a-1e5ec8eb8390)
 
 
 ## Available Settings
@@ -26,6 +26,12 @@ New in firmware version V1.0.4.2 is the ability to change settings via WiFi/Web 
 - If this setting is disabled (default), then setting the same preset index multiple times will not have any effect. <br>
 - If this setting is enabled, then setting the same preset a second time will set the Tonex pedal to bypass mode. Setting it a third time will exit bypass mode.
 This setting is most suited to use with Pedal models, where it could for example enable/disable an overdrive pedal
+
+### Footswitch Mode (added in V1.0.5.1)
+This setting controls how directly wired footswitches will function. Note this has nothing to do with Bluetooth footswitch pedals.
+- Dual Next/Previous: 2 footswitches that select preset next and previous
+- Quad Banked: 4 footswitches. 5 banks of 4 presets are controlled. 1+2 selects down a bank. 3+4 selects up a bank. Single switch selects the preset of ((bank * 4) + switch number)
+- Quad Binary: 4 switch inputs, intended for control by relays. The preset selected depends on the binary combination switch inputs, with switch 1 being the least significant bit, and switch 4 being the most significant bit. E.g. switch inputs 1,0,1,1 = preset 11
 
 ### Save and Reboot
 The Save Settings and Reboot button must be pressed to save the changes. The controller will reboot.
