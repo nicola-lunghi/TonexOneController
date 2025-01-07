@@ -173,7 +173,18 @@ Community member "AlmaMaterFL" designed this one:
 https://www.printables.com/model/1114384-esp32-s3-169inch-case
 ![image](https://github.com/user-attachments/assets/b09e51fb-da3f-41dd-a42f-305c141e3812)
 ![image](https://github.com/user-attachments/assets/0cd594f5-fb4c-4e16-bc39-dd08e65308cc)
+<br><br>
+Community member "bauerbyter" designed this one:
+https://www.tinkercad.com/things/28eY73uKDzx-copy-of-tonex-one-controller?sharecode=IBZcHWdWU0IU3KJacFaUorztHQgdARKkLArXdZe-xvc
+<br>
+![image](https://github.com/user-attachments/assets/3a248b85-a766-4aba-8da9-e19d037890da)
+<br><br>
+It fits together with this part:
+https://www.thingiverse.com/thing:6715828
+<br><br>
+![image](https://github.com/user-attachments/assets/f2271541-03e6-440f-91ce-e01776bbc3b7)
 
+<br><br>
 ## 9 volt Power for Zero, 1.69 and Devkit-C<a name="9v_power"></a>
 The 4.3B model can accept the standard 9 volt pedalboard power, however the Zero, the 1.69", and the Devkit-C boards are a maximum of 5 volts input.
 <br>It is still possible however to run them from a 9 volt power supply, with the additional of another low cost off-the-shelf PCB.
