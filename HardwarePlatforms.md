@@ -111,14 +111,21 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 
 <br><br>
 ## Wired Footswitches <a name="footswitches"></a>
-Wired dual footswitches can optionally be used to select the Next/Previous preset.
+Wired footswitches can optionally be used.
 The footswitch must be a "momentary" type that is only has its contacts closed when it is pressed.
-The common pin of the footswitch must connect to the Controller ground pin, and the other 2 wires connected as shown.
-![footswitches_waveshare_zero](https://github.com/user-attachments/assets/1ed772de-b2cb-4a14-bd3b-fc2c0a8cf521)
-![footswitches_waveshare_display](https://github.com/user-attachments/assets/86eb1e71-8dcc-4611-86b2-6d031162ef02)
-![footswitches_waveshare_169](https://github.com/user-attachments/assets/d44656de-f70b-4132-a334-699200ff26f1)
-![footswitches_devkitc](https://github.com/user-attachments/assets/350fa1db-0ac4-4049-8106-4e0e357055b1)
+The common pin of the footswitch must connect to the Controller ground pin, and the other wires connected as shown.
+<br><br>
+For the Waveshare 4.3B, a maximum of 2 footswitches are supported, always in next/previous preset mode.
+<br>
+For the other platforms, with firmware version 1.0.5.2 or above, three modes are supported, set using the web configuration, to one of:
+- 2 switches, doing Next/Previous preset
+- 4 switches, doing banked switching (just like the M-vave Chocolate pedal does)
+- 4 switches, doing direct preset selection via binary (intended for relay control)<br>
 
+![footswitches_waveshare_display](https://github.com/user-attachments/assets/0016e19f-eb87-4d31-ba1c-2b210b559e99)
+![footswitches_waveshare_zero](https://github.com/user-attachments/assets/7f1110cc-6b27-4317-af04-880c098b839e)
+![footswitches_waveshare_169](https://github.com/user-attachments/assets/93c0014e-db42-483d-9508-44a4478d2f75)
+![footswitches_devkitc](https://github.com/user-attachments/assets/bbeb5898-8cb4-49ca-80a5-eb6f4dedb8fb)
 
 ## Wired Midi (firmware version V1.0.4.1 or above required) <a name="midi"></a>
 Note: Wired Midi is disabled by default. If it is enabled without the proper hardware (detailed below) being fitted, you may get "phantom" preset changes, due to the serial input "floating".
