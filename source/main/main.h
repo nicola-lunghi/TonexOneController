@@ -50,6 +50,9 @@ extern "C" {
     //#define UART_RX_PIN       GPIO_NUM_15 
     //#define UART_TX_PIN       GPIO_NUM_16 
 
+    // leds
+    #define LED_OUTPUT_GPIO_NUM          -1
+
     // LCD pins
     #define DISPLAY_PIN_NUM_BK_LIGHT       -1
     #define DISPLAY_PIN_NUM_HSYNC          46
@@ -85,6 +88,9 @@ extern "C" {
     #define UART_RX_PIN         GPIO_NUM_18 
     #define UART_TX_PIN         GPIO_NUM_17 
 
+    // leds
+    #define LED_OUTPUT_GPIO_NUM          -1
+
     // LCD pins
     #define WAVESHARE_240_280_LCD_GPIO_SCLK           (GPIO_NUM_6)
     #define WAVESHARE_240_280_LCD_GPIO_MOSI           (GPIO_NUM_7)
@@ -108,6 +114,9 @@ extern "C" {
     #define UART_RX_PIN         GPIO_NUM_5
     #define UART_TX_PIN         GPIO_NUM_7
 
+    // leds
+    #define LED_OUTPUT_GPIO_NUM    GPIO_NUM_21
+
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_4
@@ -118,6 +127,10 @@ extern "C" {
     // Midi
     #define UART_RX_PIN         GPIO_NUM_5
     #define UART_TX_PIN         GPIO_NUM_7
+
+    // leds
+    #define LED_OUTPUT_GPIO_NUM   GPIO_NUM_48
+
 #else
     #error "Unknown hardware platform!"
 #endif

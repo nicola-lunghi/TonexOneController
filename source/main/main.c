@@ -62,6 +62,7 @@ limitations under the License.
 #include "CH422G.h"
 #include "midi_serial.h"
 #include "wifi_config.h"
+#include "leds.h"
 
 #define I2C_MASTER_SCL_IO               9       /*!< GPIO number used for I2C master clock */
 #define I2C_MASTER_SDA_IO               8       /*!< GPIO number used for I2C master data  */
@@ -417,4 +418,7 @@ void app_main(void)
 
     // init WiFi config
     wifi_config_init();
+
+    // init leds
+    leds_init();
 }

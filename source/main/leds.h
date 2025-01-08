@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2024  Greg Smith
+ Copyright (C) 2025  Greg Smith
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,22 +15,15 @@ limitations under the License.
  
 */
 
-
-#ifndef _TASK_PRIO_H
-#define _TASK_PRIO_H
+#ifndef _LEDS_H
+#define _LEDS_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define USB_DAEMON_TASK_PRIORITY        (tskIDLE_PRIORITY + 4)
-#define USB_CLASS_TASK_PRIORITY         (tskIDLE_PRIORITY + 4)
-#define DISPLAY_TASK_PRIORITY           (tskIDLE_PRIORITY + 2)
-#define CTRL_TASK_PRIORITY              (tskIDLE_PRIORITY + 3)
-#define MIDI_SERIAL_TASK_PRIORITY       (tskIDLE_PRIORITY + 2)
-#define FOOTSWITCH_TASK_PRIORITY        (tskIDLE_PRIORITY + 1)
-#define WIFI_TASK_PRIORITY              (tskIDLE_PRIORITY + 1)
-#define LEDS_TASK_PRIORITY              (tskIDLE_PRIORITY + 1)
+void leds_init(void);
+void leds_handle(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/
