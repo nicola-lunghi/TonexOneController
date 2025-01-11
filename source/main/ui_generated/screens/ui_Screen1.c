@@ -94,7 +94,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_SettingsImage, 366);
     lv_obj_set_y(ui_SettingsImage, 1);
     lv_obj_set_align(ui_SettingsImage, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_SettingsImage, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_add_flag(ui_SettingsImage, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_SettingsImage, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_TopPanel = lv_obj_create(ui_Screen1);

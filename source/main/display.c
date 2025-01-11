@@ -60,6 +60,9 @@ limitations under the License.
 #include "control.h"
 #include "task_priorities.h"
 #include "midi_control.h"
+#include "usb/usb_host.h"
+#include "usb_comms.h"
+#include "usb_tonex_one.h"
 
 static const char *TAG = "app_display";
 
@@ -116,6 +119,7 @@ enum UIElements
     UI_ELEMENT_PRESET_NAME,
     UI_ELEMENT_AMP_SKIN,
     UI_ELEMENT_PRESET_DESCRIPTION,
+    UI_ELEMENT_PARAMETERS
 };
 
 enum UIAction
@@ -130,6 +134,7 @@ typedef struct
     uint8_t ElementID;
     uint8_t Action;
     uint32_t Value;
+    void* Pointer;
     char Text[MAX_UI_TEXT];
 } tUIUpdate;
 
@@ -481,6 +486,28 @@ void UI_SetPresetDescription(char* text)
     }
 }
 
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void UI_SetCurrentParameterValues(void* ptr)
+{
+    tUIUpdate ui_update;
+
+    // build command
+    ui_update.ElementID = UI_ELEMENT_PARAMETERS;
+    ui_update.Pointer = ptr;
+
+    // send to queue
+    if (xQueueSend(ui_update_queue, (void*)&ui_update, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "UI Update parameters send failed!");            
+    }
+}
+
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
 
 /****************************************************************************
@@ -792,6 +819,643 @@ static uint8_t update_ui_element(tUIUpdate* update)
         {
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B            
             element_1 = ui_PresetDetailsTextArea;
+#endif            
+        } break;
+
+        case UI_ELEMENT_PARAMETERS:
+        {
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B      
+            tTonexParameter* param_ptr = (tTonexParameter*)update->Pointer;
+
+            for (uint16_t param = 0; param < TONEX_PARAM_LAST; param++)
+            {                
+                tTonexParameter* param_entry = &param_ptr[param];
+
+                switch (param)
+                {
+                    case TONEX_PARAM_NOISE_GATE_POST:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_NoiseGatePostSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_NoiseGatePostSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_NOISE_GATE_ENABLE:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_NoiseGateSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_NoiseGateSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_NOISE_GATE_THRESHOLD:
+                    {
+                        lv_slider_set_value(ui_NoiseGateThresholdSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_NOISE_GATE_RELEASE:
+                    {
+                        lv_slider_set_value(ui_NoiseGateReleaseSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_NOISE_GATE_DEPTH:
+                    {
+                        lv_slider_set_value(ui_NoiseGateDepthSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_COMP_POST:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_CompressorPostSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_CompressorPostSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_COMP_ENABLE:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_CompressorEnableSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_CompressorEnableSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_COMP_THRESHOLD:
+                    {
+                        lv_slider_set_value(ui_CompressorThresholdSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_COMP_MAKE_UP:
+                    {
+                        lv_slider_set_value(ui_CompressorGainSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_COMP_ATTACK:
+                    {
+                        lv_slider_set_value(ui_CompresorAttackSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_EQ_POST:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_EQPostSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_EQPostSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_EQ_BASS:
+                    {
+                        lv_slider_set_value(ui_EQBassSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_EQ_BASS_FREQ:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_EQ_MID:
+                    {
+                        lv_slider_set_value(ui_EQMidSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_EQ_MIDQ:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_EQ_MID_FREQ:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_EQ_TREBLE:
+                    {
+                        lv_slider_set_value(ui_EQTrebleSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_EQ_TREBLE_FREQ:
+                    {
+
+                    } break;
+                    
+                    case TONEX_PARAM_UNKNOWN_1:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_2:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODEL_GAIN:
+                    {
+                        lv_slider_set_value(ui_AmplifierGainSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_MODEL_VOLUME:
+                    {
+                        lv_slider_set_value(ui_AmplifierVolumeSlider, param_entry->Value, LV_ANIM_OFF);
+                    } break;
+
+                    case TONEX_PARAM_MODEX_MIX:
+                    {
+                        
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_3:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_4:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_5:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_6:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_7:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_8:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_9:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_10:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_11:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_12:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_13:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_14:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_UNKNOWN_15:
+                    {
+
+                    } break;
+                    
+                    case TONEX_PARAM_REVERB_POSITION:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_ReverbPostSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_ReverbPostSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_REVERB_ENABLE:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_ReverbEnableSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_ReverbEnableSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_REVERB_MODEL:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING1_TIME:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING1_PREDELAY:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING1_COLOR:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING1_MIX:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING2_TIME:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING2_PREDELAY:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING2_COLOR:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING2_MIX:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING3_TIME:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING3_PREDELAY:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING3_COLOR:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING3_MIX:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING4_TIME:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING4_PREDELAY:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING4_COLOR:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_SPRING4_MIX:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_ROOM_TIME:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_ROOM_PREDELAY:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_ROOM_COLOR:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_ROOM_MIX:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_PLATE_TIME:
+                                        {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_PLATE_PREDELAY:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_PLATE_COLOR:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_REVERB_PLATE_MIX:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_POST:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_ModulationPostSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_ModulationPostSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_ENABLE:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_ModulationEnableSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_ModulationEnableSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_MODEL:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_CHORUS_SYNC:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_CHORUS_TS:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_CHORUS_RATE:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_CHORUS_DEPTH:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_CHORUS_LEVEL:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_TREMOLO_SYNC:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_TREMOLO_TS:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_TREMOLO_RATE:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_TREMOLO_SHAPE:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_TREMOLO_SPREAD:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_TREMOLO_LEVEL:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_PHASER_SYNC:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_PHASER_TS:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_PHASER_RATE:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_PHASER_DEPTH:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_PHASER_LEVEL:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_FLANGER_SYNC:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_FLANGER_TS:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_FLANGER_RATE:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_FLANGER_DEPTH:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_FLANGER_FEEDEBACK:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_FLANGER_LEVEL:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_ROTARY_SYNC:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_ROTARY_TS:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_ROTARY_SPEED:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_ROTARY_RADIUS:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_ROTARY_SPREAD:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_ROTARY_LEVEL:
+                    {
+
+                    } break;
+                    
+                    case TONEX_PARAM_DELAY_POST:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_DelayPostSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_DelayPostSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_DELAY_ENABLE:
+                    {
+                        if (param_entry->Value)
+                        {
+                            lv_obj_add_state(ui_DelayEnableSwitch, LV_STATE_CHECKED);
+                        }
+                        else
+                        {
+                            lv_obj_clear_state(ui_DelayEnableSwitch, LV_STATE_CHECKED);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_DELAY_MODEL:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_DIGITAL_SYNC:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_DIGITAL_TS:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_DIGITAL_TIME:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_DIGITAL_FEEDBACK:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_DIGITAL_MODE:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_DIGITAL_MIX:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_TAPE_SYNC:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_TAPE_TS:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_TAPE_TIME:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_TAPE_FEEDBACK:
+                    {
+
+                    } break;
+
+                    case TONEX_PARAM_DELAY_TAPE_MODE:
+                    {
+
+                    } break;
+                    
+                    case TONEX_PARAM_DELAY_TAPE_MIX:
+                    {
+
+                    } break;
+                }                
+            }
 #endif            
         } break;
 

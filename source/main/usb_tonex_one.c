@@ -52,12 +52,12 @@ limitations under the License.
 #include "freertos/ringbuf.h"
 #include "esp_log.h"
 #include "usb/usb_host.h"
-#include "usb_comms.h"
 #include "usb/cdc_acm_host.h"
 #include "driver/i2c.h"
 #include "usb_comms.h"
 #include "usb_tonex_one.h"
 #include "control.h"
+#include "display.h"
 
 static const char *TAG = "app_TonexOne";
 
@@ -1173,6 +1173,9 @@ static esp_err_t usb_tonex_one_process_single_message(uint8_t* data, uint16_t le
 
                     // read the preset params
                     usb_tonex_one_parse_preset_parameters(data, length);
+
+                    // pass params to UI
+                    UI_SetCurrentParameterValues((void*)TonexParameters);
 
                     // debug dump parameters
                     //usb_tonex_one_dump_parameters();
