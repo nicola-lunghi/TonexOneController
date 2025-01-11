@@ -60,27 +60,67 @@ void ui_Settings_screen_init(void)
 
     ui_NoiseGateEnableGroup = lv_obj_create(ui_NoiseGateTab);
     lv_obj_remove_style_all(ui_NoiseGateEnableGroup);
-    lv_obj_set_width(ui_NoiseGateEnableGroup, 309);
+    lv_obj_set_width(ui_NoiseGateEnableGroup, 200);
     lv_obj_set_height(ui_NoiseGateEnableGroup, 36);
-    lv_obj_set_x(ui_NoiseGateEnableGroup, -221);
-    lv_obj_set_y(ui_NoiseGateEnableGroup, -146);
-    lv_obj_set_align(ui_NoiseGateEnableGroup, LV_ALIGN_CENTER);
+    lv_obj_set_x(ui_NoiseGateEnableGroup, -3);
+    lv_obj_set_y(ui_NoiseGateEnableGroup, -145);
+    lv_obj_set_align(ui_NoiseGateEnableGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_NoiseGateEnableGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_NoiseGateSwitch = lv_switch_create(ui_NoiseGateEnableGroup);
     lv_obj_set_width(ui_NoiseGateSwitch, 50);
-    lv_obj_set_height(ui_NoiseGateSwitch, 25);
-    lv_obj_set_x(ui_NoiseGateSwitch, 145);
+    lv_obj_set_height(ui_NoiseGateSwitch, 30);
+    lv_obj_set_x(ui_NoiseGateSwitch, 147);
     lv_obj_set_y(ui_NoiseGateSwitch, 0);
     lv_obj_set_align(ui_NoiseGateSwitch, LV_ALIGN_LEFT_MID);
 
+    lv_obj_set_style_bg_color(ui_NoiseGateSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_NoiseGateSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    lv_obj_set_style_bg_color(ui_NoiseGateSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_NoiseGateSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_NoiseGateSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_NoiseGateSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
 
     ui_NoiseGateEnableLabel = lv_label_create(ui_NoiseGateEnableGroup);
     lv_obj_set_width(ui_NoiseGateEnableLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_NoiseGateEnableLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_NoiseGateEnableLabel, -1);
+    lv_obj_set_y(ui_NoiseGateEnableLabel, 0);
     lv_obj_set_align(ui_NoiseGateEnableLabel, LV_ALIGN_LEFT_MID);
     lv_label_set_text(ui_NoiseGateEnableLabel, "Enable");
     lv_obj_set_style_text_font(ui_NoiseGateEnableLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_NoiseGatePostGroup = lv_obj_create(ui_NoiseGateTab);
+    lv_obj_remove_style_all(ui_NoiseGatePostGroup);
+    lv_obj_set_width(ui_NoiseGatePostGroup, 149);
+    lv_obj_set_height(ui_NoiseGatePostGroup, 36);
+    lv_obj_set_x(ui_NoiseGatePostGroup, 585);
+    lv_obj_set_y(ui_NoiseGatePostGroup, -145);
+    lv_obj_set_align(ui_NoiseGatePostGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_NoiseGatePostGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_NoiseGatePostSwitch = lv_switch_create(ui_NoiseGatePostGroup);
+    lv_obj_set_width(ui_NoiseGatePostSwitch, 50);
+    lv_obj_set_height(ui_NoiseGatePostSwitch, 30);
+    lv_obj_set_x(ui_NoiseGatePostSwitch, 80);
+    lv_obj_set_y(ui_NoiseGatePostSwitch, 0);
+    lv_obj_set_align(ui_NoiseGatePostSwitch, LV_ALIGN_LEFT_MID);
+
+    lv_obj_set_style_bg_color(ui_NoiseGatePostSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_NoiseGatePostSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    lv_obj_set_style_bg_color(ui_NoiseGatePostSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_NoiseGatePostSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_NoiseGatePostSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_NoiseGatePostSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
+
+    ui_NoiseGatePostLabel = lv_label_create(ui_NoiseGatePostGroup);
+    lv_obj_set_width(ui_NoiseGatePostLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_NoiseGatePostLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_NoiseGatePostLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_NoiseGatePostLabel, "Post");
+    lv_obj_set_style_text_font(ui_NoiseGatePostLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_NoiseGateThresholdGroup = lv_obj_create(ui_NoiseGateTab);
     lv_obj_remove_style_all(ui_NoiseGateThresholdGroup);
@@ -92,21 +132,22 @@ void ui_Settings_screen_init(void)
     lv_obj_clear_flag(ui_NoiseGateThresholdGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_NoiseGateThresholdSlider = lv_slider_create(ui_NoiseGateThresholdGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider, 0, LV_ANIM_OFF);
+    lv_slider_set_range(ui_NoiseGateThresholdSlider, -100, -20);
+    lv_slider_set_value(ui_NoiseGateThresholdSlider, -64, LV_ANIM_OFF);
     if(lv_slider_get_mode(ui_NoiseGateThresholdSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
             ui_NoiseGateThresholdSlider, 0, LV_ANIM_OFF);
     lv_obj_set_width(ui_NoiseGateThresholdSlider, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider, 10);
+    lv_obj_set_height(ui_NoiseGateThresholdSlider, 15);
     lv_obj_set_x(ui_NoiseGateThresholdSlider, 160);
     lv_obj_set_y(ui_NoiseGateThresholdSlider, 0);
     lv_obj_set_align(ui_NoiseGateThresholdSlider, LV_ALIGN_LEFT_MID);
     lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
     ui_NoiseGateThresholdLabel = lv_label_create(ui_NoiseGateThresholdGroup);
@@ -120,27 +161,28 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_NoiseGateReleaseGroup);
     lv_obj_set_width(ui_NoiseGateReleaseGroup, 752);
     lv_obj_set_height(ui_NoiseGateReleaseGroup, 36);
-    lv_obj_set_x(ui_NoiseGateReleaseGroup, -3);
+    lv_obj_set_x(ui_NoiseGateReleaseGroup, -1);
     lv_obj_set_y(ui_NoiseGateReleaseGroup, -34);
     lv_obj_set_align(ui_NoiseGateReleaseGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_NoiseGateReleaseGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_NoiseGateReleaseSlider = lv_slider_create(ui_NoiseGateReleaseGroup);
-    lv_slider_set_value(ui_NoiseGateReleaseSlider, 0, LV_ANIM_OFF);
+    lv_slider_set_range(ui_NoiseGateReleaseSlider, 5, 500);
+    lv_slider_set_value(ui_NoiseGateReleaseSlider, 20, LV_ANIM_OFF);
     if(lv_slider_get_mode(ui_NoiseGateReleaseSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
             ui_NoiseGateReleaseSlider, 0, LV_ANIM_OFF);
     lv_obj_set_width(ui_NoiseGateReleaseSlider, 569);
-    lv_obj_set_height(ui_NoiseGateReleaseSlider, 10);
+    lv_obj_set_height(ui_NoiseGateReleaseSlider, 15);
     lv_obj_set_x(ui_NoiseGateReleaseSlider, 160);
     lv_obj_set_y(ui_NoiseGateReleaseSlider, 0);
     lv_obj_set_align(ui_NoiseGateReleaseSlider, LV_ALIGN_LEFT_MID);
     lv_obj_set_style_bg_color(ui_NoiseGateReleaseSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_NoiseGateReleaseSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateReleaseSlider, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_NoiseGateReleaseSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_NoiseGateReleaseSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateReleaseSlider, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_NoiseGateReleaseSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_NoiseGateReleaseSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
     ui_NoiseGateReleaseLabel = lv_label_create(ui_NoiseGateReleaseGroup);
@@ -154,27 +196,28 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_NoiseGateDepthGroup);
     lv_obj_set_width(ui_NoiseGateDepthGroup, 752);
     lv_obj_set_height(ui_NoiseGateDepthGroup, 36);
-    lv_obj_set_x(ui_NoiseGateDepthGroup, -3);
+    lv_obj_set_x(ui_NoiseGateDepthGroup, -1);
     lv_obj_set_y(ui_NoiseGateDepthGroup, 22);
     lv_obj_set_align(ui_NoiseGateDepthGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_NoiseGateDepthGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_NoiseGateDepthSlider = lv_slider_create(ui_NoiseGateDepthGroup);
-    lv_slider_set_value(ui_NoiseGateDepthSlider, 0, LV_ANIM_OFF);
+    lv_slider_set_range(ui_NoiseGateDepthSlider, -100, -20);
+    lv_slider_set_value(ui_NoiseGateDepthSlider, -60, LV_ANIM_OFF);
     if(lv_slider_get_mode(ui_NoiseGateDepthSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
             ui_NoiseGateDepthSlider, 0, LV_ANIM_OFF);
     lv_obj_set_width(ui_NoiseGateDepthSlider, 569);
-    lv_obj_set_height(ui_NoiseGateDepthSlider, 10);
+    lv_obj_set_height(ui_NoiseGateDepthSlider, 15);
     lv_obj_set_x(ui_NoiseGateDepthSlider, 160);
     lv_obj_set_y(ui_NoiseGateDepthSlider, 0);
     lv_obj_set_align(ui_NoiseGateDepthSlider, LV_ALIGN_LEFT_MID);
     lv_obj_set_style_bg_color(ui_NoiseGateDepthSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_NoiseGateDepthSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateDepthSlider, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_NoiseGateDepthSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_NoiseGateDepthSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateDepthSlider, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_NoiseGateDepthSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_NoiseGateDepthSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
     ui_NoiseGateDepthLabel = lv_label_create(ui_NoiseGateDepthGroup);
@@ -184,187 +227,213 @@ void ui_Settings_screen_init(void)
     lv_label_set_text(ui_NoiseGateDepthLabel, "Depth");
     lv_obj_set_style_text_font(ui_NoiseGateDepthLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_CompressorTag = lv_tabview_add_tab(ui_SettingsTabview, "Comp");
-    lv_obj_clear_flag(ui_CompressorTag, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+    ui_CompressorTab = lv_tabview_add_tab(ui_SettingsTabview, "Comp");
+    lv_obj_clear_flag(ui_CompressorTab, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                       LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
 
-    ui_CompressorEnableGroup = lv_obj_create(ui_CompressorTag);
+    ui_CompressorEnableGroup = lv_obj_create(ui_CompressorTab);
     lv_obj_remove_style_all(ui_CompressorEnableGroup);
-    lv_obj_set_width(ui_CompressorEnableGroup, 309);
+    lv_obj_set_width(ui_CompressorEnableGroup, 200);
     lv_obj_set_height(ui_CompressorEnableGroup, 36);
-    lv_obj_set_x(ui_CompressorEnableGroup, -221);
-    lv_obj_set_y(ui_CompressorEnableGroup, -146);
-    lv_obj_set_align(ui_CompressorEnableGroup, LV_ALIGN_CENTER);
+    lv_obj_set_x(ui_CompressorEnableGroup, -3);
+    lv_obj_set_y(ui_CompressorEnableGroup, -145);
+    lv_obj_set_align(ui_CompressorEnableGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_CompressorEnableGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateSwitch2 = lv_switch_create(ui_CompressorEnableGroup);
-    lv_obj_set_width(ui_NoiseGateSwitch2, 50);
-    lv_obj_set_height(ui_NoiseGateSwitch2, 25);
-    lv_obj_set_x(ui_NoiseGateSwitch2, 145);
-    lv_obj_set_y(ui_NoiseGateSwitch2, 0);
-    lv_obj_set_align(ui_NoiseGateSwitch2, LV_ALIGN_LEFT_MID);
+    ui_CompressorEnableSwitch = lv_switch_create(ui_CompressorEnableGroup);
+    lv_obj_set_width(ui_CompressorEnableSwitch, 50);
+    lv_obj_set_height(ui_CompressorEnableSwitch, 30);
+    lv_obj_set_x(ui_CompressorEnableSwitch, 147);
+    lv_obj_set_y(ui_CompressorEnableSwitch, 0);
+    lv_obj_set_align(ui_CompressorEnableSwitch, LV_ALIGN_LEFT_MID);
 
+    lv_obj_set_style_bg_color(ui_CompressorEnableSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_CompressorEnableSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
 
-    ui_NoiseGateEnableLabel2 = lv_label_create(ui_CompressorEnableGroup);
-    lv_obj_set_width(ui_NoiseGateEnableLabel2, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateEnableLabel2, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateEnableLabel2, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateEnableLabel2, "Enable");
-    lv_obj_set_style_text_font(ui_NoiseGateEnableLabel2, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompressorEnableSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompressorEnableSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompressorEnableSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_CompressorEnableSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
 
-    ui_CompressorPostGroup = lv_obj_create(ui_CompressorTag);
+    ui_CompressorEnableLabel = lv_label_create(ui_CompressorEnableGroup);
+    lv_obj_set_width(ui_CompressorEnableLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_CompressorEnableLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_CompressorEnableLabel, -1);
+    lv_obj_set_y(ui_CompressorEnableLabel, 0);
+    lv_obj_set_align(ui_CompressorEnableLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_CompressorEnableLabel, "Enable");
+    lv_obj_set_style_text_font(ui_CompressorEnableLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_CompressorPostGroup = lv_obj_create(ui_CompressorTab);
     lv_obj_remove_style_all(ui_CompressorPostGroup);
-    lv_obj_set_width(ui_CompressorPostGroup, 309);
+    lv_obj_set_width(ui_CompressorPostGroup, 157);
     lv_obj_set_height(ui_CompressorPostGroup, 36);
-    lv_obj_set_x(ui_CompressorPostGroup, -221);
-    lv_obj_set_y(ui_CompressorPostGroup, -90);
-    lv_obj_set_align(ui_CompressorPostGroup, LV_ALIGN_CENTER);
+    lv_obj_set_x(ui_CompressorPostGroup, 585);
+    lv_obj_set_y(ui_CompressorPostGroup, -145);
+    lv_obj_set_align(ui_CompressorPostGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_CompressorPostGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateSwitch5 = lv_switch_create(ui_CompressorPostGroup);
-    lv_obj_set_width(ui_NoiseGateSwitch5, 50);
-    lv_obj_set_height(ui_NoiseGateSwitch5, 25);
-    lv_obj_set_x(ui_NoiseGateSwitch5, 145);
-    lv_obj_set_y(ui_NoiseGateSwitch5, 0);
-    lv_obj_set_align(ui_NoiseGateSwitch5, LV_ALIGN_LEFT_MID);
+    ui_CompressorPostSwitch = lv_switch_create(ui_CompressorPostGroup);
+    lv_obj_set_width(ui_CompressorPostSwitch, 50);
+    lv_obj_set_height(ui_CompressorPostSwitch, 30);
+    lv_obj_set_x(ui_CompressorPostSwitch, 80);
+    lv_obj_set_y(ui_CompressorPostSwitch, 0);
+    lv_obj_set_align(ui_CompressorPostSwitch, LV_ALIGN_LEFT_MID);
 
+    lv_obj_set_style_bg_color(ui_CompressorPostSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_CompressorPostSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
 
-    ui_NoiseGateEnableLabel5 = lv_label_create(ui_CompressorPostGroup);
-    lv_obj_set_width(ui_NoiseGateEnableLabel5, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateEnableLabel5, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateEnableLabel5, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateEnableLabel5, "Post");
-    lv_obj_set_style_text_font(ui_NoiseGateEnableLabel5, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompressorPostSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompressorPostSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompressorPostSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_CompressorPostSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
 
-    ui_CompressorThresholdGroup = lv_obj_create(ui_CompressorTag);
+    ui_CompressorPostLabel = lv_label_create(ui_CompressorPostGroup);
+    lv_obj_set_width(ui_CompressorPostLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_CompressorPostLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_CompressorPostLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_CompressorPostLabel, "Post");
+    lv_obj_set_style_text_font(ui_CompressorPostLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_CompressorThresholdGroup = lv_obj_create(ui_CompressorTab);
     lv_obj_remove_style_all(ui_CompressorThresholdGroup);
     lv_obj_set_width(ui_CompressorThresholdGroup, 752);
     lv_obj_set_height(ui_CompressorThresholdGroup, 36);
     lv_obj_set_x(ui_CompressorThresholdGroup, -3);
-    lv_obj_set_y(ui_CompressorThresholdGroup, -34);
+    lv_obj_set_y(ui_CompressorThresholdGroup, -90);
     lv_obj_set_align(ui_CompressorThresholdGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_CompressorThresholdGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider2 = lv_slider_create(ui_CompressorThresholdGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider2, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider2) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider2, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider2, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider2, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider2, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider2, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider2, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider2, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_CompressorThresholdSlider = lv_slider_create(ui_CompressorThresholdGroup);
+    lv_slider_set_range(ui_CompressorThresholdSlider, -40, 0);
+    lv_slider_set_value(ui_CompressorThresholdSlider, -14, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_CompressorThresholdSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_CompressorThresholdSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_CompressorThresholdSlider, 569);
+    lv_obj_set_height(ui_CompressorThresholdSlider, 15);
+    lv_obj_set_x(ui_CompressorThresholdSlider, 160);
+    lv_obj_set_y(ui_CompressorThresholdSlider, 0);
+    lv_obj_set_align(ui_CompressorThresholdSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_CompressorThresholdSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompressorThresholdSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider2, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider2, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompressorThresholdSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompressorThresholdSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider2, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider2, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompressorThresholdSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompressorThresholdSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel2 = lv_label_create(ui_CompressorThresholdGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel2, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel2, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel2, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel2, "Threshold");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel2, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_CompressorThresholdLabel = lv_label_create(ui_CompressorThresholdGroup);
+    lv_obj_set_width(ui_CompressorThresholdLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_CompressorThresholdLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_CompressorThresholdLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_CompressorThresholdLabel, "Threshold");
+    lv_obj_set_style_text_font(ui_CompressorThresholdLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_CompressorAttackGroup = lv_obj_create(ui_CompressorTag);
+    ui_CompressorAttackGroup = lv_obj_create(ui_CompressorTab);
     lv_obj_remove_style_all(ui_CompressorAttackGroup);
     lv_obj_set_width(ui_CompressorAttackGroup, 752);
     lv_obj_set_height(ui_CompressorAttackGroup, 36);
     lv_obj_set_x(ui_CompressorAttackGroup, -1);
-    lv_obj_set_y(ui_CompressorAttackGroup, 22);
+    lv_obj_set_y(ui_CompressorAttackGroup, -34);
     lv_obj_set_align(ui_CompressorAttackGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_CompressorAttackGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider1 = lv_slider_create(ui_CompressorAttackGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider1, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider1) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider1, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider1, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider1, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider1, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider1, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider1, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider1, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_CompresorAttackSlider = lv_slider_create(ui_CompressorAttackGroup);
+    lv_slider_set_range(ui_CompresorAttackSlider, 1, 51);
+    lv_slider_set_value(ui_CompresorAttackSlider, 14, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_CompresorAttackSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_CompresorAttackSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_CompresorAttackSlider, 569);
+    lv_obj_set_height(ui_CompresorAttackSlider, 15);
+    lv_obj_set_x(ui_CompresorAttackSlider, 160);
+    lv_obj_set_y(ui_CompresorAttackSlider, 0);
+    lv_obj_set_align(ui_CompresorAttackSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_CompresorAttackSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompresorAttackSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider1, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider1, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompresorAttackSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompresorAttackSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider1, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider1, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompresorAttackSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompresorAttackSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel1 = lv_label_create(ui_CompressorAttackGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel1, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel1, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel1, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel1, "Attack");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel1, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_CompressorAttackLabel = lv_label_create(ui_CompressorAttackGroup);
+    lv_obj_set_width(ui_CompressorAttackLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_CompressorAttackLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_CompressorAttackLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_CompressorAttackLabel, "Attack");
+    lv_obj_set_style_text_font(ui_CompressorAttackLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_CompressorMakeupGroup = lv_obj_create(ui_CompressorTag);
-    lv_obj_remove_style_all(ui_CompressorMakeupGroup);
-    lv_obj_set_width(ui_CompressorMakeupGroup, 752);
-    lv_obj_set_height(ui_CompressorMakeupGroup, 36);
-    lv_obj_set_x(ui_CompressorMakeupGroup, -1);
-    lv_obj_set_y(ui_CompressorMakeupGroup, 78);
-    lv_obj_set_align(ui_CompressorMakeupGroup, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_CompressorMakeupGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_CompressorGainGroup = lv_obj_create(ui_CompressorTab);
+    lv_obj_remove_style_all(ui_CompressorGainGroup);
+    lv_obj_set_width(ui_CompressorGainGroup, 752);
+    lv_obj_set_height(ui_CompressorGainGroup, 36);
+    lv_obj_set_x(ui_CompressorGainGroup, -1);
+    lv_obj_set_y(ui_CompressorGainGroup, 22);
+    lv_obj_set_align(ui_CompressorGainGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_CompressorGainGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider6 = lv_slider_create(ui_CompressorMakeupGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider6, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider6) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider6, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider6, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider6, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider6, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider6, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider6, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider6, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider6, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_CompressorGainSlider = lv_slider_create(ui_CompressorGainGroup);
+    lv_slider_set_range(ui_CompressorGainSlider, -30, 10);
+    lv_slider_set_value(ui_CompressorGainSlider, -12, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_CompressorGainSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_CompressorGainSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_CompressorGainSlider, 569);
+    lv_obj_set_height(ui_CompressorGainSlider, 15);
+    lv_obj_set_x(ui_CompressorGainSlider, 160);
+    lv_obj_set_y(ui_CompressorGainSlider, 0);
+    lv_obj_set_align(ui_CompressorGainSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_CompressorGainSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompressorGainSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider6, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider6, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompressorGainSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompressorGainSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider6, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider6, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_CompressorGainSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_CompressorGainSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel6 = lv_label_create(ui_CompressorMakeupGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel6, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel6, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel6, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel6, "Makeup");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel6, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_CompressorGateLabel = lv_label_create(ui_CompressorGainGroup);
+    lv_obj_set_width(ui_CompressorGateLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_CompressorGateLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_CompressorGateLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_CompressorGateLabel, "Gain");
+    lv_obj_set_style_text_font(ui_CompressorGateLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_EQTab = lv_tabview_add_tab(ui_SettingsTabview, "EQ");
     lv_obj_clear_flag(ui_EQTab, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                       LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
 
-    ui_EQPrePostGroup = lv_obj_create(ui_EQTab);
-    lv_obj_remove_style_all(ui_EQPrePostGroup);
-    lv_obj_set_width(ui_EQPrePostGroup, 309);
-    lv_obj_set_height(ui_EQPrePostGroup, 36);
-    lv_obj_set_x(ui_EQPrePostGroup, -221);
-    lv_obj_set_y(ui_EQPrePostGroup, -146);
-    lv_obj_set_align(ui_EQPrePostGroup, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_EQPrePostGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_EQPostGroup = lv_obj_create(ui_EQTab);
+    lv_obj_remove_style_all(ui_EQPostGroup);
+    lv_obj_set_width(ui_EQPostGroup, 200);
+    lv_obj_set_height(ui_EQPostGroup, 36);
+    lv_obj_set_x(ui_EQPostGroup, -3);
+    lv_obj_set_y(ui_EQPostGroup, -145);
+    lv_obj_set_align(ui_EQPostGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_EQPostGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateSwitch4 = lv_switch_create(ui_EQPrePostGroup);
-    lv_obj_set_width(ui_NoiseGateSwitch4, 50);
-    lv_obj_set_height(ui_NoiseGateSwitch4, 25);
-    lv_obj_set_x(ui_NoiseGateSwitch4, 145);
-    lv_obj_set_y(ui_NoiseGateSwitch4, 0);
-    lv_obj_set_align(ui_NoiseGateSwitch4, LV_ALIGN_LEFT_MID);
+    ui_EQPostSwitch = lv_switch_create(ui_EQPostGroup);
+    lv_obj_set_width(ui_EQPostSwitch, 50);
+    lv_obj_set_height(ui_EQPostSwitch, 30);
+    lv_obj_set_x(ui_EQPostSwitch, 147);
+    lv_obj_set_y(ui_EQPostSwitch, 0);
+    lv_obj_set_align(ui_EQPostSwitch, LV_ALIGN_LEFT_MID);
 
+    lv_obj_set_style_bg_color(ui_EQPostSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_EQPostSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
 
-    ui_NoiseGateEnableLabel4 = lv_label_create(ui_EQPrePostGroup);
-    lv_obj_set_width(ui_NoiseGateEnableLabel4, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateEnableLabel4, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateEnableLabel4, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateEnableLabel4, "Post");
-    lv_obj_set_style_text_font(ui_NoiseGateEnableLabel4, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_EQPostSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQPostSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_EQPostSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_EQPostSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
+
+    ui_EQPostLabel = lv_label_create(ui_EQPostGroup);
+    lv_obj_set_width(ui_EQPostLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_EQPostLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_EQPostLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_EQPostLabel, "Post");
+    lv_obj_set_style_text_font(ui_EQPostLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_EQBassFreqGroup = lv_obj_create(ui_EQTab);
     lv_obj_remove_style_all(ui_EQBassFreqGroup);
@@ -375,30 +444,31 @@ void ui_Settings_screen_init(void)
     lv_obj_set_align(ui_EQBassFreqGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_EQBassFreqGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider4 = lv_slider_create(ui_EQBassFreqGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider4, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider4) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider4, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider4, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider4, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider4, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider4, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider4, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider4, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider4, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_EQBassSlider = lv_slider_create(ui_EQBassFreqGroup);
+    lv_slider_set_range(ui_EQBassSlider, 0, 10);
+    lv_slider_set_value(ui_EQBassSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_EQBassSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_EQBassSlider, 0,
+                                                                                                 LV_ANIM_OFF);
+    lv_obj_set_width(ui_EQBassSlider, 569);
+    lv_obj_set_height(ui_EQBassSlider, 15);
+    lv_obj_set_x(ui_EQBassSlider, 160);
+    lv_obj_set_y(ui_EQBassSlider, 0);
+    lv_obj_set_align(ui_EQBassSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_EQBassSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQBassSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider4, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider4, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_EQBassSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQBassSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider4, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider4, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_EQBassSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQBassSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel4 = lv_label_create(ui_EQBassFreqGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel4, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel4, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel4, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel4, "Bass Freq");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel4, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_EQBassLabel = lv_label_create(ui_EQBassFreqGroup);
+    lv_obj_set_width(ui_EQBassLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_EQBassLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_EQBassLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_EQBassLabel, "Bass Freq");
+    lv_obj_set_style_text_font(ui_EQBassLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_EQMidFreqGroup = lv_obj_create(ui_EQTab);
     lv_obj_remove_style_all(ui_EQMidFreqGroup);
@@ -409,30 +479,30 @@ void ui_Settings_screen_init(void)
     lv_obj_set_align(ui_EQMidFreqGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_EQMidFreqGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider3 = lv_slider_create(ui_EQMidFreqGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider3, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider3) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider3, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider3, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider3, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider3, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider3, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider3, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider3, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider3, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_EQMidSlider = lv_slider_create(ui_EQMidFreqGroup);
+    lv_slider_set_range(ui_EQMidSlider, 0, 10);
+    lv_slider_set_value(ui_EQMidSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_EQMidSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_EQMidSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_EQMidSlider, 569);
+    lv_obj_set_height(ui_EQMidSlider, 15);
+    lv_obj_set_x(ui_EQMidSlider, 160);
+    lv_obj_set_y(ui_EQMidSlider, 0);
+    lv_obj_set_align(ui_EQMidSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_EQMidSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQMidSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider3, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider3, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_EQMidSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQMidSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider3, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider3, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_EQMidSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQMidSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel3 = lv_label_create(ui_EQMidFreqGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel3, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel3, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel3, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel3, "Mid Freq");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel3, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_EQMidLabel = lv_label_create(ui_EQMidFreqGroup);
+    lv_obj_set_width(ui_EQMidLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_EQMidLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_EQMidLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_EQMidLabel, "Mid Freq");
+    lv_obj_set_style_text_font(ui_EQMidLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_EQTrebleFreqGroup = lv_obj_create(ui_EQTab);
     lv_obj_remove_style_all(ui_EQTrebleFreqGroup);
@@ -443,290 +513,924 @@ void ui_Settings_screen_init(void)
     lv_obj_set_align(ui_EQTrebleFreqGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_EQTrebleFreqGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider7 = lv_slider_create(ui_EQTrebleFreqGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider7, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider7) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider7, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider7, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider7, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider7, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider7, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider7, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider7, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider7, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_EQTrebleSlider = lv_slider_create(ui_EQTrebleFreqGroup);
+    lv_slider_set_range(ui_EQTrebleSlider, 0, 10);
+    lv_slider_set_value(ui_EQTrebleSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_EQTrebleSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_EQTrebleSlider, 0,
+                                                                                                   LV_ANIM_OFF);
+    lv_obj_set_width(ui_EQTrebleSlider, 569);
+    lv_obj_set_height(ui_EQTrebleSlider, 15);
+    lv_obj_set_x(ui_EQTrebleSlider, 160);
+    lv_obj_set_y(ui_EQTrebleSlider, 0);
+    lv_obj_set_align(ui_EQTrebleSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_EQTrebleSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQTrebleSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider7, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider7, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_EQTrebleSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQTrebleSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider7, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider7, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_EQTrebleSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_EQTrebleSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel7 = lv_label_create(ui_EQTrebleFreqGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel7, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel7, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel7, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel7, "Treble Freq");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel7, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_EQTrebleLabel = lv_label_create(ui_EQTrebleFreqGroup);
+    lv_obj_set_width(ui_EQTrebleLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_EQTrebleLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_EQTrebleLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_EQTrebleLabel, "Treble Freq");
+    lv_obj_set_style_text_font(ui_EQTrebleLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_ReverbPage = lv_tabview_add_tab(ui_SettingsTabview, "Reverb");
+    ui_ReverbPage = lv_tabview_add_tab(ui_SettingsTabview, "Rev");
     lv_obj_clear_flag(ui_ReverbPage, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                       LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
 
     ui_ReverbEnableGroup = lv_obj_create(ui_ReverbPage);
     lv_obj_remove_style_all(ui_ReverbEnableGroup);
-    lv_obj_set_width(ui_ReverbEnableGroup, 309);
+    lv_obj_set_width(ui_ReverbEnableGroup, 200);
     lv_obj_set_height(ui_ReverbEnableGroup, 36);
-    lv_obj_set_x(ui_ReverbEnableGroup, -221);
-    lv_obj_set_y(ui_ReverbEnableGroup, -146);
-    lv_obj_set_align(ui_ReverbEnableGroup, LV_ALIGN_CENTER);
+    lv_obj_set_x(ui_ReverbEnableGroup, -3);
+    lv_obj_set_y(ui_ReverbEnableGroup, -145);
+    lv_obj_set_align(ui_ReverbEnableGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_ReverbEnableGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateSwitch3 = lv_switch_create(ui_ReverbEnableGroup);
-    lv_obj_set_width(ui_NoiseGateSwitch3, 50);
-    lv_obj_set_height(ui_NoiseGateSwitch3, 25);
-    lv_obj_set_x(ui_NoiseGateSwitch3, 145);
-    lv_obj_set_y(ui_NoiseGateSwitch3, 0);
-    lv_obj_set_align(ui_NoiseGateSwitch3, LV_ALIGN_LEFT_MID);
+    ui_ReverbEnableSwitch = lv_switch_create(ui_ReverbEnableGroup);
+    lv_obj_set_width(ui_ReverbEnableSwitch, 50);
+    lv_obj_set_height(ui_ReverbEnableSwitch, 30);
+    lv_obj_set_x(ui_ReverbEnableSwitch, 147);
+    lv_obj_set_y(ui_ReverbEnableSwitch, 0);
+    lv_obj_set_align(ui_ReverbEnableSwitch, LV_ALIGN_LEFT_MID);
 
+    lv_obj_set_style_bg_color(ui_ReverbEnableSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ReverbEnableSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
 
-    ui_NoiseGateEnableLabel3 = lv_label_create(ui_ReverbEnableGroup);
-    lv_obj_set_width(ui_NoiseGateEnableLabel3, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateEnableLabel3, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateEnableLabel3, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateEnableLabel3, "Enable");
-    lv_obj_set_style_text_font(ui_NoiseGateEnableLabel3, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbEnableSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbEnableSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbEnableSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ReverbEnableSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
+
+    ui_ReverbEnableLabel = lv_label_create(ui_ReverbEnableGroup);
+    lv_obj_set_width(ui_ReverbEnableLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ReverbEnableLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_ReverbEnableLabel, -1);
+    lv_obj_set_y(ui_ReverbEnableLabel, 0);
+    lv_obj_set_align(ui_ReverbEnableLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ReverbEnableLabel, "Enable");
+    lv_obj_set_style_text_font(ui_ReverbEnableLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_ReverbPostGroup = lv_obj_create(ui_ReverbPage);
+    lv_obj_remove_style_all(ui_ReverbPostGroup);
+    lv_obj_set_width(ui_ReverbPostGroup, 161);
+    lv_obj_set_height(ui_ReverbPostGroup, 36);
+    lv_obj_set_x(ui_ReverbPostGroup, 585);
+    lv_obj_set_y(ui_ReverbPostGroup, -145);
+    lv_obj_set_align(ui_ReverbPostGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_ReverbPostGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_ReverbPostSwitch = lv_switch_create(ui_ReverbPostGroup);
+    lv_obj_set_width(ui_ReverbPostSwitch, 50);
+    lv_obj_set_height(ui_ReverbPostSwitch, 30);
+    lv_obj_set_x(ui_ReverbPostSwitch, 80);
+    lv_obj_set_y(ui_ReverbPostSwitch, 0);
+    lv_obj_set_align(ui_ReverbPostSwitch, LV_ALIGN_LEFT_MID);
+
+    lv_obj_set_style_bg_color(ui_ReverbPostSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ReverbPostSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    lv_obj_set_style_bg_color(ui_ReverbPostSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbPostSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbPostSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ReverbPostSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
+
+    ui_ReverbPostLabel = lv_label_create(ui_ReverbPostGroup);
+    lv_obj_set_width(ui_ReverbPostLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ReverbPostLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ReverbPostLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ReverbPostLabel, "Post");
+    lv_obj_set_style_text_font(ui_ReverbPostLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_ReverbModelGroup = lv_obj_create(ui_ReverbPage);
+    lv_obj_remove_style_all(ui_ReverbModelGroup);
+    lv_obj_set_width(ui_ReverbModelGroup, 752);
+    lv_obj_set_height(ui_ReverbModelGroup, 36);
+    lv_obj_set_x(ui_ReverbModelGroup, -1);
+    lv_obj_set_y(ui_ReverbModelGroup, -90);
+    lv_obj_set_align(ui_ReverbModelGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_ReverbModelGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_ReverbModelDropdown = lv_dropdown_create(ui_ReverbModelGroup);
+    lv_dropdown_set_options(ui_ReverbModelDropdown, "Spring 1\nSpring 2\nSpring 3\nSpring 4\nRoom\nPlate");
+    lv_obj_set_width(ui_ReverbModelDropdown, 202);
+    lv_obj_set_height(ui_ReverbModelDropdown, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_ReverbModelDropdown, -127);
+    lv_obj_set_y(ui_ReverbModelDropdown, 1);
+    lv_obj_set_align(ui_ReverbModelDropdown, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_ReverbModelDropdown, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_set_style_text_font(ui_ReverbModelDropdown, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbModelDropdown, lv_color_hex(0x1F1F1F), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbModelDropdown, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(ui_ReverbModelDropdown, lv_color_hex(0x454545), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_opa(ui_ReverbModelDropdown, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_side(ui_ReverbModelDropdown, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_text_font(lv_dropdown_get_list(ui_ReverbModelDropdown), &lv_font_montserrat_20,
+                               LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(lv_dropdown_get_list(ui_ReverbModelDropdown), lv_color_hex(0x1F1F1F),
+                              LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(lv_dropdown_get_list(ui_ReverbModelDropdown), 255,  LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(lv_dropdown_get_list(ui_ReverbModelDropdown), lv_color_hex(0x513D2B),
+                              LV_PART_SELECTED | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(lv_dropdown_get_list(ui_ReverbModelDropdown), 255,  LV_PART_SELECTED | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(lv_dropdown_get_list(ui_ReverbModelDropdown), lv_color_hex(0xFB9230),
+                                LV_PART_SELECTED | LV_STATE_CHECKED);
+    lv_obj_set_style_text_opa(lv_dropdown_get_list(ui_ReverbModelDropdown), 255,  LV_PART_SELECTED | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_color(lv_dropdown_get_list(ui_ReverbModelDropdown), lv_color_hex(0x513D2B),
+                              LV_PART_SELECTED | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(lv_dropdown_get_list(ui_ReverbModelDropdown), 255,  LV_PART_SELECTED | LV_STATE_CHECKED);
+
+    ui_ReverbModelLabel = lv_label_create(ui_ReverbModelGroup);
+    lv_obj_set_width(ui_ReverbModelLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ReverbModelLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ReverbModelLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ReverbModelLabel, "Model");
+    lv_obj_set_style_text_font(ui_ReverbModelLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_ReverbMixGroup = lv_obj_create(ui_ReverbPage);
     lv_obj_remove_style_all(ui_ReverbMixGroup);
     lv_obj_set_width(ui_ReverbMixGroup, 752);
     lv_obj_set_height(ui_ReverbMixGroup, 36);
     lv_obj_set_x(ui_ReverbMixGroup, -1);
-    lv_obj_set_y(ui_ReverbMixGroup, -90);
+    lv_obj_set_y(ui_ReverbMixGroup, -34);
     lv_obj_set_align(ui_ReverbMixGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ReverbMixGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider9 = lv_slider_create(ui_ReverbMixGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider9, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider9) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider9, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider9, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider9, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider9, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider9, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider9, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider9, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider9, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ReverbMixSlider = lv_slider_create(ui_ReverbMixGroup);
+    lv_slider_set_range(ui_ReverbMixSlider, 0, 10);
+    lv_slider_set_value(ui_ReverbMixSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_ReverbMixSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_ReverbMixSlider, 0,
+                                                                                                    LV_ANIM_OFF);
+    lv_obj_set_width(ui_ReverbMixSlider, 569);
+    lv_obj_set_height(ui_ReverbMixSlider, 15);
+    lv_obj_set_x(ui_ReverbMixSlider, 160);
+    lv_obj_set_y(ui_ReverbMixSlider, 0);
+    lv_obj_set_align(ui_ReverbMixSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_ReverbMixSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbMixSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider9, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider9, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbMixSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbMixSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider9, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider9, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbMixSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbMixSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel9 = lv_label_create(ui_ReverbMixGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel9, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel9, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel9, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel9, "Mix");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel9, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ReverbMixLabel = lv_label_create(ui_ReverbMixGroup);
+    lv_obj_set_width(ui_ReverbMixLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ReverbMixLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ReverbMixLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ReverbMixLabel, "Mix");
+    lv_obj_set_style_text_font(ui_ReverbMixLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_ReverbMixGroup1 = lv_obj_create(ui_ReverbPage);
-    lv_obj_remove_style_all(ui_ReverbMixGroup1);
-    lv_obj_set_width(ui_ReverbMixGroup1, 752);
-    lv_obj_set_height(ui_ReverbMixGroup1, 36);
-    lv_obj_set_x(ui_ReverbMixGroup1, -1);
-    lv_obj_set_y(ui_ReverbMixGroup1, -34);
-    lv_obj_set_align(ui_ReverbMixGroup1, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_ReverbMixGroup1, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_ReverbTimeGroup = lv_obj_create(ui_ReverbPage);
+    lv_obj_remove_style_all(ui_ReverbTimeGroup);
+    lv_obj_set_width(ui_ReverbTimeGroup, 752);
+    lv_obj_set_height(ui_ReverbTimeGroup, 36);
+    lv_obj_set_x(ui_ReverbTimeGroup, -1);
+    lv_obj_set_y(ui_ReverbTimeGroup, 22);
+    lv_obj_set_align(ui_ReverbTimeGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_ReverbTimeGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider8 = lv_slider_create(ui_ReverbMixGroup1);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider8, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider8) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider8, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider8, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider8, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider8, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider8, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider8, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider8, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider8, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ReverbTimeSlider = lv_slider_create(ui_ReverbTimeGroup);
+    lv_slider_set_range(ui_ReverbTimeSlider, 0, 10);
+    lv_slider_set_value(ui_ReverbTimeSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_ReverbTimeSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_ReverbTimeSlider, 0,
+                                                                                                     LV_ANIM_OFF);
+    lv_obj_set_width(ui_ReverbTimeSlider, 569);
+    lv_obj_set_height(ui_ReverbTimeSlider, 15);
+    lv_obj_set_x(ui_ReverbTimeSlider, 160);
+    lv_obj_set_y(ui_ReverbTimeSlider, 0);
+    lv_obj_set_align(ui_ReverbTimeSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_ReverbTimeSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbTimeSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider8, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider8, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbTimeSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbTimeSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider8, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider8, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbTimeSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbTimeSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel8 = lv_label_create(ui_ReverbMixGroup1);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel8, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel8, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel8, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel8, "Time");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel8, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ReverbTimeLabel = lv_label_create(ui_ReverbTimeGroup);
+    lv_obj_set_width(ui_ReverbTimeLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ReverbTimeLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ReverbTimeLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ReverbTimeLabel, "Time");
+    lv_obj_set_style_text_font(ui_ReverbTimeLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_ReverbPredelayGroup = lv_obj_create(ui_ReverbPage);
     lv_obj_remove_style_all(ui_ReverbPredelayGroup);
     lv_obj_set_width(ui_ReverbPredelayGroup, 752);
     lv_obj_set_height(ui_ReverbPredelayGroup, 36);
     lv_obj_set_x(ui_ReverbPredelayGroup, -1);
-    lv_obj_set_y(ui_ReverbPredelayGroup, 22);
+    lv_obj_set_y(ui_ReverbPredelayGroup, 78);
     lv_obj_set_align(ui_ReverbPredelayGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ReverbPredelayGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider11 = lv_slider_create(ui_ReverbPredelayGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider11, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider11) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider11, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider11, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider11, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider11, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider11, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider11, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider11, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider11, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ReverbPredelaySlider = lv_slider_create(ui_ReverbPredelayGroup);
+    lv_slider_set_range(ui_ReverbPredelaySlider, 0, 500);
+    lv_slider_set_value(ui_ReverbPredelaySlider, 0, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_ReverbPredelaySlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_ReverbPredelaySlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_ReverbPredelaySlider, 569);
+    lv_obj_set_height(ui_ReverbPredelaySlider, 15);
+    lv_obj_set_x(ui_ReverbPredelaySlider, 160);
+    lv_obj_set_y(ui_ReverbPredelaySlider, 0);
+    lv_obj_set_align(ui_ReverbPredelaySlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_ReverbPredelaySlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbPredelaySlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider11, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider11, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbPredelaySlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbPredelaySlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider11, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider11, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbPredelaySlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbPredelaySlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel11 = lv_label_create(ui_ReverbPredelayGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel11, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel11, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel11, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel11, "Pre-Delay");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel11, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ReverbPredelayLabel = lv_label_create(ui_ReverbPredelayGroup);
+    lv_obj_set_width(ui_ReverbPredelayLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ReverbPredelayLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ReverbPredelayLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ReverbPredelayLabel, "Pre-Delay");
+    lv_obj_set_style_text_font(ui_ReverbPredelayLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_ReverbColorGroup = lv_obj_create(ui_ReverbPage);
     lv_obj_remove_style_all(ui_ReverbColorGroup);
     lv_obj_set_width(ui_ReverbColorGroup, 752);
     lv_obj_set_height(ui_ReverbColorGroup, 36);
     lv_obj_set_x(ui_ReverbColorGroup, -1);
-    lv_obj_set_y(ui_ReverbColorGroup, 78);
+    lv_obj_set_y(ui_ReverbColorGroup, 134);
     lv_obj_set_align(ui_ReverbColorGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ReverbColorGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider12 = lv_slider_create(ui_ReverbColorGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider12, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider12) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider12, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider12, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider12, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider12, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider12, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider12, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider12, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider12, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ReverbColorSlider = lv_slider_create(ui_ReverbColorGroup);
+    lv_slider_set_range(ui_ReverbColorSlider, -10, 10);
+    lv_slider_set_value(ui_ReverbColorSlider, 0, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_ReverbColorSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_ReverbColorSlider, 0,
+                                                                                                      LV_ANIM_OFF);
+    lv_obj_set_width(ui_ReverbColorSlider, 569);
+    lv_obj_set_height(ui_ReverbColorSlider, 15);
+    lv_obj_set_x(ui_ReverbColorSlider, 160);
+    lv_obj_set_y(ui_ReverbColorSlider, 0);
+    lv_obj_set_align(ui_ReverbColorSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_ReverbColorSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbColorSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider12, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider12, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbColorSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbColorSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider12, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider12, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ReverbColorSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ReverbColorSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    ui_NoiseGateThresholdLabel12 = lv_label_create(ui_ReverbColorGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel12, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel12, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel12, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel12, "Color");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel12, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ReverbColorLabel = lv_label_create(ui_ReverbColorGroup);
+    lv_obj_set_width(ui_ReverbColorLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ReverbColorLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ReverbColorLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ReverbColorLabel, "Color");
+    lv_obj_set_style_text_font(ui_ReverbColorLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_GlobalTab = lv_tabview_add_tab(ui_SettingsTabview, "Global");
-    lv_obj_clear_flag(ui_GlobalTab, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+    ui_Modulation = lv_tabview_add_tab(ui_SettingsTabview, "Mod");
+    lv_obj_clear_flag(ui_Modulation, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                       LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
 
-    ui_GlobalInputTrimGroup = lv_obj_create(ui_GlobalTab);
-    lv_obj_remove_style_all(ui_GlobalInputTrimGroup);
-    lv_obj_set_width(ui_GlobalInputTrimGroup, 752);
-    lv_obj_set_height(ui_GlobalInputTrimGroup, 36);
-    lv_obj_set_x(ui_GlobalInputTrimGroup, -1);
-    lv_obj_set_y(ui_GlobalInputTrimGroup, -146);
-    lv_obj_set_align(ui_GlobalInputTrimGroup, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_GlobalInputTrimGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_ModulationEnableGroup = lv_obj_create(ui_Modulation);
+    lv_obj_remove_style_all(ui_ModulationEnableGroup);
+    lv_obj_set_width(ui_ModulationEnableGroup, 200);
+    lv_obj_set_height(ui_ModulationEnableGroup, 36);
+    lv_obj_set_x(ui_ModulationEnableGroup, -3);
+    lv_obj_set_y(ui_ModulationEnableGroup, -145);
+    lv_obj_set_align(ui_ModulationEnableGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_ModulationEnableGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider5 = lv_slider_create(ui_GlobalInputTrimGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider5, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider5) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider5, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider5, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider5, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider5, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider5, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider5, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider5, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider5, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ModulationEnableSwitch = lv_switch_create(ui_ModulationEnableGroup);
+    lv_obj_set_width(ui_ModulationEnableSwitch, 50);
+    lv_obj_set_height(ui_ModulationEnableSwitch, 30);
+    lv_obj_set_x(ui_ModulationEnableSwitch, 147);
+    lv_obj_set_y(ui_ModulationEnableSwitch, 0);
+    lv_obj_set_align(ui_ModulationEnableSwitch, LV_ALIGN_LEFT_MID);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider5, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider5, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ModulationEnableSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ModulationEnableSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider5, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider5, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ModulationEnableSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationEnableSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ModulationEnableSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ModulationEnableSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
 
-    ui_NoiseGateThresholdLabel5 = lv_label_create(ui_GlobalInputTrimGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel5, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel5, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel5, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel5, "Input Trim");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel5, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ModulationEnableLabel = lv_label_create(ui_ModulationEnableGroup);
+    lv_obj_set_width(ui_ModulationEnableLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ModulationEnableLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_ModulationEnableLabel, -1);
+    lv_obj_set_y(ui_ModulationEnableLabel, 0);
+    lv_obj_set_align(ui_ModulationEnableLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ModulationEnableLabel, "Enable");
+    lv_obj_set_style_text_font(ui_ModulationEnableLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_GlobalVolumeGroup = lv_obj_create(ui_GlobalTab);
-    lv_obj_remove_style_all(ui_GlobalVolumeGroup);
-    lv_obj_set_width(ui_GlobalVolumeGroup, 752);
-    lv_obj_set_height(ui_GlobalVolumeGroup, 36);
-    lv_obj_set_x(ui_GlobalVolumeGroup, -1);
-    lv_obj_set_y(ui_GlobalVolumeGroup, -90);
-    lv_obj_set_align(ui_GlobalVolumeGroup, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_GlobalVolumeGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_ModulationPostGroup = lv_obj_create(ui_Modulation);
+    lv_obj_remove_style_all(ui_ModulationPostGroup);
+    lv_obj_set_width(ui_ModulationPostGroup, 161);
+    lv_obj_set_height(ui_ModulationPostGroup, 36);
+    lv_obj_set_x(ui_ModulationPostGroup, 585);
+    lv_obj_set_y(ui_ModulationPostGroup, -145);
+    lv_obj_set_align(ui_ModulationPostGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_ModulationPostGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateThresholdSlider10 = lv_slider_create(ui_GlobalVolumeGroup);
-    lv_slider_set_value(ui_NoiseGateThresholdSlider10, 0, LV_ANIM_OFF);
-    if(lv_slider_get_mode(ui_NoiseGateThresholdSlider10) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
-            ui_NoiseGateThresholdSlider10, 0, LV_ANIM_OFF);
-    lv_obj_set_width(ui_NoiseGateThresholdSlider10, 569);
-    lv_obj_set_height(ui_NoiseGateThresholdSlider10, 10);
-    lv_obj_set_x(ui_NoiseGateThresholdSlider10, 160);
-    lv_obj_set_y(ui_NoiseGateThresholdSlider10, 0);
-    lv_obj_set_align(ui_NoiseGateThresholdSlider10, LV_ALIGN_LEFT_MID);
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider10, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider10, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ModulationPostSwitch = lv_switch_create(ui_ModulationPostGroup);
+    lv_obj_set_width(ui_ModulationPostSwitch, 50);
+    lv_obj_set_height(ui_ModulationPostSwitch, 30);
+    lv_obj_set_x(ui_ModulationPostSwitch, 80);
+    lv_obj_set_y(ui_ModulationPostSwitch, 0);
+    lv_obj_set_align(ui_ModulationPostSwitch, LV_ALIGN_LEFT_MID);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider10, lv_color_hex(0xC7C6C5), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider10, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ModulationPostSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ModulationPostSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
 
-    lv_obj_set_style_bg_color(ui_NoiseGateThresholdSlider10, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_NoiseGateThresholdSlider10, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ModulationPostSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationPostSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ModulationPostSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ModulationPostSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
 
-    ui_NoiseGateThresholdLabel10 = lv_label_create(ui_GlobalVolumeGroup);
-    lv_obj_set_width(ui_NoiseGateThresholdLabel10, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateThresholdLabel10, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateThresholdLabel10, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateThresholdLabel10, "Global Vol");
-    lv_obj_set_style_text_font(ui_NoiseGateThresholdLabel10, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ModulationPostLabel = lv_label_create(ui_ModulationPostGroup);
+    lv_obj_set_width(ui_ModulationPostLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ModulationPostLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ModulationPostLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ModulationPostLabel, "Post");
+    lv_obj_set_style_text_font(ui_ModulationPostLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_GlobalCabinetGroup = lv_obj_create(ui_GlobalTab);
-    lv_obj_remove_style_all(ui_GlobalCabinetGroup);
-    lv_obj_set_width(ui_GlobalCabinetGroup, 309);
-    lv_obj_set_height(ui_GlobalCabinetGroup, 36);
-    lv_obj_set_x(ui_GlobalCabinetGroup, -221);
-    lv_obj_set_y(ui_GlobalCabinetGroup, -34);
-    lv_obj_set_align(ui_GlobalCabinetGroup, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_GlobalCabinetGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_ModulationModelGroup = lv_obj_create(ui_Modulation);
+    lv_obj_remove_style_all(ui_ModulationModelGroup);
+    lv_obj_set_width(ui_ModulationModelGroup, 469);
+    lv_obj_set_height(ui_ModulationModelGroup, 36);
+    lv_obj_set_x(ui_ModulationModelGroup, -5);
+    lv_obj_set_y(ui_ModulationModelGroup, -90);
+    lv_obj_set_align(ui_ModulationModelGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_ModulationModelGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_NoiseGateSwitch6 = lv_switch_create(ui_GlobalCabinetGroup);
-    lv_obj_set_width(ui_NoiseGateSwitch6, 50);
-    lv_obj_set_height(ui_NoiseGateSwitch6, 25);
-    lv_obj_set_x(ui_NoiseGateSwitch6, 145);
-    lv_obj_set_y(ui_NoiseGateSwitch6, 0);
-    lv_obj_set_align(ui_NoiseGateSwitch6, LV_ALIGN_LEFT_MID);
+    ui_ModulationModelDropdown = lv_dropdown_create(ui_ModulationModelGroup);
+    lv_dropdown_set_options(ui_ModulationModelDropdown, "Chorus\nTremolo\nPhaser\nFlanger\nRotary");
+    lv_obj_set_width(ui_ModulationModelDropdown, 202);
+    lv_obj_set_height(ui_ModulationModelDropdown, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_ModulationModelDropdown, 2);
+    lv_obj_set_y(ui_ModulationModelDropdown, 1);
+    lv_obj_set_align(ui_ModulationModelDropdown, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_ModulationModelDropdown, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_set_style_text_font(ui_ModulationModelDropdown, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ModulationModelDropdown, lv_color_hex(0x1F1F1F), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationModelDropdown, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(ui_ModulationModelDropdown, lv_color_hex(0x454545), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_opa(ui_ModulationModelDropdown, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_side(ui_ModulationModelDropdown, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
 
+    lv_obj_set_style_text_font(lv_dropdown_get_list(ui_ModulationModelDropdown), &lv_font_montserrat_20,
+                               LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(lv_dropdown_get_list(ui_ModulationModelDropdown), lv_color_hex(0x1F1F1F),
+                              LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(lv_dropdown_get_list(ui_ModulationModelDropdown), 255,  LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_NoiseGateEnableLabel6 = lv_label_create(ui_GlobalCabinetGroup);
-    lv_obj_set_width(ui_NoiseGateEnableLabel6, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_NoiseGateEnableLabel6, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_NoiseGateEnableLabel6, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_NoiseGateEnableLabel6, "Cabinet");
-    lv_obj_set_style_text_font(ui_NoiseGateEnableLabel6, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(lv_dropdown_get_list(ui_ModulationModelDropdown), lv_color_hex(0x513D2B),
+                              LV_PART_SELECTED | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(lv_dropdown_get_list(ui_ModulationModelDropdown), 255,  LV_PART_SELECTED | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(lv_dropdown_get_list(ui_ModulationModelDropdown), lv_color_hex(0xFB9230),
+                                LV_PART_SELECTED | LV_STATE_CHECKED);
+    lv_obj_set_style_text_opa(lv_dropdown_get_list(ui_ModulationModelDropdown), 255,  LV_PART_SELECTED | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_color(lv_dropdown_get_list(ui_ModulationModelDropdown), lv_color_hex(0x513D2B),
+                              LV_PART_SELECTED | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(lv_dropdown_get_list(ui_ModulationModelDropdown), 255,  LV_PART_SELECTED | LV_STATE_CHECKED);
+
+    ui_ModulationModelLabel = lv_label_create(ui_ModulationModelGroup);
+    lv_obj_set_width(ui_ModulationModelLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ModulationModelLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ModulationModelLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ModulationModelLabel, "Model");
+    lv_obj_set_style_text_font(ui_ModulationModelLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_ModulationSyncGroup = lv_obj_create(ui_Modulation);
+    lv_obj_remove_style_all(ui_ModulationSyncGroup);
+    lv_obj_set_width(ui_ModulationSyncGroup, 202);
+    lv_obj_set_height(ui_ModulationSyncGroup, 36);
+    lv_obj_set_x(ui_ModulationSyncGroup, -4);
+    lv_obj_set_y(ui_ModulationSyncGroup, -34);
+    lv_obj_set_align(ui_ModulationSyncGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_ModulationSyncGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_ModulationSyncLabel = lv_label_create(ui_ModulationSyncGroup);
+    lv_obj_set_width(ui_ModulationSyncLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ModulationSyncLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ModulationSyncLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ModulationSyncLabel, "Sync");
+    lv_obj_set_style_text_font(ui_ModulationSyncLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_ModulationSyncSwitch = lv_switch_create(ui_ModulationSyncGroup);
+    lv_obj_set_width(ui_ModulationSyncSwitch, 50);
+    lv_obj_set_height(ui_ModulationSyncSwitch, 30);
+    lv_obj_set_x(ui_ModulationSyncSwitch, 147);
+    lv_obj_set_y(ui_ModulationSyncSwitch, 0);
+    lv_obj_set_align(ui_ModulationSyncSwitch, LV_ALIGN_LEFT_MID);
+
+    lv_obj_set_style_bg_color(ui_ModulationSyncSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ModulationSyncSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    lv_obj_set_style_bg_color(ui_ModulationSyncSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationSyncSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_ModulationSyncSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_ModulationSyncSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
+
+    ui_ModulationRateGroup = lv_obj_create(ui_Modulation);
+    lv_obj_remove_style_all(ui_ModulationRateGroup);
+    lv_obj_set_width(ui_ModulationRateGroup, 752);
+    lv_obj_set_height(ui_ModulationRateGroup, 36);
+    lv_obj_set_x(ui_ModulationRateGroup, -1);
+    lv_obj_set_y(ui_ModulationRateGroup, 22);
+    lv_obj_set_align(ui_ModulationRateGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_ModulationRateGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_ModulationRateSlider = lv_slider_create(ui_ModulationRateGroup);
+    lv_slider_set_range(ui_ModulationRateSlider, 0, 1000);
+    lv_slider_set_value(ui_ModulationRateSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_ModulationRateSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_ModulationRateSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_ModulationRateSlider, 569);
+    lv_obj_set_height(ui_ModulationRateSlider, 15);
+    lv_obj_set_x(ui_ModulationRateSlider, 160);
+    lv_obj_set_y(ui_ModulationRateSlider, 0);
+    lv_obj_set_align(ui_ModulationRateSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_ModulationRateSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationRateSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_ModulationRateSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationRateSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_ModulationRateSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationRateSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+
+    ui_ModulationRateLabel = lv_label_create(ui_ModulationRateGroup);
+    lv_obj_set_width(ui_ModulationRateLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ModulationRateLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ModulationRateLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ModulationRateLabel, "Rate");
+    lv_obj_set_style_text_font(ui_ModulationRateLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_ModulationDepthGroup = lv_obj_create(ui_Modulation);
+    lv_obj_remove_style_all(ui_ModulationDepthGroup);
+    lv_obj_set_width(ui_ModulationDepthGroup, 752);
+    lv_obj_set_height(ui_ModulationDepthGroup, 36);
+    lv_obj_set_x(ui_ModulationDepthGroup, -1);
+    lv_obj_set_y(ui_ModulationDepthGroup, 78);
+    lv_obj_set_align(ui_ModulationDepthGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_ModulationDepthGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_ModulationDepthSlider = lv_slider_create(ui_ModulationDepthGroup);
+    lv_slider_set_value(ui_ModulationDepthSlider, 0, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_ModulationDepthSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_ModulationDepthSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_ModulationDepthSlider, 569);
+    lv_obj_set_height(ui_ModulationDepthSlider, 15);
+    lv_obj_set_x(ui_ModulationDepthSlider, 160);
+    lv_obj_set_y(ui_ModulationDepthSlider, 0);
+    lv_obj_set_align(ui_ModulationDepthSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_ModulationDepthSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationDepthSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_ModulationDepthSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationDepthSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_ModulationDepthSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationDepthSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+
+    ui_ModulationDepthLabel = lv_label_create(ui_ModulationDepthGroup);
+    lv_obj_set_width(ui_ModulationDepthLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ModulationDepthLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ModulationDepthLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ModulationDepthLabel, "Depth");
+    lv_obj_set_style_text_font(ui_ModulationDepthLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_ModulationlevelGroup = lv_obj_create(ui_Modulation);
+    lv_obj_remove_style_all(ui_ModulationlevelGroup);
+    lv_obj_set_width(ui_ModulationlevelGroup, 752);
+    lv_obj_set_height(ui_ModulationlevelGroup, 36);
+    lv_obj_set_x(ui_ModulationlevelGroup, -1);
+    lv_obj_set_y(ui_ModulationlevelGroup, 134);
+    lv_obj_set_align(ui_ModulationlevelGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_ModulationlevelGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_ModulationLevelSlider = lv_slider_create(ui_ModulationlevelGroup);
+    lv_slider_set_value(ui_ModulationLevelSlider, 0, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_ModulationLevelSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_ModulationLevelSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_ModulationLevelSlider, 569);
+    lv_obj_set_height(ui_ModulationLevelSlider, 15);
+    lv_obj_set_x(ui_ModulationLevelSlider, 160);
+    lv_obj_set_y(ui_ModulationLevelSlider, 0);
+    lv_obj_set_align(ui_ModulationLevelSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_ModulationLevelSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationLevelSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_ModulationLevelSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationLevelSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_ModulationLevelSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModulationLevelSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+
+    ui_ModulationLevelLabel = lv_label_create(ui_ModulationlevelGroup);
+    lv_obj_set_width(ui_ModulationLevelLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_ModulationLevelLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_ModulationLevelLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_ModulationLevelLabel, "Level");
+    lv_obj_set_style_text_font(ui_ModulationLevelLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_Delay = lv_tabview_add_tab(ui_SettingsTabview, "Dly");
+    lv_obj_clear_flag(ui_Delay, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+                      LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
+
+    ui_DelayEnableGroup = lv_obj_create(ui_Delay);
+    lv_obj_remove_style_all(ui_DelayEnableGroup);
+    lv_obj_set_width(ui_DelayEnableGroup, 200);
+    lv_obj_set_height(ui_DelayEnableGroup, 36);
+    lv_obj_set_x(ui_DelayEnableGroup, -3);
+    lv_obj_set_y(ui_DelayEnableGroup, -145);
+    lv_obj_set_align(ui_DelayEnableGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_DelayEnableGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_DelayEnableSwitch = lv_switch_create(ui_DelayEnableGroup);
+    lv_obj_set_width(ui_DelayEnableSwitch, 50);
+    lv_obj_set_height(ui_DelayEnableSwitch, 30);
+    lv_obj_set_x(ui_DelayEnableSwitch, 147);
+    lv_obj_set_y(ui_DelayEnableSwitch, 0);
+    lv_obj_set_align(ui_DelayEnableSwitch, LV_ALIGN_LEFT_MID);
+
+    lv_obj_set_style_bg_color(ui_DelayEnableSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_DelayEnableSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    lv_obj_set_style_bg_color(ui_DelayEnableSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayEnableSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_DelayEnableSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_DelayEnableSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
+
+    ui_DelayEnableLabel = lv_label_create(ui_DelayEnableGroup);
+    lv_obj_set_width(ui_DelayEnableLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_DelayEnableLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_DelayEnableLabel, -1);
+    lv_obj_set_y(ui_DelayEnableLabel, 0);
+    lv_obj_set_align(ui_DelayEnableLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_DelayEnableLabel, "Enable");
+    lv_obj_set_style_text_font(ui_DelayEnableLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_DelayPostGroup = lv_obj_create(ui_Delay);
+    lv_obj_remove_style_all(ui_DelayPostGroup);
+    lv_obj_set_width(ui_DelayPostGroup, 161);
+    lv_obj_set_height(ui_DelayPostGroup, 36);
+    lv_obj_set_x(ui_DelayPostGroup, 585);
+    lv_obj_set_y(ui_DelayPostGroup, -145);
+    lv_obj_set_align(ui_DelayPostGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_DelayPostGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_DelayPostSwitch = lv_switch_create(ui_DelayPostGroup);
+    lv_obj_set_width(ui_DelayPostSwitch, 50);
+    lv_obj_set_height(ui_DelayPostSwitch, 30);
+    lv_obj_set_x(ui_DelayPostSwitch, 80);
+    lv_obj_set_y(ui_DelayPostSwitch, 0);
+    lv_obj_set_align(ui_DelayPostSwitch, LV_ALIGN_LEFT_MID);
+
+    lv_obj_set_style_bg_color(ui_DelayPostSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_DelayPostSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    lv_obj_set_style_bg_color(ui_DelayPostSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayPostSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_DelayPostSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_DelayPostSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
+
+    ui_DelayPostLabel = lv_label_create(ui_DelayPostGroup);
+    lv_obj_set_width(ui_DelayPostLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_DelayPostLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_DelayPostLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_DelayPostLabel, "Post");
+    lv_obj_set_style_text_font(ui_DelayPostLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_DelayModelGroup = lv_obj_create(ui_Delay);
+    lv_obj_remove_style_all(ui_DelayModelGroup);
+    lv_obj_set_width(ui_DelayModelGroup, 469);
+    lv_obj_set_height(ui_DelayModelGroup, 36);
+    lv_obj_set_x(ui_DelayModelGroup, -5);
+    lv_obj_set_y(ui_DelayModelGroup, -90);
+    lv_obj_set_align(ui_DelayModelGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_DelayModelGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_DelayModelDropdown = lv_dropdown_create(ui_DelayModelGroup);
+    lv_dropdown_set_options(ui_DelayModelDropdown, "Digital\nTape");
+    lv_obj_set_width(ui_DelayModelDropdown, 202);
+    lv_obj_set_height(ui_DelayModelDropdown, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_DelayModelDropdown, 0);
+    lv_obj_set_y(ui_DelayModelDropdown, 1);
+    lv_obj_set_align(ui_DelayModelDropdown, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_DelayModelDropdown, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_set_style_text_font(ui_DelayModelDropdown, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_DelayModelDropdown, lv_color_hex(0x1F1F1F), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayModelDropdown, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(ui_DelayModelDropdown, lv_color_hex(0x454545), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_opa(ui_DelayModelDropdown, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_side(ui_DelayModelDropdown, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_text_font(lv_dropdown_get_list(ui_DelayModelDropdown), &lv_font_montserrat_20,
+                               LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(lv_dropdown_get_list(ui_DelayModelDropdown), lv_color_hex(0x1F1F1F),
+                              LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(lv_dropdown_get_list(ui_DelayModelDropdown), 255,  LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(lv_dropdown_get_list(ui_DelayModelDropdown), lv_color_hex(0x513D2B),
+                              LV_PART_SELECTED | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(lv_dropdown_get_list(ui_DelayModelDropdown), 255,  LV_PART_SELECTED | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(lv_dropdown_get_list(ui_DelayModelDropdown), lv_color_hex(0xFB9230),
+                                LV_PART_SELECTED | LV_STATE_CHECKED);
+    lv_obj_set_style_text_opa(lv_dropdown_get_list(ui_DelayModelDropdown), 255,  LV_PART_SELECTED | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_color(lv_dropdown_get_list(ui_DelayModelDropdown), lv_color_hex(0x513D2B),
+                              LV_PART_SELECTED | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(lv_dropdown_get_list(ui_DelayModelDropdown), 255,  LV_PART_SELECTED | LV_STATE_CHECKED);
+
+    ui_DelayModelLabel = lv_label_create(ui_DelayModelGroup);
+    lv_obj_set_width(ui_DelayModelLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_DelayModelLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_DelayModelLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_DelayModelLabel, "Model");
+    lv_obj_set_style_text_font(ui_DelayModelLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_DelaySyncGroup = lv_obj_create(ui_Delay);
+    lv_obj_remove_style_all(ui_DelaySyncGroup);
+    lv_obj_set_width(ui_DelaySyncGroup, 206);
+    lv_obj_set_height(ui_DelaySyncGroup, 36);
+    lv_obj_set_x(ui_DelaySyncGroup, -4);
+    lv_obj_set_y(ui_DelaySyncGroup, -34);
+    lv_obj_set_align(ui_DelaySyncGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_DelaySyncGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_DelaySyncLabel = lv_label_create(ui_DelaySyncGroup);
+    lv_obj_set_width(ui_DelaySyncLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_DelaySyncLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_DelaySyncLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_DelaySyncLabel, "Sync");
+    lv_obj_set_style_text_font(ui_DelaySyncLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_DelaySyncSwitch = lv_switch_create(ui_DelaySyncGroup);
+    lv_obj_set_width(ui_DelaySyncSwitch, 50);
+    lv_obj_set_height(ui_DelaySyncSwitch, 30);
+    lv_obj_set_x(ui_DelaySyncSwitch, 147);
+    lv_obj_set_y(ui_DelaySyncSwitch, 0);
+    lv_obj_set_align(ui_DelaySyncSwitch, LV_ALIGN_LEFT_MID);
+
+    lv_obj_set_style_bg_color(ui_DelaySyncSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_DelaySyncSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    lv_obj_set_style_bg_color(ui_DelaySyncSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelaySyncSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_DelaySyncSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_DelaySyncSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
+
+    ui_DelayPingPongGroup = lv_obj_create(ui_Delay);
+    lv_obj_remove_style_all(ui_DelayPingPongGroup);
+    lv_obj_set_width(ui_DelayPingPongGroup, 154);
+    lv_obj_set_height(ui_DelayPingPongGroup, 36);
+    lv_obj_set_x(ui_DelayPingPongGroup, 585);
+    lv_obj_set_y(ui_DelayPingPongGroup, -34);
+    lv_obj_set_align(ui_DelayPingPongGroup, LV_ALIGN_LEFT_MID);
+    lv_obj_clear_flag(ui_DelayPingPongGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_DelayPingPongLabel = lv_label_create(ui_DelayPingPongGroup);
+    lv_obj_set_width(ui_DelayPingPongLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_DelayPingPongLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_DelayPingPongLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_DelayPingPongLabel, "PPng");
+    lv_obj_set_style_text_font(ui_DelayPingPongLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_DelayPingPongSwitch = lv_switch_create(ui_DelayPingPongGroup);
+    lv_obj_set_width(ui_DelayPingPongSwitch, 50);
+    lv_obj_set_height(ui_DelayPingPongSwitch, 30);
+    lv_obj_set_x(ui_DelayPingPongSwitch, 80);
+    lv_obj_set_y(ui_DelayPingPongSwitch, 0);
+    lv_obj_set_align(ui_DelayPingPongSwitch, LV_ALIGN_LEFT_MID);
+
+    lv_obj_set_style_bg_color(ui_DelayPingPongSwitch, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_DelayPingPongSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    lv_obj_set_style_bg_color(ui_DelayPingPongSwitch, lv_color_hex(0x674D35), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayPingPongSwitch, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_DelayPingPongSwitch, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_DelayPingPongSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
+
+    ui_DelayTSGroup = lv_obj_create(ui_Delay);
+    lv_obj_remove_style_all(ui_DelayTSGroup);
+    lv_obj_set_width(ui_DelayTSGroup, 752);
+    lv_obj_set_height(ui_DelayTSGroup, 36);
+    lv_obj_set_x(ui_DelayTSGroup, -1);
+    lv_obj_set_y(ui_DelayTSGroup, 22);
+    lv_obj_set_align(ui_DelayTSGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_DelayTSGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_DelayTSSlider = lv_slider_create(ui_DelayTSGroup);
+    lv_slider_set_range(ui_DelayTSSlider, 0, 1000);
+    lv_slider_set_value(ui_DelayTSSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_DelayTSSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_DelayTSSlider, 0,
+                                                                                                  LV_ANIM_OFF);
+    lv_obj_set_width(ui_DelayTSSlider, 569);
+    lv_obj_set_height(ui_DelayTSSlider, 15);
+    lv_obj_set_x(ui_DelayTSSlider, 160);
+    lv_obj_set_y(ui_DelayTSSlider, 0);
+    lv_obj_set_align(ui_DelayTSSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_DelayTSSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayTSSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_DelayTSSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayTSSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_DelayTSSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayTSSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+
+    ui_DelayTSLabel = lv_label_create(ui_DelayTSGroup);
+    lv_obj_set_width(ui_DelayTSLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_DelayTSLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_DelayTSLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_DelayTSLabel, "Time");
+    lv_obj_set_style_text_font(ui_DelayTSLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_DelayFeedbackGroup = lv_obj_create(ui_Delay);
+    lv_obj_remove_style_all(ui_DelayFeedbackGroup);
+    lv_obj_set_width(ui_DelayFeedbackGroup, 752);
+    lv_obj_set_height(ui_DelayFeedbackGroup, 36);
+    lv_obj_set_x(ui_DelayFeedbackGroup, -1);
+    lv_obj_set_y(ui_DelayFeedbackGroup, 78);
+    lv_obj_set_align(ui_DelayFeedbackGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_DelayFeedbackGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_DelayFeedbackSlider = lv_slider_create(ui_DelayFeedbackGroup);
+    lv_slider_set_value(ui_DelayFeedbackSlider, 0, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_DelayFeedbackSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_DelayFeedbackSlider,
+                                                                                                        0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_DelayFeedbackSlider, 569);
+    lv_obj_set_height(ui_DelayFeedbackSlider, 15);
+    lv_obj_set_x(ui_DelayFeedbackSlider, 160);
+    lv_obj_set_y(ui_DelayFeedbackSlider, 0);
+    lv_obj_set_align(ui_DelayFeedbackSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_DelayFeedbackSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayFeedbackSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_DelayFeedbackSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayFeedbackSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_DelayFeedbackSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayFeedbackSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+
+    ui_DelayFeedbackLabel = lv_label_create(ui_DelayFeedbackGroup);
+    lv_obj_set_width(ui_DelayFeedbackLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_DelayFeedbackLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_DelayFeedbackLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_DelayFeedbackLabel, "Feedback");
+    lv_obj_set_style_text_font(ui_DelayFeedbackLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_DelayMixGroup = lv_obj_create(ui_Delay);
+    lv_obj_remove_style_all(ui_DelayMixGroup);
+    lv_obj_set_width(ui_DelayMixGroup, 752);
+    lv_obj_set_height(ui_DelayMixGroup, 36);
+    lv_obj_set_x(ui_DelayMixGroup, -1);
+    lv_obj_set_y(ui_DelayMixGroup, 134);
+    lv_obj_set_align(ui_DelayMixGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_DelayMixGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_DelayMixSlider = lv_slider_create(ui_DelayMixGroup);
+    lv_slider_set_value(ui_DelayMixSlider, 0, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_DelayMixSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_DelayMixSlider, 0,
+                                                                                                   LV_ANIM_OFF);
+    lv_obj_set_width(ui_DelayMixSlider, 569);
+    lv_obj_set_height(ui_DelayMixSlider, 15);
+    lv_obj_set_x(ui_DelayMixSlider, 160);
+    lv_obj_set_y(ui_DelayMixSlider, 0);
+    lv_obj_set_align(ui_DelayMixSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_DelayMixSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayMixSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_DelayMixSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayMixSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_DelayMixSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_DelayMixSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+
+    ui_DelayMixLabel = lv_label_create(ui_DelayMixGroup);
+    lv_obj_set_width(ui_DelayMixLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_DelayMixLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_DelayMixLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_DelayMixLabel, "Mix");
+    lv_obj_set_style_text_font(ui_DelayMixLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_Amplifier = lv_tabview_add_tab(ui_SettingsTabview, "Amp");
+    lv_obj_clear_flag(ui_Amplifier, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+                      LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
+
+    ui_AmplifierGainGroup = lv_obj_create(ui_Amplifier);
+    lv_obj_remove_style_all(ui_AmplifierGainGroup);
+    lv_obj_set_width(ui_AmplifierGainGroup, 752);
+    lv_obj_set_height(ui_AmplifierGainGroup, 36);
+    lv_obj_set_x(ui_AmplifierGainGroup, -1);
+    lv_obj_set_y(ui_AmplifierGainGroup, -146);
+    lv_obj_set_align(ui_AmplifierGainGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_AmplifierGainGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_AmplifierGainSlider = lv_slider_create(ui_AmplifierGainGroup);
+    lv_slider_set_range(ui_AmplifierGainSlider, 0, 10);
+    lv_slider_set_value(ui_AmplifierGainSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_AmplifierGainSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_AmplifierGainSlider,
+                                                                                                        0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_AmplifierGainSlider, 569);
+    lv_obj_set_height(ui_AmplifierGainSlider, 15);
+    lv_obj_set_x(ui_AmplifierGainSlider, 160);
+    lv_obj_set_y(ui_AmplifierGainSlider, 0);
+    lv_obj_set_align(ui_AmplifierGainSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_AmplifierGainSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_AmplifierGainSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_AmplifierGainSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_AmplifierGainSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_AmplifierGainSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_AmplifierGainSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+
+    ui_AmplifierGainLabel = lv_label_create(ui_AmplifierGainGroup);
+    lv_obj_set_width(ui_AmplifierGainLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_AmplifierGainLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_AmplifierGainLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_AmplifierGainLabel, "Gain");
+    lv_obj_set_style_text_font(ui_AmplifierGainLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_AmplifierVolumeGroup = lv_obj_create(ui_Amplifier);
+    lv_obj_remove_style_all(ui_AmplifierVolumeGroup);
+    lv_obj_set_width(ui_AmplifierVolumeGroup, 752);
+    lv_obj_set_height(ui_AmplifierVolumeGroup, 36);
+    lv_obj_set_x(ui_AmplifierVolumeGroup, -1);
+    lv_obj_set_y(ui_AmplifierVolumeGroup, -90);
+    lv_obj_set_align(ui_AmplifierVolumeGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_AmplifierVolumeGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_AmplifierVolumeSlider = lv_slider_create(ui_AmplifierVolumeGroup);
+    lv_slider_set_range(ui_AmplifierVolumeSlider, 0, 10);
+    lv_slider_set_value(ui_AmplifierVolumeSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_AmplifierVolumeSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_AmplifierVolumeSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_AmplifierVolumeSlider, 569);
+    lv_obj_set_height(ui_AmplifierVolumeSlider, 15);
+    lv_obj_set_x(ui_AmplifierVolumeSlider, 160);
+    lv_obj_set_y(ui_AmplifierVolumeSlider, 0);
+    lv_obj_set_align(ui_AmplifierVolumeSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_AmplifierVolumeSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_AmplifierVolumeSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_AmplifierVolumeSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_AmplifierVolumeSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_AmplifierVolumeSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_AmplifierVolumeSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+
+    ui_AmplifierVolumeLabel = lv_label_create(ui_AmplifierVolumeGroup);
+    lv_obj_set_width(ui_AmplifierVolumeLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_AmplifierVolumeLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_AmplifierVolumeLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_AmplifierVolumeLabel, "Volume");
+    lv_obj_set_style_text_font(ui_AmplifierVolumeLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_AmplifierPresenseGroup = lv_obj_create(ui_Amplifier);
+    lv_obj_remove_style_all(ui_AmplifierPresenseGroup);
+    lv_obj_set_width(ui_AmplifierPresenseGroup, 752);
+    lv_obj_set_height(ui_AmplifierPresenseGroup, 36);
+    lv_obj_set_x(ui_AmplifierPresenseGroup, -1);
+    lv_obj_set_y(ui_AmplifierPresenseGroup, -34);
+    lv_obj_set_align(ui_AmplifierPresenseGroup, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_AmplifierPresenseGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_AmplifierPresenseSlider = lv_slider_create(ui_AmplifierPresenseGroup);
+    lv_slider_set_range(ui_AmplifierPresenseSlider, 0, 10);
+    lv_slider_set_value(ui_AmplifierPresenseSlider, 5, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_AmplifierPresenseSlider) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(
+            ui_AmplifierPresenseSlider, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_AmplifierPresenseSlider, 569);
+    lv_obj_set_height(ui_AmplifierPresenseSlider, 15);
+    lv_obj_set_x(ui_AmplifierPresenseSlider, 160);
+    lv_obj_set_y(ui_AmplifierPresenseSlider, 0);
+    lv_obj_set_align(ui_AmplifierPresenseSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_bg_color(ui_AmplifierPresenseSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_AmplifierPresenseSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_AmplifierPresenseSlider, lv_color_hex(0x513D2B), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_AmplifierPresenseSlider, 255, LV_PART_INDICATOR | LV_STATE_DEFAULT);
+
+    lv_obj_set_style_bg_color(ui_AmplifierPresenseSlider, lv_color_hex(0xFB9230), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_AmplifierPresenseSlider, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+
+    ui_AmplifierPresenseLabel = lv_label_create(ui_AmplifierPresenseGroup);
+    lv_obj_set_width(ui_AmplifierPresenseLabel, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_AmplifierPresenseLabel, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_AmplifierPresenseLabel, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_AmplifierPresenseLabel, "Presense");
+    lv_obj_set_style_text_font(ui_AmplifierPresenseLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_CloseImage = lv_img_create(ui_Settings);
     lv_img_set_src(ui_CloseImage, &ui_img_tick_png);

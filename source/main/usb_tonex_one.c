@@ -197,7 +197,7 @@ static tTonexParameter TonexParameters[TONEX_PARAM_LAST] =
     {5,      0,      10,   "MDL GAIN"},           // TONEX_PARAM_MODEL_GAIN,
     {5,      0,      10,   "MDL VOL"},            // TONEX_PARAM_MODEL_VOLUME,
     {100,    0,      100,  "MDL MIX"},            // TONEX_PARAM_MODEX_MIX,
-    {0,      0,      0,    "UNK 3"},              // TONEX_PARAM_UNKNOWN_3,
+    {0,      0,      0,    "UNK 3"},              // TONEX_PARAM_UNKNOWN_3,     // presense and depth somewhere around here probably
     {0,      0,      0,    "UNK 4"},              // TONEX_PARAM_UNKNOWN_4,
     {0,      0,      0,    "UNK 5"},              // TONEX_PARAM_UNKNOWN_5,
     {0,      0,      0,    "UNK 6"},              // TONEX_PARAM_UNKNOWN_6,
