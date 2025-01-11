@@ -62,7 +62,7 @@ typedef struct
 } rmt_led_strip_encoder_t;
 
 static const char *TAG = "app_leds";
-static uint8_t led_strip_pixels[LED_NUMBER * 3];
+static uint8_t __attribute__((unused)) led_strip_pixels[LED_NUMBER * 3];
 
 /****************************************************************************
 * NAME:        
@@ -130,7 +130,7 @@ static void __attribute__((unused)) led_strip_hsv2rgb(uint32_t h, uint32_t s, ui
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static size_t rmt_encode_led_strip(rmt_encoder_t *encoder, rmt_channel_handle_t channel, const void *primary_data, size_t data_size, rmt_encode_state_t *ret_state)
+static size_t __attribute__((unused)) rmt_encode_led_strip(rmt_encoder_t *encoder, rmt_channel_handle_t channel, const void *primary_data, size_t data_size, rmt_encode_state_t *ret_state)
 {
     rmt_led_strip_encoder_t *led_encoder = __containerof(encoder, rmt_led_strip_encoder_t, base);
     rmt_encoder_handle_t bytes_encoder = led_encoder->bytes_encoder;
@@ -182,7 +182,7 @@ out:
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static esp_err_t rmt_del_led_strip_encoder(rmt_encoder_t *encoder)
+static esp_err_t __attribute__((unused)) rmt_del_led_strip_encoder(rmt_encoder_t *encoder)
 {
     rmt_led_strip_encoder_t *led_encoder = __containerof(encoder, rmt_led_strip_encoder_t, base);
     rmt_del_encoder(led_encoder->bytes_encoder);
@@ -199,7 +199,7 @@ static esp_err_t rmt_del_led_strip_encoder(rmt_encoder_t *encoder)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static esp_err_t rmt_led_strip_encoder_reset(rmt_encoder_t *encoder)
+static esp_err_t __attribute__((unused)) rmt_led_strip_encoder_reset(rmt_encoder_t *encoder)
 {
     rmt_led_strip_encoder_t *led_encoder = __containerof(encoder, rmt_led_strip_encoder_t, base);
     rmt_encoder_reset(led_encoder->bytes_encoder);
@@ -216,7 +216,7 @@ static esp_err_t rmt_led_strip_encoder_reset(rmt_encoder_t *encoder)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-esp_err_t rmt_new_led_strip_encoder(const led_strip_encoder_config_t *config, rmt_encoder_handle_t *ret_encoder)
+esp_err_t __attribute__((unused)) rmt_new_led_strip_encoder(const led_strip_encoder_config_t *config, rmt_encoder_handle_t *ret_encoder)
 {
     esp_err_t ret = ESP_OK;
     rmt_led_strip_encoder_t *led_encoder = NULL;
@@ -305,6 +305,7 @@ err:
 *****************************************************************************/
 void leds_task(void *arg)
 {    
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC    
     uint32_t red = 0;
     uint32_t green = 0xFF;
     uint32_t blue = 0;
@@ -339,7 +340,7 @@ void leds_task(void *arg)
     // do Green flash
     for (uint8_t loop = 0; loop < 3; loop++)
     {       
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKIT
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC
         // led is GBR colour order
         led_strip_pixels[0] = green;
         led_strip_pixels[1] = blue;
@@ -366,6 +367,7 @@ void leds_task(void *arg)
         // do nothing. In future, could flash for events or something
         vTaskDelay(pdMS_TO_TICKS(2000));
     }
+#endif    
 }
 
 /****************************************************************************

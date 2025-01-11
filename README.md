@@ -90,6 +90,12 @@ For more information about the firmware development and customisation, refer to 
 - https://github.com/vit3k/tonex_controller for great work on reverse engineering the Tonex One USB protocol
 
 ## Firmware Release Notes <a name="release_notes"></a>
+V1.0.5.2:
+- Added support for ESP "Devkit-C" board
+- Added support for the onboard RGB led on the Zero and the Devkit-C. Three green flashes shown on boot.
+- Added support for four wired footswitches. Footswitch mode can be set to one of three different modes, using the web config
+- Fixed some build warnings
+
 V1.0.4.2:
 - Added support for 1.69" version
 - New web configuration system

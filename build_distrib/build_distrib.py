@@ -9,7 +9,7 @@ from zipfile import ZipFile
 dirname = Path.cwd()
 
 # set version
-version = '1.0.4.2'
+version = '1.0.5.2'
 
 def delete_files_in_folder(directory):
     for filename in os.listdir(directory):
@@ -92,6 +92,6 @@ build_distribution('template_def_partition', 'build_wszero', False, zip_name)
 
 # Build Devkit C
 zip_name = 'TonexOneController_V' + version + '_DevKitC'
-build_distribution('template_cust_partition', 'build_devkitc', False, zip_name)
+build_distribution('template_cust_partition', 'build_devkitc', True, zip_name)
 
 print('All done')
