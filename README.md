@@ -43,9 +43,10 @@ The supported features vary a little depending on the chosen hardware platform.
 - LCD display ("1.69" model)
 - Screen displays the name and number of the current preset ("4.3B" and "1.69" models.)
 - The User can select an amplifier or pedal skin and also add descriptive text ("4.3B" model)
-- Use of simple dual footswitches to select next/previous preset
+- Use of simple dual footswitches to select next/previous preset (all platforms)
+- Use of 4 buttons to select a preset via a banked system, or directly via binary inputs (all platforms except for the "4.3B")
 - Bluetooth Client support. Use of the "M-Vave Chocolate" bluetooth Midi footswitch device to switch presets (4 buttons, bank up/down)
-- Other Bluetooth Midi controllers should be fairly easy to support with code changes, provided they use the standard Bletooth Midi service and characteristic
+- Other Bluetooth Midi controllers should be also supported, via the "custom name" option. Refer to [Web Configuration](WebConfiguration.md)
 - Bluetooth server support. Pair your phone/tablet with the controller, and send standard Midi program changes, bridged through to the Tonex One pedal (note Server and Client cannot be used simultaneously)
 - USB host control of the Tonex pedal
 - Wired/Serial Midi support
