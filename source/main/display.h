@@ -31,7 +31,7 @@ void UI_SetBTStatus(uint8_t state);
 void UI_SetPresetLabel(char* text);
 void UI_SetAmpSkin(uint16_t index);
 void UI_SetPresetDescription(char* text);
-void UI_SetCurrentParameterValues(void* ptr);
+void UI_SetCurrentParameterValues(tTonexParameter* params);
 
 #ifdef __cplusplus
 } /*extern "C"*/

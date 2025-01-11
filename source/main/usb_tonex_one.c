@@ -1175,7 +1175,7 @@ static esp_err_t usb_tonex_one_process_single_message(uint8_t* data, uint16_t le
                     usb_tonex_one_parse_preset_parameters(data, length);
 
                     // pass params to UI
-                    UI_SetCurrentParameterValues((void*)TonexParameters);
+                    UI_SetCurrentParameterValues(TonexParameters);
 
                     // debug dump parameters
                     //usb_tonex_one_dump_parameters();

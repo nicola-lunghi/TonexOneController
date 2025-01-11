@@ -33,10 +33,11 @@ limitations under the License.
 #include "esp_ota_ops.h"
 #include "sys/param.h"
 #include "control.h"
+#include "usb_comms.h"
+#include "usb/usb_host.h"
+#include "usb_tonex_one.h"
 #include "footswitches.h"
 #include "display.h"
-#include "usb_comms.h"
-#include "usb_tonex_one.h"
 #include "task_priorities.h"
 
 #define CTRL_TASK_STACK_SIZE   (3 * 1024)

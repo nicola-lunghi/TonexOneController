@@ -55,14 +55,14 @@ limitations under the License.
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     #include "ui.h"
 #endif
+#include "usb/usb_host.h"
+#include "usb_comms.h"
+#include "usb_tonex_one.h"
 #include "display.h"
 #include "CH422G.h"
 #include "control.h"
 #include "task_priorities.h"
 #include "midi_control.h"
-#include "usb/usb_host.h"
-#include "usb_comms.h"
-#include "usb_tonex_one.h"
 
 static const char *TAG = "app_display";
 
@@ -134,13 +134,13 @@ typedef struct
     uint8_t ElementID;
     uint8_t Action;
     uint32_t Value;
-    void* Pointer;
     char Text[MAX_UI_TEXT];
 } tUIUpdate;
 
 static QueueHandle_t ui_update_queue;
 static SemaphoreHandle_t I2CMutexHandle;
 static SemaphoreHandle_t lvgl_mux = NULL;
+static tTonexParameter TonexParametersCopy[TONEX_PARAM_LAST];
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
@@ -171,7 +171,6 @@ static void __attribute__((unused)) display_lvgl_flush_cb(lv_disp_drv_t *drv, co
 }
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
-
 // we use two semaphores to sync the VSYNC event and the LVGL task, to avoid potential tearing effect
 #if CONFIG_DISPLAY_AVOID_TEAR_EFFECT_WITH_SEM
 SemaphoreHandle_t sem_vsync_end;
@@ -493,14 +492,16 @@ void UI_SetPresetDescription(char* text)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void UI_SetCurrentParameterValues(void* ptr)
+void UI_SetCurrentParameterValues(tTonexParameter* params)
 {
     tUIUpdate ui_update;
 
+    // make a local copy of the current params, for thread safety
+    memcpy((void*)TonexParametersCopy, (void*)params, sizeof(TonexParametersCopy));
+
     // build command
     ui_update.ElementID = UI_ELEMENT_PARAMETERS;
-    ui_update.Pointer = ptr;
-
+    
     // send to queue
     if (xQueueSend(ui_update_queue, (void*)&ui_update, 0) != pdPASS)
     {
@@ -824,12 +825,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
         case UI_ELEMENT_PARAMETERS:
         {
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B      
-            tTonexParameter* param_ptr = (tTonexParameter*)update->Pointer;
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B     
+            ESP_LOGI(TAG, "Syncing params to UI");
 
             for (uint16_t param = 0; param < TONEX_PARAM_LAST; param++)
             {                
-                tTonexParameter* param_entry = &param_ptr[param];
+                tTonexParameter* param_entry = &TonexParametersCopy[param];
 
                 switch (param)
                 {
@@ -930,7 +931,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
                     case TONEX_PARAM_EQ_BASS_FREQ:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_EQ_MID:
@@ -940,12 +941,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
                     case TONEX_PARAM_EQ_MIDQ:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_EQ_MID_FREQ:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_EQ_TREBLE:
@@ -955,17 +956,17 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
                     case TONEX_PARAM_EQ_TREBLE_FREQ:
                     {
-
+                        // not exposed via UI    
                     } break;
                     
                     case TONEX_PARAM_UNKNOWN_1:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_2:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_MODEL_GAIN:
@@ -980,72 +981,72 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
                     case TONEX_PARAM_MODEX_MIX:
                     {
-                        
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_3:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_4:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_5:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_6:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_7:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_8:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_9:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_10:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_11:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_12:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_13:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_14:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_UNKNOWN_15:
                     {
-
+                        // not exposed via UI
                     } break;
                     
                     case TONEX_PARAM_REVERB_POSITION:
@@ -1074,127 +1075,199 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
                     case TONEX_PARAM_REVERB_MODEL:
                     {
-
+                        lv_dropdown_set_selected(ui_ReverbModelDropdown, param_entry->Value);
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING1_TIME:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_1)
+                        {                            
+                            lv_slider_set_value(ui_ReverbTimeSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING1_PREDELAY:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_1)
+                        {                            
+                            lv_slider_set_value(ui_ReverbPredelaySlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING1_COLOR:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_1)
+                        {                            
+                            lv_slider_set_value(ui_ReverbColorSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING1_MIX:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_1)
+                        {                            
+                            lv_slider_set_value(ui_ReverbMixSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING2_TIME:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_2)
+                        {                            
+                            lv_slider_set_value(ui_ReverbTimeSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING2_PREDELAY:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_2)
+                        {                            
+                            lv_slider_set_value(ui_ReverbPredelaySlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING2_COLOR:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_2)
+                        {                            
+                            lv_slider_set_value(ui_ReverbColorSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING2_MIX:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_2)
+                        {                            
+                            lv_slider_set_value(ui_ReverbMixSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING3_TIME:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_3)
+                        {                            
+                            lv_slider_set_value(ui_ReverbTimeSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING3_PREDELAY:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_3)
+                        {                            
+                            lv_slider_set_value(ui_ReverbPredelaySlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING3_COLOR:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_3)
+                        {                            
+                            lv_slider_set_value(ui_ReverbColorSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING3_MIX:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_3)
+                        {                            
+                            lv_slider_set_value(ui_ReverbMixSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING4_TIME:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_4)
+                        {                            
+                            lv_slider_set_value(ui_ReverbTimeSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING4_PREDELAY:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_4)
+                        {                            
+                            lv_slider_set_value(ui_ReverbPredelaySlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING4_COLOR:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_4)
+                        {                            
+                            lv_slider_set_value(ui_ReverbColorSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_SPRING4_MIX:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_SPRING_4)
+                        {                            
+                            lv_slider_set_value(ui_ReverbMixSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_ROOM_TIME:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_ROOM)
+                        {                            
+                            lv_slider_set_value(ui_ReverbTimeSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_ROOM_PREDELAY:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_ROOM)
+                        {                            
+                            lv_slider_set_value(ui_ReverbPredelaySlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_ROOM_COLOR:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_ROOM)
+                        {                            
+                            lv_slider_set_value(ui_ReverbColorSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_ROOM_MIX:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_ROOM)
+                        {                            
+                            lv_slider_set_value(ui_ReverbMixSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_PLATE_TIME:
-                                        {
-
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_PLATE)
+                        {                            
+                            lv_slider_set_value(ui_ReverbTimeSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_PLATE_PREDELAY:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_PLATE)
+                        {                            
+                            lv_slider_set_value(ui_ReverbPredelaySlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_PLATE_COLOR:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_PLATE)
+                        {                            
+                            lv_slider_set_value(ui_ReverbColorSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_REVERB_PLATE_MIX:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_REVERB_MODEL].Value == TONEX_REVERB_PLATE)
+                        {                            
+                            lv_slider_set_value(ui_ReverbMixSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_MODULATION_POST:
@@ -1223,47 +1296,79 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
                     case TONEX_PARAM_MODULATION_MODEL:
                     {
-
+                        lv_dropdown_set_selected(ui_ModulationModelDropdown, param_entry->Value);
                     } break;
 
                     case TONEX_PARAM_MODULATION_CHORUS_SYNC:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_CHORUS)
+                        {      
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }                        
+                        }
                     } break;
 
                     case TONEX_PARAM_MODULATION_CHORUS_TS:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_MODULATION_CHORUS_RATE:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_CHORUS)
+                        { 
+                            lv_slider_set_value(ui_ModulationRateSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_MODULATION_CHORUS_DEPTH:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_CHORUS)
+                        { 
+                            lv_slider_set_value(ui_ModulationDepthSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_MODULATION_CHORUS_LEVEL:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_CHORUS)
+                        { 
+                            lv_slider_set_value(ui_ModulationLevelSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_MODULATION_TREMOLO_SYNC:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_TREMOLO)
+                        {      
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }                        
+                        }
                     } break;
 
                     case TONEX_PARAM_MODULATION_TREMOLO_TS:
                     {
-
+                        // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_MODULATION_TREMOLO_RATE:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_TREMOLO)
+                        { 
+                            lv_slider_set_value(ui_ModulationRateSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_MODULATION_TREMOLO_SHAPE:
@@ -1278,92 +1383,146 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
                     case TONEX_PARAM_MODULATION_TREMOLO_LEVEL:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_TREMOLO)
+                        { 
+                            lv_slider_set_value(ui_ModulationLevelSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
-                    case TONEX_PARAM_PHASER_SYNC:
+                    case TONEX_PARAM_MODULATION_PHASER_SYNC:
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_PHASER)
+                        {      
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }                        
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_PHASER_TS:
+                    {
+                        // not exposed via UI
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_PHASER_RATE:
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_PHASER)
+                        { 
+                            lv_slider_set_value(ui_ModulationRateSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_PHASER_DEPTH:
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_PHASER)
+                        { 
+                            lv_slider_set_value(ui_ModulationDepthSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_PHASER_LEVEL:
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_PHASER)
+                        { 
+                            lv_slider_set_value(ui_ModulationLevelSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_FLANGER_SYNC:
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_FLANGER)
+                        {      
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }                        
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_FLANGER_TS:
+                    {
+                        // not exposed via UI
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_FLANGER_RATE:
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_FLANGER)
+                        { 
+                            lv_slider_set_value(ui_ModulationRateSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_FLANGER_DEPTH:
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_FLANGER)
+                        { 
+                            lv_slider_set_value(ui_ModulationDepthSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_FLANGER_FEEDEBACK:
                     {
 
                     } break;
 
-                    case TONEX_PARAM_PHASER_TS:
+                    case TONEX_PARAM_MODULATION_FLANGER_LEVEL:
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_FLANGER)
+                        { 
+                            lv_slider_set_value(ui_ModulationLevelSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_ROTARY_SYNC:
+                    {
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_ROTARY)
+                        {      
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_ModulationSyncSwitch, LV_STATE_CHECKED);
+                            }                        
+                        }
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_ROTARY_TS:
+                    {
+                        // not exposed via UI
+                    } break;
+
+                    case TONEX_PARAM_MODULATION_ROTARY_SPEED:
                     {
 
                     } break;
 
-                    case TONEX_PARAM_PHASER_RATE:
+                    case TONEX_PARAM_MODULATION_ROTARY_RADIUS:
                     {
 
                     } break;
 
-                    case TONEX_PARAM_PHASER_DEPTH:
+                    case TONEX_PARAM_MODULATION_ROTARY_SPREAD:
                     {
 
                     } break;
 
-                    case TONEX_PARAM_PHASER_LEVEL:
+                    case TONEX_PARAM_MODULATION_ROTARY_LEVEL:
                     {
-
-                    } break;
-
-                    case TONEX_PARAM_FLANGER_SYNC:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_FLANGER_TS:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_FLANGER_RATE:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_FLANGER_DEPTH:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_FLANGER_FEEDEBACK:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_FLANGER_LEVEL:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_ROTARY_SYNC:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_ROTARY_TS:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_ROTARY_SPEED:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_ROTARY_RADIUS:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_ROTARY_SPREAD:
-                    {
-
-                    } break;
-
-                    case TONEX_PARAM_ROTARY_LEVEL:
-                    {
-
+                        if (TonexParametersCopy[TONEX_PARAM_MODULATION_MODEL].Value == TONEX_MODULATION_ROTARY)
+                        { 
+                            lv_slider_set_value(ui_ModulationLevelSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
                     
                     case TONEX_PARAM_DELAY_POST:
@@ -1392,67 +1551,125 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
                     case TONEX_PARAM_DELAY_MODEL:
                     {
-
+                        lv_dropdown_set_selected(ui_DelayModelDropdown, param_entry->Value);
                     } break;
 
                     case TONEX_PARAM_DELAY_DIGITAL_SYNC:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_DIGITAL)
+                        {
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_DelaySyncSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_DelaySyncSwitch, LV_STATE_CHECKED);
+                            }
+                        }
                     } break;
 
                     case TONEX_PARAM_DELAY_DIGITAL_TS:
                     {
-
+                         // not exposed via UI
                     } break;
 
                     case TONEX_PARAM_DELAY_DIGITAL_TIME:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_DIGITAL)
+                        { 
+                            lv_slider_set_value(ui_DelayTSSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_DELAY_DIGITAL_FEEDBACK:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_DIGITAL)
+                        { 
+                            lv_slider_set_value(ui_DelayFeedbackSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_DELAY_DIGITAL_MODE:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_DIGITAL)
+                        {
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_DelayPingPongSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_DelayPingPongSwitch, LV_STATE_CHECKED);
+                            }
+                        }
                     } break;
 
                     case TONEX_PARAM_DELAY_DIGITAL_MIX:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_DIGITAL)
+                        { 
+                            lv_slider_set_value(ui_DelayMixSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_DELAY_TAPE_SYNC:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_TAPE)
+                        {
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_DelaySyncSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_DelaySyncSwitch, LV_STATE_CHECKED);
+                            }
+                        }
                     } break;
 
                     case TONEX_PARAM_DELAY_TAPE_TS:
                     {
-
+                        // not exposed via UI   
                     } break;
 
                     case TONEX_PARAM_DELAY_TAPE_TIME:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_TAPE)
+                        { 
+                            lv_slider_set_value(ui_DelayTSSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_DELAY_TAPE_FEEDBACK:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_TAPE)
+                        { 
+                            lv_slider_set_value(ui_DelayFeedbackSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
 
                     case TONEX_PARAM_DELAY_TAPE_MODE:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_TAPE)
+                        {
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_DelayPingPongSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_DelayPingPongSwitch, LV_STATE_CHECKED);
+                            }
+                        }
                     } break;
                     
                     case TONEX_PARAM_DELAY_TAPE_MIX:
                     {
-
+                        if (TonexParametersCopy[TONEX_PARAM_DELAY_MODEL].Value == TONEX_DELAY_TAPE)
+                        { 
+                            lv_slider_set_value(ui_DelayMixSlider, param_entry->Value, LV_ANIM_OFF);
+                        }
                     } break;
                 }                
             }
@@ -1822,7 +2039,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 #if CONFIG_DISPLAY_DOUBLE_FB
     disp_drv.full_refresh = true; // the full_refresh mode can maintain the synchronization between the two frame buffers
 #endif
-    lv_disp_t *disp = lv_disp_drv_register(&disp_drv);
+    lv_disp_t* __attribute__((unused)) disp = lv_disp_drv_register(&disp_drv);
 
     ESP_LOGI(TAG, "Install LVGL tick timer");
     
@@ -1925,7 +2142,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     disp_drv.draw_buf = &disp_buf;
     disp_drv.user_data = lcd_panel;
 
-    lv_disp_t *disp = lv_disp_drv_register(&disp_drv);
+    lv_disp_t* __attribute__((unused)) disp = lv_disp_drv_register(&disp_drv);
 
 #endif //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
 

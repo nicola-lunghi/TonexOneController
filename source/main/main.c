@@ -55,6 +55,8 @@ limitations under the License.
 #include "main.h"
 #include "task_priorities.h"
 #include "usb_comms.h"
+#include "usb/usb_host.h"
+#include "usb_tonex_one.h"
 #include "display.h"
 #include "footswitches.h"
 #include "control.h"
