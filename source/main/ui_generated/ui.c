@@ -58,126 +58,165 @@ lv_obj_t * ui_Settings;
 lv_obj_t * ui_SettingsTabview;
 lv_obj_t * ui_NoiseGateTab;
 lv_obj_t * ui_NoiseGateEnableGroup;
+void ui_event_NoiseGateSwitch(lv_event_t * e);
 lv_obj_t * ui_NoiseGateSwitch;
 lv_obj_t * ui_NoiseGateEnableLabel;
 lv_obj_t * ui_NoiseGatePostGroup;
+void ui_event_NoiseGatePostSwitch(lv_event_t * e);
 lv_obj_t * ui_NoiseGatePostSwitch;
 lv_obj_t * ui_NoiseGatePostLabel;
 lv_obj_t * ui_NoiseGateThresholdGroup;
+void ui_event_NoiseGateThresholdSlider(lv_event_t * e);
 lv_obj_t * ui_NoiseGateThresholdSlider;
 lv_obj_t * ui_NoiseGateThresholdLabel;
 lv_obj_t * ui_NoiseGateReleaseGroup;
+void ui_event_NoiseGateReleaseSlider(lv_event_t * e);
 lv_obj_t * ui_NoiseGateReleaseSlider;
 lv_obj_t * ui_NoiseGateReleaseLabel;
 lv_obj_t * ui_NoiseGateDepthGroup;
+void ui_event_NoiseGateDepthSlider(lv_event_t * e);
 lv_obj_t * ui_NoiseGateDepthSlider;
 lv_obj_t * ui_NoiseGateDepthLabel;
 lv_obj_t * ui_CompressorTab;
 lv_obj_t * ui_CompressorEnableGroup;
+void ui_event_CompressorEnableSwitch(lv_event_t * e);
 lv_obj_t * ui_CompressorEnableSwitch;
 lv_obj_t * ui_CompressorEnableLabel;
 lv_obj_t * ui_CompressorPostGroup;
+void ui_event_CompressorPostSwitch(lv_event_t * e);
 lv_obj_t * ui_CompressorPostSwitch;
 lv_obj_t * ui_CompressorPostLabel;
 lv_obj_t * ui_CompressorThresholdGroup;
+void ui_event_CompressorThresholdSlider(lv_event_t * e);
 lv_obj_t * ui_CompressorThresholdSlider;
 lv_obj_t * ui_CompressorThresholdLabel;
 lv_obj_t * ui_CompressorAttackGroup;
+void ui_event_CompresorAttackSlider(lv_event_t * e);
 lv_obj_t * ui_CompresorAttackSlider;
 lv_obj_t * ui_CompressorAttackLabel;
 lv_obj_t * ui_CompressorGainGroup;
+void ui_event_CompressorGainSlider(lv_event_t * e);
 lv_obj_t * ui_CompressorGainSlider;
 lv_obj_t * ui_CompressorGateLabel;
 lv_obj_t * ui_EQTab;
 lv_obj_t * ui_EQPostGroup;
+void ui_event_EQPostSwitch(lv_event_t * e);
 lv_obj_t * ui_EQPostSwitch;
 lv_obj_t * ui_EQPostLabel;
 lv_obj_t * ui_EQBassFreqGroup;
+void ui_event_EQBassSlider(lv_event_t * e);
 lv_obj_t * ui_EQBassSlider;
 lv_obj_t * ui_EQBassLabel;
 lv_obj_t * ui_EQMidFreqGroup;
+void ui_event_EQMidSlider(lv_event_t * e);
 lv_obj_t * ui_EQMidSlider;
 lv_obj_t * ui_EQMidLabel;
 lv_obj_t * ui_EQTrebleFreqGroup;
+void ui_event_EQTrebleSlider(lv_event_t * e);
 lv_obj_t * ui_EQTrebleSlider;
 lv_obj_t * ui_EQTrebleLabel;
 lv_obj_t * ui_ReverbPage;
 lv_obj_t * ui_ReverbEnableGroup;
+void ui_event_ReverbEnableSwitch(lv_event_t * e);
 lv_obj_t * ui_ReverbEnableSwitch;
 lv_obj_t * ui_ReverbEnableLabel;
 lv_obj_t * ui_ReverbPostGroup;
+void ui_event_ReverbPostSwitch(lv_event_t * e);
 lv_obj_t * ui_ReverbPostSwitch;
 lv_obj_t * ui_ReverbPostLabel;
 lv_obj_t * ui_ReverbModelGroup;
+void ui_event_ReverbModelDropdown(lv_event_t * e);
 lv_obj_t * ui_ReverbModelDropdown;
 lv_obj_t * ui_ReverbModelLabel;
 lv_obj_t * ui_ReverbMixGroup;
+void ui_event_ReverbMixSlider(lv_event_t * e);
 lv_obj_t * ui_ReverbMixSlider;
 lv_obj_t * ui_ReverbMixLabel;
 lv_obj_t * ui_ReverbTimeGroup;
+void ui_event_ReverbTimeSlider(lv_event_t * e);
 lv_obj_t * ui_ReverbTimeSlider;
 lv_obj_t * ui_ReverbTimeLabel;
 lv_obj_t * ui_ReverbPredelayGroup;
+void ui_event_ReverbPredelaySlider(lv_event_t * e);
 lv_obj_t * ui_ReverbPredelaySlider;
 lv_obj_t * ui_ReverbPredelayLabel;
 lv_obj_t * ui_ReverbColorGroup;
+void ui_event_ReverbColorSlider(lv_event_t * e);
 lv_obj_t * ui_ReverbColorSlider;
 lv_obj_t * ui_ReverbColorLabel;
 lv_obj_t * ui_Modulation;
 lv_obj_t * ui_ModulationEnableGroup;
+void ui_event_ModulationEnableSwitch(lv_event_t * e);
 lv_obj_t * ui_ModulationEnableSwitch;
 lv_obj_t * ui_ModulationEnableLabel;
 lv_obj_t * ui_ModulationPostGroup;
+void ui_event_ModulationPostSwitch(lv_event_t * e);
 lv_obj_t * ui_ModulationPostSwitch;
 lv_obj_t * ui_ModulationPostLabel;
 lv_obj_t * ui_ModulationModelGroup;
+void ui_event_ModulationModelDropdown(lv_event_t * e);
 lv_obj_t * ui_ModulationModelDropdown;
 lv_obj_t * ui_ModulationModelLabel;
 lv_obj_t * ui_ModulationSyncGroup;
 lv_obj_t * ui_ModulationSyncLabel;
+void ui_event_ModulationSyncSwitch(lv_event_t * e);
 lv_obj_t * ui_ModulationSyncSwitch;
 lv_obj_t * ui_ModulationRateGroup;
+void ui_event_ModulationRateSlider(lv_event_t * e);
 lv_obj_t * ui_ModulationRateSlider;
 lv_obj_t * ui_ModulationRateLabel;
 lv_obj_t * ui_ModulationDepthGroup;
+void ui_event_ModulationDepthSlider(lv_event_t * e);
 lv_obj_t * ui_ModulationDepthSlider;
 lv_obj_t * ui_ModulationDepthLabel;
 lv_obj_t * ui_ModulationlevelGroup;
+void ui_event_ModulationLevelSlider(lv_event_t * e);
 lv_obj_t * ui_ModulationLevelSlider;
 lv_obj_t * ui_ModulationLevelLabel;
 lv_obj_t * ui_Delay;
 lv_obj_t * ui_DelayEnableGroup;
+void ui_event_DelayEnableSwitch(lv_event_t * e);
 lv_obj_t * ui_DelayEnableSwitch;
 lv_obj_t * ui_DelayEnableLabel;
 lv_obj_t * ui_DelayPostGroup;
+void ui_event_DelayPostSwitch(lv_event_t * e);
 lv_obj_t * ui_DelayPostSwitch;
 lv_obj_t * ui_DelayPostLabel;
 lv_obj_t * ui_DelayModelGroup;
+void ui_event_DelayModelDropdown(lv_event_t * e);
 lv_obj_t * ui_DelayModelDropdown;
 lv_obj_t * ui_DelayModelLabel;
 lv_obj_t * ui_DelaySyncGroup;
 lv_obj_t * ui_DelaySyncLabel;
+void ui_event_DelaySyncSwitch(lv_event_t * e);
 lv_obj_t * ui_DelaySyncSwitch;
 lv_obj_t * ui_DelayPingPongGroup;
 lv_obj_t * ui_DelayPingPongLabel;
+void ui_event_DelayPingPongSwitch(lv_event_t * e);
 lv_obj_t * ui_DelayPingPongSwitch;
 lv_obj_t * ui_DelayTSGroup;
+void ui_event_DelayTSSlider(lv_event_t * e);
 lv_obj_t * ui_DelayTSSlider;
 lv_obj_t * ui_DelayTSLabel;
 lv_obj_t * ui_DelayFeedbackGroup;
+void ui_event_DelayFeedbackSlider(lv_event_t * e);
 lv_obj_t * ui_DelayFeedbackSlider;
 lv_obj_t * ui_DelayFeedbackLabel;
 lv_obj_t * ui_DelayMixGroup;
+void ui_event_DelayMixSlider(lv_event_t * e);
 lv_obj_t * ui_DelayMixSlider;
 lv_obj_t * ui_DelayMixLabel;
 lv_obj_t * ui_Amplifier;
 lv_obj_t * ui_AmplifierGainGroup;
+void ui_event_AmplifierGainSlider(lv_event_t * e);
 lv_obj_t * ui_AmplifierGainSlider;
 lv_obj_t * ui_AmplifierGainLabel;
 lv_obj_t * ui_AmplifierVolumeGroup;
+void ui_event_AmplifierVolumeSlider(lv_event_t * e);
 lv_obj_t * ui_AmplifierVolumeSlider;
 lv_obj_t * ui_AmplifierVolumeLabel;
 lv_obj_t * ui_AmplifierPresenseGroup;
+void ui_event_AmplifierPresenseSlider(lv_event_t * e);
 lv_obj_t * ui_AmplifierPresenseSlider;
 lv_obj_t * ui_AmplifierPresenseLabel;
 void ui_event_CloseImage(lv_event_t * e);
@@ -337,6 +376,7 @@ void ui_event_OKTick(lv_event_t * e)
 
     if(event_code == LV_EVENT_CLICKED) {
         SaveUserDataRequest(e);
+        PresetDescriptionChanged(e);
     }
     if(event_code == LV_EVENT_CLICKED) {
         _ui_flag_modify(ui_OKTick, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
@@ -344,6 +384,357 @@ void ui_event_OKTick(lv_event_t * e)
         _ui_flag_modify(ui_LeftArrow, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
         _ui_flag_modify(ui_RightArrow, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
         _ui_state_modify(ui_PresetDetailsTextArea, LV_STATE_DISABLED, _UI_MODIFY_STATE_ADD);
+    }
+}
+
+void ui_event_NoiseGateSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_NoiseGatePostSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_NoiseGateThresholdSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_NoiseGateReleaseSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_NoiseGateDepthSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_CompressorEnableSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_CompressorPostSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_CompressorThresholdSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_CompresorAttackSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_CompressorGainSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_EQPostSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_EQBassSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_EQMidSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_EQTrebleSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ReverbEnableSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ReverbPostSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ReverbModelDropdown(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ReverbMixSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ReverbTimeSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ReverbPredelaySlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ReverbColorSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ModulationEnableSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ModulationPostSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ModulationModelDropdown(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ModulationSyncSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ModulationRateSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ModulationDepthSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_ModulationLevelSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_DelayEnableSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_DelayPostSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_DelayModelDropdown(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_DelaySyncSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_DelayPingPongSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_DelayTSSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_DelayFeedbackSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_DelayMixSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_AmplifierGainSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_AmplifierVolumeSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_AmplifierPresenseSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
     }
 }
 

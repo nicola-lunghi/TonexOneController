@@ -161,7 +161,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_NoiseGateReleaseGroup);
     lv_obj_set_width(ui_NoiseGateReleaseGroup, 752);
     lv_obj_set_height(ui_NoiseGateReleaseGroup, 36);
-    lv_obj_set_x(ui_NoiseGateReleaseGroup, -1);
+    lv_obj_set_x(ui_NoiseGateReleaseGroup, -3);
     lv_obj_set_y(ui_NoiseGateReleaseGroup, -34);
     lv_obj_set_align(ui_NoiseGateReleaseGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_NoiseGateReleaseGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -196,7 +196,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_NoiseGateDepthGroup);
     lv_obj_set_width(ui_NoiseGateDepthGroup, 752);
     lv_obj_set_height(ui_NoiseGateDepthGroup, 36);
-    lv_obj_set_x(ui_NoiseGateDepthGroup, -1);
+    lv_obj_set_x(ui_NoiseGateDepthGroup, -3);
     lv_obj_set_y(ui_NoiseGateDepthGroup, 22);
     lv_obj_set_align(ui_NoiseGateDepthGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_NoiseGateDepthGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -334,7 +334,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_CompressorAttackGroup);
     lv_obj_set_width(ui_CompressorAttackGroup, 752);
     lv_obj_set_height(ui_CompressorAttackGroup, 36);
-    lv_obj_set_x(ui_CompressorAttackGroup, -1);
+    lv_obj_set_x(ui_CompressorAttackGroup, -3);
     lv_obj_set_y(ui_CompressorAttackGroup, -34);
     lv_obj_set_align(ui_CompressorAttackGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_CompressorAttackGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -369,7 +369,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_CompressorGainGroup);
     lv_obj_set_width(ui_CompressorGainGroup, 752);
     lv_obj_set_height(ui_CompressorGainGroup, 36);
-    lv_obj_set_x(ui_CompressorGainGroup, -1);
+    lv_obj_set_x(ui_CompressorGainGroup, -3);
     lv_obj_set_y(ui_CompressorGainGroup, 22);
     lv_obj_set_align(ui_CompressorGainGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_CompressorGainGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -408,7 +408,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_EQPostGroup);
     lv_obj_set_width(ui_EQPostGroup, 241);
     lv_obj_set_height(ui_EQPostGroup, 36);
-    lv_obj_set_x(ui_EQPostGroup, -6);
+    lv_obj_set_x(ui_EQPostGroup, -8);
     lv_obj_set_y(ui_EQPostGroup, -145);
     lv_obj_set_align(ui_EQPostGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_EQPostGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -416,7 +416,7 @@ void ui_Settings_screen_init(void)
     ui_EQPostSwitch = lv_switch_create(ui_EQPostGroup);
     lv_obj_set_width(ui_EQPostSwitch, 80);
     lv_obj_set_height(ui_EQPostSwitch, 35);
-    lv_obj_set_x(ui_EQPostSwitch, 156);
+    lv_obj_set_x(ui_EQPostSwitch, 157);
     lv_obj_set_y(ui_EQPostSwitch, 0);
     lv_obj_set_align(ui_EQPostSwitch, LV_ALIGN_LEFT_MID);
 
@@ -439,7 +439,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_EQBassFreqGroup);
     lv_obj_set_width(ui_EQBassFreqGroup, 752);
     lv_obj_set_height(ui_EQBassFreqGroup, 36);
-    lv_obj_set_x(ui_EQBassFreqGroup, -1);
+    lv_obj_set_x(ui_EQBassFreqGroup, -3);
     lv_obj_set_y(ui_EQBassFreqGroup, -90);
     lv_obj_set_align(ui_EQBassFreqGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_EQBassFreqGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -474,7 +474,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_EQMidFreqGroup);
     lv_obj_set_width(ui_EQMidFreqGroup, 752);
     lv_obj_set_height(ui_EQMidFreqGroup, 36);
-    lv_obj_set_x(ui_EQMidFreqGroup, -1);
+    lv_obj_set_x(ui_EQMidFreqGroup, -3);
     lv_obj_set_y(ui_EQMidFreqGroup, -34);
     lv_obj_set_align(ui_EQMidFreqGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_EQMidFreqGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -508,7 +508,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_EQTrebleFreqGroup);
     lv_obj_set_width(ui_EQTrebleFreqGroup, 752);
     lv_obj_set_height(ui_EQTrebleFreqGroup, 36);
-    lv_obj_set_x(ui_EQTrebleFreqGroup, -1);
+    lv_obj_set_x(ui_EQTrebleFreqGroup, -3);
     lv_obj_set_y(ui_EQTrebleFreqGroup, 22);
     lv_obj_set_align(ui_EQTrebleFreqGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_EQTrebleFreqGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -547,7 +547,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ReverbEnableGroup);
     lv_obj_set_width(ui_ReverbEnableGroup, 239);
     lv_obj_set_height(ui_ReverbEnableGroup, 36);
-    lv_obj_set_x(ui_ReverbEnableGroup, -3);
+    lv_obj_set_x(ui_ReverbEnableGroup, -8);
     lv_obj_set_y(ui_ReverbEnableGroup, -145);
     lv_obj_set_align(ui_ReverbEnableGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_ReverbEnableGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -555,7 +555,7 @@ void ui_Settings_screen_init(void)
     ui_ReverbEnableSwitch = lv_switch_create(ui_ReverbEnableGroup);
     lv_obj_set_width(ui_ReverbEnableSwitch, 80);
     lv_obj_set_height(ui_ReverbEnableSwitch, 35);
-    lv_obj_set_x(ui_ReverbEnableSwitch, 152);
+    lv_obj_set_x(ui_ReverbEnableSwitch, 157);
     lv_obj_set_y(ui_ReverbEnableSwitch, 0);
     lv_obj_set_align(ui_ReverbEnableSwitch, LV_ALIGN_LEFT_MID);
 
@@ -611,7 +611,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ReverbModelGroup);
     lv_obj_set_width(ui_ReverbModelGroup, 752);
     lv_obj_set_height(ui_ReverbModelGroup, 36);
-    lv_obj_set_x(ui_ReverbModelGroup, -1);
+    lv_obj_set_x(ui_ReverbModelGroup, -3);
     lv_obj_set_y(ui_ReverbModelGroup, -90);
     lv_obj_set_align(ui_ReverbModelGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ReverbModelGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -658,7 +658,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ReverbMixGroup);
     lv_obj_set_width(ui_ReverbMixGroup, 752);
     lv_obj_set_height(ui_ReverbMixGroup, 36);
-    lv_obj_set_x(ui_ReverbMixGroup, -1);
+    lv_obj_set_x(ui_ReverbMixGroup, -3);
     lv_obj_set_y(ui_ReverbMixGroup, -34);
     lv_obj_set_align(ui_ReverbMixGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ReverbMixGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -693,7 +693,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ReverbTimeGroup);
     lv_obj_set_width(ui_ReverbTimeGroup, 752);
     lv_obj_set_height(ui_ReverbTimeGroup, 36);
-    lv_obj_set_x(ui_ReverbTimeGroup, -1);
+    lv_obj_set_x(ui_ReverbTimeGroup, -3);
     lv_obj_set_y(ui_ReverbTimeGroup, 22);
     lv_obj_set_align(ui_ReverbTimeGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ReverbTimeGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -728,7 +728,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ReverbPredelayGroup);
     lv_obj_set_width(ui_ReverbPredelayGroup, 752);
     lv_obj_set_height(ui_ReverbPredelayGroup, 36);
-    lv_obj_set_x(ui_ReverbPredelayGroup, -1);
+    lv_obj_set_x(ui_ReverbPredelayGroup, -3);
     lv_obj_set_y(ui_ReverbPredelayGroup, 78);
     lv_obj_set_align(ui_ReverbPredelayGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ReverbPredelayGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -763,7 +763,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ReverbColorGroup);
     lv_obj_set_width(ui_ReverbColorGroup, 752);
     lv_obj_set_height(ui_ReverbColorGroup, 36);
-    lv_obj_set_x(ui_ReverbColorGroup, -1);
+    lv_obj_set_x(ui_ReverbColorGroup, -3);
     lv_obj_set_y(ui_ReverbColorGroup, 134);
     lv_obj_set_align(ui_ReverbColorGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ReverbColorGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -802,7 +802,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ModulationEnableGroup);
     lv_obj_set_width(ui_ModulationEnableGroup, 252);
     lv_obj_set_height(ui_ModulationEnableGroup, 36);
-    lv_obj_set_x(ui_ModulationEnableGroup, -3);
+    lv_obj_set_x(ui_ModulationEnableGroup, -8);
     lv_obj_set_y(ui_ModulationEnableGroup, -145);
     lv_obj_set_align(ui_ModulationEnableGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_ModulationEnableGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -810,7 +810,7 @@ void ui_Settings_screen_init(void)
     ui_ModulationEnableSwitch = lv_switch_create(ui_ModulationEnableGroup);
     lv_obj_set_width(ui_ModulationEnableSwitch, 80);
     lv_obj_set_height(ui_ModulationEnableSwitch, 35);
-    lv_obj_set_x(ui_ModulationEnableSwitch, 144);
+    lv_obj_set_x(ui_ModulationEnableSwitch, 157);
     lv_obj_set_y(ui_ModulationEnableSwitch, 0);
     lv_obj_set_align(ui_ModulationEnableSwitch, LV_ALIGN_LEFT_MID);
 
@@ -866,7 +866,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ModulationModelGroup);
     lv_obj_set_width(ui_ModulationModelGroup, 469);
     lv_obj_set_height(ui_ModulationModelGroup, 36);
-    lv_obj_set_x(ui_ModulationModelGroup, -5);
+    lv_obj_set_x(ui_ModulationModelGroup, -9);
     lv_obj_set_y(ui_ModulationModelGroup, -90);
     lv_obj_set_align(ui_ModulationModelGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_ModulationModelGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -875,7 +875,7 @@ void ui_Settings_screen_init(void)
     lv_dropdown_set_options(ui_ModulationModelDropdown, "Chorus\nTremolo\nPhaser\nFlanger\nRotary");
     lv_obj_set_width(ui_ModulationModelDropdown, 202);
     lv_obj_set_height(ui_ModulationModelDropdown, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_ModulationModelDropdown, 2);
+    lv_obj_set_x(ui_ModulationModelDropdown, 14);
     lv_obj_set_y(ui_ModulationModelDropdown, 1);
     lv_obj_set_align(ui_ModulationModelDropdown, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_ModulationModelDropdown, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
@@ -913,7 +913,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ModulationSyncGroup);
     lv_obj_set_width(ui_ModulationSyncGroup, 248);
     lv_obj_set_height(ui_ModulationSyncGroup, 36);
-    lv_obj_set_x(ui_ModulationSyncGroup, -4);
+    lv_obj_set_x(ui_ModulationSyncGroup, -8);
     lv_obj_set_y(ui_ModulationSyncGroup, -34);
     lv_obj_set_align(ui_ModulationSyncGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_ModulationSyncGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -928,7 +928,7 @@ void ui_Settings_screen_init(void)
     ui_ModulationSyncSwitch = lv_switch_create(ui_ModulationSyncGroup);
     lv_obj_set_width(ui_ModulationSyncSwitch, 80);
     lv_obj_set_height(ui_ModulationSyncSwitch, 35);
-    lv_obj_set_x(ui_ModulationSyncSwitch, 140);
+    lv_obj_set_x(ui_ModulationSyncSwitch, 157);
     lv_obj_set_y(ui_ModulationSyncSwitch, 0);
     lv_obj_set_align(ui_ModulationSyncSwitch, LV_ALIGN_LEFT_MID);
 
@@ -944,7 +944,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ModulationRateGroup);
     lv_obj_set_width(ui_ModulationRateGroup, 752);
     lv_obj_set_height(ui_ModulationRateGroup, 36);
-    lv_obj_set_x(ui_ModulationRateGroup, -1);
+    lv_obj_set_x(ui_ModulationRateGroup, -3);
     lv_obj_set_y(ui_ModulationRateGroup, 22);
     lv_obj_set_align(ui_ModulationRateGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ModulationRateGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -979,7 +979,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ModulationDepthGroup);
     lv_obj_set_width(ui_ModulationDepthGroup, 752);
     lv_obj_set_height(ui_ModulationDepthGroup, 36);
-    lv_obj_set_x(ui_ModulationDepthGroup, -1);
+    lv_obj_set_x(ui_ModulationDepthGroup, -3);
     lv_obj_set_y(ui_ModulationDepthGroup, 78);
     lv_obj_set_align(ui_ModulationDepthGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ModulationDepthGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1013,7 +1013,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_ModulationlevelGroup);
     lv_obj_set_width(ui_ModulationlevelGroup, 752);
     lv_obj_set_height(ui_ModulationlevelGroup, 36);
-    lv_obj_set_x(ui_ModulationlevelGroup, -1);
+    lv_obj_set_x(ui_ModulationlevelGroup, -3);
     lv_obj_set_y(ui_ModulationlevelGroup, 134);
     lv_obj_set_align(ui_ModulationlevelGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ModulationlevelGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1051,7 +1051,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_DelayEnableGroup);
     lv_obj_set_width(ui_DelayEnableGroup, 262);
     lv_obj_set_height(ui_DelayEnableGroup, 36);
-    lv_obj_set_x(ui_DelayEnableGroup, -3);
+    lv_obj_set_x(ui_DelayEnableGroup, -8);
     lv_obj_set_y(ui_DelayEnableGroup, -145);
     lv_obj_set_align(ui_DelayEnableGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_DelayEnableGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1059,7 +1059,7 @@ void ui_Settings_screen_init(void)
     ui_DelayEnableSwitch = lv_switch_create(ui_DelayEnableGroup);
     lv_obj_set_width(ui_DelayEnableSwitch, 80);
     lv_obj_set_height(ui_DelayEnableSwitch, 35);
-    lv_obj_set_x(ui_DelayEnableSwitch, 141);
+    lv_obj_set_x(ui_DelayEnableSwitch, 157);
     lv_obj_set_y(ui_DelayEnableSwitch, 0);
     lv_obj_set_align(ui_DelayEnableSwitch, LV_ALIGN_LEFT_MID);
 
@@ -1115,7 +1115,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_DelayModelGroup);
     lv_obj_set_width(ui_DelayModelGroup, 469);
     lv_obj_set_height(ui_DelayModelGroup, 36);
-    lv_obj_set_x(ui_DelayModelGroup, -5);
+    lv_obj_set_x(ui_DelayModelGroup, -9);
     lv_obj_set_y(ui_DelayModelGroup, -90);
     lv_obj_set_align(ui_DelayModelGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_DelayModelGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1124,7 +1124,7 @@ void ui_Settings_screen_init(void)
     lv_dropdown_set_options(ui_DelayModelDropdown, "Digital\nTape");
     lv_obj_set_width(ui_DelayModelDropdown, 202);
     lv_obj_set_height(ui_DelayModelDropdown, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_DelayModelDropdown, 0);
+    lv_obj_set_x(ui_DelayModelDropdown, 14);
     lv_obj_set_y(ui_DelayModelDropdown, 1);
     lv_obj_set_align(ui_DelayModelDropdown, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_DelayModelDropdown, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
@@ -1162,7 +1162,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_DelaySyncGroup);
     lv_obj_set_width(ui_DelaySyncGroup, 243);
     lv_obj_set_height(ui_DelaySyncGroup, 36);
-    lv_obj_set_x(ui_DelaySyncGroup, -4);
+    lv_obj_set_x(ui_DelaySyncGroup, -8);
     lv_obj_set_y(ui_DelaySyncGroup, -34);
     lv_obj_set_align(ui_DelaySyncGroup, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_DelaySyncGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1177,7 +1177,7 @@ void ui_Settings_screen_init(void)
     ui_DelaySyncSwitch = lv_switch_create(ui_DelaySyncGroup);
     lv_obj_set_width(ui_DelaySyncSwitch, 80);
     lv_obj_set_height(ui_DelaySyncSwitch, 35);
-    lv_obj_set_x(ui_DelaySyncSwitch, 140);
+    lv_obj_set_x(ui_DelaySyncSwitch, 157);
     lv_obj_set_y(ui_DelaySyncSwitch, 0);
     lv_obj_set_align(ui_DelaySyncSwitch, LV_ALIGN_LEFT_MID);
 
@@ -1224,7 +1224,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_DelayTSGroup);
     lv_obj_set_width(ui_DelayTSGroup, 752);
     lv_obj_set_height(ui_DelayTSGroup, 36);
-    lv_obj_set_x(ui_DelayTSGroup, -1);
+    lv_obj_set_x(ui_DelayTSGroup, -3);
     lv_obj_set_y(ui_DelayTSGroup, 22);
     lv_obj_set_align(ui_DelayTSGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_DelayTSGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1259,7 +1259,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_DelayFeedbackGroup);
     lv_obj_set_width(ui_DelayFeedbackGroup, 752);
     lv_obj_set_height(ui_DelayFeedbackGroup, 36);
-    lv_obj_set_x(ui_DelayFeedbackGroup, -1);
+    lv_obj_set_x(ui_DelayFeedbackGroup, -3);
     lv_obj_set_y(ui_DelayFeedbackGroup, 78);
     lv_obj_set_align(ui_DelayFeedbackGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_DelayFeedbackGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1293,7 +1293,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_DelayMixGroup);
     lv_obj_set_width(ui_DelayMixGroup, 752);
     lv_obj_set_height(ui_DelayMixGroup, 36);
-    lv_obj_set_x(ui_DelayMixGroup, -1);
+    lv_obj_set_x(ui_DelayMixGroup, -3);
     lv_obj_set_y(ui_DelayMixGroup, 134);
     lv_obj_set_align(ui_DelayMixGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_DelayMixGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1331,7 +1331,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_AmplifierGainGroup);
     lv_obj_set_width(ui_AmplifierGainGroup, 752);
     lv_obj_set_height(ui_AmplifierGainGroup, 36);
-    lv_obj_set_x(ui_AmplifierGainGroup, -1);
+    lv_obj_set_x(ui_AmplifierGainGroup, -3);
     lv_obj_set_y(ui_AmplifierGainGroup, -146);
     lv_obj_set_align(ui_AmplifierGainGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_AmplifierGainGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1366,7 +1366,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_AmplifierVolumeGroup);
     lv_obj_set_width(ui_AmplifierVolumeGroup, 752);
     lv_obj_set_height(ui_AmplifierVolumeGroup, 36);
-    lv_obj_set_x(ui_AmplifierVolumeGroup, -1);
+    lv_obj_set_x(ui_AmplifierVolumeGroup, -3);
     lv_obj_set_y(ui_AmplifierVolumeGroup, -90);
     lv_obj_set_align(ui_AmplifierVolumeGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_AmplifierVolumeGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1401,7 +1401,7 @@ void ui_Settings_screen_init(void)
     lv_obj_remove_style_all(ui_AmplifierPresenseGroup);
     lv_obj_set_width(ui_AmplifierPresenseGroup, 752);
     lv_obj_set_height(ui_AmplifierPresenseGroup, 36);
-    lv_obj_set_x(ui_AmplifierPresenseGroup, -1);
+    lv_obj_set_x(ui_AmplifierPresenseGroup, -3);
     lv_obj_set_y(ui_AmplifierPresenseGroup, -34);
     lv_obj_set_align(ui_AmplifierPresenseGroup, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_AmplifierPresenseGroup, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -1443,6 +1443,45 @@ void ui_Settings_screen_init(void)
     lv_obj_clear_flag(ui_CloseImage, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_img_set_zoom(ui_CloseImage, 160);
 
+    lv_obj_add_event_cb(ui_NoiseGateSwitch, ui_event_NoiseGateSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_NoiseGatePostSwitch, ui_event_NoiseGatePostSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_NoiseGateThresholdSlider, ui_event_NoiseGateThresholdSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_NoiseGateReleaseSlider, ui_event_NoiseGateReleaseSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_NoiseGateDepthSlider, ui_event_NoiseGateDepthSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_CompressorEnableSwitch, ui_event_CompressorEnableSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_CompressorPostSwitch, ui_event_CompressorPostSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_CompressorThresholdSlider, ui_event_CompressorThresholdSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_CompresorAttackSlider, ui_event_CompresorAttackSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_CompressorGainSlider, ui_event_CompressorGainSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_EQPostSwitch, ui_event_EQPostSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_EQBassSlider, ui_event_EQBassSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_EQMidSlider, ui_event_EQMidSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_EQTrebleSlider, ui_event_EQTrebleSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ReverbEnableSwitch, ui_event_ReverbEnableSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ReverbPostSwitch, ui_event_ReverbPostSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ReverbModelDropdown, ui_event_ReverbModelDropdown, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ReverbMixSlider, ui_event_ReverbMixSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ReverbTimeSlider, ui_event_ReverbTimeSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ReverbPredelaySlider, ui_event_ReverbPredelaySlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ReverbColorSlider, ui_event_ReverbColorSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ModulationEnableSwitch, ui_event_ModulationEnableSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ModulationPostSwitch, ui_event_ModulationPostSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ModulationModelDropdown, ui_event_ModulationModelDropdown, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ModulationSyncSwitch, ui_event_ModulationSyncSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ModulationRateSlider, ui_event_ModulationRateSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ModulationDepthSlider, ui_event_ModulationDepthSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_ModulationLevelSlider, ui_event_ModulationLevelSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_DelayEnableSwitch, ui_event_DelayEnableSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_DelayPostSwitch, ui_event_DelayPostSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_DelayModelDropdown, ui_event_DelayModelDropdown, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_DelaySyncSwitch, ui_event_DelaySyncSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_DelayPingPongSwitch, ui_event_DelayPingPongSwitch, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_DelayTSSlider, ui_event_DelayTSSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_DelayFeedbackSlider, ui_event_DelayFeedbackSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_DelayMixSlider, ui_event_DelayMixSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_AmplifierGainSlider, ui_event_AmplifierGainSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_AmplifierVolumeSlider, ui_event_AmplifierVolumeSlider, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_AmplifierPresenseSlider, ui_event_AmplifierPresenseSlider, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_CloseImage, ui_event_CloseImage, LV_EVENT_ALL, NULL);
 
 }

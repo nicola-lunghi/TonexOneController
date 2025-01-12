@@ -34,3 +34,7 @@ def SaveUserDataRequest(event_struct):
 def BTBondsClearRequest(event_struct):
     return
 
+
+def ParameterChanged(event_struct):
+    return
+

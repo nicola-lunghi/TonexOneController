@@ -744,17 +744,35 @@ static esp_err_t usb_tonex_one_transmit(uint8_t* tx_data, uint16_t tx_len)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+static void __attribute__((unused)) usb_tonex_one_dump_parameters(void)
+{
+    // dump all the param values and names
+    for (uint32_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
+    {
+        ESP_LOGI(TAG, "Param Dump: %s = %0.2f", TonexParameters[loop].Name, TonexParameters[loop].Value);
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 static esp_err_t usb_tonex_one_modify_parameter(uint16_t index, float value)
 {
     uint32_t byte_offset;
     uint8_t* temp_ptr;
-
-    ESP_LOGI(TAG, "usb_tonex_one_modify_parameter index: %d value: %02f", (int)index, value);   
-
+     
     if (index >= TONEX_PARAM_LAST)
     {
         ESP_LOGE(TAG, "usb_tonex_one_modify_parameters invalid index %d", (int)index);   
         return ESP_FAIL;
+    }
+    else
+    {
+        ESP_LOGI(TAG, "usb_tonex_one_modify_parameter index: %d name: %s value: %02f", (int)index, TonexParameters[index].Name, value);  
     }
 
     // calculate the offset to the parameter. +1 for the 0x88 marker
@@ -772,6 +790,9 @@ static esp_err_t usb_tonex_one_modify_parameter(uint16_t index, float value)
 
         // update the raw data
         memcpy((void*)temp_ptr, (void*)&value, sizeof(float));
+
+        // debug
+        //usb_tonex_one_dump_parameters();
 
         return ESP_OK;
     }
@@ -953,22 +974,6 @@ static void usb_tonex_one_parse_preset_parameters(uint8_t* raw_data, uint16_t le
     else
     {
         ESP_LOGW(TAG, "Parsing Preset parameters failed to find start marker");
-    }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-static void __attribute__((unused)) usb_tonex_one_dump_parameters(void)
-{
-    // dump all the param values and names
-    for (uint32_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
-    {
-        ESP_LOGI(TAG, "Param Dump: %s = %0.2f", TonexParameters[loop].Name, TonexParameters[loop].Value);
     }
 }
 

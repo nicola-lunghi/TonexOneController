@@ -49,3 +49,8 @@ void BTBondsClearRequest(lv_event_t * e)
 {
 	// Your code here
 }
+
+void ParameterChanged(lv_event_t * e)
+{
+	// Your code here
+}

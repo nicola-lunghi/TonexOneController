@@ -326,7 +326,486 @@ void PresetDescriptionChanged(lv_event_t * e)
 {
     char* text = (char*)lv_textarea_get_text(ui_PresetDetailsTextArea);
 
+    ESP_LOGI(TAG, "PresetDescriptionChanged: %s", text);
+
     control_set_user_text(text);      
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void ParameterChanged(lv_event_t * e)
+{
+    // get the object that was changed
+    lv_obj_t* obj = lv_event_get_current_target(e);
+
+    ESP_LOGI(TAG, "Parameter changed");
+
+    // see what it was, and update the pedal
+    if (obj == ui_NoiseGateSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_NOISE_GATE_ENABLE, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_NoiseGatePostSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_NOISE_GATE_POST, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_NoiseGateThresholdSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_NOISE_GATE_THRESHOLD, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_NoiseGateReleaseSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_NOISE_GATE_RELEASE, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_NoiseGateDepthSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_NOISE_GATE_DEPTH, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_CompressorEnableSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_COMP_ENABLE, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_CompressorPostSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_COMP_POST, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_CompressorThresholdSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_COMP_THRESHOLD, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_CompresorAttackSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_COMP_ATTACK, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_CompressorGainSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_COMP_MAKE_UP, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_EQPostSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_EQ_POST, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_EQBassSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_EQ_BASS, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_EQMidSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_EQ_MID, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_EQTrebleSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_EQ_TREBLE, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_ReverbEnableSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_REVERB_ENABLE, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_ReverbPostSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_REVERB_POSITION, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_ReverbModelDropdown)
+    {
+        usb_modify_parameter(TONEX_PARAM_REVERB_MODEL, lv_dropdown_get_selected(obj));
+    }
+    else if (obj == ui_ReverbMixSlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_ReverbModelDropdown))
+        {
+            case TONEX_REVERB_SPRING_1:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING1_MIX, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_2:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING2_MIX, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_3:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING3_MIX, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_4:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING4_MIX, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_ROOM:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_ROOM_MIX, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_PLATE:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_PLATE_MIX, lv_slider_get_value(obj));
+            } break;
+        }        
+    }
+    else if (obj == ui_ReverbTimeSlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_ReverbModelDropdown))
+        {
+            case TONEX_REVERB_SPRING_1:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING1_TIME, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_2:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING2_TIME, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_3:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING3_TIME, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_4:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING4_TIME, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_ROOM:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_ROOM_TIME, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_PLATE:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_PLATE_TIME, lv_slider_get_value(obj));
+            } break;
+        }        
+    }
+    else if (obj == ui_ReverbPredelaySlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_ReverbModelDropdown))
+        {
+            case TONEX_REVERB_SPRING_1:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING1_PREDELAY, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_2:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING2_PREDELAY, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_3:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING3_PREDELAY, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_4:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING4_PREDELAY, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_ROOM:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_ROOM_PREDELAY, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_PLATE:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_PLATE_PREDELAY, lv_slider_get_value(obj));
+            } break;
+        }        
+    }
+    else if (obj == ui_ReverbColorSlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_ReverbModelDropdown))
+        {
+            case TONEX_REVERB_SPRING_1:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING1_COLOR, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_2:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING2_COLOR, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_3:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING3_COLOR, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_SPRING_4:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_SPRING4_COLOR, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_ROOM:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_ROOM_COLOR, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_REVERB_PLATE:
+            {
+                usb_modify_parameter(TONEX_PARAM_REVERB_PLATE_COLOR, lv_slider_get_value(obj));
+            } break;
+        }        
+    }
+    else if (obj == ui_ModulationEnableSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_MODULATION_ENABLE, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_ModulationPostSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_MODULATION_POST, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_ModulationModelDropdown)
+    {
+        usb_modify_parameter(TONEX_PARAM_MODULATION_MODEL, lv_dropdown_get_selected(obj));
+    }
+    else if (obj == ui_ModulationSyncSwitch)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_ModulationModelDropdown))
+        {
+            case TONEX_MODULATION_CHORUS:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_CHORUS_SYNC, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+            } break;
+
+            case TONEX_MODULATION_TREMOLO:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_TREMOLO_SYNC, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+            } break;
+
+            case TONEX_MODULATION_PHASER:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_PHASER_SYNC, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+            } break;
+
+            case TONEX_MODULATION_FLANGER:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_FLANGER_SYNC, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+            } break;
+
+            case TONEX_MODULATION_ROTARY:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_ROTARY_SYNC, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+            } break;
+        }
+    }
+    else if (obj == ui_ModulationRateSlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_ModulationModelDropdown))
+        {
+            case TONEX_MODULATION_CHORUS:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_CHORUS_RATE, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_TREMOLO:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_TREMOLO_RATE, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_PHASER:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_PHASER_RATE, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_FLANGER:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_FLANGER_RATE, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_ROTARY:
+            {
+                //usb_modify_parameter(TONEX_PARAM_MODULATION_ROTARY_SYNC, lv_slider_get_value(obj));
+            } break;
+        }
+    }
+    else if (obj == ui_ModulationDepthSlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_ModulationModelDropdown))
+        {
+            case TONEX_MODULATION_CHORUS:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_CHORUS_DEPTH, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_TREMOLO:
+            {
+                //usb_modify_parameter(TONEX_PARAM_MODULATION_TREMOLO_DEPTH, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_PHASER:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_PHASER_DEPTH, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_FLANGER:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_FLANGER_DEPTH, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_ROTARY:
+            {
+                //usb_modify_parameter(TONEX_PARAM_MODULATION_ROTARY_SYNC, lv_slider_get_value(obj));
+            } break;
+        }
+    }
+    else if (obj == ui_ModulationLevelSlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_ModulationModelDropdown))
+        {
+            case TONEX_MODULATION_CHORUS:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_CHORUS_LEVEL, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_TREMOLO:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_TREMOLO_LEVEL, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_PHASER:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_PHASER_LEVEL, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_FLANGER:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_FLANGER_LEVEL, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_MODULATION_ROTARY:
+            {
+                usb_modify_parameter(TONEX_PARAM_MODULATION_ROTARY_LEVEL, lv_slider_get_value(obj));
+            } break;
+        }
+    }
+    else if (obj == ui_DelayEnableSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_DELAY_ENABLE, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_DelayPostSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_DELAY_POST, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+    }
+    else if (obj == ui_DelayModelDropdown)
+    {
+        usb_modify_parameter(TONEX_PARAM_DELAY_MODEL, lv_dropdown_get_selected(obj));
+    }
+    else if (obj == ui_DelaySyncSwitch)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_DelayModelDropdown))
+        {
+            case TONEX_DELAY_DIGITAL:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_DIGITAL_SYNC, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+            } break;
+
+            case TONEX_DELAY_TAPE:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_TAPE_SYNC, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+            } break;
+        }
+    }
+    else if (obj == ui_DelayPingPongSwitch)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_DelayModelDropdown))
+        {
+            case TONEX_DELAY_DIGITAL:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_DIGITAL_MODE, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+            } break;
+
+            case TONEX_DELAY_TAPE:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_TAPE_MODE, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
+            } break;
+        }
+    }
+    else if (obj == ui_DelayTSSlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_DelayModelDropdown))
+        {
+            case TONEX_DELAY_DIGITAL:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_DIGITAL_TIME, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_DELAY_TAPE:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_TAPE_TIME, lv_slider_get_value(obj));
+            } break;
+        }
+    }
+    else if (obj == ui_DelayFeedbackSlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_DelayModelDropdown))
+        {
+            case TONEX_DELAY_DIGITAL:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_DIGITAL_FEEDBACK, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_DELAY_TAPE:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_TAPE_FEEDBACK, lv_slider_get_value(obj));
+            } break;
+        }        
+    }
+    else if (obj == ui_DelayMixSlider)
+    {
+        // check which model is set
+        switch (lv_dropdown_get_selected(ui_DelayModelDropdown))
+        {
+            case TONEX_DELAY_DIGITAL:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_DIGITAL_MIX, lv_slider_get_value(obj));
+            } break;
+
+            case TONEX_DELAY_TAPE:
+            {
+                usb_modify_parameter(TONEX_PARAM_DELAY_TAPE_MIX, lv_slider_get_value(obj));
+            } break;
+        }     
+    }
+    else if (obj == ui_AmplifierGainSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_MODEL_GAIN, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_AmplifierVolumeSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_MODEL_VOLUME, lv_slider_get_value(obj));
+    }
+    else if (obj == ui_AmplifierPresenseSlider)
+    {
+        //?? usb_modify_parameter(TONEX_PARAM_, lv_slider_get_value(obj));
+    }
+    else
+    {
+        ESP_LOGW(TAG, "Unknown Parameter changed");    
+    }
+
+
+    
+    // to do
 }
 #endif
 

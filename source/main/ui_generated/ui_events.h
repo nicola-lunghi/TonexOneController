@@ -17,6 +17,7 @@ void AmpSkinPrevious(lv_event_t * e);
 void AmpSkinNext(lv_event_t * e);
 void PresetDescriptionChanged(lv_event_t * e);
 void SaveUserDataRequest(lv_event_t * e);
+void ParameterChanged(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/
