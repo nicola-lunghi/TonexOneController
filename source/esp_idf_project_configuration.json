@@ -105,16 +105,43 @@
     }
   },
   
-  "DEVKITC": {
+  "DEVKITC_N8R2": {
     "build": {
       "compileArgs": [],
       "ninjaArgs": [],
-      "buildDirectoryPath": "${workspaceFolder}/build_devkitc",
+      "buildDirectoryPath": "${workspaceFolder}/build_devkitc_N8R2",
       "sdkconfigDefaults": [
-        "sdkconfig.devkitc",
+        "sdkconfig.devkitc_N8R2",
         "sdkconfig.defaults"
       ],
-      "sdkconfigFilePath": "${workspaceFolder}/build_devkitc"
+      "sdkconfigFilePath": "${workspaceFolder}/build_devkitc_N8R2"
+    },
+    "env": {},
+    "flashBaudRate": "",
+    "monitorBaudRate": "",
+    "openOCD": {
+      "debugLevel": 0,
+      "configs": [],
+      "args": []
+    },
+    "tasks": {
+      "preBuild": "",
+      "preFlash": "",
+      "postBuild": "",
+      "postFlash": ""
+    }
+  },
+  
+  "DEVKITC_N16R8": {
+    "build": {
+      "compileArgs": [],
+      "ninjaArgs": [],
+      "buildDirectoryPath": "${workspaceFolder}/build_devkitc_N16R8",
+      "sdkconfigDefaults": [
+        "sdkconfig.devkitc_N16R8",
+        "sdkconfig.defaults"
+      ],
+      "sdkconfigFilePath": "${workspaceFolder}/build_devkitc_N16R8"
     },
     "env": {},
     "flashBaudRate": "",
