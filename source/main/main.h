@@ -131,6 +131,28 @@ extern "C" {
     // leds
     #define LED_OUTPUT_GPIO_NUM   GPIO_NUM_48
 
+#elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+    // direct IO pins
+    #define FOOTSWITCH_1		GPIO_NUM_16
+    #define FOOTSWITCH_2		GPIO_NUM_3
+    #define FOOTSWITCH_3		GPIO_NUM_2
+    #define FOOTSWITCH_4		GPIO_NUM_44     // same as UART RX
+
+    // Midi
+    #define UART_RX_PIN         GPIO_NUM_18 
+    #define UART_TX_PIN         GPIO_NUM_17 
+
+    // leds
+    #define LED_OUTPUT_GPIO_NUM          -1
+
+    // LCD pins
+    #define ATOM3SR_LCD_GPIO_SCLK           (GPIO_NUM_6)
+    #define ATOM3SR_LCD_GPIO_MOSI           (GPIO_NUM_7)
+    #define ATOM3SR_LCD_GPIO_RST            (GPIO_NUM_8)
+    #define ATOM3SR_LCD_GPIO_DC             (GPIO_NUM_4)
+    #define ATOM3SR_LCD_GPIO_CS             (GPIO_NUM_5)
+    #define ATOM3SR_LCD_GPIO_BL             (GPIO_NUM_15)
+
 #else
     #error "Unknown hardware platform!"
 #endif

@@ -388,6 +388,12 @@ void app_main(void)
     display_init(I2C_MASTER_NUM, I2CMutex);
 #endif
 
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+    // init GUI
+    ESP_LOGI(TAG, "Init 0.85 display");
+    display_init(I2C_MASTER_NUM, I2CMutex);
+#endif
+
     // init Footswitches
     ESP_LOGI(TAG, "Init footswitches");
     footswitches_init();

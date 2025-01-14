@@ -16,6 +16,8 @@ menu "Tonex Controller Configuration"
         config TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC
             bool "Espressif DevKitC"
             
+        config TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+            bool "M5Stack AtomS3R"            
     endchoice
 
     choice TONEX_CONTROLLER_SKINS
