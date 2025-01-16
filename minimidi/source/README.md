@@ -24,7 +24,9 @@ Tested on the Waveshare ESP32-S3 Zero board:
 
 **Ensure its the ESP32-S3FH4R2 with USB-C port. There are some similar boards with no USB-C or slightly different processor**
 ![footswitches_waveshare_zero](https://github.com/user-attachments/assets/205eead9-6f3b-4c88-80c3-78308731c285)
-
+<br>
+Example two-button cheap controller
+![image](https://github.com/user-attachments/assets/403126cc-d476-4378-b435-549592508654)
 
 ## ⭐ Uploading/Programming Firmware Releases <a name="firmware_uploading"></a> 
 Refer here for the procedure to upload firmware to the board:
