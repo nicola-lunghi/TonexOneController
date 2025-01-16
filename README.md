@@ -17,8 +17,9 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
  8. [Firmware Development Information](#development_info)
  9. [Acknowledgements](#acknowledgements)
  10. [Firmware Release Notes](#release_notes)
- 11. [License](#license)
- 12. [Donations](#donations)
+ 11. [Companion Projects](#companion_projects)
+ 12. [License](#license)
+ 13. [Donations](#donations)
 
 ## Demonstration Videos <a name="demonstration_videos"></a>
 https://youtu.be/j0I5G5-CXfg
@@ -131,7 +132,12 @@ V1.0.0.2:
 - Initial version
 - Caution: this version has an issue with USB. It will overwrite the pedal global settings! use with caution and backup your pedal first
 - Note: not compatible with Tonex V1.8.0
-  
+
+## Companion Projects <a name="companion_projects"></a>
+The MiniMidi project is a small, low cost bluetooth Midi peripheral device, similar to the M-Vave Chocolate pedal.
+<br>It can run two or four footswitches, and control the Tonex pedal (or other compatible devices).
+Refer to [https://github.com/Builty/TonexOneController/blob/main/minimidi/source](https://github.com/Builty/TonexOneController/blob/main/minimidi/source)
+
 ## ©️ License <a name="license"></a>
 The Tonex One Controller is under the Apache 2.0 license. It is free for both research and commercial use cases.
 <br>However, if you are stealing this work and commercialising it, you are a bad person and you should feel bad.
