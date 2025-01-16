@@ -50,6 +50,7 @@ limitations under the License.
 #include "driver/i2c.h"
 #include "soc/lldesc.h"
 #include "esp_lcd_touch_gt911.h"
+#include "esp_lcd_gc9107.h"
 #include "esp_intr_alloc.h"
 #include "main.h"
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
@@ -2685,7 +2686,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
         .color_space = ATOM3SR_LCD_COLOR_SPACE,
         .bits_per_pixel = ATOM3SR_LCD_BITS_PER_PIXEL,
     };
-    esp_lcd_new_panel_st7789(lcd_io, &panel_config, &lcd_panel);
+    esp_lcd_new_panel_gc9107(lcd_io, &panel_config, &lcd_panel);
 
     esp_lcd_panel_reset(lcd_panel);
     esp_lcd_panel_init(lcd_panel);
