@@ -37,6 +37,7 @@ limitations under the License.
 #include "midi_serial.h"
 #include "control.h"
 #include "task_priorities.h"
+#include "midi_helper.h"
 
 #define MIDI_SERIAL_TASK_STACK_SIZE             (3 * 1024)
 #define MIDI_SERIAL_BUFFER_SIZE                 128
@@ -96,14 +97,15 @@ static void midi_serial_task(void *arg)
                     continue;
                 }
 
+                // get the channel
+                uint8_t channel = midi_serial_buffer[i] & 0x0F;
+
                 // check the command
                 switch (midi_serial_buffer[i] & 0xF0)
                 {
                     case 0xC0:
                     {                        
                         // Program Change
-                        uint8_t channel = midi_serial_buffer[i] & 0x0F;
-
                         // Ensure there's a data byte following the status byte
                         if ((i + 1) < MIDI_SERIAL_BUFFER_SIZE)
                         {
@@ -130,13 +132,16 @@ static void midi_serial_task(void *arg)
                     case  0xB0:
                     {   
                         // control change
-                        uint8_t channel = midi_serial_buffer[i] & 0x0F;
-
                         // Ensure there's a data byte following the status byte
                         if ((i + 1) < MIDI_SERIAL_BUFFER_SIZE)
                         {
-                            uint8_t value = midi_serial_buffer[i + 1];
-                            control_adjust_param_via_midi(channel, value);
+                            uint8_t change_num = midi_serial_buffer[i + 1] & 0x0F;
+                            uint8_t value = midi_serial_buffer[i + 2];
+
+                            if (channel == midi_serial_channel)
+                            {
+                                midi_helper_adjust_param_via_midi(change_num, value);
+                            }
                         }
                         else
                         { 

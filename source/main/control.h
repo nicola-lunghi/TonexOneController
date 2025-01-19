@@ -108,7 +108,6 @@ void control_set_skin_previous(void);
 void control_save_user_data(uint8_t reboot);
 void control_sync_preset_details(uint16_t index, char* name);
 void control_set_user_text(char* text);
-esp_err_t control_adjust_param_via_midi(uint8_t midi_channel, uint8_t midi_value);
 
 // config API
 void control_set_config_btmode(uint32_t status);

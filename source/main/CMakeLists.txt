@@ -1,5 +1,6 @@
 
-idf_component_register(SRCS "midi_control.c" "control.c" "footswitches.c" "CH422G.c" "display.c" "main.c" "usb_comms.c" "usb_tonex_one.c" "CH422G.c" "midi_serial.c" "wifi_config.c" "leds.c"
+idf_component_register(SRCS "midi_control.c" "control.c" "footswitches.c" "CH422G.c" "display.c" "main.c" 
+                            "usb_comms.c" "usb_tonex_one.c" "CH422G.c" "midi_serial.c" "wifi_config.c" "leds.c" "midi_helper.c"
                             EMBED_TXTFILES index.html 
                             INCLUDE_DIRS "." "./")
                                                        

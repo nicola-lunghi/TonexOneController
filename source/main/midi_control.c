@@ -46,6 +46,7 @@ limitations under the License.
 #include "control.h"
 #include "task_priorities.h"
 #include "midi_control.h"
+#include "midi_helper.h"
 
 static const char *TAG = "MidiBT";
 #define GATTC_TAG        "GATTC_CLIENT"
@@ -587,14 +588,22 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
             // first 2 bytes are header/timestamp bytes, values depend on host. Ignoring them here
             if (param->write.len >= 4)
             {
-                if (param->write.value[2] == 0xC0) 
+                // check the command
+                switch (param->write.value[2] & 0xF0)
                 {
-                    // set preset
-                    control_request_preset_index(param->write.value[3]);
-                }
-                else if (param->write.value[2] == 0xB0) 
-                {
-                    // bank change, not needed
+                    case 0xC0:
+                    {
+                        // set preset
+                        control_request_preset_index(param->write.value[3]);
+                    } break;
+
+                    case 0xB0:
+                    {
+                        // control change
+                        uint8_t change_num = param->write.value[3];
+                        uint8_t value = param->write.value[4];
+                        midi_helper_adjust_param_via_midi(change_num, value);
+                    } break;
                 }
             }
 
