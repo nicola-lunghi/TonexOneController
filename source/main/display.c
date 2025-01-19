@@ -1533,62 +1533,62 @@ static uint8_t update_ui_element(tUIUpdate* update)
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_4:
+                    case TONEX_PARAM_PRESENCE:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_5:
+                    case TONEX_PARAM_DEPTH:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_6:
+                    case TONEX_PARAM_VIR_RESO:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_7:
+                    case TONEX_PARAM_VIR_MIC_1:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_8:
+                    case TONEX_PARAM_VIR_MIC_1_X:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_9:
+                    case TONEX_PARAM_VIR_MIC_1_Y:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_10:
+                    case TONEX_PARAM_VIR_MIC_1_Z:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_11:
+                    case TONEX_PARAM_VIR_MIC_2:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_12:
+                    case TONEX_PARAM_VIR_MIC_2_X:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_13:
+                    case TONEX_PARAM_VIR_MIC_2_Y:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_14:
+                    case TONEX_PARAM_VIR_MIC_2_Z:
                     {
                         // not exposed via UI
                     } break;
 
-                    case TONEX_PARAM_UNKNOWN_15:
+                    case TONEX_PARAM_VIR_BLEND:
                     {
                         // not exposed via UI
                     } break;

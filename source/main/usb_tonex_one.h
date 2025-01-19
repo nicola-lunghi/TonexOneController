@@ -86,25 +86,25 @@ enum TonexParameters
     TONEX_PARAM_EQ_TREBLE,
     TONEX_PARAM_EQ_TREBLE_FREQ,
     
-    // Unknown params, possibly Model gain, vol etc
+    //Model and VIR params
     TONEX_PARAM_UNKNOWN_1,
     TONEX_PARAM_UNKNOWN_2,
     TONEX_PARAM_MODEL_GAIN,
     TONEX_PARAM_MODEL_VOLUME,
     TONEX_PARAM_MODEX_MIX,
     TONEX_PARAM_UNKNOWN_3,
-    TONEX_PARAM_UNKNOWN_4,
-    TONEX_PARAM_UNKNOWN_5,
-    TONEX_PARAM_UNKNOWN_6,
-    TONEX_PARAM_UNKNOWN_7,
-    TONEX_PARAM_UNKNOWN_8,
-    TONEX_PARAM_UNKNOWN_9,
-    TONEX_PARAM_UNKNOWN_10,
-    TONEX_PARAM_UNKNOWN_11,
-    TONEX_PARAM_UNKNOWN_12,
-    TONEX_PARAM_UNKNOWN_13,
-    TONEX_PARAM_UNKNOWN_14,
-    TONEX_PARAM_UNKNOWN_15,
+    TONEX_PARAM_PRESENCE,
+    TONEX_PARAM_DEPTH,
+    TONEX_PARAM_VIR_RESO,
+    TONEX_PARAM_VIR_MIC_1,
+    TONEX_PARAM_VIR_MIC_1_X,
+    TONEX_PARAM_VIR_MIC_1_Y,
+    TONEX_PARAM_VIR_MIC_1_Z,
+    TONEX_PARAM_VIR_MIC_2,
+    TONEX_PARAM_VIR_MIC_2_X,
+    TONEX_PARAM_VIR_MIC_2_Y,
+    TONEX_PARAM_VIR_MIC_2_Z,
+    TONEX_PARAM_VIR_BLEND,
     
     // Reverb
     TONEX_PARAM_REVERB_POSITION,
@@ -192,6 +192,7 @@ enum TonexParameters
 void usb_tonex_one_handle(class_driver_t* driver_obj);
 void usb_tonex_one_init(class_driver_t* driver_obj, QueueHandle_t comms_queue);
 void usb_tonex_one_deinit(void);
+esp_err_t usb_tonex_one_get_param_min_max(uint16_t param_index, float* min, float* max);
 
 #ifdef __cplusplus
 } /*extern "C"*/

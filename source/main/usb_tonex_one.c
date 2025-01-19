@@ -197,25 +197,25 @@ static tTonexParameter TonexParameters[TONEX_PARAM_LAST] =
     {5,      0,      10,   "EQ TREBLE"},           // TONEX_PARAM_EQ_TREBLE,
     {1900,   1000,   4000, "EQ TFREQ"},            // TONEX_PARAM_EQ_TREBLE_FREQ,
     
-    // Unknown params, possibly Model gain, vol etc
+    // Model and VIR
     {0,      0,      1,    "UNK 1"},              // TONEX_PARAM_UNKNOWN_1,
     {0,      0,      1,    "UNK 2"},              // TONEX_PARAM_UNKNOWN_2,
     {5,      0,      10,   "MDL GAIN"},           // TONEX_PARAM_MODEL_GAIN,
     {5,      0,      10,   "MDL VOL"},            // TONEX_PARAM_MODEL_VOLUME,
     {100,    0,      100,  "MDL MIX"},            // TONEX_PARAM_MODEX_MIX,
-    {0,      0,      0,    "UNK 3"},              // TONEX_PARAM_UNKNOWN_3,     // presense and depth somewhere around here probably
-    {0,      0,      0,    "UNK 4"},              // TONEX_PARAM_UNKNOWN_4,
-    {0,      0,      0,    "UNK 5"},              // TONEX_PARAM_UNKNOWN_5,
-    {0,      0,      0,    "UNK 6"},              // TONEX_PARAM_UNKNOWN_6,
-    {0,      0,      0,    "UNK 7"},              // TONEX_PARAM_UNKNOWN_7,
-    {0,      0,      0,    "UNK 8"},              // TONEX_PARAM_UNKNOWN_8,
-    {0,      0,      0,    "UNK 9"},              // TONEX_PARAM_UNKNOWN_9,
-    {0,      0,      0,    "UNK 10"},             // TONEX_PARAM_UNKNOWN_10,
-    {0,      0,      0,    "UNK 11"},             // TONEX_PARAM_UNKNOWN_11,
-    {0,      0,      0,    "UNK 12"},             // TONEX_PARAM_UNKNOWN_12,
-    {0,      0,      0,    "UNK 13"},             // TONEX_PARAM_UNKNOWN_13,
-    {0,      0,      0,    "UNK 14"},             // TONEX_PARAM_UNKNOWN_14,
-    {0,      0,      0,    "UNK 15"},             // TONEX_PARAM_UNKNOWN_15,
+    {0,      0,      0,    "UNK 3"},              // TONEX_PARAM_UNKNOWN_3,   
+    {5,      0,      10,   "MOD PRES"},           // TONEX_PARAM_PRESENCE,
+    {5,      0,      10,   "MOD DEPTH"},          // TONEX_PARAM_DEPTH,
+    {0,      0,      10,   "VIR_RESO"},           // TONEX_PARAM_VIR_RESO,
+    {0,      0,      2,    "VIR_M1"},             // TONEX_PARAM_VIR_MIC_1,
+    {0,      0,      10,   "VIR_M1X"},            // TONEX_PARAM_VIR_MIC_1_X,
+    {0,      0,      10,   "VIR_M1Y"},            // TONEX_PARAM_VIR_MIC_1_Y,
+    {0,      0,      10,   "VIR_M1Z"},            // TONEX_PARAM_VIR_MIC_1_Z,
+    {0,      0,      2,    "VIR_M2"},             // TONEX_PARAM_VIR_MIC_2,
+    {0,      0,      10,   "VIR_M2X"},            // TONEX_PARAM_VIR_MIC_2_X,
+    {0,      0,      10,   "VIR_M2Y"},            // TONEX_PARAM_VIR_MIC_2_Y,
+    {0,      0,      10,   "VIR_M2Z"},            // TONEX_PARAM_VIR_MIC_2_Z,
+    {0,      -100,   100,  "VIR_BLEND"},          // TONEX_PARAM_VIR_BLEND,
     
     // Reverb
     {0,      0,      1,    "RVB POS"},             // TONEX_PARAM_REVERB_POSITION,
@@ -281,8 +281,8 @@ static tTonexParameter TonexParameters[TONEX_PARAM_LAST] =
     
     // Delay
     {0,      0,      1,    "DLY POST"},            // TONEX_PARAM_DELAY_POST,    
-    {0,      0,      1,    "DLY POWER"},            // TONEX_PARAM_DELAY_ENABLE,
-    {0,      0,      1,    "DLY MODEL"},            // TONEX_PARAM_DELAY_MODEL,
+    {0,      0,      1,    "DLY POWER"},           // TONEX_PARAM_DELAY_ENABLE,
+    {0,      0,      1,    "DLY MODEL"},           // TONEX_PARAM_DELAY_MODEL,
     {0,      0,      1,    "DLY DG S"},            // TONEX_PARAM_DELAY_DIGITAL_SYNC,
     {0,      0,      1,    "DLY DG T"},            // TONEX_PARAM_DELAY_DIGITAL_TS,
     {0,      0,      1000, "DLY DT M"},            // TONEX_PARAM_DELAY_DIGITAL_TIME,
@@ -1670,4 +1670,25 @@ void usb_tonex_one_deinit(void)
 {
     //to do here: need to clean up properly if pedal disconnected
     //cdc_acm_host_close();
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+esp_err_t usb_tonex_one_get_param_min_max(uint16_t param_index, float* min, float* max)
+{
+    if (param_index >= TONEX_PARAM_LAST)
+    {
+        // invalid
+        return ESP_FAIL;
+    }
+    
+    *min = TonexParameters[param_index].Min;
+    *max = TonexParameters[param_index].Max;
+
+    return ESP_OK;
 }

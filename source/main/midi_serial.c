@@ -96,46 +96,65 @@ static void midi_serial_task(void *arg)
                     continue;
                 }
 
-                // Check if this byte is a status byte for Program Change
-                if ((midi_serial_buffer[i] & 0xF0) == 0xC0)
+                // check the command
+                switch (midi_serial_buffer[i] & 0xF0)
                 {
-                    // Program Change status byte found
-                    uint8_t channel = midi_serial_buffer[i] & 0x0F;
+                    case 0xC0:
+                    {                        
+                        // Program Change
+                        uint8_t channel = midi_serial_buffer[i] & 0x0F;
 
-                    // Ensure there's a data byte following the status byte
-                    if ((i + 1) < MIDI_SERIAL_BUFFER_SIZE)
-                    {
-                        uint8_t programNumber = midi_serial_buffer[i + 1];
-
-                        if (channel == midi_serial_channel)
+                        // Ensure there's a data byte following the status byte
+                        if ((i + 1) < MIDI_SERIAL_BUFFER_SIZE)
                         {
-                            ESP_LOGI(TAG, "Change to preset %d", programNumber);
+                            uint8_t programNumber = midi_serial_buffer[i + 1];
 
-                            // change to this preset
-                            control_request_preset_index(programNumber);
+                            if (channel == midi_serial_channel)
+                            {
+                                ESP_LOGI(TAG, "Change to preset %d", programNumber);
+
+                                // change to this preset
+                                control_request_preset_index(programNumber);
+                            }
+                            
+                            // Skip the data byte
+                            i++;
                         }
-                        
-                        // Skip the data byte
-                        i++;
-                    }
-                    else
-                    {
-                        ESP_LOGW(TAG, "Warning: Incomplete Program Change message at end of buffer");
-                        break;
-                    }
-                }
-                else if (midi_serial_buffer[i] & 0x80)
-                {
-                    // This is a status byte for a different type of message
-                    // Skip this message by finding the next status byte or end of buffer
-                    while ((++i < MIDI_SERIAL_BUFFER_SIZE) && !(midi_serial_buffer[i] & 0x80))
-                    {
-                    }
-                    i--; // Decrement i because the for loop will increment it again
-                }
+                        else
+                        { 
+                            ESP_LOGW(TAG, "Warning: Incomplete Program Change message at end of buffer");
+                            break;
+                        }   
+                    } break;
+
+                    case  0xB0:
+                    {   
+                        // control change
+                        uint8_t channel = midi_serial_buffer[i] & 0x0F;
+
+                        // Ensure there's a data byte following the status byte
+                        if ((i + 1) < MIDI_SERIAL_BUFFER_SIZE)
+                        {
+                            uint8_t value = midi_serial_buffer[i + 1];
+                            control_adjust_param_via_midi(channel, value);
+                        }
+                        else
+                        { 
+                            ESP_LOGW(TAG, "Warning: Incomplete Control Change message at end of buffer");
+                            break;
+                        }    
+                    } break;        
                 
-                // If it's not a status byte, it's a data byte of a message we're not interested in
-                // The loop will automatically move to the next byte
+                    case 0x80:
+                    {
+                        // This is a status byte for a different type of message
+                        // Skip this message by finding the next status byte or end of buffer
+                        while ((++i < MIDI_SERIAL_BUFFER_SIZE) && !(midi_serial_buffer[i] & 0x80))
+                        {
+                        }
+                        i--; // Decrement i because the for loop will increment it again
+                    } break;
+                }
             }
 
             // don't hog the CPU
