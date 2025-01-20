@@ -42,7 +42,7 @@ limitations under the License.
 #include "usb_tonex_one.h"
 #include "leds.h"
 
-#define LEDS_TASK_STACK_SIZE            (3 * 1024)
+#define LEDS_TASK_STACK_SIZE            (2500)
 #define RMT_LED_STRIP_RESOLUTION_HZ     10000000 // 10MHz resolution, 1 tick = 0.1us (led strip needs a high resolution)
 #define LED_NUMBER                      1
 

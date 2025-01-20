@@ -39,7 +39,7 @@ limitations under the License.
 #include "task_priorities.h"
 #include "midi_helper.h"
 
-#define MIDI_SERIAL_TASK_STACK_SIZE             (3 * 1024)
+#define MIDI_SERIAL_TASK_STACK_SIZE             (2500)
 #define MIDI_SERIAL_BUFFER_SIZE                 128
 
 #define UART_PORT_NUM                           UART_NUM_1
@@ -135,8 +135,10 @@ static void midi_serial_task(void *arg)
                         // Ensure there's a data byte following the status byte
                         if ((i + 1) < MIDI_SERIAL_BUFFER_SIZE)
                         {
-                            uint8_t change_num = midi_serial_buffer[i + 1] & 0x0F;
+                            uint8_t change_num = midi_serial_buffer[i + 1];
                             uint8_t value = midi_serial_buffer[i + 2];
+
+                            ESP_LOGI(TAG, "Midi CC change num: %d, value: %d", change_num, value);
 
                             if (channel == midi_serial_channel)
                             {

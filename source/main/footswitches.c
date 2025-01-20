@@ -40,7 +40,7 @@ limitations under the License.
 #include "usb_comms.h"
 #include "usb_tonex_one.h"
 
-#define FOOTSWITCH_TASK_STACK_SIZE          (3 * 1024)
+#define FOOTSWITCH_TASK_STACK_SIZE          (2500)
 #define FOOTSWITCH_SAMPLE_COUNT             5       // 20 msec per sample
 #define BANK_MODE_BUTTONS                   4
 #define BANK_MAXIMUM                        (MAX_PRESETS / BANK_MODE_BUTTONS)

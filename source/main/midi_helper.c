@@ -51,7 +51,7 @@ static float midi_helper_scale_midi_to_float(uint16_t param_index, uint8_t midi_
     float min;
     float max;
 
-    // get this params, min/max values
+    // get this params min/max values
     usb_tonex_one_get_param_min_max(param_index, &min, &max);
 
     // scale 0..127 midi value to param
@@ -84,13 +84,13 @@ static float midi_helper_boolean_midi_to_float(uint8_t midi_value)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-esp_err_t midi_helper_adjust_param_via_midi(uint8_t midi_channel, uint8_t midi_value)
+esp_err_t midi_helper_adjust_param_via_midi(uint8_t change_num, uint8_t midi_value)
 {
     uint16_t param;
     float value;
 
     // Midi mapping done to match the big Tonex pedal
-    switch (midi_channel)
+    switch (change_num)
     {
         // 0: midi patch bank on big tonex
 
@@ -723,7 +723,7 @@ esp_err_t midi_helper_adjust_param_via_midi(uint8_t midi_channel, uint8_t midi_v
 
         default:
         {
-            ESP_LOGW(TAG, "Invalid Midi channel %d", midi_channel);
+            ESP_LOGW(TAG, "Unsupported Midi change number %d", change_num);
             return ESP_FAIL;
         } break;
     }

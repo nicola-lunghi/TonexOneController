@@ -50,6 +50,10 @@ extern "C" {
     //#define UART_RX_PIN       GPIO_NUM_15 
     //#define UART_TX_PIN       GPIO_NUM_16 
 
+    // Midi: ADC port on 4.3 dev board (dev only)
+    //#define UART_RX_PIN         GPIO_NUM_6
+    //#define UART_TX_PIN         -1
+
     // leds
     #define LED_OUTPUT_GPIO_NUM          -1
 

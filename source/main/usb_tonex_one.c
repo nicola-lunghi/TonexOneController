@@ -67,15 +67,14 @@ static const uint8_t ToneOnePresetByteMarker[] = {0xB9, 0x04, 0xB9, 0x02, 0xBC, 
 // lengths of preset name and drive character
 #define TONEX_ONE_RESP_OFFSET_PRESET_NAME_LEN       32
 
-// Tonex One can send quite large data quickly, so make a generous receive buffer
-#define RX_TEMP_BUFFER_SIZE                         32704   // even multiple of 64 CDC transfer size
-#define MAX_INPUT_BUFFERS                           2
-#define USB_TX_BUFFER_SIZE                          4096
-
 #define TONEX_ONE_CDC_INTERFACE_INDEX               0
 #define MAX_RAW_DATA                                3072
 #define MAX_STATE_DATA                              512
 
+// Tonex One can send quite large data quickly, so make a generous receive buffer
+#define RX_TEMP_BUFFER_SIZE                         32704   // even multiple of 64 CDC transfer size
+#define MAX_INPUT_BUFFERS                           2
+#define USB_TX_BUFFER_SIZE                          MAX_RAW_DATA
 
 // credit to https://github.com/vit3k/tonex_controller for some of the below details and implementation
 enum CommsState

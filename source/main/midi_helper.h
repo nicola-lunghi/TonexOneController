@@ -17,5 +17,5 @@ limitations under the License.
 
 #pragma once
 
-esp_err_t midi_helper_adjust_param_via_midi(uint8_t midi_channel, uint8_t midi_value);
+esp_err_t midi_helper_adjust_param_via_midi(uint8_t change_num, uint8_t midi_value);
 
