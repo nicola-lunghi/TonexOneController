@@ -64,6 +64,7 @@ limitations under the License.
 #include "control.h"
 #include "task_priorities.h"
 #include "midi_control.h"
+#include "LP5562.h"
 
 static const char *TAG = "app_display";
 
@@ -115,11 +116,10 @@ static const char *TAG = "app_display";
     #define ATOM3SR_LCD_PIXEL_CLK_HZ        (40 * 1000 * 1000)
     #define ATOM3SR_LCD_CMD_BITS            (8)
     #define ATOM3SR_LCD_PARAM_BITS          (8)
-    #define ATOM3SR_LCD_COLOR_SPACE         (ESP_LCD_COLOR_SPACE_RGB)
+    #define ATOM3SR_LCD_COLOR_SPACE         (ESP_LCD_COLOR_SPACE_BGR)
     #define ATOM3SR_LCD_BITS_PER_PIXEL      (16)
     #define ATOM3SR_LCD_DRAW_BUFF_DOUBLE    (1)
     #define ATOM3SR_LCD_DRAW_BUFF_HEIGHT    (50)
-    #define ATOM3SR_LCD_BL_ON_LEVEL         (1)
 
     static esp_lcd_panel_io_handle_t lcd_io = NULL;
     static esp_lcd_panel_handle_t lcd_panel = NULL;
@@ -160,7 +160,7 @@ typedef struct
 static QueueHandle_t ui_update_queue;
 static SemaphoreHandle_t I2CMutexHandle;
 static SemaphoreHandle_t lvgl_mux = NULL;
-static tTonexParameter TonexParametersCopy[TONEX_PARAM_LAST];
+static tTonexParameter* TonexParametersCopy;
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
     static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
@@ -1027,7 +1027,7 @@ void UI_SetCurrentParameterValues(tTonexParameter* params)
     tUIUpdate ui_update;
 
     // make a local copy of the current params, for thread safety
-    memcpy((void*)TonexParametersCopy, (void*)params, sizeof(TonexParametersCopy));
+    memcpy((void*)TonexParametersCopy, (void*)params, sizeof(tTonexParameter) * TONEX_PARAM_LAST);
 
     // build command
     ui_update.ElementID = UI_ELEMENT_PARAMETERS;
@@ -2492,7 +2492,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     I2CMutexHandle = I2CMutex;
 
     // create queue for UI updates from other threads
-    ui_update_queue = xQueueCreate(25, sizeof(tUIUpdate));
+    ui_update_queue = xQueueCreate(10, sizeof(tUIUpdate));
     if (ui_update_queue == NULL)
     {
         ESP_LOGE(TAG, "Failed to create UI update queue!");
@@ -2500,6 +2500,13 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
     lvgl_mux = xSemaphoreCreateRecursiveMutex();
     assert(lvgl_mux);
+
+    // create copy of parameters in PSRAM
+    TonexParametersCopy = heap_caps_malloc(sizeof(tTonexParameter) * TONEX_PARAM_LAST, MALLOC_CAP_SPIRAM);
+    if (TonexParametersCopy == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to allocate TonexParametersCopy buffer!");
+    }
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B    
     uint8_t touch_ok = 0;
@@ -2814,13 +2821,10 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 #endif //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
-    // LCD backlight
-    gpio_config_t bk_gpio_config = {
-        .mode = GPIO_MODE_OUTPUT,
-        .pin_bit_mask = 1ULL << ATOM3SR_LCD_GPIO_BL};
-    ESP_ERROR_CHECK(gpio_config(&bk_gpio_config));
+    // LCD backlight on Led driver
+    // todo 
 
-    /* LCD initialization */
+    // LCD initialization
     ESP_LOGD(TAG, "Initialize SPI bus");
     const spi_bus_config_t buscfg = {
         .sclk_io_num = ATOM3SR_LCD_GPIO_SCLK,
@@ -2862,9 +2866,9 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     esp_lcd_panel_disp_on_off(lcd_panel, true);
 
     // LCD backlight on 
-    ESP_ERROR_CHECK(gpio_set_level(ATOM3SR_LCD_GPIO_BL, ATOM3SR_LCD_BL_ON_LEVEL));
+    LP5562_set_color(0, 0, 0, 180);
 
-    esp_lcd_panel_set_gap(lcd_panel, 0, 20);
+    esp_lcd_panel_set_gap(lcd_panel, 2, 1);
     esp_lcd_panel_invert_color(lcd_panel, true);
 
     ESP_LOGI(TAG, "Initialize LVGL library");

@@ -27,6 +27,10 @@ extern "C" {
 
 // IO defines
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+    // I2C bus
+    #define I2C_MASTER_SCL_IO  GPIO_NUM_9       
+    #define I2C_MASTER_SDA_IO  GPIO_NUM_8       
+
     // IO expander
     #define FOOTSWITCH_1		IO_EXPANDER_PIN_NUM_0
     #define TOUCH_RESET 		IO_EXPANDER_PIN_NUM_1
@@ -80,6 +84,12 @@ extern "C" {
     #define DISPLAY_PIN_NUM_DATA14         41 // R6
     #define DISPLAY_PIN_NUM_DATA15         40 // R7
     #define DISPLAY_PIN_NUM_DISP_EN        -1
+
+    // Pin assignments for SD Card
+    #define PIN_NUM_MISO        13
+    #define PIN_NUM_MOSI        11
+    #define PIN_NUM_CLK         12
+    #define PIN_NUM_CS          -1
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
     // direct IO pins
@@ -136,26 +146,30 @@ extern "C" {
     #define LED_OUTPUT_GPIO_NUM   GPIO_NUM_48
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+    // I2C bus
+    #define I2C_MASTER_SCL_IO  GPIO_NUM_0       
+    #define I2C_MASTER_SDA_IO  GPIO_NUM_45       
+
     // direct IO pins
-    #define FOOTSWITCH_1		GPIO_NUM_16
-    #define FOOTSWITCH_2		GPIO_NUM_3
-    #define FOOTSWITCH_3		GPIO_NUM_2
-    #define FOOTSWITCH_4		GPIO_NUM_44     // same as UART RX
+    #define FOOTSWITCH_1		GPIO_NUM_5
+    #define FOOTSWITCH_2		GPIO_NUM_6
+    #define FOOTSWITCH_3		GPIO_NUM_7
+    #define FOOTSWITCH_4		GPIO_NUM_8
 
     // Midi
-    #define UART_RX_PIN         GPIO_NUM_18 
-    #define UART_TX_PIN         GPIO_NUM_17 
+    #define UART_RX_PIN         GPIO_NUM_38 
+    #define UART_TX_PIN         GPIO_NUM_39 
 
     // leds
     #define LED_OUTPUT_GPIO_NUM          -1
 
     // LCD pins
-    #define ATOM3SR_LCD_GPIO_SCLK           (GPIO_NUM_6)
-    #define ATOM3SR_LCD_GPIO_MOSI           (GPIO_NUM_7)
-    #define ATOM3SR_LCD_GPIO_RST            (GPIO_NUM_8)
-    #define ATOM3SR_LCD_GPIO_DC             (GPIO_NUM_4)
-    #define ATOM3SR_LCD_GPIO_CS             (GPIO_NUM_5)
-    #define ATOM3SR_LCD_GPIO_BL             (GPIO_NUM_15)
+    #define ATOM3SR_LCD_GPIO_SCLK           (GPIO_NUM_15)
+    #define ATOM3SR_LCD_GPIO_MOSI           (GPIO_NUM_21)
+    #define ATOM3SR_LCD_GPIO_RST            (GPIO_NUM_48)
+    #define ATOM3SR_LCD_GPIO_DC             (GPIO_NUM_42)
+    #define ATOM3SR_LCD_GPIO_CS             (GPIO_NUM_14)
+    // Note LCD Backlight uses led driver on I2C
 
 #else
     #error "Unknown hardware platform!"

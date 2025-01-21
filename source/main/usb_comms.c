@@ -470,7 +470,7 @@ void init_usb_comms(void)
     SemaphoreHandle_t signaling_sem = xSemaphoreCreateBinary();
 
     // create queue for commands from other threads
-    usb_input_queue = xQueueCreate(10, sizeof(tUSBMessage));
+    usb_input_queue = xQueueCreate(5, sizeof(tUSBMessage));
     if (usb_input_queue == NULL)
     {
         ESP_LOGE(TAG, "Failed to create usb input queue!");
@@ -479,7 +479,7 @@ void init_usb_comms(void)
     //Create USB daemon task
     xTaskCreatePinnedToCore(host_lib_daemon_task,
                             "daemon",
-                            4096,
+                            2500, 
                             (void*)signaling_sem,
                             USB_DAEMON_TASK_PRIORITY,
                             &daemon_task_hdl,
@@ -488,7 +488,7 @@ void init_usb_comms(void)
     //Create the USB class driver task
     xTaskCreatePinnedToCore(class_driver_task,
                             "class",
-                            4096,
+                            2500, 
                             (void*)signaling_sem,
                             USB_CLASS_TASK_PRIORITY,
                             &class_driver_task_hdl,

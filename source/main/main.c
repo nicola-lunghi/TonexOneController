@@ -62,12 +62,11 @@ limitations under the License.
 #include "control.h"
 #include "midi_control.h"
 #include "CH422G.h"
+#include "LP5562.h"
 #include "midi_serial.h"
 #include "wifi_config.h"
 #include "leds.h"
 
-#define I2C_MASTER_SCL_IO               9       /*!< GPIO number used for I2C master clock */
-#define I2C_MASTER_SDA_IO               8       /*!< GPIO number used for I2C master data  */
 #define I2C_MASTER_NUM                  0       /*!< I2C master i2c port number, the number of i2c peripheral interfaces available will depend on the chip */
 #define I2C_MASTER_FREQ_HZ              400000                     /*!< I2C master clock frequency */
 #define I2C_MASTER_TX_BUF_DISABLE       0                          /*!< I2C master doesn't need buffer */
@@ -78,18 +77,11 @@ limitations under the License.
 
 #define MOUNT_POINT "/sdcard"
 
-// Pin assignments for SD Card
-#define PIN_NUM_MISO        13
-#define PIN_NUM_MOSI        11
-#define PIN_NUM_CLK         12
-#define PIN_NUM_CS          -1
-
-
 static const char *TAG = "app_main";
 
 SemaphoreHandle_t I2CMutex;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
 static esp_err_t i2c_master_init(void);
 
 /****************************************************************************
@@ -175,7 +167,9 @@ static esp_err_t i2c_master_init(void)
     res = i2c_driver_install(I2C_MASTER_NUM, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
     return res;
 }
+#endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
 
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
 /****************************************************************************
 * NAME:        
 * DESCRIPTION: 
@@ -208,139 +202,6 @@ static void InitIOExpander(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-#if 0
-static void InitSDCard(void)
-{
-    esp_err_t ret;
-
-    // Set CS pin low
-    CH422G_write_direction(SD_CS, IO_EXPANDER_OUTPUT);
-    CH422G_write_output(SD_CS, 0);
-
-    esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-        .format_if_mount_failed = false,
-        .max_files = 5,
-        .allocation_unit_size = 16 * 1024
-    };
-
-    sdmmc_card_t *card;
-    const char mount_point[] = MOUNT_POINT;
-    ESP_LOGI(TAG, "Initializing SD card");
-    sdmmc_host_t host = SDSPI_HOST_DEFAULT();
-
-    spi_bus_config_t bus_cfg = {
-        .mosi_io_num = PIN_NUM_MOSI,
-        .miso_io_num = PIN_NUM_MISO,
-        .sclk_io_num = PIN_NUM_CLK,
-        .quadwp_io_num = -1,
-        .quadhd_io_num = -1,
-        .max_transfer_sz = 4000,
-    };
-    
-    ret = spi_bus_initialize(host.slot, &bus_cfg, SDSPI_DEFAULT_DMA);
-    if (ret != ESP_OK) 
-    {
-        printf("Failed to initialize SPI bus.\r\n");
-        return;
-    }
-    
-    // This initializes the slot without card detect (CD) and write protect (WP) signals.
-    sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
-    slot_config.gpio_cs = PIN_NUM_CS;
-    slot_config.host_id = host.slot;
-
-    ret = esp_vfs_fat_sdspi_mount(mount_point, &host, &slot_config, &mount_config, &card);
-
-    if (ret != ESP_OK) 
-    {      
-        ESP_LOGI(TAG, "Failed to init SD card %s", esp_err_to_name(ret));
-        return;
-    }
-    
-    ESP_LOGI(TAG, "SD Card mounted");
-
-    // Card has been initialized, print its properties
-    sdmmc_card_print_info(stdout, card);
-
-    // copy amp skin images from SD card to PSRAM. This is done mainly because the Waveshare
-    // boards use an I2C IO expander to drive the SD card chip select, which is not suppported
-    // by the ESP drivers. Would have to have some way of making LGVL call a custom function
-    // to clear/set CS via I2C before/after all transactions, which doesn't seem to be supported.
-    //
-    // By copying fromm SD to PSAM, we free up program memory (compared to internal storage) and
-    // also allow the user to add/changes skins without needing to compile. Plus PSRAM is faster
-    // to access than SD at run time
-
-    ESP_LOGI(TAG, "PSRAM free space before skin load %d", (int)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
-
-    struct dirent* dp;
-    struct stat st;
-    DIR* dir = opendir(MOUNT_POINT);
-
-    if (dir == NULL) 
-    {
-        ESP_LOGE(TAG, "Can't Open Dir.");
-    }
-    else
-    {
-        while ((dp = readdir(dir)) != NULL) 
-        {
-            ESP_LOGI(TAG, "%s", dp->d_name);
-
-            // check if file is a PNG image
-            if (strstr(strupr(dp->d_name), ".PNG") != NULL)
-            {
-                // get status of file            
-                sprintf(full_path, "%s/%s", MOUNT_POINT, dp->d_name);
-
-                if (stat(full_path, &st) == 0) 
-                {
-                    ESP_LOGI(TAG, "Found SD card png file %s. Size: %d", full_path, (int)st.st_size);
-
-                    if (st.st_size > 0)
-                    {
-                        // allocate buffer in PSRAM to hold it
-                        void* img_ptr = heap_caps_malloc(st.st_size, MALLOC_CAP_SPIRAM);
-                        if (img_ptr == NULL)
-                        {
-                            ESP_LOGE(TAG, "Unable to malloc space for amp skin %s", full_path);
-                            break;
-                        }
-                        else
-                        {
-                            // add to struct for future usage    
-                            //dp->d_name, img_ptr
-                        }
-                    }
-                }
-                else
-                {
-                    ESP_LOGE(TAG, "stat not zero %s", full_path);
-                }
-            }
-        }
-
-        closedir (dir);
-    }
-
-    // deselect CS
-    CH422G_write_output(SD_CS, 1);
-
-    ESP_LOGI(TAG, "PSRAM free space after skin load %d", (int)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
-
-    // unmount partition
-    esp_vfs_fat_sdcard_unmount(mount_point, card);
-    spi_bus_free(host.slot);
-}
-#endif
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
 void app_main(void)
 {
     ESP_LOGI(TAG, "ToneX One Controller App start");
@@ -348,7 +209,7 @@ void app_main(void)
     // load the config first
     control_load_config();
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
     // create mutex for shared I2C bus
     I2CMutex = xSemaphoreCreateMutex();
     if (I2CMutex == NULL)
@@ -359,17 +220,18 @@ void app_main(void)
     // init I2C master
     ESP_ERROR_CHECK(i2c_master_init());
     ESP_LOGI(TAG, "I2C initialized successfully");
+#endif
 
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     // init IO expander
     ESP_LOGI(TAG, "Init IO Expander");
     InitIOExpander(I2C_MASTER_NUM, I2CMutex);
-    
-    // Init SD card
-    // Note here: this was intended to be used to load Amp skin images
-    // from SD card, but 2 MB PSRAM not enough to load to ram, and
-    // SD card using IO expander for chip select makes direct LVGL load
-    // from SD really tricky.
-    //InitSDCard();
+#endif
+
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+    // init LP5562 led driver
+    ESP_LOGI(TAG, "Init LP5562 Led Driver");
+    LP5562_init(I2C_MASTER_NUM, I2CMutex);
 #endif
 
     // init control task
@@ -426,7 +288,4 @@ void app_main(void)
 
     // init WiFi config
     wifi_config_init();
-
-    // init leds
-    leds_init();
 }

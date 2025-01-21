@@ -40,7 +40,7 @@ limitations under the License.
 #include "display.h"
 #include "task_priorities.h"
 
-#define CTRL_TASK_STACK_SIZE   (3 * 1024)
+#define CTRL_TASK_STACK_SIZE   (2500)
 #define NVS_USERDATA_NAME       "userdata"        
 
 #define MAX_TEXT_LENGTH        128
@@ -1076,7 +1076,7 @@ void control_load_config(void)
 void control_init(void)
 {
     // create queue for commands from other threads
-    control_input_queue = xQueueCreate(10, sizeof(tControlMessage));
+    control_input_queue = xQueueCreate(5, sizeof(tControlMessage));
     if (control_input_queue == NULL)
     {
         ESP_LOGE(TAG, "Failed to create control input queue!");

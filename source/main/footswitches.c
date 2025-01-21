@@ -39,6 +39,7 @@ limitations under the License.
 #include "usb/usb_host.h"
 #include "usb_comms.h"
 #include "usb_tonex_one.h"
+#include "leds.h"
 
 #define FOOTSWITCH_TASK_STACK_SIZE          (2500)
 #define FOOTSWITCH_SAMPLE_COUNT             5       // 20 msec per sample
@@ -416,6 +417,9 @@ void footswitch_task(void *arg)
             } break;
         }
 
+        // handle leds from this task, to save wasting ram on another task for it
+        leds_handle();
+
         vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
@@ -443,6 +447,9 @@ void footswitches_init(void)
     gpio_config_struct.intr_type = GPIO_INTR_DISABLE;
     gpio_config(&gpio_config_struct);
 #endif
+
+    // init leds
+    leds_init();
 
     // create task
     xTaskCreatePinnedToCore(footswitch_task, "FOOT", FOOTSWITCH_TASK_STACK_SIZE, NULL, FOOTSWITCH_TASK_PRIORITY, NULL, 1);

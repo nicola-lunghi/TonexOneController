@@ -30,7 +30,6 @@ extern "C" {
 #define MIDI_SERIAL_TASK_PRIORITY       (tskIDLE_PRIORITY + 2)
 #define FOOTSWITCH_TASK_PRIORITY        (tskIDLE_PRIORITY + 1)
 #define WIFI_TASK_PRIORITY              (tskIDLE_PRIORITY + 1)
-#define LEDS_TASK_PRIORITY              (tskIDLE_PRIORITY + 1)
 
 #ifdef __cplusplus
 } /*extern "C"*/

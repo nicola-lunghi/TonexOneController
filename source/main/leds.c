@@ -42,10 +42,16 @@ limitations under the License.
 #include "usb_tonex_one.h"
 #include "leds.h"
 
-#define LEDS_TASK_STACK_SIZE            (2500)
 #define RMT_LED_STRIP_RESOLUTION_HZ     10000000 // 10MHz resolution, 1 tick = 0.1us (led strip needs a high resolution)
 #define LED_NUMBER                      1
 
+enum LedStates
+{
+    LED_STATE_BOOT_FLASH_ON,
+    LED_STATE_BOOT_FLASH_OFF,
+    LED_STATE_BOOT_WAIT,
+    LED_STATE_IDLE
+};
 
 typedef struct 
 {
@@ -61,8 +67,21 @@ typedef struct
     rmt_symbol_word_t reset_code;
 } rmt_led_strip_encoder_t;
 
+typedef struct 
+{
+    uint8_t state; 
+    uint8_t queued_state; 
+    uint32_t timer;
+    uint32_t counter;
+
+    uint8_t led_strip_pixels[LED_NUMBER * 3];
+    rmt_channel_handle_t led_chan;
+    rmt_encoder_handle_t led_encoder;
+    rmt_transmit_config_t tx_config;
+} tLedControl;
+
 static const char *TAG = "app_leds";
-static uint8_t __attribute__((unused)) led_strip_pixels[LED_NUMBER * 3];
+static tLedControl LedControl;
 
 /****************************************************************************
 * NAME:        
@@ -295,7 +314,6 @@ err:
     return ret;
 }
 
-
 /****************************************************************************
 * NAME:        
 * DESCRIPTION: 
@@ -303,69 +321,77 @@ err:
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void leds_task(void *arg)
+void leds_handle(void)
 {    
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC    
     uint32_t red = 0;
     uint32_t green = 0xFF;
     uint32_t blue = 0;
-
-    ESP_LOGI(TAG, "Leds task start");
-
-    ESP_LOGI(TAG, "Create RMT TX channel");
-    rmt_channel_handle_t led_chan = NULL;
-    rmt_tx_channel_config_t tx_chan_config = {
-        .clk_src = RMT_CLK_SRC_DEFAULT, // select source clock
-        .gpio_num = LED_OUTPUT_GPIO_NUM,
-        .mem_block_symbols = 64, // increase the block size can make the LED less flickering
-        .resolution_hz = RMT_LED_STRIP_RESOLUTION_HZ,
-        .trans_queue_depth = 4, // set the number of transactions that can be pending in the background
-    };
-    ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_chan_config, &led_chan));
-
-    ESP_LOGI(TAG, "Install led strip encoder");
-    rmt_encoder_handle_t led_encoder = NULL;
-    led_strip_encoder_config_t encoder_config = {
-        .resolution = RMT_LED_STRIP_RESOLUTION_HZ,
-    };
-    ESP_ERROR_CHECK(rmt_new_led_strip_encoder(&encoder_config, &led_encoder));
-
-    ESP_LOGI(TAG, "Enable RMT TX channel");
-    ESP_ERROR_CHECK(rmt_enable(led_chan));
-
-    rmt_transmit_config_t tx_config = {
-        .loop_count = 0, // no transfer loop
-    };
-    
-    // do Green flash
-    for (uint8_t loop = 0; loop < 3; loop++)
-    {       
+   
+    switch (LedControl.state)
+    {
+        case LED_STATE_BOOT_FLASH_ON:
+        {
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC
-        // led is GBR colour order
-        led_strip_pixels[0] = green;
-        led_strip_pixels[1] = blue;
-        led_strip_pixels[2] = red;
+            // led is GBR colour order
+            LedControl.led_strip_pixels[0] = green;
+            LedControl.led_strip_pixels[1] = blue;
+            LedControl.led_strip_pixels[2] = red;
 #endif        
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO 
-        // led is RGB colour order
-        led_strip_pixels[0] = red;
-        led_strip_pixels[1] = green;
-        led_strip_pixels[2] = blue;
+            // led is RGB colour order
+            LedControl.led_strip_pixels[0] = red;
+            LedControl.led_strip_pixels[1] = green;
+            LedControl.led_strip_pixels[2] = blue;
 #endif
 
-        ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));
-        vTaskDelay(pdMS_TO_TICKS(100));
+            ESP_ERROR_CHECK(rmt_transmit(LedControl.led_chan, LedControl.led_encoder, LedControl.led_strip_pixels, sizeof(LedControl.led_strip_pixels), &LedControl.tx_config));
 
-        // set off
-        memset(led_strip_pixels, 0, sizeof(led_strip_pixels));
-        ESP_ERROR_CHECK(rmt_transmit(led_chan, led_encoder, led_strip_pixels, sizeof(led_strip_pixels), &tx_config));
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
+            LedControl.queued_state = LED_STATE_BOOT_FLASH_OFF;
+            LedControl.state = LED_STATE_BOOT_WAIT;
+            LedControl.timer = xTaskGetTickCount();
+        } break;
 
-    while (1)
-    {
-        // do nothing. In future, could flash for events or something
-        vTaskDelay(pdMS_TO_TICKS(2000));
+        case LED_STATE_BOOT_FLASH_OFF:
+        {
+            memset(LedControl.led_strip_pixels, 0, sizeof(LedControl.led_strip_pixels));
+            ESP_ERROR_CHECK(rmt_transmit(LedControl.led_chan, LedControl.led_encoder, LedControl.led_strip_pixels, sizeof(LedControl.led_strip_pixels), &LedControl.tx_config));
+
+            // check hoiw many times we have flashed the led
+            if (LedControl.counter > 0)
+            {
+                LedControl.counter--;
+            }
+
+            if (LedControl.counter == 0)
+            {
+                // all done
+                LedControl.queued_state = LED_STATE_IDLE;
+            }
+            else
+            {            
+                // flash again
+                LedControl.queued_state = LED_STATE_BOOT_FLASH_ON;
+            }
+            
+            LedControl.state = LED_STATE_BOOT_WAIT;
+            LedControl.timer = xTaskGetTickCount();
+        } break;
+
+        case LED_STATE_BOOT_WAIT:
+        {
+            // timed expired?
+            if ((xTaskGetTickCount() - LedControl.timer) > 250)
+            {
+                // to next state
+                LedControl.state = LedControl.queued_state;
+            }
+        } break;
+
+        case LED_STATE_IDLE:
+        {
+            // nothing to do
+        } break;
     }
 #endif    
 }
@@ -378,9 +404,37 @@ void leds_task(void *arg)
 * NOTES:       
 *****************************************************************************/
 void leds_init(void)
-{	
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC
-    // create task
-    xTaskCreatePinnedToCore(leds_task, "LED", LEDS_TASK_STACK_SIZE, NULL, LEDS_TASK_PRIORITY, NULL, 1);
-#endif
+{
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC    
+    ESP_LOGI(TAG, "Leds Init start");
+
+    // init memory
+    memset((void*)&LedControl, 0, sizeof(LedControl));
+    LedControl.tx_config.loop_count = 0; // no transfer loop
+
+    LedControl.state = LED_STATE_BOOT_FLASH_ON;
+
+    // set for 3 flashes at boot
+    LedControl.counter = 3;
+
+    ESP_LOGI(TAG, "Create RMT TX channel");
+    rmt_tx_channel_config_t tx_chan_config = {
+        .clk_src = RMT_CLK_SRC_DEFAULT, // select source clock
+        .gpio_num = LED_OUTPUT_GPIO_NUM,
+        .mem_block_symbols = 64, // increase the block size can make the LED less flickering
+        .resolution_hz = RMT_LED_STRIP_RESOLUTION_HZ,
+        .trans_queue_depth = 4, // set the number of transactions that can be pending in the background
+    };
+    ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_chan_config, &LedControl.led_chan));
+
+    ESP_LOGI(TAG, "Install led strip encoder");    
+
+    led_strip_encoder_config_t encoder_config = {
+        .resolution = RMT_LED_STRIP_RESOLUTION_HZ,
+    };
+    ESP_ERROR_CHECK(rmt_new_led_strip_encoder(&encoder_config, &LedControl.led_encoder));
+
+    ESP_LOGI(TAG, "Enable RMT TX channel");
+    ESP_ERROR_CHECK(rmt_enable(LedControl.led_chan));    
+#endif     
 }

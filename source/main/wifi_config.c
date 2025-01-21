@@ -433,7 +433,7 @@ static esp_err_t http_server_init(void)
     // set config
     http_config.task_priority      = tskIDLE_PRIORITY + 1;
     http_config.core_id            = 0;
-    http_config.stack_size         = (3 * 1024);  
+    http_config.stack_size         = 2500;  //(3 * 1024);  
     http_config.server_port        = 80;
     http_config.ctrl_port          = 32768;
     http_config.max_open_sockets   = 2;
