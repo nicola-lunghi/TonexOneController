@@ -16,7 +16,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_width(ui_PresetHeadingLabel, 115);
     lv_obj_set_height(ui_PresetHeadingLabel, 23);
     lv_obj_set_x(ui_PresetHeadingLabel, -1);
-    lv_obj_set_y(ui_PresetHeadingLabel, -27);
+    lv_obj_set_y(ui_PresetHeadingLabel, -31);
     lv_obj_set_align(ui_PresetHeadingLabel, LV_ALIGN_CENTER);
     lv_label_set_text(ui_PresetHeadingLabel, "?\n");
     lv_obj_set_style_text_color(ui_PresetHeadingLabel, lv_color_hex(0xD1A60C), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -27,9 +27,9 @@ void ui_Screen1_screen_init(void)
     ui_BottomContainer = lv_obj_create(ui_Screen1);
     lv_obj_remove_style_all(ui_BottomContainer);
     lv_obj_set_width(ui_BottomContainer, 128);
-    lv_obj_set_height(ui_BottomContainer, 72);
+    lv_obj_set_height(ui_BottomContainer, 79);
     lv_obj_set_x(ui_BottomContainer, 0);
-    lv_obj_set_y(ui_BottomContainer, 27);
+    lv_obj_set_y(ui_BottomContainer, 24);
     lv_obj_set_align(ui_BottomContainer, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_BottomContainer, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_radius(ui_BottomContainer, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -44,7 +44,7 @@ void ui_Screen1_screen_init(void)
 
     ui_PresetHeadingLabel2 = lv_label_create(ui_BottomContainer);
     lv_obj_set_width(ui_PresetHeadingLabel2, 115);
-    lv_obj_set_height(ui_PresetHeadingLabel2, 58);
+    lv_obj_set_height(ui_PresetHeadingLabel2, 66);
     lv_obj_set_x(ui_PresetHeadingLabel2, -1);
     lv_obj_set_y(ui_PresetHeadingLabel2, 1);
     lv_obj_set_align(ui_PresetHeadingLabel2, LV_ALIGN_CENTER);
