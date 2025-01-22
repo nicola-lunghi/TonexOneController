@@ -81,7 +81,10 @@ typedef struct
 } tLedControl;
 
 static const char *TAG = "app_leds";
+
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC    
 static tLedControl LedControl;
+#endif
 
 /****************************************************************************
 * NAME:        

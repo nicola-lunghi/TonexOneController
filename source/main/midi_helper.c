@@ -36,6 +36,7 @@ limitations under the License.
 #include "usb_comms.h"
 #include "usb/usb_host.h"
 #include "usb_tonex_one.h"
+#include "tonex_params.h"
 
 static const char *TAG = "app_midi_helper";
 
@@ -52,7 +53,7 @@ static float midi_helper_scale_midi_to_float(uint16_t param_index, uint8_t midi_
     float max;
 
     // get this params min/max values
-    usb_tonex_one_get_param_min_max(param_index, &min, &max);
+    tonex_params_get_min_max(param_index, &min, &max);
 
     // scale 0..127 midi value to param
     return min + (((float)midi_value / 127.0f) * (max - min));

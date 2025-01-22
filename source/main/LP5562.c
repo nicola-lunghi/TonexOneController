@@ -91,7 +91,7 @@ static esp_err_t LP5562_write(uint8_t reg, uint8_t val)
 	buff[0] = reg;
 	buff[1] = val;
 
-    if (xSemaphoreTake(I2CMutexHandle, (TickType_t)200) == pdTRUE)
+    if (xSemaphoreTake(I2CMutexHandle, pdMS_TO_TICKS(200)) == pdTRUE)
     {		
         res = i2c_master_write_to_device(i2cnum, LP5562_I2C_ADDR, buff, sizeof(buff), pdMS_TO_TICKS(I2C_TIMEOUT_MS));
         if (res != ESP_OK)
@@ -116,7 +116,7 @@ static esp_err_t LP5562_read(uint8_t reg, uint8_t* val)
 {
 	esp_err_t res = ESP_FAIL;
 
-	 if (xSemaphoreTake(I2CMutexHandle, (TickType_t)200) == pdTRUE)
+	if (xSemaphoreTake(I2CMutexHandle, pdMS_TO_TICKS(200)) == pdTRUE)
     {		
         res = i2c_master_write_read_device(i2cnum, LP5562_I2C_ADDR, &reg, sizeof(reg), val, sizeof(val), pdMS_TO_TICKS(I2C_TIMEOUT_MS));
         if (res != ESP_OK)
@@ -147,7 +147,7 @@ static esp_err_t LP5562_poweron(void)
 	}
     
     // start-up delay
-	vTaskDelay(1); 
+	vTaskDelay(pdMS_TO_TICKS(1)); 
     
 	// enable and set PWM clock to 558 Hz
 	ret = LP5562_write(LP5562_REG_CONFIG, 0x41);

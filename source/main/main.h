@@ -47,16 +47,16 @@ extern "C" {
     #define TOUCH_INT           GPIO_NUM_4    // touch panel interrupt
 
     // Midi: RS485 port
-    #define UART_RX_PIN         GPIO_NUM_43
-    #define UART_TX_PIN         GPIO_NUM_44 
+    //temp #define UART_RX_PIN         GPIO_NUM_43
+    //#define UART_TX_PIN         GPIO_NUM_44 
 
     // Midi on Waveshare 7" using RS485 port (dev only)
     //#define UART_RX_PIN       GPIO_NUM_15 
     //#define UART_TX_PIN       GPIO_NUM_16 
 
     // Midi: ADC port on 4.3 dev board (dev only)
-    //#define UART_RX_PIN         GPIO_NUM_6
-    //#define UART_TX_PIN         -1
+    #define UART_RX_PIN         GPIO_NUM_6
+    #define UART_TX_PIN         -1
 
     // leds
     #define LED_OUTPUT_GPIO_NUM          -1

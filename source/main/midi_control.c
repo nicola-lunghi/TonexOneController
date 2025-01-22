@@ -1574,13 +1574,15 @@ static void init_BLE(void)
         ESP_LOGI(GATTS_TAG, "Enabling BT Server mode");
 
         ret = esp_ble_gatts_register_callback(gatts_event_handler);
-        if (ret){
+        if (ret)
+        {
             ESP_LOGE(GATTS_TAG, "gatts register error, error code = %x", ret);
             return;
         }
 
         ret = esp_ble_gatts_app_register(PROFILE_A_APP_ID);
-        if (ret){
+        if (ret)
+        {
             ESP_LOGE(GATTS_TAG, "gatts app register error, error code = %x", ret);
             return;
         }

@@ -66,6 +66,7 @@ limitations under the License.
 #include "midi_serial.h"
 #include "wifi_config.h"
 #include "leds.h"
+#include "tonex_params.h"
 
 #define I2C_MASTER_NUM                  0       /*!< I2C master i2c port number, the number of i2c peripheral interfaces available will depend on the chip */
 #define I2C_MASTER_FREQ_HZ              400000                     /*!< I2C master clock frequency */
@@ -75,11 +76,9 @@ limitations under the License.
 #define I2C_CLR_BUS_SCL_NUM            (9)
 #define I2C_CLR_BUS_HALF_PERIOD_US     (5)
 
-#define MOUNT_POINT "/sdcard"
-
 static const char *TAG = "app_main";
 
-SemaphoreHandle_t I2CMutex;
+static SemaphoreHandle_t I2CMutex;
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
 static esp_err_t i2c_master_init(void);
@@ -233,6 +232,10 @@ void app_main(void)
     ESP_LOGI(TAG, "Init LP5562 Led Driver");
     LP5562_init(I2C_MASTER_NUM, I2CMutex);
 #endif
+
+    // init parameters
+    ESP_LOGI(TAG, "Init Params");
+    tonex_params_init();
 
     // init control task
     ESP_LOGI(TAG, "Init Control");

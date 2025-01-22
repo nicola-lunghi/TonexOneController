@@ -58,6 +58,7 @@ limitations under the License.
 #include "usb_tonex_one.h"
 #include "control.h"
 #include "display.h"
+#include "tonex_params.h"
 
 static const char *TAG = "app_TonexOne";
 
@@ -168,133 +169,6 @@ static uint8_t* FramedBuffer;
 static QueueHandle_t input_queue;
 static uint8_t boot_init_needed = 0;
 static volatile tInputBufferEntry* InputBuffers;
-
-// "value" below is just a default, is overridden by the preset on load
-static tTonexParameter TonexParameters[TONEX_PARAM_LAST] = 
-{
-    //value, Min,    Max,  Name
-    {0,      0,      1,    "NG POST"},            // TONEX_PARAM_NOISE_GATE_POST   
-    {1,      0,      1,    "NG POWER"},           // TONEX_PARAM_NOISE_GATE_ENABLE,
-    {-64,    -100,   0,    "NG THRESH"},          // TONEX_PARAM_NOISE_GATE_THRESHOLD,
-    {20,     5,      500,  "NG REL"},             // TONEX_PARAM_NOISE_GATE_RELEASE,
-    {-60,    -100,   -20,  "NG DEPTH"},           // TONEX_PARAM_NOISE_GATE_DEPTH,
-
-    // Compressor
-    {1,      0,      1,    "COMP POST"},           // TONEX_PARAM_COMP_POST,             
-    {0,      0,      1,    "COMP POWER"},          // TONEX_PARAM_COMP_ENABLE,
-    {-14,    -40,    0,    "COMP THRESH"},         // TONEX_PARAM_COMP_THRESHOLD,
-    {-12,    -30,    10,   "COMP GAIN"},           // TONEX_PARAM_COMP_MAKE_UP,
-    {14,     1,      51,   "COMP ATTACK"},          // TONEX_PARAM_COMP_ATTACK,
-
-    // EQ    
-    {0,      0,      1,    "EQ POST"},             // TONEX_PARAM_EQ_POST,                // Pre/Post
-    {5,      0,      10,   "EQ BASS"},             // TONEX_PARAM_EQ_BASS,
-    {300,    75,     600,  "EQ BFREQ"},            // TONEX_PARAM_EQ_BASS_FREQ,
-    {5,      0,      10,   "EQ MID"},              // TONEX_PARAM_EQ_MID,
-    {0.7,    0.2,    3.0,  "EQ MIDQ"},             // TONEX_PARAM_EQ_MIDQ,
-    {750,    150,    500,  "EQ MFREQ"},            // TONEX_PARAM_EQ_MID_FREQ,
-    {5,      0,      10,   "EQ TREBLE"},           // TONEX_PARAM_EQ_TREBLE,
-    {1900,   1000,   4000, "EQ TFREQ"},            // TONEX_PARAM_EQ_TREBLE_FREQ,
-    
-    // Model and VIR
-    {0,      0,      1,    "UNK 1"},              // TONEX_PARAM_UNKNOWN_1,
-    {0,      0,      1,    "UNK 2"},              // TONEX_PARAM_UNKNOWN_2,
-    {5,      0,      10,   "MDL GAIN"},           // TONEX_PARAM_MODEL_GAIN,
-    {5,      0,      10,   "MDL VOL"},            // TONEX_PARAM_MODEL_VOLUME,
-    {100,    0,      100,  "MDL MIX"},            // TONEX_PARAM_MODEX_MIX,
-    {0,      0,      0,    "UNK 3"},              // TONEX_PARAM_UNKNOWN_3,   
-    {5,      0,      10,   "MOD PRES"},           // TONEX_PARAM_PRESENCE,
-    {5,      0,      10,   "MOD DEPTH"},          // TONEX_PARAM_DEPTH,
-    {0,      0,      10,   "VIR_RESO"},           // TONEX_PARAM_VIR_RESO,
-    {0,      0,      2,    "VIR_M1"},             // TONEX_PARAM_VIR_MIC_1,
-    {0,      0,      10,   "VIR_M1X"},            // TONEX_PARAM_VIR_MIC_1_X,
-    {0,      0,      10,   "VIR_M1Y"},            // TONEX_PARAM_VIR_MIC_1_Y,
-    {0,      0,      10,   "VIR_M1Z"},            // TONEX_PARAM_VIR_MIC_1_Z,
-    {0,      0,      2,    "VIR_M2"},             // TONEX_PARAM_VIR_MIC_2,
-    {0,      0,      10,   "VIR_M2X"},            // TONEX_PARAM_VIR_MIC_2_X,
-    {0,      0,      10,   "VIR_M2Y"},            // TONEX_PARAM_VIR_MIC_2_Y,
-    {0,      0,      10,   "VIR_M2Z"},            // TONEX_PARAM_VIR_MIC_2_Z,
-    {0,      -100,   100,  "VIR_BLEND"},          // TONEX_PARAM_VIR_BLEND,
-    
-    // Reverb
-    {0,      0,      1,    "RVB POS"},             // TONEX_PARAM_REVERB_POSITION,
-    {1,      0,      1,    "RVB POWER"},           // TONEX_PARAM_REVERB_ENABLE,
-    {0,      0,      5,    "RVB MODEL"},           // TONEX_PARAM_REVERB_MODEL,
-    {5,      0,      10,   "RVB S1 T"},            // TONEX_PARAM_REVERB_SPRING1_TIME,
-    {0,      0,      500,  "RVB S1 P"},            // TONEX_PARAM_REVERB_SPRING1_PREDELAY,
-    {0,      -10,    10,   "RVB S1 C"},            // TONEX_PARAM_REVERB_SPRING1_COLOR,
-    {0,      0,      100,  "RVB S1 M"},            // TONEX_PARAM_REVERB_SPRING1_MIX,
-    {5,      0,      10,   "RVB S2 T"},            // TONEX_PARAM_REVERB_SPRING2_TIME,
-    {0,      0,      500,  "RVB S2 P"},            // TONEX_PARAM_REVERB_SPRING2_PREDELAY,
-    {0,      -10,    10,   "RVB S2 C"},            // TONEX_PARAM_REVERB_SPRING2_COLOR,
-    {0,      0,      100,  "RVB S2 M"},            // TONEX_PARAM_REVERB_SPRING2_MIX,
-    {5,      0,      10,   "RVB S3 T"},            // TONEX_PARAM_REVERB_SPRING3_TIME,
-    {0,      0,      500,  "RVB S3 P"},            // TONEX_PARAM_REVERB_SPRING3_PREDELAY,
-    {0,      -10,    10,   "RVB S3 C"},            // TONEX_PARAM_REVERB_SPRING3_COLOR,
-    {0,      0,      100,  "RVB S3 M"},            // TONEX_PARAM_REVERB_SPRING3_MIX,
-    {5,      0,      10,   "RVB S4 T"},            // TONEX_PARAM_REVERB_SPRING4_TIME,
-    {0,      0,      500,  "RVB S4 P"},            // TONEX_PARAM_REVERB_SPRING4_PREDELAY,
-    {0,      -10,    10,   "RVB S4 C"},            // TONEX_PARAM_REVERB_SPRING4_COLOR,
-    {0,      0,      100,  "RVB S4 M"},            // TONEX_PARAM_REVERB_SPRING4_MIX,
-    {5,      0,      10,   "RVB RM T"},            // TONEX_PARAM_REVERB_ROOM_TIME,
-    {0,      0,      500,  "RVB RM P"},            // TONEX_PARAM_REVERB_ROOM_PREDELAY,
-    {0,      -10,    10,   "RVB RM C"},            // TONEX_PARAM_REVERB_ROOM_COLOR,
-    {0,      0,      100,  "RVB RM M"},            // TONEX_PARAM_REVERB_ROOM_MIX,
-    {5,      0,      10,   "RVB PL T"},            // TONEX_PARAM_REVERB_PLATE_TIME,
-    {0,      0,      500,  "RVB PL P"},            // TONEX_PARAM_REVERB_PLATE_PREDELAY,
-    {0,      -10,    10,   "RVB PL C"},            // TONEX_PARAM_REVERB_PLATE_COLOR,
-    {0,      0,      100,  "RVB PL M"},            // TONEX_PARAM_REVERB_PLATE_MIX,
-
-    // Modulation
-    {0,      0,      1,    "MOD POST"},            // TONEX_PARAM_MODULATION_POST,
-    {0,      0,      1,    "MOD POWER"},            // TONEX_PARAM_MODULATION_ENABLE,
-    {0,      0,      4,    "MOD MODEL"},            // TONEX_PARAM_MODULATION_MODEL,
-    {0,      0,      1,    "MOD CH S"},            // TONEX_PARAM_MODULATION_CHORUS_SYNC,
-    {0,      0,      1,    "MOD CH T"},            // TONEX_PARAM_MODULATION_CHORUS_TS,
-    {0.5,    0.1,    10,   "MOD CH R"},            // TONEX_PARAM_MODULATION_CHORUS_RATE,
-    {0,      0,      100,  "MOD CH D"},            // TONEX_PARAM_MODULATION_CHORUS_DEPTH,
-    {0,      0,      10,   "MOD CH L"},            // TONEX_PARAM_MODULATION_CHORUS_LEVEL,
-    {0,      0,      1,    "MOD TR S"},            // TONEX_PARAM_MODULATION_TREMOLO_SYNC,
-    {0,      0,      1,    "MOD TR T"},            // TONEX_PARAM_MODULATION_TREMOLO_TS,
-    {0.5,    0.1,    10,   "MOD TR R"},            // TONEX_PARAM_MODULATION_TREMOLO_RATE,
-    {0,      0,      10,   "MOD TR P"},            // TONEX_PARAM_MODULATION_TREMOLO_SHAPE,
-    {0,      0,      100,  "MOD TR D"},            // TONEX_PARAM_MODULATION_TREMOLO_SPREAD,
-    {0,      0,      10,   "MOD TR L"},            // TONEX_PARAM_MODULATION_TREMOLO_LEVEL,
-    {0,      0,      1,    "MOD PH S"},            // TONEX_PARAM_PHASER_SYNC,
-    {0,      0,      1,    "MOD PH T"},            // TONEX_PARAM_PHASER_TS,
-    {0.5,    0.1,    10,   "MOD PH R"},            // TONEX_PARAM_PHASER_RATE,
-    {0,      0,      100,  "MOD PH D"},            // TONEX_PARAM_PHASER_DEPTH,
-    {0,      0,      10,   "MOD PH L"},            // TONEX_PARAM_PHASER_LEVEL,
-    {0,      0,      1,    "MOD FL S"},            // TONEX_PARAM_FLANGER_SYNC,
-    {0,      0,      1,    "MOD FL T"},            // TONEX_PARAM_FLANGER_TS,
-    {0.5,    0.1,    10,   "MOD FL R"},            // TONEX_PARAM_FLANGER_RATE,
-    {0,      0,      100,  "MOD FL D"},            // TONEX_PARAM_FLANGER_DEPTH,
-    {0,      0,      100,  "MOD FL F"},            // TONEX_PARAM_FLANGER_FEEDEBACK,
-    {0,      0,      10,   "MOD FL L"},            // TONEX_PARAM_FLANGER_LEVEL,
-    {0,      0,      1,    "MOD RO S"},            // TONEX_PARAM_ROTARY_SYNC,
-    {0,      0,      1,    "MOD RO T"},            // TONEX_PARAM_ROTARY_TS,
-    {0,      0,      400,  "MOD RO S"},            // TONEX_PARAM_ROTARY_SPEED,
-    {0,      0,      300,  "MOD RO R"},            // TONEX_PARAM_ROTARY_RADIUS,
-    {0,      0,      100,  "MOD RO D"},            // TONEX_PARAM_ROTARY_SPREAD,
-    {0,      0,      10,   "MOD RO L"},            // TONEX_PARAM_ROTARY_LEVEL,
-    
-    // Delay
-    {0,      0,      1,    "DLY POST"},            // TONEX_PARAM_DELAY_POST,    
-    {0,      0,      1,    "DLY POWER"},           // TONEX_PARAM_DELAY_ENABLE,
-    {0,      0,      1,    "DLY MODEL"},           // TONEX_PARAM_DELAY_MODEL,
-    {0,      0,      1,    "DLY DG S"},            // TONEX_PARAM_DELAY_DIGITAL_SYNC,
-    {0,      0,      1,    "DLY DG T"},            // TONEX_PARAM_DELAY_DIGITAL_TS,
-    {0,      0,      1000, "DLY DT M"},            // TONEX_PARAM_DELAY_DIGITAL_TIME,
-    {0,      0,      100,  "DLY DT F"},            // TONEX_PARAM_DELAY_DIGITAL_FEEDBACK,
-    {0,      0,      1,    "DLY DT O"},            // TONEX_PARAM_DELAY_DIGITAL_MODE,
-    {0,      0,      100,  "DLY DT X"},            // TONEX_PARAM_DELAY_DIGITAL_MIX,
-    {0,      0,      1,    "DLY TA S"},            // TONEX_PARAM_DELAY_TAPE_SYNC,
-    {0,      0,      1,    "DLY TA T"},            // TONEX_PARAM_DELAY_TAPE_TS,
-    {0,      0,      1000, "DLY TA M"},            // TONEX_PARAM_DELAY_TAPE_TIME,
-    {0,      0,      100,  "DLY TA F"},            // TONEX_PARAM_DELAY_TAPE_FEEDBACK,
-    {0,      0,      1,    "DLY TA O"},            // TONEX_PARAM_DELAY_TAPE_MODE,
-    {0,      0,      100,  "DLY TA X"},            // TONEX_PARAM_DELAY_TAPE_MIX,    
-};
 
 /*
 ** Static function prototypes
@@ -545,9 +419,6 @@ static esp_err_t __attribute__((unused)) usb_tonex_one_request_full_preset_detai
 *****************************************************************************/
 static esp_err_t usb_tonex_one_send_parameters(void)
 {
-//#if 0    
-    // disabled section due to being non-functional
-    
     uint16_t framed_length;
 
     // Build message, length to 0 for now                      len LSB  len MSB
@@ -556,10 +427,6 @@ static esp_err_t usb_tonex_one_send_parameters(void)
     // set length 
     message[6] = TonexData->Message.PedalData.FullPresetDataLength & 0xFF;
     message[7] = (TonexData->Message.PedalData.FullPresetDataLength >> 8) & 0xFF;
-
-    // test
-    //TonexData.Message.PedalData.FullPresetData[2] = 1;
-    //TonexData.Message.PedalData.FullPresetData[7] = 4;
 
     // build total message
     memcpy((void*)TxBuffer, (void*)message, sizeof(message));
@@ -573,9 +440,6 @@ static esp_err_t usb_tonex_one_send_parameters(void)
 
     // send it
     return usb_tonex_one_transmit(FramedBuffer, framed_length);
-//#endif
-
-  //  return ESP_FAIL;
 }
 
 /****************************************************************************
@@ -812,10 +676,17 @@ static esp_err_t usb_tonex_one_transmit(uint8_t* tx_data, uint16_t tx_len)
 *****************************************************************************/
 static void __attribute__((unused)) usb_tonex_one_dump_parameters(void)
 {
-    // dump all the param values and names
-    for (uint32_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
+    tTonexParameter* param_ptr = NULL;
+    
+    if (tonex_params_get_locked_access(&param_ptr) == ESP_OK)
     {
-        ESP_LOGI(TAG, "Param Dump: %s = %0.2f", TonexParameters[loop].Name, TonexParameters[loop].Value);
+        // dump all the param values and names
+        for (uint32_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
+        {
+            ESP_LOGI(TAG, "Param Dump: %s = %0.2f", param_ptr[loop].Name, param_ptr[loop].Value);
+        }
+
+        tonex_params_release_locked_access();
     }
 }
 
@@ -830,44 +701,53 @@ static esp_err_t usb_tonex_one_modify_parameter(uint16_t index, float value)
 {
     uint32_t byte_offset;
     uint8_t* temp_ptr;
+    tTonexParameter* param_ptr = NULL;
+    esp_err_t res = ESP_FAIL;
      
     if (index >= TONEX_PARAM_LAST)
     {
         ESP_LOGE(TAG, "usb_tonex_one_modify_parameters invalid index %d", (int)index);   
         return ESP_FAIL;
     }
-    else
+        
+    if (tonex_params_get_locked_access(&param_ptr) == ESP_OK)
     {
-        ESP_LOGI(TAG, "usb_tonex_one_modify_parameter index: %d name: %s value: %02f", (int)index, TonexParameters[index].Name, value);  
-    }
-
-    // modify the param in the full data, as we have to send this back to the pedal
-    // calculate the offset to the parameter. +1 for the 0x88 marker
-    byte_offset = TonexData->Message.PedalData.FullPresetParameterStartOffset + (index * (sizeof(float) + 1));
-    temp_ptr = &TonexData->Message.PedalData.FullPresetData[byte_offset];
+        ESP_LOGI(TAG, "usb_tonex_one_modify_parameter index: %d name: %s value: %02f", (int)index, param_ptr[index].Name, value);  
     
-    // safety check on the index
-    if (*temp_ptr == 0x88)
-    {
-        // skip the marker
-        temp_ptr++;
+        // modify the param in the full data, as we have to send this back to the pedal
+        // calculate the offset to the parameter. +1 for the 0x88 marker
+        byte_offset = TonexData->Message.PedalData.FullPresetParameterStartOffset + (index * (sizeof(float) + 1));
+        temp_ptr = &TonexData->Message.PedalData.FullPresetData[byte_offset];
+        
+        // safety check on the index
+        if (*temp_ptr == 0x88)
+        {
+            // skip the marker
+            temp_ptr++;
 
-        // update the local copy
-        memcpy((void*)&TonexParameters[index].Value, (void*)&value, sizeof(float));
+            // update the local copy
+            memcpy((void*)&param_ptr[index].Value, (void*)&value, sizeof(float));
 
-        // update the raw data
-        memcpy((void*)temp_ptr, (void*)&value, sizeof(float));
+            // update the raw data
+            memcpy((void*)temp_ptr, (void*)&value, sizeof(float));
 
-        // debug
-        //usb_tonex_one_dump_parameters();
+            tonex_params_release_locked_access();
 
-        return ESP_OK;
+            // debug
+            //usb_tonex_one_dump_parameters();
+
+            res = ESP_OK;
+        }
+        else
+        {
+            tonex_params_release_locked_access();
+
+            ESP_LOGE(TAG, "usb_tonex_one_modify_parameters invalid ptr. Offset %d Value %d", (int)byte_offset, (int)*temp_ptr);   
+            res = ESP_FAIL;
+        }        
     }
-    else
-    {
-        ESP_LOGE(TAG, "usb_tonex_one_modify_parameters invalid ptr. Offset %d Value %d", (int)byte_offset, (int)*temp_ptr);   
-        return ESP_FAIL;
-    }
+
+    return res;
 }
 
 /****************************************************************************
@@ -1042,6 +922,7 @@ static uint16_t usb_tonex_one_get_current_active_preset(void)
 static void usb_tonex_one_parse_preset_parameters(uint8_t* raw_data, uint16_t length)
 {
     uint8_t param_start_marker[] = {0xBA, 0x03, 0xBA, 0x6D}; 
+    tTonexParameter* param_ptr = NULL;
 
     ESP_LOGI(TAG, "Parsing Preset parameters");
 
@@ -1056,25 +937,30 @@ static void usb_tonex_one_parse_preset_parameters(uint8_t* raw_data, uint16_t le
         TonexData->Message.PedalData.PresetParameterStartOffset = temp_ptr - raw_data;
         ESP_LOGI(TAG, "Preset parameters offset: %d", (int)TonexData->Message.PedalData.PresetParameterStartOffset);
 
-        // params here are start marker of 0x88, followed by a 4-byte float
-        for (uint32_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
+        if (tonex_params_get_locked_access(&param_ptr) == ESP_OK)
         {
-            if (*temp_ptr == 0x88)
+            // params here are start marker of 0x88, followed by a 4-byte float
+            for (uint32_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
             {
-                // skip the marker
-                temp_ptr++;
+                if (*temp_ptr == 0x88)
+                {
+                    // skip the marker
+                    temp_ptr++;
 
-                // get the value
-                memcpy((void*)&TonexParameters[loop].Value, (void*)temp_ptr, sizeof(float));
+                    // get the value
+                    memcpy((void*)&param_ptr[loop].Value, (void*)temp_ptr, sizeof(float));
 
-                // skip the float
-                temp_ptr += sizeof(float);
+                    // skip the float
+                    temp_ptr += sizeof(float);
+                }
+                else
+                {
+                    ESP_LOGW(TAG, "Unexpected value during Param parse: %d, %d", (int)loop, (int)*temp_ptr);  
+                    break;
+                }
             }
-            else
-            {
-                ESP_LOGW(TAG, "Unexpected value during Param parse: %d, %d", (int)loop, (int)*temp_ptr);  
-                break;
-            }
+
+            tonex_params_release_locked_access();
         }
 
         ESP_LOGI(TAG, "Parsing Preset parameters complete");
@@ -1163,7 +1049,7 @@ static Status usb_tonex_one_parse(uint8_t* message, uint16_t inlength)
     }
 
     // make sure we don't trip the task watchdog
-    vTaskDelay(5);
+    vTaskDelay(pdMS_TO_TICKS(5));
 
     // check message type
     switch (header.type)
@@ -1304,8 +1190,8 @@ static esp_err_t usb_tonex_one_process_single_message(uint8_t* data, uint16_t le
                     // read the preset params
                     usb_tonex_one_parse_preset_parameters(data, length);
 
-                    // pass params to UI
-                    UI_SetCurrentParameterValues(TonexParameters);
+                    // signal to refresh param UI
+                    UI_RefreshParameterValues();
 
                     // debug dump parameters
                     //usb_tonex_one_dump_parameters();
@@ -1495,11 +1381,11 @@ void usb_tonex_one_handle(class_driver_t* driver_obj)
             InputBuffers[loop].ReadyToRead = 0;
             InputBuffers[loop].ReadyToWrite = 1;   
 
-            vTaskDelay(2); 
+            vTaskDelay(pdMS_TO_TICKS(2)); 
         } 
     }
 
-    vTaskDelay(2);
+    vTaskDelay(pdMS_TO_TICKS(2));
 }
 
 /****************************************************************************
@@ -1622,7 +1508,7 @@ void usb_tonex_one_init(class_driver_t* driver_obj, QueueHandle_t comms_queue)
     assert(cdc_dev);
     
     //cdc_acm_host_desc_print(cdc_dev);
-    vTaskDelay(100);
+    vTaskDelay(pdMS_TO_TICKS(100));
 
     ESP_LOGI(TAG, "Setting up line coding");
 
@@ -1652,7 +1538,7 @@ void usb_tonex_one_init(class_driver_t* driver_obj, QueueHandle_t comms_queue)
     }
 
     // let things finish init and settle
-    vTaskDelay(250);
+    vTaskDelay(pdMS_TO_TICKS(250));
 
     // update UI
     control_set_usb_status(1);
@@ -1669,25 +1555,4 @@ void usb_tonex_one_deinit(void)
 {
     //to do here: need to clean up properly if pedal disconnected
     //cdc_acm_host_close();
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-esp_err_t usb_tonex_one_get_param_min_max(uint16_t param_index, float* min, float* max)
-{
-    if (param_index >= TONEX_PARAM_LAST)
-    {
-        // invalid
-        return ESP_FAIL;
-    }
-    
-    *min = TonexParameters[param_index].Min;
-    *max = TonexParameters[param_index].Max;
-
-    return ESP_OK;
 }

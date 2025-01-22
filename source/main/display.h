@@ -15,7 +15,6 @@ limitations under the License.
  
 */
 
-
 #ifndef _DISPLAY_H
 #define _DISPLAY_H
 
@@ -31,7 +30,7 @@ void UI_SetBTStatus(uint8_t state);
 void UI_SetPresetLabel(char* text);
 void UI_SetAmpSkin(uint16_t index);
 void UI_SetPresetDescription(char* text);
-void UI_SetCurrentParameterValues(tTonexParameter* params);
+void UI_RefreshParameterValues(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/
