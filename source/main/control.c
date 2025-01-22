@@ -40,7 +40,7 @@ limitations under the License.
 #include "display.h"
 #include "task_priorities.h"
 
-#define CTRL_TASK_STACK_SIZE   (2500)
+#define CTRL_TASK_STACK_SIZE   (3 * 1024)
 #define NVS_USERDATA_NAME       "userdata"        
 
 #define MAX_TEXT_LENGTH        128

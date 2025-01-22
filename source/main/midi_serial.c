@@ -39,7 +39,7 @@ limitations under the License.
 #include "task_priorities.h"
 #include "midi_helper.h"
 
-#define MIDI_SERIAL_TASK_STACK_SIZE             (2500)
+#define MIDI_SERIAL_TASK_STACK_SIZE             (3 * 1024)
 #define MIDI_SERIAL_BUFFER_SIZE                 128
 
 #define UART_PORT_NUM                           UART_NUM_1

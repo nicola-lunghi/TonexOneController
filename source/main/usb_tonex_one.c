@@ -75,7 +75,7 @@ static const uint8_t ToneOnePresetByteMarker[] = {0xB9, 0x04, 0xB9, 0x02, 0xBC, 
 // Tonex One can send quite large data quickly, so make a generous receive buffer
 #define RX_TEMP_BUFFER_SIZE                         32704   // even multiple of 64 CDC transfer size
 #define MAX_INPUT_BUFFERS                           2
-#define USB_TX_BUFFER_SIZE                          MAX_RAW_DATA
+#define USB_TX_BUFFER_SIZE                          8192    //4096
 
 // credit to https://github.com/vit3k/tonex_controller for some of the below details and implementation
 enum CommsState
@@ -169,6 +169,7 @@ static uint8_t* FramedBuffer;
 static QueueHandle_t input_queue;
 static uint8_t boot_init_needed = 0;
 static volatile tInputBufferEntry* InputBuffers;
+static uint8_t* PreallocatedMemory;
 
 /*
 ** Static function prototypes
@@ -1502,7 +1503,13 @@ void usb_tonex_one_init(class_driver_t* driver_obj, QueueHandle_t comms_queue)
         .event_cb = NULL,
         .data_cb = usb_tonex_one_handle_rx
     };
-    
+
+    // release the reserved large buffers space we malloc'd at boot
+    heap_caps_free(PreallocatedMemory);
+
+    // debug
+    //heap_caps_print_heap_info(MALLOC_CAP_DMA);
+
     // open it
     ESP_ERROR_CHECK(cdc_acm_host_open(IK_MULTIMEDIA_USB_VENDOR, TONEX_ONE_PRODUCT_ID, TONEX_ONE_CDC_INTERFACE_INDEX, &dev_config, &cdc_dev));
     assert(cdc_dev);
@@ -1555,4 +1562,26 @@ void usb_tonex_one_deinit(void)
 {
     //to do here: need to clean up properly if pedal disconnected
     //cdc_acm_host_close();
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void usb_tonex_one_preallocate_memory(void)
+{
+    // note here: the Tonex One requires large CDC buffers. Not many heap areas have enough contiguous space.
+    // if we let the system boot and no Tonex is conncted, the other parts of the system allocate mem
+    // and leave us with no spaces big enough to hold the buffers.
+    // Work around here: preallocate the buffers we need, and then free them just before the CDC allocation,
+    // effectively reserving them and then other parts of system can use different heap areas.
+    // +256 here just to be sure.
+    PreallocatedMemory = heap_caps_malloc(RX_TEMP_BUFFER_SIZE + USB_TX_BUFFER_SIZE + 256, MALLOC_CAP_DMA);
+    if (PreallocatedMemory == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to allocate PreallocatedMemory!");
+    } 
 }

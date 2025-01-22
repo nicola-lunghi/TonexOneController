@@ -28,6 +28,7 @@ extern "C" {
 void usb_tonex_one_handle(class_driver_t* driver_obj);
 void usb_tonex_one_init(class_driver_t* driver_obj, QueueHandle_t comms_queue);
 void usb_tonex_one_deinit(void);
+void usb_tonex_one_preallocate_memory(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/

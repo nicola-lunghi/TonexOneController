@@ -476,10 +476,13 @@ void init_usb_comms(void)
         ESP_LOGE(TAG, "Failed to create usb input queue!");
     }
 
+    // reserve DMA capable large contiguous memory blocks
+    usb_tonex_one_preallocate_memory();
+
     //Create USB daemon task
     xTaskCreatePinnedToCore(host_lib_daemon_task,
                             "daemon",
-                            2500, 
+                            (3 * 1024), 
                             (void*)signaling_sem,
                             USB_DAEMON_TASK_PRIORITY,
                             &daemon_task_hdl,
@@ -488,7 +491,7 @@ void init_usb_comms(void)
     //Create the USB class driver task
     xTaskCreatePinnedToCore(class_driver_task,
                             "class",
-                            2500, 
+                            (3 * 1024), 
                             (void*)signaling_sem,
                             USB_CLASS_TASK_PRIORITY,
                             &class_driver_task_hdl,
