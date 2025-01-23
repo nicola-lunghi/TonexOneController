@@ -1076,7 +1076,7 @@ void control_load_config(void)
 void control_init(void)
 {
     // create queue for commands from other threads
-    control_input_queue = xQueueCreate(5, sizeof(tControlMessage));
+    control_input_queue = xQueueCreate(15, sizeof(tControlMessage));
     if (control_input_queue == NULL)
     {
         ESP_LOGE(TAG, "Failed to create control input queue!");

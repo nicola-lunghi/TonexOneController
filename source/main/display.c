@@ -2496,7 +2496,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     I2CMutexHandle = I2CMutex;
 
     // create queue for UI updates from other threads
-    ui_update_queue = xQueueCreate(10, sizeof(tUIUpdate));
+    ui_update_queue = xQueueCreate(20, sizeof(tUIUpdate));
     if (ui_update_queue == NULL)
     {
         ESP_LOGE(TAG, "Failed to create UI update queue!");

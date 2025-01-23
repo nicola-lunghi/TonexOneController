@@ -246,6 +246,77 @@ esp_err_t tonex_params_get_min_max(uint16_t param_index, float* min, float* max)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+float tonex_params_clamp_value(uint16_t param_index, float value)
+{
+    if (param_index >= TONEX_PARAM_LAST)
+    {
+        // invalid
+        return 0;
+    }
+
+    // take mutex
+    if (xSemaphoreTake(ParamMutex, pdMS_TO_TICKS(PARAM_MUTEX_TIMEOUT)) == pdTRUE)
+    {		
+        if (value < TonexParameters[param_index].Min)
+        {
+            value = TonexParameters[param_index].Min;
+        }
+        else if (value > TonexParameters[param_index].Max)
+        {
+            value = TonexParameters[param_index].Max;
+        }
+
+        // release mutex
+        xSemaphoreGive(ParamMutex);
+
+        return value;
+    }
+    else
+    {
+        ESP_LOGE(TAG, "tonex_params_clamp_value Mutex timeout!");   
+    }
+
+    return 0;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+esp_err_t __attribute__((unused)) tonex_dump_parameters(void)
+{
+    // take mutex
+    if (xSemaphoreTake(ParamMutex, pdMS_TO_TICKS(PARAM_MUTEX_TIMEOUT)) == pdTRUE)
+    {	
+        // dump all the param values and names
+        for (uint32_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
+        {
+            ESP_LOGI(TAG, "Param Dump: %s = %0.2f", TonexParameters[loop].Name, TonexParameters[loop].Value);
+        }
+
+        // release mutex
+        xSemaphoreGive(ParamMutex);
+
+         return ESP_OK;
+    }
+    else
+    {
+        ESP_LOGE(TAG, "tonex_dump_parameters Mutex timeout!");   
+    }
+
+    return ESP_FAIL;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 esp_err_t tonex_params_init(void)
 {
     // create mutex to protect interprocess issues with memory sharing

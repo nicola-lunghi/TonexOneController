@@ -67,15 +67,16 @@ static const uint8_t ToneOnePresetByteMarker[] = {0xB9, 0x04, 0xB9, 0x02, 0xBC, 
 
 // lengths of preset name and drive character
 #define TONEX_ONE_RESP_OFFSET_PRESET_NAME_LEN       32
-
 #define TONEX_ONE_CDC_INTERFACE_INDEX               0
-#define MAX_RAW_DATA                                3072
-#define MAX_STATE_DATA                              512
 
 // Tonex One can send quite large data quickly, so make a generous receive buffer
 #define RX_TEMP_BUFFER_SIZE                         32704   // even multiple of 64 CDC transfer size
 #define MAX_INPUT_BUFFERS                           2
-#define USB_TX_BUFFER_SIZE                          8192    //4096
+#define USB_TX_BUFFER_SIZE                          8192 
+
+#define MAX_SHORT_PRESET_DATA                       3072
+#define MAX_FULL_PRESET_DATA                        RX_TEMP_BUFFER_SIZE
+#define MAX_STATE_DATA                              512
 
 // credit to https://github.com/vit3k/tonex_controller for some of the below details and implementation
 enum CommsState
@@ -124,12 +125,12 @@ typedef struct __attribute__ ((packed))
     uint16_t StateDataLength;
 
     // storage for current preset details data (short version)
-    uint8_t PresetData[MAX_RAW_DATA];
+    uint8_t PresetData[MAX_SHORT_PRESET_DATA];
     uint16_t PresetDataLength;
     uint16_t PresetParameterStartOffset;
 
     // storage for current preset details data (full version)
-    uint8_t FullPresetData[RX_TEMP_BUFFER_SIZE];
+    uint8_t FullPresetData[MAX_FULL_PRESET_DATA];
     uint16_t FullPresetDataLength;
     uint16_t FullPresetParameterStartOffset;
 } tPedalData;
@@ -675,29 +676,6 @@ static esp_err_t usb_tonex_one_transmit(uint8_t* tx_data, uint16_t tx_len)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static void __attribute__((unused)) usb_tonex_one_dump_parameters(void)
-{
-    tTonexParameter* param_ptr = NULL;
-    
-    if (tonex_params_get_locked_access(&param_ptr) == ESP_OK)
-    {
-        // dump all the param values and names
-        for (uint32_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
-        {
-            ESP_LOGI(TAG, "Param Dump: %s = %0.2f", param_ptr[loop].Name, param_ptr[loop].Value);
-        }
-
-        tonex_params_release_locked_access();
-    }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
 static esp_err_t usb_tonex_one_modify_parameter(uint16_t index, float value)
 {
     uint32_t byte_offset;
@@ -735,7 +713,7 @@ static esp_err_t usb_tonex_one_modify_parameter(uint16_t index, float value)
             tonex_params_release_locked_access();
 
             // debug
-            //usb_tonex_one_dump_parameters();
+            //tonex_dump_parameters();
 
             res = ESP_OK;
         }
@@ -1195,7 +1173,7 @@ static esp_err_t usb_tonex_one_process_single_message(uint8_t* data, uint16_t le
                     UI_RefreshParameterValues();
 
                     // debug dump parameters
-                    //usb_tonex_one_dump_parameters();
+                    //tonex_dump_parameters();
 
                     // request full parameter details
                     usb_tonex_one_request_full_preset_details(current_preset);

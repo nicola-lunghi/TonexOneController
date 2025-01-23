@@ -470,7 +470,7 @@ void init_usb_comms(void)
     SemaphoreHandle_t signaling_sem = xSemaphoreCreateBinary();
 
     // create queue for commands from other threads
-    usb_input_queue = xQueueCreate(5, sizeof(tUSBMessage));
+    usb_input_queue = xQueueCreate(10, sizeof(tUSBMessage));
     if (usb_input_queue == NULL)
     {
         ESP_LOGE(TAG, "Failed to create usb input queue!");

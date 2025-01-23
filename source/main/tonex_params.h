@@ -192,6 +192,8 @@ esp_err_t tonex_params_init(void);
 esp_err_t tonex_params_get_locked_access(tTonexParameter** param_ptr);
 esp_err_t tonex_params_release_locked_access(void);
 esp_err_t tonex_params_get_min_max(uint16_t param_index, float* min, float* max);
+esp_err_t tonex_dump_parameters(void);
+float tonex_params_clamp_value(uint16_t param_index, float value);
 
 #ifdef __cplusplus
 } /*extern "C"*/
