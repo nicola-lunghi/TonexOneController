@@ -78,7 +78,7 @@ limitations under the License.
 
 static const char *TAG = "app_main";
 
-static SemaphoreHandle_t I2CMutex;
+static __attribute__((unused)) SemaphoreHandle_t I2CMutex;
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
 static esp_err_t i2c_master_init(void);

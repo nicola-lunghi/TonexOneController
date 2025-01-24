@@ -9,7 +9,7 @@ from zipfile import ZipFile
 dirname = Path.cwd()
 
 # set version
-version = '1.0.5.2'
+version = '1.0.6.1_beta_1'
 
 def delete_files_in_folder(directory):
     for filename in os.listdir(directory):
@@ -97,5 +97,9 @@ build_distribution('template_cust_partition', 'build_devkitc_N8R2', True, zip_na
 # Build Devkit C N16R8
 zip_name = 'TonexOneController_V' + version + '_DevKitC_N16R8'
 build_distribution('template_cust_partition', 'build_devkitc_N16R8', True, zip_name)
+
+# Build M5 Atom
+zip_name = 'TonexOneController_V' + version + '_M5AtomS3R'
+build_distribution('template_cust_partition', 'build_m5atoms3r', True, zip_name)
 
 print('All done')

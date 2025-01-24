@@ -672,16 +672,16 @@ esp_err_t midi_helper_adjust_param_via_midi(uint8_t change_num, uint8_t midi_val
             //preset down
             control_request_preset_down();
 
-            // no param changhe needed
+            // no param change needed
             return ESP_OK;
         } break;
 
         case 87:
         {
-            //preset down
+            //preset up
             control_request_preset_up();
 
-            // no param changhe needed
+            // no param change needed
             return ESP_OK;
         } break;
 
