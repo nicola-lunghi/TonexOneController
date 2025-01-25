@@ -1024,6 +1024,7 @@ void UI_SetPresetDescription(char* text)
 *****************************************************************************/
 void UI_RefreshParameterValues(void)
 {
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R    
     tUIUpdate ui_update;
 
     // build command
@@ -1034,6 +1035,7 @@ void UI_RefreshParameterValues(void)
     {
         ESP_LOGE(TAG, "UI Update parameters send failed!");            
     }
+#endif    
 }
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B

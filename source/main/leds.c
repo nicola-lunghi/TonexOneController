@@ -384,7 +384,7 @@ void leds_handle(void)
         case LED_STATE_BOOT_WAIT:
         {
             // timed expired?
-            if ((xTaskGetTickCount() - LedControl.timer) > 250)
+            if ((xTaskGetTickCount() - LedControl.timer) > 150)
             {
                 // to next state
                 LedControl.state = LedControl.queued_state;
