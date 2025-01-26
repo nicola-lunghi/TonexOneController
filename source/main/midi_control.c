@@ -1090,8 +1090,8 @@ static void __attribute__((unused)) gattc_profile_a_event_handler(esp_gattc_cb_e
         }
 
         case ESP_GATTC_NOTIFY_EVT:
-            //ESP_LOGI(GATTC_TAG, "ESP_GATTC_NOTIFY_EVT, Receive notify value:");
-            //esp_log_buffer_hex(GATTC_TAG, p_data->notify.value, p_data->notify.value_len);
+            ESP_LOGI(GATTC_TAG, "ESP_GATTC_NOTIFY_EVT, Receive notify value:");
+            esp_log_buffer_hex(GATTC_TAG, p_data->notify.value, p_data->notify.value_len);
 
             // check Midi data. Program change Should be ?? ?? 0xC0 XX (XX = preset index, 0-based)
             // first 2 bytes are header/timestamp bytes, values depend on host. Ignoring them here
@@ -1104,8 +1104,16 @@ static void __attribute__((unused)) gattc_profile_a_event_handler(esp_gattc_cb_e
                 }
                 else if (p_data->notify.value[2] == 0xB0) 
                 {
-                    // bank change
-                }
+                    // note issue here with MVave chocolate pedal. Bank up/down sends 
+                    // a control change message, which would modify a different parameter
+                    if (control_get_config_enable_bt_midi_CC())
+                    {                        
+                        // control change
+                        uint8_t change_num = p_data->notify.value[3];
+                        uint8_t value = p_data->notify.value[4];
+                        midi_helper_adjust_param_via_midi(change_num, value);
+                    }
+                } 
             }
             break;
 

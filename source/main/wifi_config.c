@@ -361,6 +361,22 @@ static esp_err_t update_post_handler(httpd_req_t* req)
         control_set_config_custom_bt_name(value);
     }
 
+    // look for BT midi CC
+    ptr = strstr(buf, "btmidicc=");    
+    temp_val = 0;
+    if (ptr != NULL)
+    {
+        // skip up to =
+        ptr += strlen("btmidicc=");
+        get_submitted_value(value, ptr);
+
+        if (strcmp(value, "on") == 0)
+        {
+            temp_val = 1;
+        }
+    }   
+    control_set_config_enable_bt_midi_CC(temp_val);
+
     // look for footswitch mode
     ptr = strstr(buf, "footmode=");    
     if (ptr != NULL)

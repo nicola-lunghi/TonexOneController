@@ -66,7 +66,8 @@ enum CommandEvents
     EVENT_SET_CONFIG_MIDI_ENABLE,
     EVENT_SET_CONFIG_MIDI_CHANNEL,
     EVENT_SET_CONFIG_TOGGLE_BYPASS,
-    EVENT_SET_CONFIG_FOOTSWITCH_MODE
+    EVENT_SET_CONFIG_FOOTSWITCH_MODE,
+    EVENT_SET_CONFIG_ENABLE_BT_MIDI_CC
 };
 
 typedef struct
@@ -96,7 +97,8 @@ typedef struct __attribute__ ((packed))
 
     // serial Midi flags
     uint8_t MidiSerialEnable: 1;
-    uint8_t MidiSpares: 7;
+    uint8_t EnableBTmidiCC: 1;
+    uint8_t MidiSpares: 6;
 
     uint8_t MidiChannel;
 
@@ -283,6 +285,13 @@ static uint8_t process_control_command(tControlMessage* message)
             ESP_LOGI(TAG, "Config set Footswitch Mode %d", (int)message->Value);
             ControlData.ConfigData.FootswitchMode = (uint8_t)message->Value;
         } break;
+
+        case EVENT_SET_CONFIG_ENABLE_BT_MIDI_CC:
+        {
+            ESP_LOGI(TAG, "Config set BT Midi CC enable %d", (int)message->Value);
+            ControlData.ConfigData.EnableBTmidiCC = (uint8_t)message->Value;
+        } break;
+
     }
 
     return 1;
@@ -683,6 +692,29 @@ void control_set_config_toggle_bypass(uint32_t status)
 * NAME:        
 * DESCRIPTION: 
 * PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+void control_set_config_enable_bt_midi_CC(uint32_t status)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_config_enable_bt_midi_CC");
+
+    message.Event = EVENT_SET_CONFIG_ENABLE_BT_MIDI_CC;
+    message.Value = status;
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_config_enable_bt_midi_CC queue send failed!");            
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
@@ -851,6 +883,18 @@ uint8_t control_get_config_footswitch_mode(void)
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
+uint8_t control_get_config_enable_bt_midi_CC(void)
+{
+    return ControlData.ConfigData.EnableBTmidiCC;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
 static uint8_t SaveUserData(void)
 {
     esp_err_t err;
@@ -988,6 +1032,7 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config Midi channel: %d", (int)ControlData.ConfigData.MidiChannel);
     ESP_LOGI(TAG, "Config Toggle bypass: %d", (int)ControlData.ConfigData.GeneralDoublePressToggleBypass);
     ESP_LOGI(TAG, "Config Footswitch Mode: %d", (int)ControlData.ConfigData.FootswitchMode);
+    ESP_LOGI(TAG, "Config EnableBTmidiCC Mode: %d", (int)ControlData.ConfigData.EnableBTmidiCC);
 
     // status    
     return result;
@@ -1048,6 +1093,7 @@ void control_load_config(void)
     ControlData.ConfigData.MidiSerialEnable = 0;
     ControlData.ConfigData.MidiChannel = 1;
     ControlData.ConfigData.FootswitchMode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
+    ControlData.ConfigData.EnableBTmidiCC = 0;
     memset((void*)ControlData.ConfigData.BTClientCustomName, 0, sizeof(ControlData.ConfigData.BTClientCustomName));
 
     // Initialize NVS

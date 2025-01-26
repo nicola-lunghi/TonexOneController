@@ -119,6 +119,7 @@ void control_set_config_serial_midi_enable(uint32_t status);
 void control_set_config_serial_midi_channel(uint32_t status);
 void control_set_config_toggle_bypass(uint32_t status);
 void control_set_config_footswitch_mode(uint32_t mode);
+void control_set_config_enable_bt_midi_CC(uint32_t status);
 
 uint8_t control_get_config_bt_mode(void);
 uint8_t control_get_config_bt_mvave_choc_enable(void);
@@ -129,3 +130,4 @@ uint8_t control_get_config_double_toggle(void);
 uint8_t control_get_config_midi_serial_enable(void);
 uint8_t control_get_config_midi_channel(void);
 uint8_t control_get_config_footswitch_mode(void);
+uint8_t control_get_config_enable_bt_midi_CC(void);
