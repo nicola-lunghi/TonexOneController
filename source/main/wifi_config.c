@@ -23,6 +23,7 @@ limitations under the License.
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/semphr.h"
+#include "freertos/event_groups.h"
 #include "esp_check.h"
 #include "esp_log.h"
 #include "usb/usb_host.h"
@@ -37,6 +38,8 @@ limitations under the License.
 #include "esp_event.h"
 #include "lwip/err.h"
 #include "lwip/sys.h"
+#include "json_parser.h"
+#include "json_generator.h"
 #include "mdns.h"
 #include <esp_http_server.h>
 #include "control.h"
@@ -45,19 +48,43 @@ limitations under the License.
 
 #define WIFI_CONFIG_TASK_STACK_SIZE   (3 * 1024)
 
-#define ESP_WIFI_SSID      "TonexConfig"
-#define ESP_WIFI_PASS      "12345678"
-#define ESP_WIFI_CHANNEL   7
-#define MAX_STA_CONN       2
+#define ESP_WIFI_SSID           "TonexConfig"
+#define ESP_WIFI_PASS           "12345678"
+#define ESP_WIFI_CHANNEL        7
+#define MAX_STA_CONN            2
+#define WIFI_STA_MAXIMUM_RETRY  5
+#define WIFI_CONNECTED_BIT      BIT0
+#define WIFI_FAIL_BIT           BIT1
 
+
+#define EXAMPLE_ESP_WIFI_SSID "todo"
+#define EXAMPLE_ESP_WIFI_PASS "todo"
+
+
+static int s_retry_num = 0;
+int wifi_connect_status = 0;
 static const char *TAG = "wifi_config";
 static uint8_t client_connected = 0;
 static httpd_handle_t http_server = NULL;
 static httpd_config_t http_config = HTTPD_DEFAULT_CONFIG();
+static EventGroupHandle_t s_wifi_event_group;
+static jparse_ctx_t jctx;
+static char wifi_ssid[MAX_WIFI_SSID_PW];
+static char wifi_password[MAX_WIFI_SSID_PW];
 
 static esp_err_t index_get_handler(httpd_req_t *req);
 static esp_err_t update_post_handler(httpd_req_t* req);
 static esp_err_t get_handler(httpd_req_t *req);
+static esp_err_t ws_handler(httpd_req_t *req);
+static void ws_async_send(void *arg);
+static esp_err_t trigger_async_send(httpd_handle_t handle, httpd_req_t *req);
+static void wifi_kill_all(void);
+
+struct async_resp_arg 
+{
+    httpd_handle_t hd;
+    int fd;
+};
 
 static const httpd_uri_t index_get = 
 {
@@ -67,6 +94,7 @@ static const httpd_uri_t index_get =
 	.user_ctx = NULL
 };
 
+#if 0
 static const httpd_uri_t update_post = 
 {
 	.uri	  = "/config",
@@ -74,12 +102,171 @@ static const httpd_uri_t update_post =
 	.handler  = update_post_handler,
 	.user_ctx = NULL
 };
+#endif 
+
+static const httpd_uri_t ws = {
+        .uri        = "/ws",
+        .method     = HTTP_GET,
+        .handler    = ws_handler,
+        .user_ctx   = NULL,
+        .is_websocket = true
+};
 
 // web page for config
 extern const uint8_t index_html_start[] asm("_binary_index_html_start");
 extern const uint8_t index_html_end[] asm("_binary_index_html_end");
 
 static esp_err_t stop_webserver(void);
+static void wifi_init_sta(void);
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+static void ws_async_send(void *arg)
+{
+    static const char * data = "Async data";
+    struct async_resp_arg *resp_arg = arg;
+    httpd_handle_t hd = resp_arg->hd;
+    int fd = resp_arg->fd;
+    httpd_ws_frame_t ws_pkt;
+
+    memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
+    ws_pkt.payload = (uint8_t*)data;
+    ws_pkt.len = strlen(data);
+    ws_pkt.type = HTTPD_WS_TYPE_TEXT;
+
+    httpd_ws_send_frame_async(hd, fd, &ws_pkt);
+    free(resp_arg);
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+static esp_err_t trigger_async_send(httpd_handle_t handle, httpd_req_t *req)
+{
+    struct async_resp_arg *resp_arg = malloc(sizeof(struct async_resp_arg));
+    resp_arg->hd = req->handle;
+    resp_arg->fd = httpd_req_to_sockfd(req);
+    return httpd_queue_work(handle, ws_async_send, resp_arg);
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+static esp_err_t ws_handler(httpd_req_t *req)
+{
+    if (req->method == HTTP_GET) 
+    {
+        ESP_LOGI(TAG, "Handshake done, the new connection was opened");
+        return ESP_OK;
+    }
+    
+    httpd_ws_frame_t ws_pkt;
+    uint8_t* buf = NULL;
+
+    memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
+    ws_pkt.type = HTTPD_WS_TYPE_TEXT;
+    
+    // Set max_len = 0 to get the frame len 
+    esp_err_t ret = httpd_ws_recv_frame(req, &ws_pkt, 0);
+    if (ret != ESP_OK) 
+    {
+        ESP_LOGE(TAG, "httpd_ws_recv_frame failed to get frame len with %d", ret);
+        return ret;
+    }
+    
+    ESP_LOGI(TAG, "frame len is %d", ws_pkt.len);
+    if (ws_pkt.len) 
+    {
+        // ws_pkt.len + 1 is for NULL termination as we are expecting a string 
+        buf = calloc(1, ws_pkt.len + 1);
+        if (buf == NULL) 
+        {
+            ESP_LOGE(TAG, "Failed to calloc memory for buf");
+            return ESP_ERR_NO_MEM;
+        }
+        
+        ws_pkt.payload = buf;
+        
+        // Set max_len = ws_pkt.len to get the frame payload
+        ret = httpd_ws_recv_frame(req, &ws_pkt, ws_pkt.len);
+        if (ret != ESP_OK) 
+        {
+            ESP_LOGE(TAG, "httpd_ws_recv_frame failed with %d", ret);
+            free(buf);
+            return ret;
+        }
+        
+        //ESP_LOGI(TAG, "Got ws packet with message: %s", ws_pkt.payload);
+
+        // parse the json command        
+        char str_val[64];
+
+        if (json_parse_start(&jctx, (const char*)ws_pkt.payload, strlen((const char*)ws_pkt.payload)) == OS_SUCCESS)
+        {
+            // get the command
+            if (json_obj_get_string(&jctx, "CMD", str_val, sizeof(str_val)) == OS_SUCCESS)
+            {
+                ESP_LOGI(TAG, "WS got command %s", str_val);
+
+                if (strcmp(str_val, "GETPARAMS") == 0)
+                {
+                    // send current params
+                    ESP_LOGI(TAG, "Param request");
+
+                    // start   json_gen_str_start(json_gen_str_t *jstr, char *buf, int buf_size, json_gen_flush_cb_t flush_cb, void *priv);
+                    // int json_gen_start_array(json_gen_str_t *jstr);
+                    // int json_gen_end_array(json_gen_str_t *jstr);
+                    // int json_gen_str_end(json_gen_str_t *jstr);
+
+                    //ret = httpd_ws_send_frame(req, &ws_pkt);
+                    //if (ret != ESP_OK) 
+                    //{
+                    //    ESP_LOGE(TAG, "httpd_ws_send_frame failed with %d", ret);
+                    //}
+                }
+                else if (strcmp(str_val, "GETCONFIG") == 0)
+                {
+                    // send current config
+                    ESP_LOGI(TAG, "Config request");
+
+                }
+                else if (strcmp(str_val, "SETCONFIG") == 0)
+                {
+                    // current config
+                    ESP_LOGI(TAG, "Config Set");
+
+                }
+            }
+
+            json_parse_end(&jctx);
+        }
+    }
+    
+#if 0    
+    ESP_LOGI(TAG, "Packet type: %d", ws_pkt.type);
+    if (ws_pkt.type == HTTPD_WS_TYPE_TEXT && strcmp((char*)ws_pkt.payload,"Trigger async") == 0) 
+    {
+        free(buf);
+        return trigger_async_send(req->handle, req);
+    }
+#endif 
+
+    free(buf);    
+    return ret;
+}
 
 /****************************************************************************
 * NAME:        
@@ -472,8 +659,12 @@ static esp_err_t http_server_init(void)
             ESP_LOGI(TAG, "Http register uri 1");
     	    httpd_register_uri_handler(http_server, &index_get);
 
-            ESP_LOGI(TAG, "Http register uri 2");
-		    httpd_register_uri_handler(http_server, &update_post);
+            //ESP_LOGI(TAG, "Http register uri 2");
+		    //httpd_register_uri_handler(http_server, &update_post);
+
+            // Registering the ws handler
+            ESP_LOGI(TAG, "Registering ws handler");
+            httpd_register_uri_handler(http_server, &ws);
         }
 	}
 
@@ -509,7 +700,117 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t e
         wifi_event_ap_stadisconnected_t* event = (wifi_event_ap_stadisconnected_t*) event_data;
         ESP_LOGI(TAG, "station "MACSTR" leave, AID=%d", MAC2STR(event->mac), event->aid);
         client_connected = 0;
+
+        ESP_LOGI(TAG, "Wifi config stopping");
+        wifi_kill_all();
     }
+    else if ((event_base == WIFI_EVENT) && (event_id == WIFI_EVENT_STA_START))
+    {
+        esp_wifi_connect();
+    }
+    else if ((event_base == WIFI_EVENT) && (event_id == WIFI_EVENT_STA_DISCONNECTED))
+    {
+        if (s_retry_num < WIFI_STA_MAXIMUM_RETRY)
+        {
+            esp_wifi_connect();
+            s_retry_num++;
+            ESP_LOGI(TAG, "retry to connect to the AP");
+        }
+        else
+        {
+            xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
+        }
+        wifi_connect_status = 0;
+        ESP_LOGI(TAG, "connect to the AP fail");
+    }
+    else if ((event_base == IP_EVENT) && (event_id == IP_EVENT_STA_GOT_IP))
+    {
+        ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
+        ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+        s_retry_num = 0;
+
+        xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+        wifi_connect_status = 1;
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+static void wifi_init_sta(void)
+{
+    ESP_ERROR_CHECK(esp_netif_init());
+
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    esp_netif_create_default_wifi_sta();
+
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+
+    esp_event_handler_instance_t instance_any_id;
+    esp_event_handler_instance_t instance_got_ip;
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
+                                                        ESP_EVENT_ANY_ID,
+                                                        &wifi_event_handler,
+                                                        NULL,
+                                                        &instance_any_id));
+
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT,
+                                                        IP_EVENT_STA_GOT_IP,
+                                                        &wifi_event_handler,
+                                                        NULL,
+                                                        &instance_got_ip));
+
+    wifi_config_t wifi_config = {
+        .sta = {
+            // Setting a password implies station will connect to all security modes including WEP/WPA.
+            // However these modes are deprecated and not advisable to be used. Incase your Access point
+            // doesn't support WPA2, these mode can be enabled by commenting below line
+            .threshold.authmode = WIFI_AUTH_WPA2_PSK,
+        },
+    };
+
+    // get credentials from config
+    control_get_config_wifi_ssid(wifi_ssid);
+    control_get_config_wifi_password(wifi_password);
+
+    // set SSID and password
+    strcpy((char*)wifi_config.sta.ssid, wifi_ssid);
+    strcpy((char*)wifi_config.sta.password, wifi_password);
+
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
+    ESP_ERROR_CHECK(esp_wifi_start());
+
+    ESP_LOGI(TAG, "wifi_init_sta finished.");
+
+    // Waiting until either the connection is established (WIFI_CONNECTED_BIT) or connection failed for the maximum
+    // number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) 
+    EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
+                                           WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
+                                           pdFALSE,
+                                           pdFALSE,
+                                           portMAX_DELAY);
+
+    // xEventGroupWaitBits() returns the bits before the call returned, hence we can test which event actually
+    // happened. 
+    if (bits & WIFI_CONNECTED_BIT)
+    {
+        ESP_LOGI(TAG, "connected to ap SSID:%s", EXAMPLE_ESP_WIFI_SSID);
+    }
+    else if (bits & WIFI_FAIL_BIT)
+    {
+        ESP_LOGI(TAG, "Failed to connect to SSID:%s", EXAMPLE_ESP_WIFI_SSID);
+    }
+    else
+    {
+        ESP_LOGE(TAG, "UNEXPECTED EVENT");
+    }
+    vEventGroupDelete(s_wifi_event_group);
 }
 
 /****************************************************************************
@@ -589,6 +890,21 @@ void start_mdns_service()
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+static void wifi_kill_all(void)
+{
+    ESP_LOGI(TAG, "Wifi config stopping");
+    stop_webserver();
+    vTaskDelay(pdMS_TO_TICKS(5000));
+    esp_wifi_stop();
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 static void wifi_config_task(void *arg)
 {
     ESP_LOGI(TAG, "Wifi config task start");
@@ -597,26 +913,35 @@ static void wifi_config_task(void *arg)
     vTaskDelay(pdMS_TO_TICKS(1000));
 
     ESP_LOGI(TAG, "Wifi config starting");
+    s_wifi_event_group = xEventGroupCreate();
 
-    // start up WiFi access point
-    wifi_init_softap();
+    if (control_get_config_wifi_sta_mode())
+    {
+        // conect to AP
+        wifi_init_sta();
+    }
+    else
+    {
+        // start up WiFi access point
+        wifi_init_softap();
+    }
     start_mdns_service();
 
     // start web server
     http_server_init();
 
-    // allow WiFi to run for 60 seconds
-    vTaskDelay(pdMS_TO_TICKS(60000));
-
-    // if no clients, kill Wifi    
-    if (client_connected == 0)
+    if (!control_get_config_wifi_sta_mode())
     {
-        // kill
-        ESP_LOGI(TAG, "Wifi config stopping");
-        stop_webserver();
-        vTaskDelay(pdMS_TO_TICKS(5000));
-        esp_wifi_stop();
-        ESP_LOGI(TAG, "Wifi config stopped");
+        // allow WiFi AP to run for 60 seconds
+        vTaskDelay(pdMS_TO_TICKS(60000));
+
+        // if no clients, kill Wifi    
+        if (client_connected == 0)
+        {
+            // kill
+            ESP_LOGI(TAG, "Wifi config stopping");
+            wifi_kill_all();
+        }
     }
 
     // do nothing

@@ -1,4 +1,6 @@
 dependencies:
+  espressif/json_generator: "^1.1.2"
+  espressif/json_parser: "^1.0.3"
   espressif/mdns: "^1.4.2"
   espressif/usb_host_cdc_acm: "^2.0.5"
   idf: ">=4.4"

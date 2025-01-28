@@ -104,10 +104,15 @@ typedef struct __attribute__ ((packed))
 
     // general flags
     uint16_t GeneralDoublePressToggleBypass: 1;
-    uint16_t GeneralSpare: 15;
+    uint16_t GeneralWiFiStationMode: 1;
+    uint16_t GeneralSpare: 14;
 
     uint8_t FootswitchMode;
     char BTClientCustomName[MAX_BT_CUSTOM_NAME];
+
+    // wifi
+    char WifiSSID[MAX_WIFI_SSID_PW];
+    char WifiPassword[MAX_WIFI_SSID_PW];
 } tConfigData;
 
 typedef struct 
@@ -895,6 +900,44 @@ uint8_t control_get_config_enable_bt_midi_CC(void)
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
+uint8_t control_get_config_wifi_sta_mode(void)
+{
+    return ControlData.ConfigData.GeneralWiFiStationMode;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void control_get_config_wifi_ssid(char* name)
+{
+    strncpy(name, ControlData.ConfigData.WifiSSID, MAX_WIFI_SSID_PW - 1);
+    name[MAX_WIFI_SSID_PW - 1] = 0;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void control_get_config_wifi_password(char* name)
+{
+    strncpy(name, ControlData.ConfigData.WifiPassword, MAX_WIFI_SSID_PW - 1);
+    name[MAX_WIFI_SSID_PW - 1] = 0;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
 static uint8_t SaveUserData(void)
 {
     esp_err_t err;
@@ -1033,6 +1076,9 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config Toggle bypass: %d", (int)ControlData.ConfigData.GeneralDoublePressToggleBypass);
     ESP_LOGI(TAG, "Config Footswitch Mode: %d", (int)ControlData.ConfigData.FootswitchMode);
     ESP_LOGI(TAG, "Config EnableBTmidiCC Mode: %d", (int)ControlData.ConfigData.EnableBTmidiCC);
+    ESP_LOGI(TAG, "Config WiFi STA mode: %d", (int)ControlData.ConfigData.GeneralWiFiStationMode);
+    ESP_LOGI(TAG, "Config WiFi SSID: %s", ControlData.ConfigData.WifiSSID);
+    ESP_LOGI(TAG, "Config WiFi Password: <hidden>");
 
     // status    
     return result;
@@ -1095,6 +1141,9 @@ void control_load_config(void)
     ControlData.ConfigData.FootswitchMode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
     ControlData.ConfigData.EnableBTmidiCC = 0;
     memset((void*)ControlData.ConfigData.BTClientCustomName, 0, sizeof(ControlData.ConfigData.BTClientCustomName));
+    ControlData.ConfigData.GeneralWiFiStationMode = 0;;
+    strcpy(ControlData.ConfigData.WifiSSID, "SSID");
+    strcpy(ControlData.ConfigData.WifiSSID, "pw");
 
     // Initialize NVS
     ret = nvs_flash_init();

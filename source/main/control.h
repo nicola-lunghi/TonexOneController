@@ -96,6 +96,8 @@ enum FootswitchModes
     FOOTSWITCH_MODE_LAST
 };
 
+#define MAX_WIFI_SSID_PW       33
+
 // thread safe public API
 void control_request_preset_up(void);
 void control_request_preset_down(void);
@@ -131,3 +133,6 @@ uint8_t control_get_config_midi_serial_enable(void);
 uint8_t control_get_config_midi_channel(void);
 uint8_t control_get_config_footswitch_mode(void);
 uint8_t control_get_config_enable_bt_midi_CC(void);
+uint8_t control_get_config_wifi_sta_mode(void);
+void control_get_config_wifi_ssid(char* name);
+void control_get_config_wifi_password(char* name);
