@@ -33,6 +33,11 @@ This setting controls how directly wired footswitches will function. Note this h
 - Quad Banked: 4 footswitches. 5 banks of 4 presets are controlled. 1+2 selects down a bank. 3+4 selects up a bank. Single switch selects the preset of ((bank * 4) + switch number)
 - Quad Binary: 4 switch inputs, intended for control by relays. The preset selected depends on the binary combination switch inputs, with switch 1 being the least significant bit, and switch 4 being the most significant bit. E.g. switch inputs 1,0,1,1 = preset 11
 
+### Bluetooth Midi Control Change Enable (added in V1.0.6.1)
+This setting controls if the Bluetooth Central Midi can accept Control Change commands (e.g. enabling effects and changing parameters.)<br>
+This is disabled by default, as the MVave Chocolate pedal, when changing banks, sends a conflicting change that modifies the Tonex parameters.<br>
+This setting should not be enabled with a Chocolate pedal that has the default configuration loaded!
+
 ### Save and Reboot
 The Save Settings and Reboot button must be pressed to save the changes. The controller will reboot.
 

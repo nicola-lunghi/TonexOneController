@@ -35,22 +35,24 @@ The code could be adapted to run on other brand ESP32-S3 boards, but to make thi
 - 1.69" LCD board. Similar to an Apple Watch, this small board displays the preset name and number
 - "Zero" board with no display, is the smallest and cheapest option
 - "DevKit-C" board with no display
+- "Atom S3R" board with tiny LCD
 ![meet_family](https://github.com/user-attachments/assets/a2f4ad41-d5b8-4b3d-b800-b53b116014e7)
 
 
 ## ⭐ Key Features <a name="key_features"></a>
 The supported features vary a little depending on the chosen hardware platform.
 - LCD display with capactive touch screen ("4.3B" model)
-- LCD display ("1.69" model)
-- Screen displays the name and number of the current preset ("4.3B" and "1.69" models.)
+- LCD display ("1.69" model and "Atom S3R" model)
+- Screen displays the name and number of the current preset (all models with displays)
 - The User can select an amplifier or pedal skin and also add descriptive text ("4.3B" model)
 - Use of simple dual footswitches to select next/previous preset (all platforms)
-- Use of 4 buttons to select a preset via a banked system, or directly via binary inputs (all platforms except for the "4.3B")
+- Use of four buttons to select a preset via a banked system, or directly via binary inputs (all platforms except for the "4.3B")
 - Bluetooth Client support. Use of the "M-Vave Chocolate" bluetooth Midi footswitch device to switch presets (4 buttons, bank up/down)
 - Other Bluetooth Midi controllers should be also supported, via the "custom name" option. Refer to [Web Configuration](WebConfiguration.md)
 - Bluetooth server support. Pair your phone/tablet with the controller, and send standard Midi program changes, bridged through to the Tonex One pedal (note Server and Client cannot be used simultaneously)
 - USB host control of the Tonex pedal
 - Wired/Serial Midi support
+- New in V1.06: full control over all Tonex One parameters and effects, via LCD (4.3B only) and Midi (all platforms.)
 
 ## Hardware Platforms and Wiring <a name="hardware_platforms"></a>
 For more information about the hardware platforms, refer to [Hardware Platforms](HardwarePlatforms.md)
@@ -92,6 +94,12 @@ For more information about the firmware development and customisation, refer to 
 - https://github.com/vit3k/tonex_controller for great work on reverse engineering the Tonex One USB protocol
 
 ## Firmware Release Notes <a name="release_notes"></a>
+V1.0.6.1:
+- Added support for M5Stack Atom S3R 
+- Added support for ESP Devkit-C with 16 MB flash/8MB PSRAM
+- added parameter/effect editing user interface and Midi control 
+- Fixed issue where pressing the green tick during editing the preset details field would not save the text change
+
 V1.0.5.2:
 - Added support for ESP "Devkit-C" board
 - Added support for the onboard RGB led on the Zero and the Devkit-C. Three green flashes shown on boot.
