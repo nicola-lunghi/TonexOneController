@@ -170,6 +170,20 @@
             -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
             animation: fadein 0.5s, fadeout 0.5s 2.5s;
         }
+        
+        .select_style {
+            width: 100%; 
+            max-width: 350px; 
+            color:white; 
+            background: #1f1f1f;
+        }
+        
+        .text_entry_style {
+            width: 100%; 
+            max-width: 350px; 
+            color:white; 
+            background: #1f1f1f;
+        }
     </style>
 
     <script>   
@@ -329,7 +343,7 @@
             }
 
             pageTimer = setInterval("pageTimerEvent();", 750);
-            timers['MainScreen'] = pageTimer;
+            timers['MainScreen'] = pageTimer;                                 
         }
 
         function pageTimerEvent(){
@@ -337,7 +351,7 @@
 
             if (areWeOnScreen !== null){
                 // Functions on the timer go here.
-                sendWS({"CMD": "GETPARAMS"});
+                //sendWS({"CMD": "GETPARAMS"});
             }
             else{
                 clearInterval(pageTimer);
@@ -356,6 +370,11 @@
         function onOpen(event) {
             console.log('Connection opened');
             SocketConnected = 1;
+            
+            // request config, params, and current preset
+            sendWS({"CMD": "GETPRESET"});
+            sendWS({"CMD": "GETPARAMS"});
+            sendWS({"CMD": "GETCONFIG"});        
         }
 
         function onClose(event) {
@@ -370,33 +389,41 @@
             }
         }
         
-        // Function that receives the message from the ESP32 with the readings
+        // Function that receives the message from the ESP32
         function onMessage(event) {
-            var received_data = JSON.parse(evt.data);
-            //console.log(received_data);
+            var received_data = JSON.parse(event.data);
+            console.log(received_data);
             processReturnCmd(received_data);        
         }
 
         function processReturnCmd(data) {
             switch (data['CMD'])
             {
-                case 'xxx':
+                case 'GETPARAMS':
+                    break;
+                    
+                case 'GETCONFIG':
+                    break;   
+                
+                case 'GETPRESET':
                     break;
             }
         }
-
+        
         function openTab(evt, tabName) {
-          var i, tabcontent, tablinks;
-          tabcontent = document.getElementsByClassName("tabcontent");
-          for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-          }
-          tablinks = document.getElementsByClassName("tablinks");
-          for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-          }
-          document.getElementById(tabName).style.display = "block";
-          evt.currentTarget.className += " active";
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
         
         function setToast(msg) {
@@ -420,8 +447,22 @@
             setToast('Settings saved.<br>Rebooting now');
         }
         
-        function ConnectWifi() {
-            setToast('Connecting to<br>WiFi...');
+        function SaveWifi() {
+            if (SocketConnected === 1) {
+                // get values
+                var wifi_mode = document.getElementById("wifimode").value;
+                var wifi_ssid = document.getElementById("wifiname").value;
+                var wifi_pw = document.getElementById("wifipassword").value;
+                
+                console.log('WiFi config send');
+                
+                sendWS({"CMD": "SETWIFI", 
+                        "MODE": parseInt(wifi_mode),
+                        "SSID": wifi_ssid,
+                        "PW": wifi_pw});
+                        
+                setToast('WiFi Config Saved');
+            }
         }
         
         function onParamChange(e) {
@@ -721,25 +762,15 @@
                 </div>    
                 <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <label class="form-check-label" for="rv_model">Model</label>
-                                <select class="form-select" onchange="onParamChange(event)" id="rv_model" style="color:white; background: #1f1f1f;">
-                                  <option value="0" selected>Spring 1</option>
-                                  <option value="1">Spring 2</option>
-                                  <option value="2">Spring 3</option>
-                                  <option value="3">Spring 4</option>
-                                  <option value="4">Room</option>
-                                  <option value="5">Plate</option>
-                                </select>            
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>
+                    <label class="form-check-label" for="rv_model">Model</label>
+                    <select class="form-select select_style" onchange="onParamChange(event)" id="rv_model">
+                      <option value="0" selected>Spring 1</option>
+                      <option value="1">Spring 2</option>
+                      <option value="2">Spring 3</option>
+                      <option value="3">Spring 4</option>
+                      <option value="4">Room</option>
+                      <option value="5">Plate</option>
+                    </select>            
                 </div>
                 <br>
                 <div class="container">
@@ -800,22 +831,14 @@
                 </div>                  
                 <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <label class="form-check-label" for="mo_model">Model</label>
-                                <select class="form-select" onchange="onParamChange(event)" id="mo_model" style="color:white; background: #1f1f1f;">
-                                  <option value="0" selected>Chorus</option>
-                                  <option value="1">Tremolo</option>
-                                  <option value="2">Phaser</option>
-                                  <option value="3">Flanger</option>
-                                  <option value="4">Rotary</option>
-                                </select>     
-                            </div>
-                        </div>
-                        <div class="col">
-                        </div>
-                    </div>
+                    <label class="form-check-label" for="mo_model">Model</label>
+                    <select class="form-select select_style" onchange="onParamChange(event)" id="mo_model">
+                        <option value="0" selected>Chorus</option>
+                        <option value="1">Tremolo</option>
+                        <option value="2">Phaser</option>
+                        <option value="3">Flanger</option>
+                        <option value="4">Rotary</option>
+                     </select>
                 </div>
                 <br>
                 <div class="container">
@@ -877,21 +900,11 @@
                 </div>    
                 <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <label class="form-check-label" for="rv_model">Model</label>
-                                <select class="form-select" onchange="onParamChange(event)" id="dl_model" style="color:white; background: #1f1f1f;">
-                                  <option value="0" selected>Digital</option>
-                                  <option value="1">Tape</option>
-                                </select>            
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>
+                    <label class="form-check-label" for="rv_model">Model</label>
+                    <select class="form-select select_style" onchange="onParamChange(event)" id="dl_model">
+                        <option value="0" selected>Digital</option>
+                        <option value="1">Tape</option>
+                    </select>            
                 </div>
                 <br>
                 <div class="container">
@@ -935,22 +948,12 @@
             <h5 class="selected_text">Options</h5>
             <p class="lead">
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <label for="btmode" class="style3 style2">Bluetooth Mode</label>
-                                <select id="btmode" class="form-select" name="btmode" style="color:white; background: #1f1f1f;">
-                                    <option value="disabled" class="style6">Disabled</option>
-                                    <option value="client" class="style6" selected>Central</option>
-                                    <option value="server" class="style6">Peripheral</option>                                                    
-                                </select> 
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>
+                    <label for="btmode" class="style3 style2">Bluetooth Mode</label>
+                    <select id="btmode" class="form-select select_style" name="btmode">
+                        <option value="disabled" class="style6">Disabled</option>
+                        <option value="client" class="style6" selected>Central</option>
+                        <option value="server" class="style6">Peripheral</option>                                                    
+                    </select> 
                 </div>
                 <br>
                 <div class="container">
@@ -973,17 +976,7 @@
                     </div> 
                 </div>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <input type="text" id="custombt" name="custombt" class="form-control" maxlength="24" size="24" value="Enter Name" style="color:white; background: #1f1f1f;">                       
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>                                      
+                    <input type="text" id="custombt" name="custombt" class="form-control text_entry_style" maxlength="24" size="24" value="Enter Name">
                 </div>
                 <br>
                 <div class="container">
@@ -1000,36 +993,26 @@
                     </div> 
                 </div>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <label class="form-check-label" for="midichannel">Midi Channel</label>
-                                <select class="form-select" id="midichannel" style="color:white; background: #1f1f1f;">
-                                  <option value="0" selected>1</option>
-                                  <option value="1">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                  <option value="6">6</option>
-                                  <option value="7">7</option>
-                                  <option value="8">8</option>
-                                  <option value="9">9</option>
-                                  <option value="10">10</option>
-                                  <option value="11">11</option>
-                                  <option value="12">12</option>
-                                  <option value="13">13</option>
-                                  <option value="14">14</option>
-                                  <option value="15">15</option>
-                                  <option value="16">16</option>
-                                </select>            
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <label class="form-check-label" for="midichannel">Midi Channel</label>
+                    <select class="form-select select_style" id="midichannel">
+                      <option value="0" selected>1</option>
+                      <option value="1">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                      <option value="12">12</option>
+                      <option value="13">13</option>
+                      <option value="14">14</option>
+                      <option value="15">15</option>
+                      <option value="16">16</option>
+                    </select>  
+                </div>                    
                 <br>
                 <div class="container">
                     <div class="form-check form-switch">
@@ -1039,36 +1022,16 @@
                 </div>
                 <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <label class="form-check-label" for="footmode">Footswitch</label>
-                                <select class="form-select" id="footmode" style="color:white; background: #1f1f1f;">
-                                    <option value="Dual Next/Previous" class="style6" selected>Dual Next/Previous</option>
-                                    <option value="Quad Banked" class="style6">Quad Banked (not 4.3B)</option>
-                                    <option value="Quad Binary" class="style6">Quad Binary (not 4.3B)</option>     
-                                </select>            
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>
+                    <label class="form-check-label" for="footmode">Footswitch</label>
+                    <select class="form-select select_style" id="footmode">
+                        <option value="Dual Next/Previous" class="style6" selected>Dual Next/Previous</option>
+                        <option value="Quad Banked" class="style6">Quad Banked (not 4.3B)</option>
+                        <option value="Quad Binary" class="style6">Quad Binary (not 4.3B)</option>     
+                    </select>            
                 </div>
                 <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <button type="button" onclick="saveSettings()" class="btn btn-success">Save</button>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>                                      
+                    <button type="button" onclick="saveSettings()" class="btn btn-success">Save and Reboot</button>
                 </div>
             </p>
         </div>
@@ -1079,10 +1042,12 @@
             <h5 class="selected_text">Settings</h5>
             <p class="lead">
                 <div class="container">
-                    <div class="form-check form-switch">
-                       <input class="form-check-input" type="checkbox" role="switch" value="on" id="setwifi">
-                       <label class="form-check-label" for="setwifi">Connect to WiFi</label>
-                    </div>                            
+                    <label class="form-check-label" for="wifimode">WiFi Mode</label>
+                    <select class="form-select select_style" id="wifimode">
+                        <option value="0" class="style6" selected>Access Point Timed</option>
+                        <option value="1" class="style6">Station</option>
+                        <option value="2" class="style6">Access Point</option>     
+                    </select>                           
                 </div>
                 <div class="container">
                     <div class="form-check form-switch">
@@ -1090,51 +1055,20 @@
                 </div>
                 <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <input type="text" id="wifiname" name="wifiname" class="form-control" maxlength="40" size="40" value="WiFi SSID" style="color:white; background: #1f1f1f;">                       
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>                                      
+                    <input type="text" id="wifiname" name="wifiname" class="form-control text_entry_style" maxlength="40" size="40" value="WiFi SSID">
                 </div>
                 <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <input type="text" id="wifipassword" name="wifipassword" class="form-control" maxlength="40" size="40" value="WiFi Password" style="color:white; background: #1f1f1f;">                       
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>                                      
+                    <input type="text" id="wifipassword" name="wifipassword" class="form-control text_entry_style" maxlength="40" size="40" value="WiFi Password">
                 </div>
                 <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div>
-                                <button type="button" onclick="ConnectWifi()" class="btn btn-success"">Connect</button>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-check">
-                            </div>
-                        </div>
-                    </div>                                      
+                    <button type="button" onclick="SaveWifi()" class="btn btn-success">Save and Reboot</button>
                 </div>
             </p>
         </div>
-    </div>
-        
+    </div>        
+    
     <div id="toast"></div>
-</div>
   </body>
 </html>

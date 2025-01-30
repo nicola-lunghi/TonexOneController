@@ -32,6 +32,7 @@ limitations under the License.
 #include "esp_vfs_fat.h"
 #include "esp_ota_ops.h"
 #include "sys/param.h"
+#include "main.h"
 #include "control.h"
 #include "usb_comms.h"
 #include "usb/usb_host.h"
@@ -40,12 +41,12 @@ limitations under the License.
 #include "display.h"
 #include "task_priorities.h"
 
-#define CTRL_TASK_STACK_SIZE   (3 * 1024)
-#define NVS_USERDATA_NAME       "userdata"        
+#define CTRL_TASK_STACK_SIZE                (3 * 1024)
+#define NVS_USERDATA_NAME                   "userdata"        
 
-#define MAX_TEXT_LENGTH        128
-#define MAX_PRESETS_DEFAULT    20
-#define MAX_BT_CUSTOM_NAME     25                 
+#define MAX_TEXT_LENGTH                     128
+#define MAX_PRESETS_DEFAULT                 20
+#define MAX_BT_CUSTOM_NAME                  25                 
 
 enum CommandEvents
 {
@@ -67,7 +68,10 @@ enum CommandEvents
     EVENT_SET_CONFIG_MIDI_CHANNEL,
     EVENT_SET_CONFIG_TOGGLE_BYPASS,
     EVENT_SET_CONFIG_FOOTSWITCH_MODE,
-    EVENT_SET_CONFIG_ENABLE_BT_MIDI_CC
+    EVENT_SET_CONFIG_ENABLE_BT_MIDI_CC,
+    EVENT_SET_CONFIG_WIFI_MODE,
+    EVENT_SET_CONFIG_WIFI_SSID,
+    EVENT_SET_CONFIG_WIFI_PASSWORD
 };
 
 typedef struct
@@ -104,13 +108,13 @@ typedef struct __attribute__ ((packed))
 
     // general flags
     uint16_t GeneralDoublePressToggleBypass: 1;
-    uint16_t GeneralWiFiStationMode: 1;
-    uint16_t GeneralSpare: 14;
+    uint16_t GeneralSpare: 15;
 
     uint8_t FootswitchMode;
     char BTClientCustomName[MAX_BT_CUSTOM_NAME];
 
     // wifi
+    uint8_t WiFiMode;
     char WifiSSID[MAX_WIFI_SSID_PW];
     char WifiPassword[MAX_WIFI_SSID_PW];
 } tConfigData;
@@ -297,6 +301,25 @@ static uint8_t process_control_command(tControlMessage* message)
             ControlData.ConfigData.EnableBTmidiCC = (uint8_t)message->Value;
         } break;
 
+        case EVENT_SET_CONFIG_WIFI_MODE:
+        {
+            ESP_LOGI(TAG, "Config set WiFi modee %d", (int)message->Value);
+            ControlData.ConfigData.WiFiMode = (uint8_t)message->Value;
+        } break;
+
+        case EVENT_SET_CONFIG_WIFI_SSID:
+        {
+            ESP_LOGI(TAG, "Config set WiFi SSID %s", message->Text);
+            strncpy(ControlData.ConfigData.WifiSSID, message->Text, MAX_WIFI_SSID_PW - 1);
+            ControlData.ConfigData.WifiSSID[MAX_WIFI_SSID_PW - 1] = 0;
+        } break;
+
+        case EVENT_SET_CONFIG_WIFI_PASSWORD:
+        {
+            ESP_LOGI(TAG, "Config set WiFi password (hidden)");
+            strncpy(ControlData.ConfigData.WifiPassword, message->Text, MAX_WIFI_SSID_PW - 1);
+            ControlData.ConfigData.WifiPassword[MAX_WIFI_SSID_PW - 1] = 0;
+        } break;
     }
 
     return 1;
@@ -677,6 +700,75 @@ void control_set_config_custom_bt_name(char* name)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+void control_set_config_wifi_mode(uint32_t mode)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_config_wifi_mode");
+
+    message.Event = EVENT_SET_CONFIG_WIFI_MODE;
+    message.Value = mode;
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_config_wifi_mode queue send failed!");            
+    }
+}     
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void control_set_config_wifi_ssid(char* name)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_config_wifi_ssid: %s", name);
+
+    message.Event = EVENT_SET_CONFIG_WIFI_SSID;
+    strncpy(message.Text, name, MAX_BT_CUSTOM_NAME - 1);
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_config_wifi_ssid queue send failed!");            
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void control_set_config_wifi_password(char* name)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_config_wifi_password");
+
+    message.Event = EVENT_SET_CONFIG_WIFI_PASSWORD;
+    strncpy(message.Text, name, MAX_BT_CUSTOM_NAME - 1);
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_config_wifi_password queue send failed!");            
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 void control_set_config_toggle_bypass(uint32_t status)
 {
     tControlMessage message;
@@ -900,9 +992,9 @@ uint8_t control_get_config_enable_bt_midi_CC(void)
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
-uint8_t control_get_config_wifi_sta_mode(void)
+uint8_t control_get_config_wifi_mode(void)
 {
-    return ControlData.ConfigData.GeneralWiFiStationMode;
+    return ControlData.ConfigData.WiFiMode;
 }
 
 /****************************************************************************
@@ -1076,12 +1168,36 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config Toggle bypass: %d", (int)ControlData.ConfigData.GeneralDoublePressToggleBypass);
     ESP_LOGI(TAG, "Config Footswitch Mode: %d", (int)ControlData.ConfigData.FootswitchMode);
     ESP_LOGI(TAG, "Config EnableBTmidiCC Mode: %d", (int)ControlData.ConfigData.EnableBTmidiCC);
-    ESP_LOGI(TAG, "Config WiFi STA mode: %d", (int)ControlData.ConfigData.GeneralWiFiStationMode);
+    ESP_LOGI(TAG, "Config WiFi Mode: %d", (int)ControlData.ConfigData.WiFiMode);
     ESP_LOGI(TAG, "Config WiFi SSID: %s", ControlData.ConfigData.WifiSSID);
     ESP_LOGI(TAG, "Config WiFi Password: <hidden>");
 
     // status    
     return result;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void control_set_default_config(void)
+{
+    ControlData.ConfigData.BTMode = BT_MODE_CENTRAL;
+    ControlData.ConfigData.BTClientMvaveChocolateEnable = 1;
+    ControlData.ConfigData.BTClientXviveMD1Enable = 1;
+    ControlData.ConfigData.BTClientCustomEnable = 0;
+    ControlData.ConfigData.GeneralDoublePressToggleBypass = 0;
+    ControlData.ConfigData.MidiSerialEnable = 0;
+    ControlData.ConfigData.MidiChannel = 1;
+    ControlData.ConfigData.FootswitchMode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
+    ControlData.ConfigData.EnableBTmidiCC = 0;
+    memset((void*)ControlData.ConfigData.BTClientCustomName, 0, sizeof(ControlData.ConfigData.BTClientCustomName));
+    ControlData.ConfigData.WiFiMode = WIFI_MODE_ACCESS_POINT_TIMED;
+    strcpy(ControlData.ConfigData.WifiSSID, "TonexConfig");
+    strcpy(ControlData.ConfigData.WifiPassword, "12345678");   
 }
 
 /****************************************************************************
@@ -1131,20 +1247,8 @@ void control_load_config(void)
     }
 
     // default config, will be overwritten or used as default
-    ControlData.ConfigData.BTMode = BT_MODE_CENTRAL;
-    ControlData.ConfigData.BTClientMvaveChocolateEnable = 1;
-    ControlData.ConfigData.BTClientXviveMD1Enable = 1;
-    ControlData.ConfigData.BTClientCustomEnable = 0;
-    ControlData.ConfigData.GeneralDoublePressToggleBypass = 0;
-    ControlData.ConfigData.MidiSerialEnable = 0;
-    ControlData.ConfigData.MidiChannel = 1;
-    ControlData.ConfigData.FootswitchMode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
-    ControlData.ConfigData.EnableBTmidiCC = 0;
-    memset((void*)ControlData.ConfigData.BTClientCustomName, 0, sizeof(ControlData.ConfigData.BTClientCustomName));
-    ControlData.ConfigData.GeneralWiFiStationMode = 0;;
-    strcpy(ControlData.ConfigData.WifiSSID, "SSID");
-    strcpy(ControlData.ConfigData.WifiSSID, "pw");
-
+    control_set_default_config();
+   
     // Initialize NVS
     ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) 

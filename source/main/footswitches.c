@@ -45,6 +45,7 @@ limitations under the License.
 #define FOOTSWITCH_SAMPLE_COUNT             5       // 20 msec per sample
 #define BANK_MODE_BUTTONS                   4
 #define BANK_MAXIMUM                        (MAX_PRESETS / BANK_MODE_BUTTONS)
+#define BUTTON_FACTORY_RESET_TIME           500    // * 20 msec = 10 secs
 
 enum FootswitchStates
 {
@@ -379,6 +380,8 @@ static void footswitch_handle_quad_binary(void)
 void footswitch_task(void *arg)
 {    
     uint8_t mode;   
+    uint8_t value;
+    uint32_t reset_timer = 0;
  
     ESP_LOGI(TAG, "Footswitch task start");
 
@@ -415,6 +418,28 @@ void footswitch_task(void *arg)
                 // run 4 switch binary mode
                 footswitch_handle_quad_binary();
             } break;
+        }
+
+        // check for button held for data reset
+        if (read_footswitch_input(FOOTSWITCH_1, &value))
+        {
+            if (value == 0)
+            {        
+                reset_timer++;
+
+                if (reset_timer > BUTTON_FACTORY_RESET_TIME)
+                {
+                    ESP_LOGI(TAG, "Config Reset to default");  
+                    control_set_default_config(); 
+
+                    // save and reboot
+                    control_save_user_data(1);
+                }
+            }
+            else
+            {
+                reset_timer = 0;
+            }
         }
 
         // handle leds from this task, to save wasting ram on another task for it

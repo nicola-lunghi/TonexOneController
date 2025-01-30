@@ -96,6 +96,13 @@ enum FootswitchModes
     FOOTSWITCH_MODE_LAST
 };
 
+enum WiFiModes
+{
+    WIFI_MODE_ACCESS_POINT_TIMED,       // access point for 1 minute on boot
+    WIFI_MODE_STATION,                  // station mode
+    WIFI_MODE_ACCESS_POINT              // access point, no timeout
+};
+
 #define MAX_WIFI_SSID_PW       33
 
 // thread safe public API
@@ -112,6 +119,7 @@ void control_sync_preset_details(uint16_t index, char* name);
 void control_set_user_text(char* text);
 
 // config API
+void control_set_default_config(void);
 void control_set_config_btmode(uint32_t status);
 void control_set_config_mv_choc_enable(uint32_t status);
 void control_set_config_xv_md1_enable(uint32_t status);
@@ -122,6 +130,9 @@ void control_set_config_serial_midi_channel(uint32_t status);
 void control_set_config_toggle_bypass(uint32_t status);
 void control_set_config_footswitch_mode(uint32_t mode);
 void control_set_config_enable_bt_midi_CC(uint32_t status);
+void control_set_config_wifi_mode(uint32_t mode);
+void control_set_config_wifi_ssid(char* name);
+void control_set_config_wifi_password(char* name);
 
 uint8_t control_get_config_bt_mode(void);
 uint8_t control_get_config_bt_mvave_choc_enable(void);
@@ -133,6 +144,6 @@ uint8_t control_get_config_midi_serial_enable(void);
 uint8_t control_get_config_midi_channel(void);
 uint8_t control_get_config_footswitch_mode(void);
 uint8_t control_get_config_enable_bt_midi_CC(void);
-uint8_t control_get_config_wifi_sta_mode(void);
+uint8_t control_get_config_wifi_mode(void);
 void control_get_config_wifi_ssid(char* name);
 void control_get_config_wifi_password(char* name);
