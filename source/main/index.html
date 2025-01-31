@@ -207,127 +207,127 @@
         
         // Tonex params
         // noise gate
-        var TONEX_PARAM_NOISE_GATE_POST = 0;
-        var TONEX_PARAM_NOISE_GATE_ENABLE = 1;
-        var TONEX_PARAM_NOISE_GATE_THRESHOLD = 2;
-        var TONEX_PARAM_NOISE_GATE_RELEASE = 3;
-        var TONEX_PARAM_NOISE_GATE_DEPTH = 4;
+        const TONEX_PARAM_NOISE_GATE_POST = 0;
+        const TONEX_PARAM_NOISE_GATE_ENABLE = 1;
+        const TONEX_PARAM_NOISE_GATE_THRESHOLD = 2;
+        const TONEX_PARAM_NOISE_GATE_RELEASE = 3;
+        const TONEX_PARAM_NOISE_GATE_DEPTH = 4;
 
         // Compressor
-        var TONEX_PARAM_COMP_POST = 5;
-        var TONEX_PARAM_COMP_ENABLE = 6;
-        var TONEX_PARAM_COMP_THRESHOLD = 7;
-        var TONEX_PARAM_COMP_MAKE_UP = 8;
-        var TONEX_PARAM_COMP_ATTACK = 9;
+        const TONEX_PARAM_COMP_POST = 5;
+        const TONEX_PARAM_COMP_ENABLE = 6;
+        const TONEX_PARAM_COMP_THRESHOLD = 7;
+        const TONEX_PARAM_COMP_MAKE_UP = 8;
+        const TONEX_PARAM_COMP_ATTACK = 9;
 
         // EQ    
-        var TONEX_PARAM_EQ_POST = 10;     
-        var TONEX_PARAM_EQ_BASS = 11;
-        var TONEX_PARAM_EQ_BASS_FREQ = 12;
-        var TONEX_PARAM_EQ_MID = 13;
-        var TONEX_PARAM_EQ_MIDQ = 14;
-        var TONEX_PARAM_EQ_MID_FREQ = 15;
-        var TONEX_PARAM_EQ_TREBLE = 16;
-        var TONEX_PARAM_EQ_TREBLE_FREQ = 17;
+        const TONEX_PARAM_EQ_POST = 10;     
+        const TONEX_PARAM_EQ_BASS = 11;
+        const TONEX_PARAM_EQ_BASS_FREQ = 12;
+        const TONEX_PARAM_EQ_MID = 13;
+        const TONEX_PARAM_EQ_MIDQ = 14;
+        const TONEX_PARAM_EQ_MID_FREQ = 15;
+        const TONEX_PARAM_EQ_TREBLE = 16;
+        const TONEX_PARAM_EQ_TREBLE_FREQ = 17;
         
         //Model and VIR params
-        var TONEX_PARAM_UNKNOWN_1 = 18;
-        var TONEX_PARAM_UNKNOWN_2 = 19;
-        var TONEX_PARAM_MODEL_GAIN = 20;
-        var TONEX_PARAM_MODEL_VOLUME = 21;
-        var TONEX_PARAM_MODEX_MIX = 22;
-        var TONEX_PARAM_UNKNOWN_3 = 23;
-        var TONEX_PARAM_PRESENCE = 24;
-        var TONEX_PARAM_DEPTH = 25;
-        var TONEX_PARAM_VIR_RESO = 26;
-        var TONEX_PARAM_VIR_MIC_1 = 27;
-        var TONEX_PARAM_VIR_MIC_1_X = 28;
-        var TONEX_PARAM_VIR_MIC_1_Y = 29;
-        var TONEX_PARAM_VIR_MIC_1_Z = 30;
-        var TONEX_PARAM_VIR_MIC_2 = 31;
-        var TONEX_PARAM_VIR_MIC_2_X = 32;
-        var TONEX_PARAM_VIR_MIC_2_Y = 33;
-        var TONEX_PARAM_VIR_MIC_2_Z = 34;
-        var TONEX_PARAM_VIR_BLEND = 35;
+        const TONEX_PARAM_UNKNOWN_1 = 18;
+        const TONEX_PARAM_UNKNOWN_2 = 19;
+        const TONEX_PARAM_MODEL_GAIN = 20;
+        const TONEX_PARAM_MODEL_VOLUME = 21;
+        const TONEX_PARAM_MODEX_MIX = 22;
+        const TONEX_PARAM_UNKNOWN_3 = 23;
+        const TONEX_PARAM_PRESENCE = 24;
+        const TONEX_PARAM_DEPTH = 25;
+        const TONEX_PARAM_VIR_RESO = 26;
+        const TONEX_PARAM_VIR_MIC_1 = 27;
+        const TONEX_PARAM_VIR_MIC_1_X = 28;
+        const TONEX_PARAM_VIR_MIC_1_Y = 29;
+        const TONEX_PARAM_VIR_MIC_1_Z = 30;
+        const TONEX_PARAM_VIR_MIC_2 = 31;
+        const TONEX_PARAM_VIR_MIC_2_X = 32;
+        const TONEX_PARAM_VIR_MIC_2_Y = 33;
+        const TONEX_PARAM_VIR_MIC_2_Z = 34;
+        const TONEX_PARAM_VIR_BLEND = 35;
         
         // Reverb
-        var TONEX_PARAM_REVERB_POSITION = 36;
-        var TONEX_PARAM_REVERB_ENABLE = 37;
-        var TONEX_PARAM_REVERB_MODEL = 38;
-        var TONEX_PARAM_REVERB_SPRING1_TIME = 39
-        var TONEX_PARAM_REVERB_SPRING1_PREDELAY = 40;
-        var TONEX_PARAM_REVERB_SPRING1_COLOR = 41;
-        var TONEX_PARAM_REVERB_SPRING1_MIX = 42;
-        var TONEX_PARAM_REVERB_SPRING2_TIME = 43;
-        var TONEX_PARAM_REVERB_SPRING2_PREDELAY = 44;
-        var TONEX_PARAM_REVERB_SPRING2_COLOR = 45;
-        var TONEX_PARAM_REVERB_SPRING2_MIX = 46;
-        var TONEX_PARAM_REVERB_SPRING3_TIME = 47;
-        var TONEX_PARAM_REVERB_SPRING3_PREDELAY = 48;
-        var TONEX_PARAM_REVERB_SPRING3_COLOR = 49;
-        var TONEX_PARAM_REVERB_SPRING3_MIX = 50;
-        var TONEX_PARAM_REVERB_SPRING4_TIME = 51;
-        var TONEX_PARAM_REVERB_SPRING4_PREDELAY = 52;
-        var TONEX_PARAM_REVERB_SPRING4_COLOR = 53;
-        var TONEX_PARAM_REVERB_SPRING4_MIX = 54;
-        var TONEX_PARAM_REVERB_ROOM_TIME = 55;
-        var TONEX_PARAM_REVERB_ROOM_PREDELAY = 56;
-        var TONEX_PARAM_REVERB_ROOM_COLOR = 57;
-        var TONEX_PARAM_REVERB_ROOM_MIX = 58;
-        var TONEX_PARAM_REVERB_PLATE_TIME = 59;
-        var TONEX_PARAM_REVERB_PLATE_PREDELAY = 60;
-        var TONEX_PARAM_REVERB_PLATE_COLOR = 61;
-        var TONEX_PARAM_REVERB_PLATE_MIX = 62;
+        const TONEX_PARAM_REVERB_POSITION = 36;
+        const TONEX_PARAM_REVERB_ENABLE = 37;
+        const TONEX_PARAM_REVERB_MODEL = 38;
+        const TONEX_PARAM_REVERB_SPRING1_TIME = 39
+        const TONEX_PARAM_REVERB_SPRING1_PREDELAY = 40;
+        const TONEX_PARAM_REVERB_SPRING1_COLOR = 41;
+        const TONEX_PARAM_REVERB_SPRING1_MIX = 42;
+        const TONEX_PARAM_REVERB_SPRING2_TIME = 43;
+        const TONEX_PARAM_REVERB_SPRING2_PREDELAY = 44;
+        const TONEX_PARAM_REVERB_SPRING2_COLOR = 45;
+        const TONEX_PARAM_REVERB_SPRING2_MIX = 46;
+        const TONEX_PARAM_REVERB_SPRING3_TIME = 47;
+        const TONEX_PARAM_REVERB_SPRING3_PREDELAY = 48;
+        const TONEX_PARAM_REVERB_SPRING3_COLOR = 49;
+        const TONEX_PARAM_REVERB_SPRING3_MIX = 50;
+        const TONEX_PARAM_REVERB_SPRING4_TIME = 51;
+        const TONEX_PARAM_REVERB_SPRING4_PREDELAY = 52;
+        const TONEX_PARAM_REVERB_SPRING4_COLOR = 53;
+        const TONEX_PARAM_REVERB_SPRING4_MIX = 54;
+        const TONEX_PARAM_REVERB_ROOM_TIME = 55;
+        const TONEX_PARAM_REVERB_ROOM_PREDELAY = 56;
+        const TONEX_PARAM_REVERB_ROOM_COLOR = 57;
+        const TONEX_PARAM_REVERB_ROOM_MIX = 58;
+        const TONEX_PARAM_REVERB_PLATE_TIME = 59;
+        const TONEX_PARAM_REVERB_PLATE_PREDELAY = 60;
+        const TONEX_PARAM_REVERB_PLATE_COLOR = 61;
+        const TONEX_PARAM_REVERB_PLATE_MIX = 62;
 
         // Modulation
-        var TONEX_PARAM_MODULATION_POST = 63;
-        var TONEX_PARAM_MODULATION_ENABLE = 64;
-        var TONEX_PARAM_MODULATION_MODEL = 65;
-        var TONEX_PARAM_MODULATION_CHORUS_SYNC = 66;
-        var TONEX_PARAM_MODULATION_CHORUS_TS = 67;
-        var TONEX_PARAM_MODULATION_CHORUS_RATE = 68;
-        var TONEX_PARAM_MODULATION_CHORUS_DEPTH = 69;
-        var TONEX_PARAM_MODULATION_CHORUS_LEVEL = 70;
-        var TONEX_PARAM_MODULATION_TREMOLO_SYNC = 71;
-        var TONEX_PARAM_MODULATION_TREMOLO_TS = 72;
-        var TONEX_PARAM_MODULATION_TREMOLO_RATE = 73;
-        var TONEX_PARAM_MODULATION_TREMOLO_SHAPE = 74;
-        var TONEX_PARAM_MODULATION_TREMOLO_SPREAD = 75;
-        var TONEX_PARAM_MODULATION_TREMOLO_LEVEL = 76;
-        var TONEX_PARAM_MODULATION_PHASER_SYNC = 77;
-        var TONEX_PARAM_MODULATION_PHASER_TS = 78;
-        var TONEX_PARAM_MODULATION_PHASER_RATE = 79;
-        var TONEX_PARAM_MODULATION_PHASER_DEPTH = 80;
-        var TONEX_PARAM_MODULATION_PHASER_LEVEL = 81;
-        var TONEX_PARAM_MODULATION_FLANGER_SYNC = 82;
-        var TONEX_PARAM_MODULATION_FLANGER_TS = 83;
-        var TONEX_PARAM_MODULATION_FLANGER_RATE = 84;
-        var TONEX_PARAM_MODULATION_FLANGER_DEPTH = 85;
-        var TONEX_PARAM_MODULATION_FLANGER_FEEDBACK = 86;
-        var TONEX_PARAM_MODULATION_FLANGER_LEVEL = 87;
-        var TONEX_PARAM_MODULATION_ROTARY_SYNC = 88;
-        var TONEX_PARAM_MODULATION_ROTARY_TS = 89;
-        var TONEX_PARAM_MODULATION_ROTARY_SPEED = 90;
-        var TONEX_PARAM_MODULATION_ROTARY_RADIUS = 91;
-        var TONEX_PARAM_MODULATION_ROTARY_SPREAD = 92;
-        var TONEX_PARAM_MODULATION_ROTARY_LEVEL = 93;
+        const TONEX_PARAM_MODULATION_POST = 63;
+        const TONEX_PARAM_MODULATION_ENABLE = 64;
+        const TONEX_PARAM_MODULATION_MODEL = 65;
+        const TONEX_PARAM_MODULATION_CHORUS_SYNC = 66;
+        const TONEX_PARAM_MODULATION_CHORUS_TS = 67;
+        const TONEX_PARAM_MODULATION_CHORUS_RATE = 68;
+        const TONEX_PARAM_MODULATION_CHORUS_DEPTH = 69;
+        const TONEX_PARAM_MODULATION_CHORUS_LEVEL = 70;
+        const TONEX_PARAM_MODULATION_TREMOLO_SYNC = 71;
+        const TONEX_PARAM_MODULATION_TREMOLO_TS = 72;
+        const TONEX_PARAM_MODULATION_TREMOLO_RATE = 73;
+        const TONEX_PARAM_MODULATION_TREMOLO_SHAPE = 74;
+        const TONEX_PARAM_MODULATION_TREMOLO_SPREAD = 75;
+        const TONEX_PARAM_MODULATION_TREMOLO_LEVEL = 76;
+        const TONEX_PARAM_MODULATION_PHASER_SYNC = 77;
+        const TONEX_PARAM_MODULATION_PHASER_TS = 78;
+        const TONEX_PARAM_MODULATION_PHASER_RATE = 79;
+        const TONEX_PARAM_MODULATION_PHASER_DEPTH = 80;
+        const TONEX_PARAM_MODULATION_PHASER_LEVEL = 81;
+        const TONEX_PARAM_MODULATION_FLANGER_SYNC = 82;
+        const TONEX_PARAM_MODULATION_FLANGER_TS = 83;
+        const TONEX_PARAM_MODULATION_FLANGER_RATE = 84;
+        const TONEX_PARAM_MODULATION_FLANGER_DEPTH = 85;
+        const TONEX_PARAM_MODULATION_FLANGER_FEEDBACK = 86;
+        const TONEX_PARAM_MODULATION_FLANGER_LEVEL = 87;
+        const TONEX_PARAM_MODULATION_ROTARY_SYNC = 88;
+        const TONEX_PARAM_MODULATION_ROTARY_TS = 89;
+        const TONEX_PARAM_MODULATION_ROTARY_SPEED = 90;
+        const TONEX_PARAM_MODULATION_ROTARY_RADIUS = 91;
+        const TONEX_PARAM_MODULATION_ROTARY_SPREAD = 92;
+        const TONEX_PARAM_MODULATION_ROTARY_LEVEL = 93;
         
         // Delay
-        var TONEX_PARAM_DELAY_POST = 94;
-        var TONEX_PARAM_DELAY_ENABLE = 95;
-        var TONEX_PARAM_DELAY_MODEL = 96;
-        var TONEX_PARAM_DELAY_DIGITAL_SYNC = 97;
-        var TONEX_PARAM_DELAY_DIGITAL_TS = 98;
-        var TONEX_PARAM_DELAY_DIGITAL_TIME = 99;
-        var TONEX_PARAM_DELAY_DIGITAL_FEEDBACK = 100;
-        var TONEX_PARAM_DELAY_DIGITAL_MODE = 101;
-        var TONEX_PARAM_DELAY_DIGITAL_MIX = 102;
-        var TONEX_PARAM_DELAY_TAPE_SYNC = 103;
-        var TONEX_PARAM_DELAY_TAPE_TS = 104;
-        var TONEX_PARAM_DELAY_TAPE_TIME = 105;
-        var TONEX_PARAM_DELAY_TAPE_FEEDBACK = 106;
-        var TONEX_PARAM_DELAY_TAPE_MODE = 107;
-        var TONEX_PARAM_DELAY_TAPE_MIX = 108;
+        const TONEX_PARAM_DELAY_POST = 94;
+        const TONEX_PARAM_DELAY_ENABLE = 95;
+        const TONEX_PARAM_DELAY_MODEL = 96;
+        const TONEX_PARAM_DELAY_DIGITAL_SYNC = 97;
+        const TONEX_PARAM_DELAY_DIGITAL_TS = 98;
+        const TONEX_PARAM_DELAY_DIGITAL_TIME = 99;
+        const TONEX_PARAM_DELAY_DIGITAL_FEEDBACK = 100;
+        const TONEX_PARAM_DELAY_DIGITAL_MODE = 101;
+        const TONEX_PARAM_DELAY_DIGITAL_MIX = 102;
+        const TONEX_PARAM_DELAY_TAPE_SYNC = 103;
+        const TONEX_PARAM_DELAY_TAPE_TS = 104;
+        const TONEX_PARAM_DELAY_TAPE_TIME = 105;
+        const TONEX_PARAM_DELAY_TAPE_FEEDBACK = 106;
+        const TONEX_PARAM_DELAY_TAPE_MODE = 107;
+        const TONEX_PARAM_DELAY_TAPE_MIX = 108;
         
         // Init web socket when the page loads
         window.addEventListener('load', onload);
@@ -372,7 +372,7 @@
             SocketConnected = 1;
             
             // request config, params, and current preset
-            sendWS({"CMD": "GETPRESET"});
+            //sendWS({"CMD": "GETPRESET"});
             sendWS({"CMD": "GETPARAMS"});
             sendWS({"CMD": "GETCONFIG"});        
         }
@@ -396,17 +396,394 @@
             processReturnCmd(received_data);        
         }
 
+        function configureParamRange(objname, value, min, max) {
+            console.log("configureParamRange");
+            var paramrange = document.getElementById(objname);
+            paramrange.min = min;
+            paramrange.max = max;
+            paramrange.value = value;
+        }
+
+        function configureParamSwitch(objname, value) {
+            console.log("configureParamSwitch");
+
+            var paramswitch = document.getElementById(objname);
+            if (value == 0) {
+                paramswitch.checked = false;
+            } else {
+                paramswitch.checked = true;
+            }
+        }
+
         function processReturnCmd(data) {
             switch (data['CMD'])
             {
                 case 'GETPARAMS':
+                    for (var key in data['PARAMS']) {
+                        //console.log(data['PARAMS'][key]);
+
+                        var min = data['PARAMS'][key].min;
+                        var max = data['PARAMS'][key].max;
+                        var value = data['PARAMS'][key].value;
+
+                        switch (key)
+                        {
+                            case TONEX_PARAM_NOISE_GATE_POST:  
+                                configureParamSwitch("ng_post", value);
+                                break;
+
+                            case TONEX_PARAM_NOISE_GATE_ENABLE: 
+                                configureParamSwitch("ng_enable", value);                            
+                                break;
+
+                            case TONEX_PARAM_NOISE_GATE_THRESHOLD: 
+                                configureParamRange("ng_thresh", value, min, max);
+                                break;
+
+                            case TONEX_PARAM_NOISE_GATE_RELEASE: 
+                                configureParamRange("ng_release", value, min, max);                            
+                                break;
+
+                            case TONEX_PARAM_NOISE_GATE_DEPTH: 
+                                configureParamRange("ng_depth", value, min, max);                            
+                                break;
+
+                            // Compressor
+                            case TONEX_PARAM_COMP_POST: 
+                                break;
+
+                            case TONEX_PARAM_COMP_ENABLE:
+                                break;
+
+                            case TONEX_PARAM_COMP_THRESHOLD:
+                                break;
+
+                            case TONEX_PARAM_COMP_MAKE_UP: 
+                                break;
+
+                            case TONEX_PARAM_COMP_ATTACK:
+                                break;
+
+                            // EQ    
+                            case TONEX_PARAM_EQ_POST:
+                                break;
+
+                            case TONEX_PARAM_EQ_BASS:
+                                break;
+
+                            case TONEX_PARAM_EQ_BASS_FREQ:
+                                break;
+
+                            case TONEX_PARAM_EQ_MID:
+                                break;
+
+                            case TONEX_PARAM_EQ_MIDQ:
+                                break;
+
+                            case TONEX_PARAM_EQ_MID_FREQ:
+                                break;
+
+                            case TONEX_PARAM_EQ_TREBLE:
+                                break;
+
+                            case TONEX_PARAM_EQ_TREBLE_FREQ:
+                                break;
+                            
+                            //Model and VIR params
+                            case TONEX_PARAM_UNKNOWN_1:
+                                break;
+
+                            case TONEX_PARAM_UNKNOWN_2:
+                                break;
+
+                            case TONEX_PARAM_MODEL_GAIN:
+                                break;
+
+                            case TONEX_PARAM_MODEL_VOLUME:
+                                break;
+
+                            case TONEX_PARAM_MODEX_MIX:
+                                break;
+
+                            case TONEX_PARAM_UNKNOWN_3:
+                                break;
+
+                            case TONEX_PARAM_PRESENCE:
+                                break;
+
+                            case TONEX_PARAM_DEPTH:
+                                break;
+
+                            case TONEX_PARAM_VIR_RESO:
+                                break;
+
+                            case TONEX_PARAM_VIR_MIC_1:
+                                break;
+
+                            case TONEX_PARAM_VIR_MIC_1_X:
+                                break;
+
+                            case TONEX_PARAM_VIR_MIC_1_Y:
+                                break;
+
+                            case TONEX_PARAM_VIR_MIC_1_Z:
+                                break;
+
+                            case TONEX_PARAM_VIR_MIC_2:
+                                break;
+
+                            case TONEX_PARAM_VIR_MIC_2_X:
+                                break;
+
+                            case TONEX_PARAM_VIR_MIC_2_Y:
+                                break;
+
+                            case TONEX_PARAM_VIR_MIC_2_Z:
+                                break;
+
+                            case TONEX_PARAM_VIR_BLEND:
+                                break;
+                            
+                            // Reverb
+                            case TONEX_PARAM_REVERB_POSITION:
+                                break;
+
+                            case TONEX_PARAM_REVERB_ENABLE:
+                                break;
+
+                            case TONEX_PARAM_REVERB_MODEL:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING1_TIME:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING1_PREDELAY:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING1_COLOR:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING1_MIX:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING2_TIME:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING2_PREDELAY:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING2_COLOR:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING2_MIX:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING3_TIME:
+                                break;
+                            
+                            case TONEX_PARAM_REVERB_SPRING3_PREDELAY:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING3_COLOR:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING3_MIX:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING4_TIME:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING4_PREDELAY:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING4_COLOR:
+                                break;
+
+                            case TONEX_PARAM_REVERB_SPRING4_MIX:
+                                break;
+
+                            case TONEX_PARAM_REVERB_ROOM_TIME:
+                                break;
+
+                            case TONEX_PARAM_REVERB_ROOM_PREDELAY:
+                                break;
+
+                            case TONEX_PARAM_REVERB_ROOM_COLOR:
+                                break;
+
+                            case TONEX_PARAM_REVERB_ROOM_MIX:
+                                break;
+
+                            case TONEX_PARAM_REVERB_PLATE_TIME:
+                                break;
+
+                            case TONEX_PARAM_REVERB_PLATE_PREDELAY:
+                                break;
+
+                            case TONEX_PARAM_REVERB_PLATE_COLOR:
+                                break;
+
+                            case TONEX_PARAM_REVERB_PLATE_MIX:
+                                break;  
+
+                            // Modulation
+                            case TONEX_PARAM_MODULATION_POST:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_ENABLE:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_MODEL:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_CHORUS_SYNC:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_CHORUS_TS:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_CHORUS_RATE:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_CHORUS_DEPTH:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_CHORUS_LEVEL:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_TREMOLO_SYNC:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_TREMOLO_TS:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_TREMOLO_RATE:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_TREMOLO_SHAPE:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_TREMOLO_SPREAD:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_TREMOLO_LEVEL:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_PHASER_SYNC:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_PHASER_TS:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_PHASER_RATE:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_PHASER_DEPTH:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_PHASER_LEVEL:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_FLANGER_SYNC:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_FLANGER_TS:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_FLANGER_RATE:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_FLANGER_DEPTH:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_FLANGER_FEEDBACK:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_FLANGER_LEVEL:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_ROTARY_SYNC:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_ROTARY_TS:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_ROTARY_SPEED:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_ROTARY_RADIUS:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_ROTARY_SPREAD:
+                                break;
+
+                            case TONEX_PARAM_MODULATION_ROTARY_LEVEL:
+                                break;
+                            
+                            // Delay
+                            case TONEX_PARAM_DELAY_POST:
+                                break;
+
+                            case TONEX_PARAM_DELAY_ENABLE:
+                                break;
+
+                            case TONEX_PARAM_DELAY_MODEL:
+                                break;
+
+                            case TONEX_PARAM_DELAY_DIGITAL_SYNC:
+                                break;
+
+                            case TONEX_PARAM_DELAY_DIGITAL_TS:
+                                break;
+
+                            case TONEX_PARAM_DELAY_DIGITAL_TIME:
+                                break;
+
+                            case TONEX_PARAM_DELAY_DIGITAL_FEEDBACK:
+                                break;
+
+                            case TONEX_PARAM_DELAY_DIGITAL_MODE:
+                                break;
+
+                            case TONEX_PARAM_DELAY_DIGITAL_MIX:
+                                break;
+
+                            case TONEX_PARAM_DELAY_TAPE_SYNC:
+                                break;
+                                
+                            case TONEX_PARAM_DELAY_TAPE_TS:
+                                break;
+
+                            case TONEX_PARAM_DELAY_TAPE_TIME:
+                                break;
+
+                            case TONEX_PARAM_DELAY_TAPE_FEEDBACK:
+                                break;
+
+                            case TONEX_PARAM_DELAY_TAPE_MODE:
+                                break;
+
+                            case TONEX_PARAM_DELAY_TAPE_MIX:
+                                break;
+                        }
+                    } 
+
                     break;
                     
                 case 'GETCONFIG':
+                
+                    var wifimode = document.getElementById("wifimode");
+                    wifimode.value = data['WIFI_MODE'];
+
+                    var wifiname = document.getElementById("wifiname");
+                    wifiname.value = data['WIFI_SSID'];
+
+                    var wifipassword = document.getElementById("wifipassword")
+                    wifipassword.value = data['WIFI_PW'];
                     break;   
                 
                 case 'GETPRESET':
-                    break;
+                    break;                  
             }
         }
         
@@ -457,9 +834,9 @@
                 console.log('WiFi config send');
                 
                 sendWS({"CMD": "SETWIFI", 
-                        "MODE": parseInt(wifi_mode),
-                        "SSID": wifi_ssid,
-                        "PW": wifi_pw});
+                        "WIFI_MODE": parseInt(wifi_mode),
+                        "WIFI_SSID": wifi_ssid,
+                        "WIFI_PW": wifi_pw});
                         
                 setToast('WiFi Config Saved');
             }
@@ -1055,10 +1432,12 @@
                 </div>
                 <br>
                 <div class="container">
+                    <label class="form-check-label" for="wifiname">WiFi SSID</label>
                     <input type="text" id="wifiname" name="wifiname" class="form-control text_entry_style" maxlength="40" size="40" value="WiFi SSID">
                 </div>
                 <br>
                 <div class="container">
+                    <label class="form-check-label" for="wifipassword">WiFi Password</label>
                     <input type="text" id="wifipassword" name="wifipassword" class="form-control text_entry_style" maxlength="40" size="40" value="WiFi Password">
                 </div>
                 <br>

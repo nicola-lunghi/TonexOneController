@@ -180,7 +180,8 @@ static esp_err_t build_send_ws_response_packet(httpd_req_t *req, char* payload)
 
     pWebConfig->ws_rsp.type = HTTPD_WS_TYPE_TEXT;
     pWebConfig->ws_rsp.payload = (uint8_t*)payload;
-
+    pWebConfig->ws_rsp.len = strlen(payload);
+    
     // send it
     ret = httpd_ws_send_frame(req, &pWebConfig->ws_rsp);
     if (ret != ESP_OK) 
@@ -224,12 +225,13 @@ static esp_err_t ws_handler(httpd_req_t *req)
     if (ws_pkt.len) 
     {
         // ws_pkt.len + 1 is for NULL termination as we are expecting a string 
-        buf = calloc(1, ws_pkt.len + 1);
+        buf = heap_caps_malloc(ws_pkt.len + 1, MALLOC_CAP_SPIRAM);
         if (buf == NULL) 
         {
             ESP_LOGE(TAG, "Failed to calloc memory for buf");
             return ESP_ERR_NO_MEM;
         }
+        memset((void*)buf, 0, ws_pkt.len + 1);
         
         ws_pkt.payload = buf;
         
@@ -272,8 +274,7 @@ static esp_err_t ws_handler(httpd_req_t *req)
                     // add response
                     json_gen_obj_set_string(&pWebConfig->jstr, "CMD", "GETPARAMS");
 
-                    // add params array 
-                    json_gen_push_array(&pWebConfig->jstr, "PARAMS");
+                    json_gen_push_object(&pWebConfig->jstr, "PARAMS");
 
                     for (uint16_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
                     {
@@ -296,10 +297,10 @@ static esp_err_t ws_handler(httpd_req_t *req)
                         tonex_params_release_locked_access();
                     }
                     
-                    // add the ] 
-                    json_gen_pop_array(&pWebConfig->jstr);
+                    // add the } for PARAMS
+                    json_gen_pop_object(&pWebConfig->jstr);
 
-                    // add the }
+                    // add the } for end
                     json_gen_end_object(&pWebConfig->jstr);
 
                     // end generation
@@ -324,8 +325,7 @@ static esp_err_t ws_handler(httpd_req_t *req)
                     // add response
                     json_gen_obj_set_string(&pWebConfig->jstr, "CMD", "GETCONFIG");
 
-                    // add config array 
-                    json_gen_push_array(&pWebConfig->jstr, "CONFIG");                  
+                    // add config
                     json_gen_obj_set_int(&pWebConfig->jstr, "BT_MODE", control_get_config_bt_mode());
                     json_gen_obj_set_int(&pWebConfig->jstr, "BT_CHOC_EN", control_get_config_bt_mvave_choc_enable());
                     json_gen_obj_set_int(&pWebConfig->jstr, "BT_MD1_EN", control_get_config_bt_xvive_md1_enable());
@@ -348,16 +348,13 @@ static esp_err_t ws_handler(httpd_req_t *req)
                     control_get_config_wifi_password(str_val);
                     json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_PW", str_val);
 
-                    // add the ] 
-                    json_gen_pop_array(&pWebConfig->jstr);
-
                     // add the }
                     json_gen_end_object(&pWebConfig->jstr);
 
                     // end generation
                     json_gen_str_end(&pWebConfig->jstr);
 
-                    //debug ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
+                    ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
 
                     // build packet and send
                     build_send_ws_response_packet(req, pWebConfig->TempBuffer);
@@ -430,17 +427,17 @@ static esp_err_t ws_handler(httpd_req_t *req)
                     // set config
                     ESP_LOGI(TAG, "WiFi Set");
 
-                    if (json_obj_get_int(&pWebConfig->jctx, "MODE", &int_val) == OS_SUCCESS)
+                    if (json_obj_get_int(&pWebConfig->jctx, "WIFI_MODE", &int_val) == OS_SUCCESS)
                     {
                         control_set_config_wifi_mode(int_val);
                     }
 
-                    if (json_obj_get_string(&pWebConfig->jctx, "SSID", str_val, sizeof(str_val)) == OS_SUCCESS)
+                    if (json_obj_get_string(&pWebConfig->jctx, "WIFI_SSID", str_val, sizeof(str_val)) == OS_SUCCESS)
                     {
                         control_set_config_wifi_ssid(str_val);
                     }
 
-                    if (json_obj_get_string(&pWebConfig->jctx, "PW", str_val, sizeof(str_val)) == OS_SUCCESS)
+                    if (json_obj_get_string(&pWebConfig->jctx, "WIFI_PW", str_val, sizeof(str_val)) == OS_SUCCESS)
                     {
                         control_set_config_wifi_password(str_val);
                     }
@@ -452,6 +449,7 @@ static esp_err_t ws_handler(httpd_req_t *req)
                     // save it and reboot after
                     control_save_user_data(1);
                 }
+               
                 else if (strcmp(str_val, "SETPARAM") == 0)
                 {
                     uint16_t index;
@@ -869,9 +867,9 @@ static esp_err_t http_server_init(void)
     http_config.stack_size         = (3 * 1024);  
     http_config.server_port        = 80;
     http_config.ctrl_port          = 32768;
-    http_config.max_open_sockets   = 2;
+    http_config.max_open_sockets   = 4;
     http_config.max_uri_handlers   = 2;
-    http_config.max_resp_headers   = 3;
+    http_config.max_resp_headers   = 6;
     http_config.backlog_conn       = 1;
     http_config.keep_alive_enable  = true;
     http_config.keep_alive_idle    = 10;     // seconds

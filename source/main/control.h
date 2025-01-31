@@ -103,7 +103,7 @@ enum WiFiModes
     WIFI_MODE_ACCESS_POINT              // access point, no timeout
 };
 
-#define MAX_WIFI_SSID_PW       33
+#define MAX_WIFI_SSID_PW       65   
 
 // thread safe public API
 void control_request_preset_up(void);
