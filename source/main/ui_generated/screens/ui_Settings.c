@@ -467,7 +467,7 @@ void ui_Settings_screen_init(void)
     lv_obj_set_width(ui_EQBassLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_EQBassLabel, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(ui_EQBassLabel, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_EQBassLabel, "Bass Freq");
+    lv_label_set_text(ui_EQBassLabel, "Bass");
     lv_obj_set_style_text_font(ui_EQBassLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_EQMidFreqGroup = lv_obj_create(ui_EQTab);
@@ -501,7 +501,7 @@ void ui_Settings_screen_init(void)
     lv_obj_set_width(ui_EQMidLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_EQMidLabel, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(ui_EQMidLabel, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_EQMidLabel, "Mid Freq");
+    lv_label_set_text(ui_EQMidLabel, "Mid");
     lv_obj_set_style_text_font(ui_EQMidLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_EQTrebleFreqGroup = lv_obj_create(ui_EQTab);
@@ -536,7 +536,7 @@ void ui_Settings_screen_init(void)
     lv_obj_set_width(ui_EQTrebleLabel, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_EQTrebleLabel, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(ui_EQTrebleLabel, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_EQTrebleLabel, "Treble Freq");
+    lv_label_set_text(ui_EQTrebleLabel, "Treble");
     lv_obj_set_style_text_font(ui_EQTrebleLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_ReverbPage = lv_tabview_add_tab(ui_SettingsTabview, "Rev");
@@ -1423,7 +1423,7 @@ void ui_Settings_screen_init(void)
     lv_obj_set_x(ui_AmplifierPresenseLabel, -8);
     lv_obj_set_y(ui_AmplifierPresenseLabel, -34);
     lv_obj_set_align(ui_AmplifierPresenseLabel, LV_ALIGN_LEFT_MID);
-    lv_label_set_text(ui_AmplifierPresenseLabel, "Presense");
+    lv_label_set_text(ui_AmplifierPresenseLabel, "Presence");
     lv_obj_set_style_text_font(ui_AmplifierPresenseLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_AmplifierPresenseSlider = lv_slider_create(ui_Amplifier);

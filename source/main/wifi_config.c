@@ -58,22 +58,43 @@ limitations under the License.
 #define WIFI_CONNECTED_BIT      BIT0
 #define WIFI_FAIL_BIT           BIT1
 #define MAX_TEMP_BUFFER         (20 * 1024)
+#define MAX_TEXT_LENGTH         128
 
 static int s_retry_num = 0;
-int wifi_connect_status = 0;
+static int wifi_connect_status = 0;
 static const char *TAG = "wifi_config";
 static uint8_t client_connected = 0;
 static httpd_handle_t http_server = NULL;
 static httpd_config_t http_config = HTTPD_DEFAULT_CONFIG();
 static EventGroupHandle_t s_wifi_event_group;
+static QueueHandle_t wifi_input_queue;
+static const size_t max_clients = 3;
 
 static esp_err_t index_get_handler(httpd_req_t *req);
-static esp_err_t update_post_handler(httpd_req_t* req);
 static esp_err_t get_handler(httpd_req_t *req);
 static esp_err_t ws_handler(httpd_req_t *req);
-static void ws_async_send(void *arg);
-static esp_err_t trigger_async_send(httpd_handle_t handle, httpd_req_t *req);
 static void wifi_kill_all(void);
+static void send_params_async(void *arg);
+static void send_preset_async(void *arg);
+static void send_config_async(void *arg);
+static void ws_send_all_clients(httpd_handle_t* server, void (*functionPtr)(void* arg));
+static void wifi_build_params_json(void);
+static void wifi_build_config_json(void);
+static void wifi_build_preset_json(void);
+
+enum WiFivents
+{
+    EVENT_SYNC_PARAMS,
+    EVENT_SYNC_PRESET,
+    EVENT_SYNC_CONFIG
+};
+
+typedef struct
+{
+    uint8_t Event;
+    uint32_t Value;
+    char Text[MAX_TEXT_LENGTH];
+} tWiFiMessage;
 
 typedef struct
 {
@@ -86,6 +107,8 @@ typedef struct
     jparse_ctx_t jctx;
     json_gen_str_t jstr;
     httpd_ws_frame_t ws_rsp;
+    char PresetName[MAX_TEXT_LENGTH];
+    uint16_t PresetIndex;
     char wifi_ssid[MAX_WIFI_SSID_PW];
     char wifi_password[MAX_WIFI_SSID_PW];
     char TempBuffer[MAX_TEMP_BUFFER];
@@ -99,22 +122,13 @@ static const httpd_uri_t index_get =
 	.user_ctx = NULL
 };
 
-#if 0
-static const httpd_uri_t update_post = 
-{
-	.uri	  = "/config",
-	.method   = HTTP_POST,
-	.handler  = update_post_handler,
-	.user_ctx = NULL
-};
-#endif 
-
 static const httpd_uri_t ws = {
     .uri        = "/ws",
     .method     = HTTP_GET,
     .handler    = ws_handler,
     .user_ctx   = NULL,
-    .is_websocket = true
+    .is_websocket = true,
+    .handle_ws_control_frames = true
 };
 
 // web page for config
@@ -129,20 +143,108 @@ static tWebConfigData* pWebConfig;
 * NAME:        
 * DESCRIPTION: 
 * PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+static uint8_t process_wifi_command(tWiFiMessage* message)
+{
+    ESP_LOGI(TAG, "command %d", message->Event);
+
+    // check what we got
+    switch (message->Event)
+    {
+        case EVENT_SYNC_PARAMS:
+        {
+            // send to all web sockets clients
+            ws_send_all_clients(&http_server, &send_params_async);
+        } break;
+
+        case EVENT_SYNC_PRESET:
+        {
+            // save preset details
+            memcpy((void*)pWebConfig->PresetName, (void*)message->Text, MAX_TEXT_LENGTH - 1);
+            pWebConfig->PresetIndex = message->Value;
+
+            // send to all web sockets clients
+            ws_send_all_clients(&http_server, &send_preset_async);
+        } break;
+
+        case EVENT_SYNC_CONFIG:
+        {
+            // send to all web sockets clients
+            ws_send_all_clients(&http_server, &send_config_async);
+        } break;    
+    }
+
+    return 1;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void wifi_request_sync(uint8_t type, void* arg1, void* arg2)
+{
+    tWiFiMessage message;
+
+    ESP_LOGI(TAG, "wifi_request_sync");            
+
+    switch (type)
+    {
+        case  WIFI_SYNC_TYPE_PARAMS:
+        default:
+        {
+            message.Event = EVENT_SYNC_PARAMS;
+        } break;
+
+        case WIFI_SYNC_TYPE_PRESET:
+        {
+            message.Event = EVENT_SYNC_PRESET;
+
+            // get preset name
+            memcpy((void*)message.Text, arg1, MAX_TEXT_LENGTH - 1);
+
+            // get preset index
+            message.Value = *(uint32_t*)arg2;
+        } break;
+
+        case WIFI_SYNC_TYPE_CONFIG:
+        {
+            message.Event = EVENT_SYNC_CONFIG;
+        } break;
+    }
+
+    // send to queue
+    if (xQueueSend(wifi_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "wifi_request_sync queue send failed!");            
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
-static void ws_async_send(void *arg)
+static void send_params_async(void *arg)
 {
-    static const char * data = "Async data";
-    async_resp_arg *resp_arg = arg;
+    async_resp_arg* resp_arg = arg;
     httpd_handle_t hd = resp_arg->hd;
     int fd = resp_arg->fd;
     httpd_ws_frame_t ws_pkt;
 
     memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
-    ws_pkt.payload = (uint8_t*)data;
-    ws_pkt.len = strlen(data);
+
+    // build params
+    wifi_build_params_json();
+
+    ws_pkt.payload = (uint8_t*)&pWebConfig->jstr;
+    ws_pkt.len = strlen((char*)ws_pkt.payload);
     ws_pkt.type = HTTPD_WS_TYPE_TEXT;
 
     httpd_ws_send_frame_async(hd, fd, &ws_pkt);
@@ -156,12 +258,97 @@ static void ws_async_send(void *arg)
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
-static esp_err_t trigger_async_send(httpd_handle_t handle, httpd_req_t *req)
+static void send_preset_async(void *arg)
 {
-    async_resp_arg *resp_arg = malloc(sizeof(async_resp_arg));
-    resp_arg->hd = req->handle;
-    resp_arg->fd = httpd_req_to_sockfd(req);
-    return httpd_queue_work(handle, ws_async_send, resp_arg);
+    async_resp_arg* resp_arg = arg;
+    httpd_handle_t hd = resp_arg->hd;
+    int fd = resp_arg->fd;
+    httpd_ws_frame_t ws_pkt;
+
+    memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
+
+    // build json
+    wifi_build_preset_json();
+
+    ws_pkt.payload = (uint8_t*)&pWebConfig->jstr;
+    ws_pkt.len = strlen((char*)ws_pkt.payload);
+    ws_pkt.type = HTTPD_WS_TYPE_TEXT;
+
+    httpd_ws_send_frame_async(hd, fd, &ws_pkt);
+    free(resp_arg);
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+static void send_config_async(void *arg)
+{
+    async_resp_arg* resp_arg = arg;
+    httpd_handle_t hd = resp_arg->hd;
+    int fd = resp_arg->fd;
+    httpd_ws_frame_t ws_pkt;
+
+    memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
+
+    // build params
+    wifi_build_config_json();
+
+    ws_pkt.payload = (uint8_t*)&pWebConfig->jstr;
+    ws_pkt.len = strlen((char*)ws_pkt.payload);
+    ws_pkt.type = HTTPD_WS_TYPE_TEXT;
+
+    httpd_ws_send_frame_async(hd, fd, &ws_pkt);
+    free(resp_arg);
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+static void ws_send_all_clients(httpd_handle_t* server, void (*functionPtr)(void* arg))
+{
+    size_t clients = max_clients;
+    int client_fds[max_clients];
+
+    if ((wifi_connect_status == 0) && (client_connected == 0))
+    {
+        // no clients, no point in processing
+        return;
+    }
+
+    if (httpd_get_client_list(*server, &clients, client_fds) == ESP_OK) 
+    {
+        // loop all connected clients
+        for (size_t i = 0; i < clients; ++i) 
+        {
+            // get the socket
+            int sock = client_fds[i];
+
+            // get the fd info
+            if (httpd_ws_get_fd_info(*server, sock) == HTTPD_WS_CLIENT_WEBSOCKET) 
+            {
+                ESP_LOGI(TAG, "Active client (fd=%d) -> sending async message", sock);
+                async_resp_arg *resp_arg = heap_caps_malloc(sizeof(async_resp_arg), MALLOC_CAP_SPIRAM);
+
+                resp_arg->hd = *server;
+                resp_arg->fd = sock;
+
+                // queue work via function pointer
+                if (httpd_queue_work(resp_arg->hd, *functionPtr, resp_arg) != ESP_OK) 
+                {
+                    ESP_LOGE(TAG, "httpd_queue_work failed!");
+                    break;
+                }
+            }
+        }
+    }
 }
 
 /****************************************************************************
@@ -199,19 +386,186 @@ static esp_err_t build_send_ws_response_packet(httpd_req_t *req, char* payload)
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
+static void wifi_build_params_json(void)
+{
+    char str_val[64];
+    tTonexParameter* param_ptr;
+
+    // init generation of json response
+    json_gen_str_start(&pWebConfig->jstr, pWebConfig->TempBuffer, MAX_TEMP_BUFFER, NULL, NULL);
+
+    // start json object, adds {
+    json_gen_start_object(&pWebConfig->jstr);
+
+    // add response
+    json_gen_obj_set_string(&pWebConfig->jstr, "CMD", "GETPARAMS");
+
+    json_gen_push_object(&pWebConfig->jstr, "PARAMS");
+
+    for (uint16_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
+    {
+        // get access to parameters
+        tonex_params_get_locked_access(&param_ptr);
+
+        // add param index
+        sprintf(str_val, "%d", loop);
+        json_gen_push_object(&pWebConfig->jstr, str_val);
+
+        // add param details
+        json_gen_obj_set_float(&pWebConfig->jstr, "Val", param_ptr[loop].Value);
+        json_gen_obj_set_float(&pWebConfig->jstr, "Min", param_ptr[loop].Min);
+        json_gen_obj_set_float(&pWebConfig->jstr, "Max", param_ptr[loop].Max);
+        json_gen_obj_set_string(&pWebConfig->jstr, "NAME", param_ptr[loop].Name);
+
+        json_gen_pop_object(&pWebConfig->jstr);
+
+        // don't hog the param pointer                    
+        tonex_params_release_locked_access();
+    }
+    
+    // add the } for PARAMS
+    json_gen_pop_object(&pWebConfig->jstr);
+
+    // add the } for end
+    json_gen_end_object(&pWebConfig->jstr);
+
+    // end generation
+    json_gen_str_end(&pWebConfig->jstr);
+
+    //debug ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
+
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+static void wifi_build_config_json(void)
+{
+    char str_val[64];
+
+    // init generation of json response
+    json_gen_str_start(&pWebConfig->jstr, pWebConfig->TempBuffer, MAX_TEMP_BUFFER, NULL, NULL);
+
+    // start json object, adds {
+    json_gen_start_object(&pWebConfig->jstr);
+
+    // add response
+    json_gen_obj_set_string(&pWebConfig->jstr, "CMD", "GETCONFIG");
+
+    // add config
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MODE", control_get_config_bt_mode());
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_CHOC_EN", control_get_config_bt_mvave_choc_enable());
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MD1_EN", control_get_config_bt_xvive_md1_enable());
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_CUST_EN", control_get_config_bt_custom_enable());
+
+    control_get_config_custom_bt_name(str_val);
+    json_gen_obj_set_string(&pWebConfig->jstr, "BT_CUST_NAME", str_val);
+
+    json_gen_obj_set_int(&pWebConfig->jstr, "TOGGLE_BYPASS", control_get_config_double_toggle());
+    json_gen_obj_set_int(&pWebConfig->jstr, "S_MIDI_EN", control_get_config_midi_serial_enable());
+    json_gen_obj_set_int(&pWebConfig->jstr, "S_MIDI_CH", control_get_config_midi_channel());
+    json_gen_obj_set_int(&pWebConfig->jstr, "FOOTSW_MODE", control_get_config_footswitch_mode());
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MIDI_CC", control_get_config_enable_bt_midi_CC());
+    json_gen_obj_set_int(&pWebConfig->jstr, "WIFI_MODE", control_get_config_wifi_mode());
+
+    control_get_config_wifi_ssid(str_val);
+    json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_SSID", str_val);
+
+    // might be best not to send password??
+    control_get_config_wifi_password(str_val);
+    json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_PW", str_val);
+
+    // add the }
+    json_gen_end_object(&pWebConfig->jstr);
+
+    // end generation
+    json_gen_str_end(&pWebConfig->jstr);
+
+    ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+static void wifi_build_preset_json(void)
+{
+    // init generation of json response
+    json_gen_str_start(&pWebConfig->jstr, pWebConfig->TempBuffer, MAX_TEMP_BUFFER, NULL, NULL);
+
+    // start json object, adds {
+    json_gen_start_object(&pWebConfig->jstr);
+
+    // add response
+    json_gen_obj_set_string(&pWebConfig->jstr, "CMD", "GETPRESET");
+
+    // add preset details
+    json_gen_obj_set_string(&pWebConfig->jstr, "NAME", pWebConfig->PresetName);
+    json_gen_obj_set_int(&pWebConfig->jstr, "INDEX", pWebConfig->PresetIndex);
+
+    // add the }
+    json_gen_end_object(&pWebConfig->jstr);
+
+    // end generation
+    json_gen_str_end(&pWebConfig->jstr);
+
+    ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+esp_err_t wss_open_fd(httpd_handle_t hd, int sockfd)
+{
+    ESP_LOGE(TAG, "New client connected %d", sockfd);
+    return ESP_OK;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
+void wss_close_fd(httpd_handle_t hd, int sockfd)
+{
+    ESP_LOGE(TAG, "Client disconnected %d", sockfd);
+    close(sockfd);
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      none
+* NOTES:       none
+****************************************************************************/
 static esp_err_t ws_handler(httpd_req_t *req)
 {
+    httpd_ws_frame_t ws_pkt;
+    uint8_t* buf = NULL;
+    char str_val[64];
+    int int_val;
+
     if (req->method == HTTP_GET) 
     {
         ESP_LOGI(TAG, "Handshake done, the new connection was opened");
         return ESP_OK;
     }
-    
-    httpd_ws_frame_t ws_pkt;
-    uint8_t* buf = NULL;
 
     memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
-    ws_pkt.type = HTTPD_WS_TYPE_TEXT;
     
     // Set max_len = 0 to get the frame len 
     esp_err_t ret = httpd_ws_recv_frame(req, &ws_pkt, 0);
@@ -246,236 +600,172 @@ static esp_err_t ws_handler(httpd_req_t *req)
         
         //ESP_LOGI(TAG, "Got ws packet with message: %s", ws_pkt.payload);
 
-        // parse the json command        
-        char str_val[64];
-        int int_val;
-
-        ESP_LOGI(TAG, "%s", ws_pkt.payload);
-
-        if (json_parse_start(&pWebConfig->jctx, (const char*)ws_pkt.payload, strlen((const char*)ws_pkt.payload)) == OS_SUCCESS)
+        if (ws_pkt.type == HTTPD_WS_TYPE_CLOSE)
         {
-            // get the command
-            if (json_obj_get_string(&pWebConfig->jctx, "CMD", str_val, sizeof(str_val)) == OS_SUCCESS)
+            // Response CLOSE packet with no payload to peer
+            ESP_LOGI(TAG, "Client Close");
+
+            ws_pkt.len = 0;
+            ws_pkt.payload = NULL;
+
+            ret = httpd_ws_send_frame(req, &ws_pkt);
+        }
+        else if (ws_pkt.type == HTTPD_WS_TYPE_TEXT)
+        {
+            // parse the json command        
+            ESP_LOGI(TAG, "%s", ws_pkt.payload);
+
+            if (json_parse_start(&pWebConfig->jctx, (const char*)ws_pkt.payload, strlen((const char*)ws_pkt.payload)) == OS_SUCCESS)
             {
-                ESP_LOGI(TAG, "WS got command %s", str_val);
-
-                if (strcmp(str_val, "GETPARAMS") == 0)
+                // get the command
+                if (json_obj_get_string(&pWebConfig->jctx, "CMD", str_val, sizeof(str_val)) == OS_SUCCESS)
                 {
-                    // send current params
-                    ESP_LOGI(TAG, "Param request");
-                    tTonexParameter* param_ptr;
+                    ESP_LOGI(TAG, "WS got command %s", str_val);
 
-                    // init generation of json response
-                    json_gen_str_start(&pWebConfig->jstr, pWebConfig->TempBuffer, MAX_TEMP_BUFFER, NULL, NULL);
-
-                    // start json object, adds {
-                    json_gen_start_object(&pWebConfig->jstr);
-
-                    // add response
-                    json_gen_obj_set_string(&pWebConfig->jstr, "CMD", "GETPARAMS");
-
-                    json_gen_push_object(&pWebConfig->jstr, "PARAMS");
-
-                    for (uint16_t loop = 0; loop < TONEX_PARAM_LAST; loop++)
+                    if (strcmp(str_val, "GETPARAMS") == 0)
                     {
-                        // get access to parameters
-                        tonex_params_get_locked_access(&param_ptr);
+                        // send current params
+                        ESP_LOGI(TAG, "Param request");
 
-                        // add param index
-                        sprintf(str_val, "%d", loop);
-                        json_gen_push_object(&pWebConfig->jstr, str_val);
-
-                        // add param details
-                        json_gen_obj_set_float(&pWebConfig->jstr, "Val", param_ptr[loop].Value);
-                        json_gen_obj_set_float(&pWebConfig->jstr, "Min", param_ptr[loop].Min);
-                        json_gen_obj_set_float(&pWebConfig->jstr, "Max", param_ptr[loop].Max);
-                        json_gen_obj_set_string(&pWebConfig->jstr, "NAME", param_ptr[loop].Name);
-
-                        json_gen_pop_object(&pWebConfig->jstr);
-
-                        // don't hog the param pointer                    
-                        tonex_params_release_locked_access();
+                        // build json
+                        wifi_build_params_json();   
+                        
+                        // build packet and send
+                        build_send_ws_response_packet(req, pWebConfig->TempBuffer);              
                     }
-                    
-                    // add the } for PARAMS
-                    json_gen_pop_object(&pWebConfig->jstr);
-
-                    // add the } for end
-                    json_gen_end_object(&pWebConfig->jstr);
-
-                    // end generation
-                    json_gen_str_end(&pWebConfig->jstr);
-
-                    //debug ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
-
-                    // build packet and send
-                    build_send_ws_response_packet(req, pWebConfig->TempBuffer);
-                }
-                else if (strcmp(str_val, "GETCONFIG") == 0)
-                {
-                    // send current config
-                    ESP_LOGI(TAG, "Config request");
-
-                    // init generation of json response
-                    json_gen_str_start(&pWebConfig->jstr, pWebConfig->TempBuffer, MAX_TEMP_BUFFER, NULL, NULL);
-
-                    // start json object, adds {
-                    json_gen_start_object(&pWebConfig->jstr);
-
-                    // add response
-                    json_gen_obj_set_string(&pWebConfig->jstr, "CMD", "GETCONFIG");
-
-                    // add config
-                    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MODE", control_get_config_bt_mode());
-                    json_gen_obj_set_int(&pWebConfig->jstr, "BT_CHOC_EN", control_get_config_bt_mvave_choc_enable());
-                    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MD1_EN", control_get_config_bt_xvive_md1_enable());
-                    json_gen_obj_set_int(&pWebConfig->jstr, "BT_CUST_EN", control_get_config_bt_custom_enable());
-
-                    control_get_config_custom_bt_name(str_val);
-                    json_gen_obj_set_string(&pWebConfig->jstr, "BT_CUST_NAME", str_val);
-
-                    json_gen_obj_set_int(&pWebConfig->jstr, "TOGGLE_BYPASS", control_get_config_double_toggle());
-                    json_gen_obj_set_int(&pWebConfig->jstr, "S_MIDI_EN", control_get_config_midi_serial_enable());
-                    json_gen_obj_set_int(&pWebConfig->jstr, "S_MIDI_CH", control_get_config_midi_channel());
-                    json_gen_obj_set_int(&pWebConfig->jstr, "FOOTSW_MODE", control_get_config_footswitch_mode());
-                    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MIDI_CC", control_get_config_enable_bt_midi_CC());
-                    json_gen_obj_set_int(&pWebConfig->jstr, "WIFI_MODE", control_get_config_wifi_mode());
-
-                    control_get_config_wifi_ssid(str_val);
-                    json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_SSID", str_val);
-
-                    // might be best not to send password??
-                    control_get_config_wifi_password(str_val);
-                    json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_PW", str_val);
-
-                    // add the }
-                    json_gen_end_object(&pWebConfig->jstr);
-
-                    // end generation
-                    json_gen_str_end(&pWebConfig->jstr);
-
-                    ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
-
-                    // build packet and send
-                    build_send_ws_response_packet(req, pWebConfig->TempBuffer);
-                }
-                else if (strcmp(str_val, "GETPRESET") == 0)
-                {
-                    // send current preset details
-                    ESP_LOGI(TAG, "Preset request");
-                    
-                }
-                else if (strcmp(str_val, "SETCONFIG") == 0)
-                {
-                    // set config
-                    ESP_LOGI(TAG, "Config Set");
-
-                    if (json_obj_get_string(&pWebConfig->jctx, "S_MIDI_EN", str_val, sizeof(str_val)) == OS_SUCCESS)
+                    else if (strcmp(str_val, "GETCONFIG") == 0)
                     {
-                        control_set_config_serial_midi_enable(atoi(str_val));
+                        // send current config
+                        ESP_LOGI(TAG, "Config request");
+
+                        // build response
+                        wifi_build_config_json();
+                        
+                        // build packet and send
+                        build_send_ws_response_packet(req, pWebConfig->TempBuffer);
                     }
-
-                    if (json_obj_get_string(&pWebConfig->jctx, "S_MIDI_CH", str_val, sizeof(str_val)) == OS_SUCCESS)
+                    else if (strcmp(str_val, "GETPRESET") == 0)
                     {
-                        control_set_config_serial_midi_channel(atoi(str_val));        
+                        // send current preset details
+                        ESP_LOGI(TAG, "Preset request");
+
+                        // build json response
+                        wifi_build_preset_json();
+                        
+                        // build packet and send
+                        build_send_ws_response_packet(req, pWebConfig->TempBuffer);
                     }
-
-                    if (json_obj_get_string(&pWebConfig->jctx, "TOGGLE_BYPASS", str_val, sizeof(str_val)) == OS_SUCCESS)
+                    else if (strcmp(str_val, "SETCONFIG") == 0)
                     {
-                        control_set_config_toggle_bypass(atoi(str_val));
-                    }
-                    
-                    if (json_obj_get_string(&pWebConfig->jctx, "BT_CHOC_EN", str_val, sizeof(str_val)) == OS_SUCCESS)
-                    {
-                        control_set_config_mv_choc_enable(atoi(str_val));
-                    }
+                        // set config
+                        ESP_LOGI(TAG, "Config Set");
 
-                    if (json_obj_get_string(&pWebConfig->jctx, "BT_MD1_EN", str_val, sizeof(str_val)) == OS_SUCCESS)
-                    {
-                        control_set_config_xv_md1_enable(atoi(str_val));
-                    }
-
-                    if (json_obj_get_string(&pWebConfig->jctx, "BT_CUST_EN", str_val, sizeof(str_val)) == OS_SUCCESS)
-                    {
-                        control_set_config_bt_custom_enable(atoi(str_val));
-                    }
-                    
-                    if (json_obj_get_string(&pWebConfig->jctx, "BT_CUST_NAME", str_val, sizeof(str_val)) == OS_SUCCESS)
-                    {
-                        control_set_config_custom_bt_name(str_val);
-                    }
-
-                    if (json_obj_get_string(&pWebConfig->jctx, "BT_MIDI_CC", str_val, sizeof(str_val)) == OS_SUCCESS)
-                    {
-                        control_set_config_enable_bt_midi_CC(atoi(str_val));
-                    }
-                    
-                    if (json_obj_get_string(&pWebConfig->jctx, "FOOTSW_MODE", str_val, sizeof(str_val)) == OS_SUCCESS)
-                    {
-                        control_set_config_footswitch_mode(atoi(str_val));
-                    }
-
-                    vTaskDelay(pdMS_TO_TICKS(250));
-                    stop_webserver();
-                    vTaskDelay(pdMS_TO_TICKS(250));
-
-                    // save it and reboot after
-                    control_save_user_data(1);
-                }
-                else if (strcmp(str_val, "SETWIFI") == 0)
-                {
-                    // set config
-                    ESP_LOGI(TAG, "WiFi Set");
-
-                    if (json_obj_get_int(&pWebConfig->jctx, "WIFI_MODE", &int_val) == OS_SUCCESS)
-                    {
-                        control_set_config_wifi_mode(int_val);
-                    }
-
-                    if (json_obj_get_string(&pWebConfig->jctx, "WIFI_SSID", str_val, sizeof(str_val)) == OS_SUCCESS)
-                    {
-                        control_set_config_wifi_ssid(str_val);
-                    }
-
-                    if (json_obj_get_string(&pWebConfig->jctx, "WIFI_PW", str_val, sizeof(str_val)) == OS_SUCCESS)
-                    {
-                        control_set_config_wifi_password(str_val);
-                    }
-
-                    vTaskDelay(pdMS_TO_TICKS(250));
-                    stop_webserver();
-                    vTaskDelay(pdMS_TO_TICKS(250));
-
-                    // save it and reboot after
-                    control_save_user_data(1);
-                }
-               
-                else if (strcmp(str_val, "SETPARAM") == 0)
-                {
-                    uint16_t index;
-                    float value;
-
-                    ESP_LOGI(TAG, "Set Param");
-
-                    if (json_obj_get_string(&pWebConfig->jctx, "INDEX", str_val, sizeof(str_val)) == OS_SUCCESS)
-                    {
-                        index = atoi(str_val);
-
-                        if (json_obj_get_string(&pWebConfig->jctx, "VALUE", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        if (json_obj_get_string(&pWebConfig->jctx, "S_MIDI_EN", str_val, sizeof(str_val)) == OS_SUCCESS)
                         {
-                            value = atof(str_val);
-                            usb_modify_parameter(index, value);
+                            control_set_config_serial_midi_enable(atoi(str_val));
+                        }
+
+                        if (json_obj_get_string(&pWebConfig->jctx, "S_MIDI_CH", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_serial_midi_channel(atoi(str_val));        
+                        }
+
+                        if (json_obj_get_string(&pWebConfig->jctx, "TOGGLE_BYPASS", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_toggle_bypass(atoi(str_val));
+                        }
+                        
+                        if (json_obj_get_string(&pWebConfig->jctx, "BT_CHOC_EN", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_mv_choc_enable(atoi(str_val));
+                        }
+
+                        if (json_obj_get_string(&pWebConfig->jctx, "BT_MD1_EN", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_xv_md1_enable(atoi(str_val));
+                        }
+
+                        if (json_obj_get_string(&pWebConfig->jctx, "BT_CUST_EN", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_bt_custom_enable(atoi(str_val));
+                        }
+                        
+                        if (json_obj_get_string(&pWebConfig->jctx, "BT_CUST_NAME", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_custom_bt_name(str_val);
+                        }
+
+                        if (json_obj_get_string(&pWebConfig->jctx, "BT_MIDI_CC", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_enable_bt_midi_CC(atoi(str_val));
+                        }
+                        
+                        if (json_obj_get_string(&pWebConfig->jctx, "FOOTSW_MODE", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_footswitch_mode(atoi(str_val));
+                        }
+
+                        vTaskDelay(pdMS_TO_TICKS(250));
+                        stop_webserver();
+                        vTaskDelay(pdMS_TO_TICKS(250));
+
+                        // save it and reboot after
+                        control_save_user_data(1);
+                    }
+                    else if (strcmp(str_val, "SETWIFI") == 0)
+                    {
+                        // set config
+                        ESP_LOGI(TAG, "WiFi Set");
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "WIFI_MODE", &int_val) == OS_SUCCESS)
+                        {
+                            control_set_config_wifi_mode(int_val);
+                        }
+
+                        if (json_obj_get_string(&pWebConfig->jctx, "WIFI_SSID", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_wifi_ssid(str_val);
+                        }
+
+                        if (json_obj_get_string(&pWebConfig->jctx, "WIFI_PW", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_wifi_password(str_val);
+                        }
+
+                        vTaskDelay(pdMS_TO_TICKS(250));
+                        stop_webserver();
+                        vTaskDelay(pdMS_TO_TICKS(250));
+
+                        // save it and reboot after
+                        control_save_user_data(1);
+                    }                
+                    else if (strcmp(str_val, "SETPARAM") == 0)
+                    {
+                        uint16_t index;
+                        float value;
+
+                        ESP_LOGI(TAG, "Set Param");
+
+                        if (json_obj_get_string(&pWebConfig->jctx, "INDEX", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            index = atoi(str_val);
+
+                            if (json_obj_get_string(&pWebConfig->jctx, "VALUE", str_val, sizeof(str_val)) == OS_SUCCESS)
+                            {
+                                value = atof(str_val);
+                                usb_modify_parameter(index, value);
+                            }
                         }
                     }
-                }
-                else if (strcmp(str_val, "SETPRESET") == 0)
-                {
-                    // set preset
-                    ESP_LOGI(TAG, "Preset Set");
-
-                    if (json_obj_get_string(&pWebConfig->jctx, "PRESET", str_val, sizeof(str_val)) == OS_SUCCESS)
+                    else if (strcmp(str_val, "SETPRESET") == 0)
                     {
-                        control_request_preset_index(atoi(str_val));
+                        // set preset
+                        ESP_LOGI(TAG, "Preset Set");
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "PRESET", &int_val) == OS_SUCCESS)
+                        {
+                            control_request_preset_index(int_val);
+                        }
                     }
                 }
             }
@@ -484,15 +774,6 @@ static esp_err_t ws_handler(httpd_req_t *req)
         free(buf);
     }    
     
-#if 0    
-    ESP_LOGI(TAG, "Packet type: %d", ws_pkt.type);
-    if (ws_pkt.type == HTTPD_WS_TYPE_TEXT && strcmp((char*)ws_pkt.payload,"Trigger async") == 0) 
-    {
-        free(buf);
-        return trigger_async_send(req->handle, req);
-    }
-#endif 
-
     return ret;
 }
 
@@ -617,228 +898,6 @@ uint8_t get_submitted_value(char* dest, char* ptr)
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
-static esp_err_t update_post_handler(httpd_req_t* req)
-{
-    char value[32] = {0};
-    char* ptr;
-    uint8_t temp_val;
-
-    //ESP_LOGI(TAG, "root_post_handler req->uri=[%s]", req->uri);
-	//ESP_LOGI(TAG, "root_post_handler content length %d", req->content_len);
-	char*  buf = malloc(req->content_len + 1);
-
-	size_t off = 0;
-	while (off < req->content_len) 
-    {
-		// Read data received in the request
-		int ret = httpd_req_recv(req, buf + off, req->content_len - off);
-		if (ret <= 0) 
-        {
-			if (ret == HTTPD_SOCK_ERR_TIMEOUT) 
-            {
-				httpd_resp_send_408(req);
-			}
-			free (buf);
-            ESP_LOGE(TAG, "update_post_handler failed timeout");
-			return ESP_FAIL;
-		}
-		off += ret;
-		//ESP_LOGI(TAG, "root_post_handler recv length %d", ret);
-	}
-	buf[off] = '\0';
-	ESP_LOGI(TAG, "root_post_handler buf=[%s]", buf);
-
-    // check for POST elements                  
-    // look for bt mode
-    ptr = strstr(buf, "btmode=");    
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("btmode=");
-        get_submitted_value(value, ptr);
- 
-        uint8_t index = BT_MODE_CENTRAL;
-        if (strcmp(value, "disabled") == 0)
-        {
-            index = BT_MODE_DISABLED;
-        }
-        else if (strcmp(value, "client") == 0)
-        {
-            index = BT_MODE_CENTRAL;
-        }
-        else if (strcmp(value, "server") == 0)
-        {
-            index = BT_MODE_PERIPHERAL;
-        }
-        control_set_config_btmode(index);
-    }
-
-    // look for midienabled
-    ptr = strstr(buf, "midienabled=");    
-    temp_val = 0;
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("midienabled=");
-        get_submitted_value(value, ptr);
-
-        if (strcmp(value, "on") == 0)
-        {
-            temp_val = 1;
-        }
-    }
-    control_set_config_serial_midi_enable(temp_val);
-
-    // look for midichannel
-    ptr = strstr(buf, "midichannel=");    
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("midichannel=");
-        get_submitted_value(value, ptr);
-
-        control_set_config_serial_midi_channel(atoi(value));        
-    }
-    
-    // look for togglebypass
-    ptr = strstr(buf, "togglebypass=");   
-    temp_val = 0;
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("togglebypass=");
-        get_submitted_value(value, ptr);
-
-        if (strcmp(value, "on") == 0)
-        {
-            temp_val = 1;
-        }
-    }
-    control_set_config_toggle_bypass(temp_val);
-
-    // look for mvavechoc
-    ptr = strstr(buf, "mvavechoc=");    
-    temp_val = 0;
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("mvavechoc=");
-        get_submitted_value(value, ptr);
-
-        if (strcmp(value, "on") == 0)
-        {
-            temp_val = 1;
-        }
-    }   
-    control_set_config_mv_choc_enable(temp_val);
-
-    // look for xvivemd1
-    ptr = strstr(buf, "xvivemd1=");    
-    temp_val = 0;
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("xvivemd1=");
-        get_submitted_value(value, ptr);
-
-        if (strcmp(value, "on") == 0)
-        {
-            temp_val = 1;
-        }
-    }
-    control_set_config_xv_md1_enable(temp_val);
-
-
-    // look for custom BT device enable
-    ptr = strstr(buf, "custombte=");    
-    temp_val = 0;
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("custombte=");
-        get_submitted_value(value, ptr);
-
-        if (strcmp(value, "on") == 0)
-        {
-            temp_val = 1;
-        }
-    }   
-    control_set_config_bt_custom_enable(temp_val);
-
-    // look for custom BT name
-    ptr = strstr(buf, "custombt=");    
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("custombt=");
-        get_submitted_value(value, ptr);
-
-        control_set_config_custom_bt_name(value);
-    }
-
-    // look for BT midi CC
-    ptr = strstr(buf, "btmidicc=");    
-    temp_val = 0;
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("btmidicc=");
-        get_submitted_value(value, ptr);
-
-        if (strcmp(value, "on") == 0)
-        {
-            temp_val = 1;
-        }
-    }   
-    control_set_config_enable_bt_midi_CC(temp_val);
-
-    // look for footswitch mode
-    ptr = strstr(buf, "footmode=");    
-    if (ptr != NULL)
-    {
-        // skip up to =
-        ptr += strlen("footmode=");
-        get_submitted_value(value, ptr);
- 
-        uint8_t mode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
-        if (strcmp(value, "Dual Next/Previous") == 0)
-        {
-            mode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
-        }
-        else if (strcmp(value, "Quad Banked") == 0)
-        {
-            mode = FOOTSWITCH_MODE_QUAD_BANKED;
-        }
-        else if (strcmp(value, "Quad Binary") == 0)
-        {
-            mode = FOOTSWITCH_MODE_QUAD_BINARY;
-        }
-        control_set_config_footswitch_mode(mode);
-    }
-
-    free(buf);
-
-    // Send a simple response
-    const char resp[] = "<span style=\"font-size: 7vw;\">Config save complete. Rebooting...</span>\n";
-    httpd_resp_send(req, resp, HTTPD_RESP_USE_STRLEN);
-
-    vTaskDelay(pdMS_TO_TICKS(250));
-    stop_webserver();
-    vTaskDelay(pdMS_TO_TICKS(250));
-
-    // save it and reboot after
-    control_save_user_data(1);
-
-	return ESP_OK;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
 static esp_err_t stop_webserver(void)
 {
     // Stop the httpd server
@@ -867,16 +926,16 @@ static esp_err_t http_server_init(void)
     http_config.stack_size         = (3 * 1024);  
     http_config.server_port        = 80;
     http_config.ctrl_port          = 32768;
-    http_config.max_open_sockets   = 4;
+    http_config.max_open_sockets   = 6;
     http_config.max_uri_handlers   = 2;
-    http_config.max_resp_headers   = 6;
+    http_config.max_resp_headers   = 8;
     http_config.backlog_conn       = 1;
     http_config.keep_alive_enable  = true;
     http_config.keep_alive_idle    = 10;     // seconds
     http_config.keep_alive_interval = 10;    // seconds
     http_config.keep_alive_count = 5;
-    http_config.open_fn = NULL;
-    http_config.close_fn = NULL;
+    http_config.open_fn = wss_open_fd;
+    http_config.close_fn = wss_close_fd;
     http_config.uri_match_fn = NULL;
     http_config.lru_purge_enable = true;
 
@@ -886,9 +945,6 @@ static esp_err_t http_server_init(void)
         {
             ESP_LOGI(TAG, "Http register uri 1");
     	    httpd_register_uri_handler(http_server, &index_get);
-
-            //ESP_LOGI(TAG, "Http register uri 2");
-		    //httpd_register_uri_handler(http_server, &update_post);
 
             // Registering the ws handler
             ESP_LOGI(TAG, "Registering ws handler");
@@ -1141,6 +1197,10 @@ static void wifi_kill_all(void)
 *****************************************************************************/
 static void wifi_config_task(void *arg)
 {
+    tWiFiMessage message;
+    uint32_t tick_timer;
+    uint8_t wifi_kill_checked = 0;
+
     ESP_LOGI(TAG, "Wifi config task start");
 
     // let everything settle and init
@@ -1155,6 +1215,11 @@ static void wifi_config_task(void *arg)
         ESP_LOGE(TAG, "Failed to allocate pWebConfig buffer!");
         return;
     }
+
+    // init mem
+    memset((void*)pWebConfig, 0, sizeof(tWebConfigData));
+    pWebConfig->PresetIndex = 1;
+    sprintf(pWebConfig->PresetName, "Unknown");
 
     // check wifi mode
     switch (control_get_config_wifi_mode())    
@@ -1179,24 +1244,39 @@ static void wifi_config_task(void *arg)
     // start web server
     http_server_init();
 
-    if (control_get_config_wifi_mode() == WIFI_MODE_ACCESS_POINT_TIMED)
-    {
-        // allow WiFi AP to run for 60 seconds
-        vTaskDelay(pdMS_TO_TICKS(60000));
+    // reset timer
+    tick_timer = xTaskGetTickCount();
 
-        // if no clients, kill Wifi    
-        if (client_connected == 0)
-        {
-            // kill
-            ESP_LOGI(TAG, "Wifi config stopping");
-            wifi_kill_all();
-        }
-    }
-
-    // do nothing
     while (1) 
     {
-		vTaskDelay(pdMS_TO_TICKS(10000));
+        if (control_get_config_wifi_mode() == WIFI_MODE_ACCESS_POINT_TIMED)
+        {            
+            if (wifi_kill_checked == 0)
+            {
+                // allow WiFi AP to run for 60 seconds
+                if ((xTaskGetTickCount() - tick_timer) >= 60000)
+                {
+                    wifi_kill_checked = 1;
+
+                    // any clients connected?
+                    if (client_connected == 0)
+                    {
+                        // kill
+                        ESP_LOGI(TAG, "Wifi config stopping");
+                        wifi_kill_all();
+                    }
+                }
+            }
+        }
+
+        // check for any input messages
+        if (xQueueReceive(wifi_input_queue, (void*)&message, pdMS_TO_TICKS(20)) == pdPASS)
+        {
+            // process it
+            process_wifi_command(&message);
+        }
+
+		vTaskDelay(pdMS_TO_TICKS(5));
 	}
 }
 
@@ -1209,5 +1289,12 @@ static void wifi_config_task(void *arg)
 *****************************************************************************/
 void wifi_config_init(void)
 {
+     // create queue for commands from other threads
+    wifi_input_queue = xQueueCreate(5, sizeof(tWiFiMessage));
+    if (wifi_input_queue == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to create WiFi input queue!");
+    }
+
     xTaskCreatePinnedToCore(wifi_config_task, "WIFI", WIFI_CONFIG_TASK_STACK_SIZE, NULL, WIFI_TASK_PRIORITY, NULL, 0);
 }

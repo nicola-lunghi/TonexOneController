@@ -58,6 +58,7 @@ limitations under the License.
 #include "usb_tonex_one.h"
 #include "control.h"
 #include "display.h"
+#include "wifi_config.h"
 #include "tonex_params.h"
 
 static const char *TAG = "app_TonexOne";
@@ -1171,6 +1172,9 @@ static esp_err_t usb_tonex_one_process_single_message(uint8_t* data, uint16_t le
 
                     // signal to refresh param UI
                     UI_RefreshParameterValues();
+
+                    // update web UI
+                    wifi_request_sync(WIFI_SYNC_TYPE_PARAMS, NULL, NULL);
 
                     // debug dump parameters
                     //tonex_dump_parameters();

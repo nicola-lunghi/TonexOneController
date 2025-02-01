@@ -39,6 +39,7 @@ limitations under the License.
 #include "usb_tonex_one.h"
 #include "footswitches.h"
 #include "display.h"
+#include "wifi_config.h"
 #include "task_priorities.h"
 
 #define CTRL_TASK_STACK_SIZE                (3 * 1024)
@@ -189,6 +190,9 @@ static uint8_t process_control_command(tControlMessage* message)
             UI_SetAmpSkin(ControlData.ConfigData.UserData[ControlData.PresetIndex].SkinIndex);
             UI_SetPresetDescription(ControlData.ConfigData.UserData[ControlData.PresetIndex].PresetDescription);
 #endif
+
+            // update web UI
+            wifi_request_sync(WIFI_SYNC_TYPE_PRESET, (void*)ControlData.PresetName, (void*)&ControlData.PresetIndex);
         } break;
 
         case EVENT_SET_USB_STATUS:

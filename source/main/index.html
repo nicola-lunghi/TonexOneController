@@ -205,6 +205,24 @@
         var pageTimer = 0;
         var SocketConnected = 0;   
         
+        // param models
+        const TONEX_REVERB_SPRING_1 = 0;
+        const TONEX_REVERB_SPRING_2 = 1;
+        const TONEX_REVERB_SPRING_3 = 2;
+        const TONEX_REVERB_SPRING_4 = 3;
+        const TONEX_REVERB_ROOM = 4;
+        const TONEX_REVERB_PLATE = 5;
+
+        const TONEX_MODULATION_CHORUS = 0;
+        const TONEX_MODULATION_TREMOLO = 1;
+        const TONEX_MODULATION_PHASER = 2;
+        const TONEX_MODULATION_FLANGER = 3;
+        const TONEX_MODULATION_ROTARY = 4;
+
+        const TONEX_DELAY_DIGITAL = 0;
+        const TONEX_DELAY_TAPE = 1;
+
+
         // Tonex params
         // noise gate
         const TONEX_PARAM_NOISE_GATE_POST = 0;
@@ -372,7 +390,7 @@
             SocketConnected = 1;
             
             // request config, params, and current preset
-            //sendWS({"CMD": "GETPRESET"});
+            sendWS({"CMD": "GETPRESET"});
             sendWS({"CMD": "GETPARAMS"});
             sendWS({"CMD": "GETCONFIG"});        
         }
@@ -397,7 +415,8 @@
         }
 
         function configureParamRange(objname, value, min, max) {
-            console.log("configureParamRange");
+            //console.log("configureParamRange");
+            //console.log(objname);
             var paramrange = document.getElementById(objname);
             paramrange.min = min;
             paramrange.max = max;
@@ -405,7 +424,7 @@
         }
 
         function configureParamSwitch(objname, value) {
-            console.log("configureParamSwitch");
+            //console.log("configureParamSwitch");
 
             var paramswitch = document.getElementById(objname);
             if (value == 0) {
@@ -415,18 +434,48 @@
             }
         }
 
+        function configureParamSelect(objname, value) {
+            //console.log("configureParamSelect");
+            var paramrange = document.getElementById(objname);
+            paramrange.value = value;
+        }
+
+        function getSelectValue(objname) {
+            var sel = document.getElementById(objname);
+            return sel.value;
+        }
+
+        function setParamLabel(objname, text) {
+            var sel = document.getElementById(objname);
+            sel.innerHTML = text;
+        }
+
+        function setParamVisible(objname, visible) {
+            var elem = document.getElementById(objname);
+
+            if (visible) {
+                elem.style.display = "block";
+            } else {
+                elem.style.display = "none";
+            }
+        }
+
         function processReturnCmd(data) {
             switch (data['CMD'])
             {
                 case 'GETPARAMS':
                     for (var key in data['PARAMS']) {
                         //console.log(data['PARAMS'][key]);
+                        var min = data['PARAMS'][key]['Min'];
+                        var max = data['PARAMS'][key]['Max'];
+                        var value = data['PARAMS'][key]['Val'];
 
-                        var min = data['PARAMS'][key].min;
-                        var max = data['PARAMS'][key].max;
-                        var value = data['PARAMS'][key].value;
+                        //console.log("This param");
+                        //console.log(min);
+                        //console.log(max);
+                        //console.log(value);
 
-                        switch (key)
+                        switch (parseInt(key))
                         {
                             case TONEX_PARAM_NOISE_GATE_POST:  
                                 configureParamSwitch("ng_post", value);
@@ -441,40 +490,48 @@
                                 break;
 
                             case TONEX_PARAM_NOISE_GATE_RELEASE: 
-                                configureParamRange("ng_release", value, min, max);                            
+                                configureParamRange("ng_release", value, min, max);
                                 break;
 
                             case TONEX_PARAM_NOISE_GATE_DEPTH: 
-                                configureParamRange("ng_depth", value, min, max);                            
+                                configureParamRange("ng_depth", value, min, max);
                                 break;
 
                             // Compressor
                             case TONEX_PARAM_COMP_POST: 
+                                configureParamSwitch("cp_post", value);
                                 break;
 
                             case TONEX_PARAM_COMP_ENABLE:
+                                configureParamSwitch("cp_enable", value);
                                 break;
 
                             case TONEX_PARAM_COMP_THRESHOLD:
+                                configureParamRange("cp_thresh", value, min, max);
                                 break;
 
                             case TONEX_PARAM_COMP_MAKE_UP: 
+                                configureParamRange("cp_gain", value, min, max);
                                 break;
 
                             case TONEX_PARAM_COMP_ATTACK:
+                                configureParamRange("cp_attack", value, min, max);
                                 break;
 
                             // EQ    
                             case TONEX_PARAM_EQ_POST:
+                                configureParamSwitch("eq_post", value);
                                 break;
 
                             case TONEX_PARAM_EQ_BASS:
+                                configureParamRange("eq_bass", value, min, max);
                                 break;
 
                             case TONEX_PARAM_EQ_BASS_FREQ:
                                 break;
 
                             case TONEX_PARAM_EQ_MID:
+                                configureParamRange("eq_mid", value, min, max);
                                 break;
 
                             case TONEX_PARAM_EQ_MIDQ:
@@ -484,6 +541,7 @@
                                 break;
 
                             case TONEX_PARAM_EQ_TREBLE:
+                                configureParamRange("eq_treble", value, min, max);
                                 break;
 
                             case TONEX_PARAM_EQ_TREBLE_FREQ:
@@ -497,9 +555,11 @@
                                 break;
 
                             case TONEX_PARAM_MODEL_GAIN:
+                                configureParamRange("am_gain", value, min, max);
                                 break;
 
                             case TONEX_PARAM_MODEL_VOLUME:
+                                configureParamRange("am_volume", value, min, max);
                                 break;
 
                             case TONEX_PARAM_MODEX_MIX:
@@ -509,6 +569,7 @@
                                 break;
 
                             case TONEX_PARAM_PRESENCE:
+                                configureParamRange("am_presence", value, min, max);
                                 break;
 
                             case TONEX_PARAM_DEPTH:
@@ -546,224 +607,444 @@
                             
                             // Reverb
                             case TONEX_PARAM_REVERB_POSITION:
+                                configureParamSwitch("rv_post", value);
                                 break;
 
                             case TONEX_PARAM_REVERB_ENABLE:
+                                configureParamSwitch("rv_enable", value);
                                 break;
 
                             case TONEX_PARAM_REVERB_MODEL:
+                                configureParamSelect("rv_model", value);
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING1_TIME:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
+                                    configureParamRange("rv_time", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING1_PREDELAY:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
+                                    configureParamRange("rv_predelay", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING1_COLOR:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
+                                    configureParamRange("rv_color", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING1_MIX:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
+                                    configureParamRange("rv_mix", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING2_TIME:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
+                                    configureParamRange("rv_time", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING2_PREDELAY:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
+                                    configureParamRange("rv_predelay", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING2_COLOR:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
+                                    configureParamRange("rv_color", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING2_MIX:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
+                                    configureParamRange("rv_mix", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING3_TIME:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
+                                    configureParamRange("rv_time", value, min, max);
+                                }
                                 break;
                             
                             case TONEX_PARAM_REVERB_SPRING3_PREDELAY:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
+                                    configureParamRange("rv_predelay", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING3_COLOR:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
+                                    configureParamRange("rv_color", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING3_MIX:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
+                                    configureParamRange("rv_mix", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING4_TIME:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
+                                    configureParamRange("rv_time", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING4_PREDELAY:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
+                                    configureParamRange("rv_predelay", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING4_COLOR:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
+                                    configureParamRange("rv_color", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING4_MIX:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
+                                    configureParamRange("rv_mix", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_ROOM_TIME:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
+                                    configureParamRange("rv_time", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_ROOM_PREDELAY:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
+                                    configureParamRange("rv_predelay", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_ROOM_COLOR:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
+                                    configureParamRange("rv_color", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_ROOM_MIX:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
+                                    configureParamRange("rv_mix", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_PLATE_TIME:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
+                                    configureParamRange("rv_time", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_PLATE_PREDELAY:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
+                                    configureParamRange("rv_predelay", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_PLATE_COLOR:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
+                                    configureParamRange("rv_color", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_REVERB_PLATE_MIX:
+                                if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
+                                    configureParamRange("rv_mix", value, min, max);
+                                }
                                 break;  
 
                             // Modulation
                             case TONEX_PARAM_MODULATION_POST:
+                                configureParamSwitch("mo_post", value);
                                 break;
 
                             case TONEX_PARAM_MODULATION_ENABLE:
+                                configureParamSwitch("mo_enable", value);
                                 break;
 
                             case TONEX_PARAM_MODULATION_MODEL:
+                                configureParamSelect("mo_model", value);
+
+                                // set param labels
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
+                                    setParamLabel("mo_param1l", "Rate");
+                                    setParamLabel("mo_param2l", "Depth");
+                                    setParamLabel("mo_param3l", "Level");
+
+                                    setParamVisible("mo_param4", false);
+                                }
+                                else if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
+                                    setParamLabel("mo_param1l", "Rate");
+                                    setParamLabel("mo_param2l", "Shape");
+                                    setParamLabel("mo_param3l", "Spread");
+                                    setParamLabel("mo_param4l", "Level");
+
+                                    setParamVisible("mo_param4", true);
+                                }
+                                else if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
+                                    setParamLabel("mo_param1l", "Rate");
+                                    setParamLabel("mo_param2l", "Depth");
+                                    setParamLabel("mo_param3l", "Level");
+
+                                    setParamVisible("mo_param4l", false);
+                                }
+                                else if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
+                                    setParamLabel("mo_param1l", "Rate");
+                                    setParamLabel("mo_param2l", "Depth");
+                                    setParamLabel("mo_param3l", "Feedback");
+                                    setParamLabel("mo_param4l", "Level");
+
+                                    setParamVisible("mo_param4l", true);
+                                }
+                                else if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
+                                    setParamLabel("mo_param1l", "Speed");
+                                    setParamLabel("mo_param2l", "Radius");
+                                    setParamLabel("mo_param3l", "Spread");
+                                    setParamLabel("mo_param4l", "Level");
+
+                                    setParamVisible("mo_param4l", true);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_CHORUS_SYNC:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
+                                    configureParamSwitch("mo_sync", value);                                    
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_CHORUS_TS:
                                 break;
 
                             case TONEX_PARAM_MODULATION_CHORUS_RATE:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
+                                    configureParamRange("mo_param1", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_CHORUS_DEPTH:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
+                                    configureParamRange("mo_param2", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_CHORUS_LEVEL:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
+                                    configureParamRange("mo_param3", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_SYNC:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
+                                    configureParamSwitch("mo_sync", value);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_TS:
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_RATE:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
+                                    configureParamRange("mo_param1", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_SHAPE:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
+                                    configureParamRange("mo_param2", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_SPREAD:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
+                                    configureParamRange("mo_param3", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_LEVEL:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
+                                    configureParamRange("mo_param4", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_PHASER_SYNC:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
+                                    configureParamSwitch("mo_sync", value);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_PHASER_TS:
                                 break;
 
                             case TONEX_PARAM_MODULATION_PHASER_RATE:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
+                                    configureParamRange("mo_param1", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_PHASER_DEPTH:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
+                                    configureParamRange("mo_param2", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_PHASER_LEVEL:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
+                                    configureParamRange("mo_param3", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_SYNC:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
+                                    configureParamSwitch("mo_sync", value);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_TS:
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_RATE:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
+                                    configureParamRange("mo_param1", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_DEPTH:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
+                                    configureParamRange("mo_param2", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_FEEDBACK:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
+                                    configureParamRange("mo_param3", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_LEVEL:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
+                                    configureParamRange("mo_param4", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_SYNC:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
+                                    configureParamSwitch("mo_sync", value);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_TS:
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_SPEED:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
+                                    configureParamRange("mo_param1", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_RADIUS:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
+                                    configureParamRange("mo_param2", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_SPREAD:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
+                                    configureParamRange("mo_param3", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_LEVEL:
+                                if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
+                                    configureParamRange("mo_param4", value, min, max);
+                                }
                                 break;
                             
                             // Delay
                             case TONEX_PARAM_DELAY_POST:
+                                configureParamSwitch("dl_post", value);
                                 break;
 
                             case TONEX_PARAM_DELAY_ENABLE:
+                                configureParamSwitch("dl_enable", value);
                                 break;
 
                             case TONEX_PARAM_DELAY_MODEL:
+                                configureParamSelect("dl_model", value);
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_SYNC:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
+                                    configureParamSwitch("dl_sync", value);
+                                }
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_TS:
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_TIME:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
+                                    configureParamRange("dl_time", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_FEEDBACK:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
+                                    configureParamRange("dl_feedback", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_MODE:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
+                                    configureParamSwitch("dl_pingpong", value);
+                                }
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_MIX:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
+                                    configureParamRange("dl_mix", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_DELAY_TAPE_SYNC:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
+                                    configureParamSwitch("dl_sync", value);
+                                }
                                 break;
                                 
                             case TONEX_PARAM_DELAY_TAPE_TS:
                                 break;
 
                             case TONEX_PARAM_DELAY_TAPE_TIME:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
+                                    configureParamRange("dl_time", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_DELAY_TAPE_FEEDBACK:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
+                                    configureParamRange("dl_feedback", value, min, max);
+                                }
                                 break;
 
                             case TONEX_PARAM_DELAY_TAPE_MODE:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
+                                    configureParamSwitch("dl_pingpong", value);
+                                }
                                 break;
 
                             case TONEX_PARAM_DELAY_TAPE_MIX:
+                                if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
+                                    configureParamRange("dl_mix", value, min, max);
+                                }
                                 break;
                         }
                     } 
@@ -783,6 +1064,11 @@
                     break;   
                 
                 case 'GETPRESET':
+                    var preset_index = document.getElementById("set_preset")
+                    preset_index.value = data['INDEX'];
+
+                    var preset_name = document.getElementById("preset_name");
+                    preset_name.innerHTML = data['NAME'];
                     break;                  
             }
         }
@@ -842,6 +1128,17 @@
             }
         }
         
+        function onPresetChange() {
+            if (SocketConnected === 1) {
+                // get values
+                var preset_index = document.getElementById("set_preset").value;
+                console.log('Preset change');
+                
+                sendWS({"CMD": "SETPRESET", 
+                        "PRESET": parseInt(preset_index)});                        
+            }
+        }
+
         function onParamChange(e) {
             //e.target;
             console.log('Param changed');
@@ -964,9 +1261,9 @@
        <form class="form-inline text-white">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="form-label" id="set_preset" style="margin-left: 10px; padding-right: 10px; color:white; font-size: 24px; background: #1f1f1f;">Preset</span>
+                    <span class="form-label" style="margin-left: 10px; padding-right: 10px; color:white; font-size: 24px; background: #1f1f1f;">Preset</span>
                 </div>
-                <select class="form-select" id="set_preset" style="margin-right: 10px; padding-right: 40px; color:white; background: #1f1f1f;">
+                <select class="form-select" id="set_preset" onchange="onPresetChange()" style="margin-right: 10px; padding-right: 40px; color:white; background: #1f1f1f;">
                   <option value="0" selected>1</option>
                   <option value="1">2</option>
                   <option value="2">3</option>
@@ -989,7 +1286,7 @@
                   <option value="19">20</option>
                 </select> 
                 <div class="input-group-postpend">
-                    <span class="form-label" style="padding-right: 10px; color:white; font-size: 24px; background: #1f1f1f;">Boosted German</span>
+                    <span class="form-label" id="preset_name" style="padding-right: 10px; color:white; font-size: 24px; background: #1f1f1f;">Boosted German</span>
                 </div>
             </div>            
         </form>
@@ -1219,19 +1516,19 @@
                 </div>
                 <br>
                 <div class="container">
-                    <label for="mo_param1" class="form-label">Param1</label>
+                    <label for="mo_param1" id="mo_param1l" class="form-label">Param1</label>
                     <input type="range" onchange="onParamChange(event)" class="form-range" id="mo_param1">
                 </div>
                 <div class="container">
-                    <label for="mo_param2" class="form-label">Param2</label>
+                    <label for="mo_param2" id="mo_param2l" class="form-label">Param2</label>
                     <input type="range" onchange="onParamChange(event)" class="form-range" id="mo_param2">
                 </div>
                 <div class="container">
-                    <label for="mo_param3" class="form-label">Param3</label>
+                    <label for="mo_param3" id="mo_param3l" class="form-label">Param3</label>
                     <input type="range" onchange="onParamChange(event)" class="form-range" id="mo_param3">
                 </div>
                 <div class="container">
-                    <label for="mo_param4" class="form-label">Param4</label>
+                    <label for="mo_param4" id="mo_param4l" class="form-label">Param4</label>
                     <input type="range" onchange="onParamChange(event)" class="form-range" id="mo_param4">
                 </div>
             </p>
@@ -1438,7 +1735,7 @@
                 <br>
                 <div class="container">
                     <label class="form-check-label" for="wifipassword">WiFi Password</label>
-                    <input type="text" id="wifipassword" name="wifipassword" class="form-control text_entry_style" maxlength="40" size="40" value="WiFi Password">
+                    <input type="password" id="wifipassword" name="wifipassword" class="form-control text_entry_style" maxlength="40" size="40" value="WiFi Password">
                 </div>
                 <br>
                 <div class="container">
