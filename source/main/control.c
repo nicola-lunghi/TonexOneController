@@ -320,7 +320,7 @@ static uint8_t process_control_command(tControlMessage* message)
 
         case EVENT_SET_CONFIG_WIFI_PASSWORD:
         {
-            ESP_LOGI(TAG, "Config set WiFi password %s", message->Text);
+            ESP_LOGI(TAG, "Config set WiFi password <hidden>");
             strncpy(ControlData.ConfigData.WifiPassword, message->Text, MAX_WIFI_SSID_PW - 1);
             ControlData.ConfigData.WifiPassword[MAX_WIFI_SSID_PW - 1] = 0;
         } break;
@@ -1174,7 +1174,7 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config EnableBTmidiCC Mode: %d", (int)ControlData.ConfigData.EnableBTmidiCC);
     ESP_LOGI(TAG, "Config WiFi Mode: %d", (int)ControlData.ConfigData.WiFiMode);
     ESP_LOGI(TAG, "Config WiFi SSID: %s", ControlData.ConfigData.WifiSSID);
-    ESP_LOGI(TAG, "Config WiFi Password:  %s", ControlData.ConfigData.WifiPassword);
+    ESP_LOGI(TAG, "Config WiFi Password: <hidden>");
 
     // status    
     return result;

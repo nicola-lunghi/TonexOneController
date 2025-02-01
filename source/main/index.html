@@ -368,8 +368,8 @@
             var areWeOnScreen = document.getElementById('MainMenu');   
 
             if (areWeOnScreen !== null){
-                // Functions on the timer go here.
-                //sendWS({"CMD": "GETPARAMS"});
+                // request sending of anything changed
+                sendWS({"CMD": "GETCHANGES"});
             }
             else{
                 clearInterval(pageTimer);
@@ -460,6 +460,11 @@
             }
         }
 
+        function setParamValue(objname, value) {
+            var obj = document.getElementById(objname);
+            obj.value = value;
+        }
+
         function processReturnCmd(data) {
             switch (data['CMD'])
             {
@@ -469,11 +474,6 @@
                         var min = data['PARAMS'][key]['Min'];
                         var max = data['PARAMS'][key]['Max'];
                         var value = data['PARAMS'][key]['Val'];
-
-                        //console.log("This param");
-                        //console.log(min);
-                        //console.log(max);
-                        //console.log(value);
 
                         switch (parseInt(key))
                         {
@@ -1048,27 +1048,28 @@
                                 break;
                         }
                     } 
-
                     break;
                     
-                case 'GETCONFIG':
-                
-                    var wifimode = document.getElementById("wifimode");
-                    wifimode.value = data['WIFI_MODE'];
-
-                    var wifiname = document.getElementById("wifiname");
-                    wifiname.value = data['WIFI_SSID'];
-
-                    var wifipassword = document.getElementById("wifipassword")
-                    wifipassword.value = data['WIFI_PW'];
+                case 'GETCONFIG':  
+                    // set all config items              
+                    configureParamSelect("btmode", data['BT_MODE']);
+                    configureParamSwitch("mvavechoc", data['BT_CHOC_EN']);
+                    configureParamSwitch("xvivemd1", data['BT_MD1_EN']);
+                    configureParamSwitch("custombte", data['BT_CUST_EN']);
+                    setParamLabel("custombt", data['BT_CUST_NAME']);
+                    configureParamSwitch("togglebypass", data['TOGGLE_BYPASS']);
+                    configureParamSwitch("midienabled", data['S_MIDI_EN']);
+                    configureParamSelect("midichannel", data['S_MIDI_CH']);
+                    configureParamSelect("footmode", data['FOOTSW_MODE']);
+                    configureParamSwitch("btmidicc", data['BT_MIDI_CC']);
+                    configureParamSelect("wifimode", data['WIFI_MODE']);
+                    setParamValue("wifiname", data['WIFI_SSID']);
+                    setParamValue("wifipassword", data['WIFI_PW']);
                     break;   
                 
                 case 'GETPRESET':
-                    var preset_index = document.getElementById("set_preset")
-                    preset_index.value = data['INDEX'];
-
-                    var preset_name = document.getElementById("preset_name");
-                    preset_name.innerHTML = data['NAME'];
+                    configureParamSelect("set_preset", data['INDEX']);
+                    setParamLabel("preset_name", data['NAME']);
                     break;                  
             }
         }
@@ -1107,7 +1108,48 @@
         }
         
         function saveSettings() {
-            setToast('Settings saved.<br>Rebooting now');
+            if (SocketConnected === 1) {
+                // get values
+                var btmode = document.getElementById("btmode").value;
+
+                var mvavechoc = document.getElementById("mvavechoc").checked;
+                var mvavechocen = mvavechoc ? 1 : 0;
+
+                var xvivemd1 = document.getElementById("xvivemd1").checked;
+                var xvivemd1en = xvivemd1 ? 1 : 0;
+
+                var custombte = document.getElementById("custombte").checked;
+                var custombteen = custombte ? 1 : 0;
+
+                var custombt = document.getElementById("custombt").value;
+
+                var togglebypass = document.getElementById("togglebypass").checked;
+                var togglebypassen = togglebypass ? 1 : 0;
+
+                var midienabled = document.getElementById("midienabled").checked;
+                var midienableden = midienabled ? 1 : 0;
+                
+                var midichannel = document.getElementById("midichannel").value;
+                var footmode = document.getElementById("footmode").value;
+                
+                var btmidicc = document.getElementById("btmidicc").checked;
+                var btmidiccen = btmidicc ? 1 : 0;
+                                   
+                sendWS({"CMD": "SETCONFIG", 
+                        "BT_MODE": parseInt(btmode),
+                        "BT_CHOC_EN": mvavechocen, 
+                        "BT_MD1_EN": xvivemd1en,
+                        "BT_CUST_EN": custombteen,
+                        "BT_CUST_NAME": custombt,
+                        "TOGGLE_BYPASS": togglebypassen,
+                        "S_MIDI_EN": midienableden,
+                        "S_MIDI_CH": parseInt(midichannel),
+                        "FOOTSW_MODE": parseInt(footmode),
+                        "BT_MIDI_CC": btmidiccen
+                    });  
+      
+                setToast('Settings saved.<br>Rebooting now');
+            }
         }
         
         function SaveWifi() {
@@ -1135,7 +1177,7 @@
                 console.log('Preset change');
                 
                 sendWS({"CMD": "SETPRESET", 
-                        "PRESET": parseInt(preset_index)});                        
+                        "S_MIDI_EN": parseInt(preset_index)});                        
             }
         }
 
@@ -1143,6 +1185,9 @@
             //e.target;
             console.log('Param changed');
             
+            var param_index = 0;
+            var param_value = 0;
+
             // noise gate
             //TONEX_PARAM_NOISE_GATE_POST
             //TONEX_PARAM_NOISE_GATE_ENABLE
@@ -1252,6 +1297,16 @@
             // TONEX_PARAM_DELAY_TAPE_FEEDBACK
             // TONEX_PARAM_DELAY_TAPE_MODE
             // TONEX_PARAM_DELAY_TAPE_MIX
+
+            if (SocketConnected === 1) {
+                // get values
+                //var preset_index = document.getElementById("set_preset").value;
+                console.log('Param change');
+                
+                //sendWS({"CMD": "SETPRESET", 
+                //        "INDEX": param_index,
+                //        "VALUE": param_value});                        
+            }
         }
      
     </script>
@@ -1260,9 +1315,6 @@
        <label style="margin-left: 10px; font-size: 24px; color:#FB9230;">Tonex One Controller</label>
        <form class="form-inline text-white">
             <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="form-label" style="margin-left: 10px; padding-right: 10px; color:white; font-size: 24px; background: #1f1f1f;">Preset</span>
-                </div>
                 <select class="form-select" id="set_preset" onchange="onPresetChange()" style="margin-right: 10px; padding-right: 40px; color:white; background: #1f1f1f;">
                   <option value="0" selected>1</option>
                   <option value="1">2</option>
@@ -1624,9 +1676,9 @@
                 <div class="container">
                     <label for="btmode" class="style3 style2">Bluetooth Mode</label>
                     <select id="btmode" class="form-select select_style" name="btmode">
-                        <option value="disabled" class="style6">Disabled</option>
-                        <option value="client" class="style6" selected>Central</option>
-                        <option value="server" class="style6">Peripheral</option>                                                    
+                        <option value="0" class="style6">Disabled</option>
+                        <option value="1" class="style6" selected>Central</option>
+                        <option value="2" class="style6">Peripheral</option>                                                    
                     </select> 
                 </div>
                 <br>
@@ -1669,8 +1721,8 @@
                 <div class="container">
                     <label class="form-check-label" for="midichannel">Midi Channel</label>
                     <select class="form-select select_style" id="midichannel">
-                      <option value="0" selected>1</option>
-                      <option value="1">2</option>
+                      <option value="1" selected>1</option>
+                      <option value="2">2</option>
                       <option value="3">3</option>
                       <option value="4">4</option>
                       <option value="5">5</option>
@@ -1698,9 +1750,9 @@
                 <div class="container">
                     <label class="form-check-label" for="footmode">Footswitch</label>
                     <select class="form-select select_style" id="footmode">
-                        <option value="Dual Next/Previous" class="style6" selected>Dual Next/Previous</option>
-                        <option value="Quad Banked" class="style6">Quad Banked (not 4.3B)</option>
-                        <option value="Quad Binary" class="style6">Quad Binary (not 4.3B)</option>     
+                        <option value="0" class="style6" selected>Dual Next/Previous</option>
+                        <option value="1" class="style6">Quad Banked (not 4.3B)</option>
+                        <option value="2" class="style6">Quad Binary (not 4.3B)</option>     
                     </select>            
                 </div>
                 <br>
