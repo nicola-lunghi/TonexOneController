@@ -465,6 +465,13 @@
             obj.value = value;
         }
 
+        function setParamData(objname, param_index) {
+            // add param index, for future use
+            var obj = document.getElementById(objname);
+            //obj.dataset.indexNumber = param_index;
+            obj.setAttribute("data-indexnumber", param_index);
+        }
+
         function processReturnCmd(data) {
             switch (data['CMD'])
             {
@@ -479,52 +486,64 @@
                         {
                             case TONEX_PARAM_NOISE_GATE_POST:  
                                 configureParamSwitch("ng_post", value);
+                                setParamData("ng_post", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_NOISE_GATE_ENABLE: 
-                                configureParamSwitch("ng_enable", value);                            
+                                configureParamSwitch("ng_enable", value);     
+                                setParamData("ng_enable", parseInt(key));                       
                                 break;
 
                             case TONEX_PARAM_NOISE_GATE_THRESHOLD: 
                                 configureParamRange("ng_thresh", value, min, max);
+                                setParamData("ng_thresh", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_NOISE_GATE_RELEASE: 
                                 configureParamRange("ng_release", value, min, max);
+                                setParamData("ng_release", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_NOISE_GATE_DEPTH: 
                                 configureParamRange("ng_depth", value, min, max);
+                                setParamData("ng_depth", parseInt(key));
                                 break;
 
                             // Compressor
                             case TONEX_PARAM_COMP_POST: 
                                 configureParamSwitch("cp_post", value);
+                                setParamData("cp_post", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_COMP_ENABLE:
                                 configureParamSwitch("cp_enable", value);
+                                setParamData("cp_enable", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_COMP_THRESHOLD:
                                 configureParamRange("cp_thresh", value, min, max);
+                                setParamData("cp_thresh", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_COMP_MAKE_UP: 
                                 configureParamRange("cp_gain", value, min, max);
+                                setParamData("cp_gain", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_COMP_ATTACK:
                                 configureParamRange("cp_attack", value, min, max);
+                                setParamData("cp_attack", parseInt(key));
                                 break;
 
                             // EQ    
                             case TONEX_PARAM_EQ_POST:
                                 configureParamSwitch("eq_post", value);
+                                setParamData("eq_post", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_EQ_BASS:
                                 configureParamRange("eq_bass", value, min, max);
+                                setParamData("eq_bass", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_EQ_BASS_FREQ:
@@ -532,6 +551,7 @@
 
                             case TONEX_PARAM_EQ_MID:
                                 configureParamRange("eq_mid", value, min, max);
+                                setParamData("eq_mid", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_EQ_MIDQ:
@@ -542,6 +562,7 @@
 
                             case TONEX_PARAM_EQ_TREBLE:
                                 configureParamRange("eq_treble", value, min, max);
+                                setParamData("eq_treble", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_EQ_TREBLE_FREQ:
@@ -556,10 +577,12 @@
 
                             case TONEX_PARAM_MODEL_GAIN:
                                 configureParamRange("am_gain", value, min, max);
+                                setParamData("am_gain", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_MODEL_VOLUME:
                                 configureParamRange("am_volume", value, min, max);
+                                setParamData("am_volume", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_MODEX_MIX:
@@ -570,6 +593,7 @@
 
                             case TONEX_PARAM_PRESENCE:
                                 configureParamRange("am_presence", value, min, max);
+                                setParamData("am_presence", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_DEPTH:
@@ -608,171 +632,201 @@
                             // Reverb
                             case TONEX_PARAM_REVERB_POSITION:
                                 configureParamSwitch("rv_post", value);
+                                setParamData("rv_post", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_REVERB_ENABLE:
                                 configureParamSwitch("rv_enable", value);
+                                setParamData("rv_post", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_REVERB_MODEL:
                                 configureParamSelect("rv_model", value);
+                                setParamData("rv_model", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING1_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
                                     configureParamRange("rv_time", value, min, max);
+                                    setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING1_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
                                     configureParamRange("rv_predelay", value, min, max);
+                                    setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING1_COLOR:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
                                     configureParamRange("rv_color", value, min, max);
+                                    setParamData("rv_color", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING1_MIX:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
                                     configureParamRange("rv_mix", value, min, max);
+                                    setParamData("rv_mix", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING2_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
                                     configureParamRange("rv_time", value, min, max);
+                                    setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING2_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
                                     configureParamRange("rv_predelay", value, min, max);
+                                    setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING2_COLOR:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
                                     configureParamRange("rv_color", value, min, max);
+                                    setParamData("rv_color", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING2_MIX:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
                                     configureParamRange("rv_mix", value, min, max);
+                                    setParamData("rv_mix", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING3_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
                                     configureParamRange("rv_time", value, min, max);
+                                    setParamData("rv_time", parseInt(key));
                                 }
                                 break;
                             
                             case TONEX_PARAM_REVERB_SPRING3_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
                                     configureParamRange("rv_predelay", value, min, max);
+                                    setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING3_COLOR:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
                                     configureParamRange("rv_color", value, min, max);
+                                    setParamData("rv_color", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING3_MIX:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
                                     configureParamRange("rv_mix", value, min, max);
+                                    setParamData("rv_mix", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING4_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
                                     configureParamRange("rv_time", value, min, max);
+                                    setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING4_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
                                     configureParamRange("rv_predelay", value, min, max);
+                                    setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING4_COLOR:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
                                     configureParamRange("rv_color", value, min, max);
+                                    setParamData("rv_color", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING4_MIX:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
                                     configureParamRange("rv_mix", value, min, max);
+                                    setParamData("rv_mix", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_ROOM_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
                                     configureParamRange("rv_time", value, min, max);
+                                    setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_ROOM_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
                                     configureParamRange("rv_predelay", value, min, max);
+                                    setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_ROOM_COLOR:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
                                     configureParamRange("rv_color", value, min, max);
+                                    setParamData("rv_color", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_ROOM_MIX:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
                                     configureParamRange("rv_mix", value, min, max);
+                                    setParamData("rv_mix", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_PLATE_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
                                     configureParamRange("rv_time", value, min, max);
+                                    setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_PLATE_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
                                     configureParamRange("rv_predelay", value, min, max);
+                                    setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_PLATE_COLOR:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
                                     configureParamRange("rv_color", value, min, max);
+                                    setParamData("rv_color", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_PLATE_MIX:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
                                     configureParamRange("rv_mix", value, min, max);
+                                    setParamData("rv_mix", parseInt(key));
                                 }
                                 break;  
 
                             // Modulation
                             case TONEX_PARAM_MODULATION_POST:
                                 configureParamSwitch("mo_post", value);
+                                setParamData("mo_post", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_MODULATION_ENABLE:
                                 configureParamSwitch("mo_enable", value);
+                                setParamData("mo_enable", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_MODULATION_MODEL:
                                 configureParamSelect("mo_model", value);
+                                setParamData("mo_model", parseInt(key));
 
                                 // set param labels
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
@@ -817,7 +871,8 @@
 
                             case TONEX_PARAM_MODULATION_CHORUS_SYNC:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
-                                    configureParamSwitch("mo_sync", value);                                    
+                                    configureParamSwitch("mo_sync", value);   
+                                    setParamData("mo_sync", parseInt(key));                                 
                                 }
                                 break;
 
@@ -827,24 +882,28 @@
                             case TONEX_PARAM_MODULATION_CHORUS_RATE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
                                     configureParamRange("mo_param1", value, min, max);
+                                    setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_CHORUS_DEPTH:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
                                     configureParamRange("mo_param2", value, min, max);
+                                    setParamData("mo_param2", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_CHORUS_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
                                     configureParamRange("mo_param3", value, min, max);
+                                    setParamData("mo_param3", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_SYNC:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
                                     configureParamSwitch("mo_sync", value);
+                                    setParamData("mo_sync", parseInt(key));
                                 }
                                 break;
 
@@ -854,30 +913,35 @@
                             case TONEX_PARAM_MODULATION_TREMOLO_RATE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
                                     configureParamRange("mo_param1", value, min, max);
+                                    setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_SHAPE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
                                     configureParamRange("mo_param2", value, min, max);
+                                    setParamData("mo_param2", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_SPREAD:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
                                     configureParamRange("mo_param3", value, min, max);
+                                    setParamData("mo_param3", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
                                     configureParamRange("mo_param4", value, min, max);
+                                    setParamData("mo_param4", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_PHASER_SYNC:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
                                     configureParamSwitch("mo_sync", value);
+                                    setParamData("mo_sync", parseInt(key));
                                 }
                                 break;
 
@@ -887,24 +951,28 @@
                             case TONEX_PARAM_MODULATION_PHASER_RATE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
                                     configureParamRange("mo_param1", value, min, max);
+                                    setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_PHASER_DEPTH:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
                                     configureParamRange("mo_param2", value, min, max);
+                                    setParamData("mo_param2", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_PHASER_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
                                     configureParamRange("mo_param3", value, min, max);
+                                    setParamData("mo_param3", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_SYNC:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
                                     configureParamSwitch("mo_sync", value);
+                                    setParamData("mo_sync", parseInt(key));
                                 }
                                 break;
 
@@ -914,30 +982,35 @@
                             case TONEX_PARAM_MODULATION_FLANGER_RATE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
                                     configureParamRange("mo_param1", value, min, max);
+                                    setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_DEPTH:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
                                     configureParamRange("mo_param2", value, min, max);
+                                    setParamData("mo_param2", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_FEEDBACK:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
                                     configureParamRange("mo_param3", value, min, max);
+                                    setParamData("mo_param3", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_FLANGER_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
                                     configureParamRange("mo_param4", value, min, max);
+                                    setParamData("mo_param4", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_SYNC:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
                                     configureParamSwitch("mo_sync", value);
+                                    setParamData("mo_sync", parseInt(key));
                                 }
                                 break;
 
@@ -947,43 +1020,51 @@
                             case TONEX_PARAM_MODULATION_ROTARY_SPEED:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
                                     configureParamRange("mo_param1", value, min, max);
+                                    setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_RADIUS:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
                                     configureParamRange("mo_param2", value, min, max);
+                                    setParamData("mo_param2", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_SPREAD:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
                                     configureParamRange("mo_param3", value, min, max);
+                                    setParamData("mo_param3", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
                                     configureParamRange("mo_param4", value, min, max);
+                                    setParamData("mo_param4", parseInt(key));
                                 }
                                 break;
                             
                             // Delay
                             case TONEX_PARAM_DELAY_POST:
                                 configureParamSwitch("dl_post", value);
+                                setParamData("dl_post", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_DELAY_ENABLE:
                                 configureParamSwitch("dl_enable", value);
+                                setParamData("dl_enable", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_DELAY_MODEL:
                                 configureParamSelect("dl_model", value);
+                                setParamData("dl_model", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_SYNC:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
                                     configureParamSwitch("dl_sync", value);
+                                    setParamData("dl_sync", parseInt(key));
                                 }
                                 break;
 
@@ -993,30 +1074,35 @@
                             case TONEX_PARAM_DELAY_DIGITAL_TIME:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
                                     configureParamRange("dl_time", value, min, max);
+                                    setParamData("dl_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_FEEDBACK:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
                                     configureParamRange("dl_feedback", value, min, max);
+                                    setParamData("dl_feedback", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_MODE:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
                                     configureParamSwitch("dl_pingpong", value);
+                                    setParamData("dl_pingpong", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_DELAY_DIGITAL_MIX:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
                                     configureParamRange("dl_mix", value, min, max);
+                                    setParamData("dl_mix", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_DELAY_TAPE_SYNC:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
                                     configureParamSwitch("dl_sync", value);
+                                    setParamData("dl_sync", parseInt(key));
                                 }
                                 break;
                                 
@@ -1026,24 +1112,28 @@
                             case TONEX_PARAM_DELAY_TAPE_TIME:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
                                     configureParamRange("dl_time", value, min, max);
+                                    setParamData("dl_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_DELAY_TAPE_FEEDBACK:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
                                     configureParamRange("dl_feedback", value, min, max);
+                                    setParamData("dl_feedback", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_DELAY_TAPE_MODE:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
                                     configureParamSwitch("dl_pingpong", value);
+                                    setParamData("dl_pingpong", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_DELAY_TAPE_MIX:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
                                     configureParamRange("dl_mix", value, min, max);
+                                    setParamData("dl_mix", parseInt(key));
                                 }
                                 break;
                         }
@@ -1069,7 +1159,9 @@
                 
                 case 'GETPRESET':
                     configureParamSelect("set_preset", data['INDEX']);
-                    setParamLabel("preset_name", data['NAME']);
+
+                    // update the list to have the preset name
+                    var sel = document.getElementById("set_preset").options[data['INDEX']].text = data['NAME'];
                     break;                  
             }
         }
@@ -1182,140 +1274,28 @@
         }
 
         function onParamChange(e) {
-            //e.target;
             console.log('Param changed');
             
-            var param_index = 0;
-            var param_value = 0;
-
-            // noise gate
-            //TONEX_PARAM_NOISE_GATE_POST
-            //TONEX_PARAM_NOISE_GATE_ENABLE
-            //TONEX_PARAM_NOISE_GATE_THRESHOLD
-            // TONEX_PARAM_NOISE_GATE_RELEASE
-            // TONEX_PARAM_NOISE_GATE_DEPTH
-
-            // Compressor
-            // TONEX_PARAM_COMP_POST
-            // TONEX_PARAM_COMP_ENABLE
-            // TONEX_PARAM_COMP_THRESHOLD
-            // TONEX_PARAM_COMP_MAKE_UP
-            // TONEX_PARAM_COMP_ATTACK
-
-            // EQ    
-            // TONEX_PARAM_EQ_POST
-            // TONEX_PARAM_EQ_BASS
-            // TONEX_PARAM_EQ_BASS_FREQ
-            // TONEX_PARAM_EQ_MID
-            // TONEX_PARAM_EQ_MIDQ
-            // TONEX_PARAM_EQ_MID_FREQ
-            // TONEX_PARAM_EQ_TREBLE
-            // TONEX_PARAM_EQ_TREBLE_FREQ
-            
-            //Model and VIR params
-            // TONEX_PARAM_MODEL_GAIN
-            // TONEX_PARAM_MODEL_VOLUME
-            // TONEX_PARAM_MODEX_MIX
-            // TONEX_PARAM_PRESENCE
-            // TONEX_PARAM_DEPTH
-            
-            // Reverb
-            // TONEX_PARAM_REVERB_POSITION
-            // TONEX_PARAM_REVERB_ENABLE
-            // TONEX_PARAM_REVERB_MODEL
-            // TONEX_PARAM_REVERB_SPRING1_TIME
-            // TONEX_PARAM_REVERB_SPRING1_PREDELAY
-            // TONEX_PARAM_REVERB_SPRING1_COLOR
-            // TONEX_PARAM_REVERB_SPRING1_MIX
-            // TONEX_PARAM_REVERB_SPRING2_TIME
-            // TONEX_PARAM_REVERB_SPRING2_PREDELAY
-            // TONEX_PARAM_REVERB_SPRING2_COLOR
-            // TONEX_PARAM_REVERB_SPRING2_MIX
-            // TONEX_PARAM_REVERB_SPRING3_TIME
-            // TONEX_PARAM_REVERB_SPRING3_PREDELAY
-            // TONEX_PARAM_REVERB_SPRING3_COLOR
-            // TONEX_PARAM_REVERB_SPRING3_MIX
-            // TONEX_PARAM_REVERB_SPRING4_TIME
-            // TONEX_PARAM_REVERB_SPRING4_PREDELAY
-            // TONEX_PARAM_REVERB_SPRING4_COLOR
-            // TONEX_PARAM_REVERB_SPRING4_MIX
-            // TONEX_PARAM_REVERB_ROOM_TIME
-            // TONEX_PARAM_REVERB_ROOM_PREDELAY
-            // TONEX_PARAM_REVERB_ROOM_COLOR
-            // TONEX_PARAM_REVERB_ROOM_MIX
-            // TONEX_PARAM_REVERB_PLATE_TIME
-            // TONEX_PARAM_REVERB_PLATE_PREDELAY
-            // TONEX_PARAM_REVERB_PLATE_COLOR
-            // TONEX_PARAM_REVERB_PLATE_MIX
-
-            // Modulation
-            // TONEX_PARAM_MODULATION_POST
-            // TONEX_PARAM_MODULATION_ENABLE
-            // TONEX_PARAM_MODULATION_MODEL
-            // TONEX_PARAM_MODULATION_CHORUS_SYNC
-            // TONEX_PARAM_MODULATION_CHORUS_TS
-            // TONEX_PARAM_MODULATION_CHORUS_RATE
-            // TONEX_PARAM_MODULATION_CHORUS_DEPTH
-            // TONEX_PARAM_MODULATION_CHORUS_LEVEL
-            // TONEX_PARAM_MODULATION_TREMOLO_SYNC
-            // TONEX_PARAM_MODULATION_TREMOLO_TS
-            // TONEX_PARAM_MODULATION_TREMOLO_RATE
-            // TONEX_PARAM_MODULATION_TREMOLO_SHAPE
-            // TONEX_PARAM_MODULATION_TREMOLO_SPREAD
-            // TONEX_PARAM_MODULATION_TREMOLO_LEVEL
-            // TONEX_PARAM_MODULATION_PHASER_SYNC
-            // TONEX_PARAM_MODULATION_PHASER_TS
-            // TONEX_PARAM_MODULATION_PHASER_RATE
-            // TONEX_PARAM_MODULATION_PHASER_DEPTH
-            // TONEX_PARAM_MODULATION_PHASER_LEVEL
-            // TONEX_PARAM_MODULATION_FLANGER_SYNC
-            // TONEX_PARAM_MODULATION_FLANGER_TS
-            // TONEX_PARAM_MODULATION_FLANGER_RATE
-            // TONEX_PARAM_MODULATION_FLANGER_DEPTH
-            // TONEX_PARAM_MODULATION_FLANGER_FEEDBACK
-            // TONEX_PARAM_MODULATION_FLANGER_LEVEL
-            // TONEX_PARAM_MODULATION_ROTARY_SYNC
-            // TONEX_PARAM_MODULATION_ROTARY_TS
-            // TONEX_PARAM_MODULATION_ROTARY_SPEED
-            // TONEX_PARAM_MODULATION_ROTARY_RADIUS
-            // TONEX_PARAM_MODULATION_ROTARY_SPREAD
-            // TONEX_PARAM_MODULATION_ROTARY_LEVEL
-            
-            // Delay
-            // TONEX_PARAM_DELAY_POST
-            // TONEX_PARAM_DELAY_ENABLE
-            // TONEX_PARAM_DELAY_MODEL
-            // TONEX_PARAM_DELAY_DIGITAL_SYNC
-            // TONEX_PARAM_DELAY_DIGITAL_TS
-            // TONEX_PARAM_DELAY_DIGITAL_TIME
-            // TONEX_PARAM_DELAY_DIGITAL_FEEDBACK
-            // TONEX_PARAM_DELAY_DIGITAL_MODE
-            // TONEX_PARAM_DELAY_DIGITAL_MIX
-            // TONEX_PARAM_DELAY_TAPE_SYNC
-            // TONEX_PARAM_DELAY_TAPE_TS
-            // TONEX_PARAM_DELAY_TAPE_TIME
-            // TONEX_PARAM_DELAY_TAPE_FEEDBACK
-            // TONEX_PARAM_DELAY_TAPE_MODE
-            // TONEX_PARAM_DELAY_TAPE_MIX
+            var param_index = e.target.getAttribute("data-indexnumber");
+            //var param_index = e.target.dataset.indexNumber;
+            var param_value = e.target.value;
 
             if (SocketConnected === 1) {
-                // get values
-                //var preset_index = document.getElementById("set_preset").value;
                 console.log('Param change');
                 
-                //sendWS({"CMD": "SETPRESET", 
-                //        "INDEX": param_index,
-                //        "VALUE": param_value});                        
+                sendWS({"CMD": "SETPARAM", 
+                        "INDEX": param_index,
+                        "VALUE": param_value});                        
             }
         }
      
     </script>
         
     <nav class="navbar navbar-dark bg-dark">
-       <label style="margin-left: 10px; font-size: 24px; color:#FB9230;">Tonex One Controller</label>
+       <label style="margin-left: 10px; font-size: 30px; color:#FB9230;">Tonex One Controller</label>
        <form class="form-inline text-white">
             <div class="input-group">
-                <select class="form-select" id="set_preset" onchange="onPresetChange()" style="margin-right: 10px; padding-right: 40px; color:white; background: #1f1f1f;">
+                <select class="form-select" id="set_preset" onchange="onPresetChange()" style="width: 290px; margin-right: 10px; padding-right: 40px; color:white; background: #1f1f1f;">
                   <option value="0" selected>1</option>
                   <option value="1">2</option>
                   <option value="2">3</option>
@@ -1337,9 +1317,6 @@
                   <option value="18">19</option>
                   <option value="19">20</option>
                 </select> 
-                <div class="input-group-postpend">
-                    <span class="form-label" id="preset_name" style="padding-right: 10px; color:white; font-size: 24px; background: #1f1f1f;">Boosted German</span>
-                </div>
             </div>            
         </form>
     </nav>
@@ -1364,13 +1341,13 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="ng_enable">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="ng_enable">
                                 <label class="form-check-label" for="ng_enable">Enable</label>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="ng_post">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="ng_post">
                                 <label class="form-check-label" for="ng_post">Post</label>
                             </div>
                         </div>
@@ -1379,15 +1356,15 @@
                 <br>
                 <div class="container">
                     <label for="ng_thresh" class="form-label">Threshold</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="ng_thresh">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="ng_thresh">
                 </div>
                 <div class="container">
                     <label for="ng_release" class="form-label">Release</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="ng_release">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="ng_release">
                 </div>
                 <div class="container">
                     <label for="ng_depth" class="form-label">Depth</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="ng_depth">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="ng_depth">
                 </div>
             </p>
         </div>
@@ -1401,13 +1378,13 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="cp_enable">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="cp_enable">
                                 <label class="form-check-label" for="cp_enable">Enable</label>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="cp_post">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="cp_post">
                                 <label class="form-check-label" for="cp_post">Post</label>
                             </div>
                         </div>
@@ -1416,15 +1393,15 @@
                 <br>
                 <div class="container">
                     <label for="cp_thresh" class="form-label">Threshold</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="cp_thresh">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="cp_thresh">
                 </div>
                 <div class="container">
                     <label for="cp_attack" class="form-label">Attack</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="cp_attack">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="cp_attack">
                 </div>
                 <div class="container">
                     <label for="cp_gain" class="form-label">Gain</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="cp_gain">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="cp_gain">
                 </div>
             </p>
         </div>
@@ -1438,7 +1415,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="eq_post">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="eq_post">
                                 <label class="form-check-label" for="eq_post">Post</label>
                             </div>
                         </div>
@@ -1452,15 +1429,15 @@
                 
                 <div class="container">
                     <label for="eq_bass" class="form-label">Bass</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="eq_bass">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_bass">
                 </div>
                 <div class="container">
                     <label for="eq_mid" class="form-label">Mid</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="eq_mid">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_mid">
                 </div>
                 <div class="container">
                     <label for="eq_treble" class="form-label">Treble</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="eq_treble">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_treble">
                 </div>
             </p>
         </div>
@@ -1474,13 +1451,13 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="rv_enable">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="rv_enable">
                                 <label class="form-check-label" for="rv_enable">Enable</label>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="rv_post">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="rv_post">
                                 <label class="form-check-label" for="rv_post">Post</label>
                             </div>
                         </div>
@@ -1489,7 +1466,7 @@
                 <br>
                 <div class="container">
                     <label class="form-check-label" for="rv_model">Model</label>
-                    <select class="form-select select_style" onchange="onParamChange(event)" id="rv_model">
+                    <select class="form-select select_style" data-index-number="dummy" onchange="onParamChange(event)" id="rv_model">
                       <option value="0" selected>Spring 1</option>
                       <option value="1">Spring 2</option>
                       <option value="2">Spring 3</option>
@@ -1501,19 +1478,19 @@
                 <br>
                 <div class="container">
                     <label for="rv_mix" class="form-label">Mix</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="rv_mix">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="rv_mix">
                 </div>
                 <div class="container">
                     <label for="rv_time" class="form-label">Time</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="rv_time">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="rv_time">
                 </div>
                 <div class="container">
                     <label for="rv_predelay" class="form-label">Pre-Delay</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="rv_predelay">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="rv_predelay">
                 </div>
                 <div class="container">
                     <label for="rv_color" class="form-label">Color</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="rv_color">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="rv_color">
                 </div>
 
             </p>
@@ -1528,13 +1505,13 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="mo_enable">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="mo_enable">
                                 <label class="form-check-label" for="mo_enable">Enable</label>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="mo_post">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="mo_post">
                                 <label class="form-check-label" for="mo_post">Post</label>
                             </div>
                         </div>
@@ -1545,7 +1522,7 @@
                     <div class="row">                
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="mo_sync">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="mo_sync">
                                 <label class="form-check-label" for="mo_sync">Sync</label>         
                             </div>
                         </div>
@@ -1558,7 +1535,7 @@
                 <br>
                 <div class="container">
                     <label class="form-check-label" for="mo_model">Model</label>
-                    <select class="form-select select_style" onchange="onParamChange(event)" id="mo_model">
+                    <select class="form-select select_style" data-index-number="dummy" onchange="onParamChange(event)" id="mo_model">
                         <option value="0" selected>Chorus</option>
                         <option value="1">Tremolo</option>
                         <option value="2">Phaser</option>
@@ -1569,19 +1546,19 @@
                 <br>
                 <div class="container">
                     <label for="mo_param1" id="mo_param1l" class="form-label">Param1</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="mo_param1">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="mo_param1">
                 </div>
                 <div class="container">
                     <label for="mo_param2" id="mo_param2l" class="form-label">Param2</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="mo_param2">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="mo_param2">
                 </div>
                 <div class="container">
                     <label for="mo_param3" id="mo_param3l" class="form-label">Param3</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="mo_param3">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="mo_param3">
                 </div>
                 <div class="container">
                     <label for="mo_param4" id="mo_param4l" class="form-label">Param4</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="mo_param4">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="mo_param4">
                 </div>
             </p>
         </div>
@@ -1595,13 +1572,13 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="dl_enable">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="dl_enable">
                                 <label class="form-check-label" for="dl_enable">Enable</label>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="dl_post">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="dl_post">
                                 <label class="form-check-label" for="dl_post">Post</label>
                             </div>
                         </div>
@@ -1612,13 +1589,13 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="dl_sync">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="dl_sync">
                                 <label class="form-check-label" for="dl_sync">Sync</label>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="dl_pingpong">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="dl_pingpong">
                                 <label class="form-check-label" for="dl_pingpong">PPng</label>
                             </div>
                         </div>
@@ -1627,7 +1604,7 @@
                 <br>
                 <div class="container">
                     <label class="form-check-label" for="rv_model">Model</label>
-                    <select class="form-select select_style" onchange="onParamChange(event)" id="dl_model">
+                    <select class="form-select select_style" data-index-number="dummy" onchange="onParamChange(event)" id="dl_model">
                         <option value="0" selected>Digital</option>
                         <option value="1">Tape</option>
                     </select>            
@@ -1635,15 +1612,15 @@
                 <br>
                 <div class="container">
                     <label for="dl_time" class="form-label">Time</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="dl_time">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="dl_time">
                 </div>
                 <div class="container">
                     <label for="dl_feedback" class="form-label">Feedback</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="dl_feedback">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="dl_feedback">
                 </div>
                 <div class="container">
                     <label for="dl_mix" class="form-label">Mix</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="dl_mix">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="dl_mix">
                 </div>
             </p>
         </div>
@@ -1655,15 +1632,15 @@
             <p class="lead">
                 <div class="container">
                     <label for="am_gain" class="form-label">Gain</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="am_gain">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="am_gain">
                 </div>
                 <div class="container">
                     <label for="am_volume" class="form-label">Volume</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="am_volume">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="am_volume">
                 </div>
                 <div class="container">
                     <label for="am_presence" class="form-label">Presence</label>
-                    <input type="range" onchange="onParamChange(event)" class="form-range" id="am_presence">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="am_presence">
                 </div>
             </p>
         </div>
