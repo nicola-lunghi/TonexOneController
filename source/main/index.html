@@ -184,6 +184,17 @@
             color:white; 
             background: #1f1f1f;
         }
+
+        .mod-table-server-icon{
+            padding-left: 5%;
+            width: 10%;
+        }
+
+        .mod-table-server-text{
+            padding-left: 10%;
+            padding-top: 3%;
+        }
+
     </style>
 
     <script>   
@@ -201,7 +212,6 @@
     <script>  
         var gateway = `ws://${window.location.hostname}/ws`;
         var websocket;
-        var timers = {};  
         var pageTimer = 0;
         var SocketConnected = 0;   
         
@@ -355,25 +365,26 @@
             document.getElementById("defaultOpen").click();
             
             initWebSocket();
-            
-            if (timers['MainScreen'] !== undefined){
-                clearInterval(timers['MainScreen']);
-            }
-
             pageTimer = setInterval("pageTimerEvent();", 750);
-            timers['MainScreen'] = pageTimer;                                 
         }
 
         function pageTimerEvent(){
-            var areWeOnScreen = document.getElementById('MainMenu');   
+            let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modConnectionFault')) 
 
-            if (areWeOnScreen !== null){
+            if (SocketConnected === 0) {
+                if (!modal._isShown) {
+                    console.log("Not connected");
+                    modal.show();
+                }
+            }
+            else {
                 // request sending of anything changed
                 sendWS({"CMD": "GETCHANGES"});
-            }
-            else{
-                clearInterval(pageTimer);
-                delete timers['MainScreen'];
+
+                if (modal._isShown) {
+                    console.log('Connected');
+                    modal.hide();            
+                }
             }
         }
         
@@ -1269,7 +1280,7 @@
                 console.log('Preset change');
                 
                 sendWS({"CMD": "SETPRESET", 
-                        "S_MIDI_EN": parseInt(preset_index)});                        
+                        "PRESET": parseInt(preset_index)});                        
             }
         }
 
@@ -1775,5 +1786,19 @@
     </div>        
     
     <div id="toast"></div>
+
+    <div id="modConnectionFault" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Waiting for Connection to Controller...</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
   </body>
 </html>

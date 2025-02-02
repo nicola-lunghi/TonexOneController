@@ -1259,6 +1259,7 @@ static void wifi_config_task(void *arg)
     tWiFiMessage message;
     uint32_t tick_timer;
     uint8_t wifi_kill_checked = 0;
+    uint8_t wifi_mode = control_get_config_wifi_mode();
 
     ESP_LOGI(TAG, "Wifi config task start");
 
@@ -1277,11 +1278,11 @@ static void wifi_config_task(void *arg)
 
     // init mem
     memset((void*)pWebConfig, 0, sizeof(tWebConfigData));
-    pWebConfig->PresetIndex = 1;
-    sprintf(pWebConfig->PresetName, "Unknown");
+    pWebConfig->PresetIndex = 0;
+    sprintf(pWebConfig->PresetName, "1");
 
     // check wifi mode
-    switch (control_get_config_wifi_mode())    
+    switch (wifi_mode)    
     {
         case WIFI_MODE_STATION:
         {
@@ -1308,7 +1309,7 @@ static void wifi_config_task(void *arg)
 
     while (1) 
     {
-        if (control_get_config_wifi_mode() == WIFI_MODE_ACCESS_POINT_TIMED)
+        if (wifi_mode == WIFI_MODE_ACCESS_POINT_TIMED)
         {            
             if (wifi_kill_checked == 0)
             {
