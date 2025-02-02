@@ -1285,17 +1285,20 @@
         }
 
         function onParamChange(e) {
-            console.log('Param changed');
-            
+            console.log('Param changed');            
             var param_index = e.target.getAttribute("data-indexnumber");
-            //var param_index = e.target.dataset.indexNumber;
-            var param_value = e.target.value;
+            var param_value;
 
-            if (SocketConnected === 1) {
-                console.log('Param change');
-                
+            if (e.target.type && e.target.type === 'checkbox') {
+                var checked = e.target.checked;
+                param_value = checked ? 1.0 : 0.0;
+            } else {
+                param_value = parseFloat(e.target.value);
+            }
+
+            if (SocketConnected === 1) {                
                 sendWS({"CMD": "SETPARAM", 
-                        "INDEX": param_index,
+                        "INDEX": parseInt(param_index),
                         "VALUE": param_value});                        
             }
         }

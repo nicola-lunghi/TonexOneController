@@ -57,6 +57,7 @@ enum CommandEvents
     EVENT_SET_PRESET_DETAILS,
     EVENT_SET_USB_STATUS,
     EVENT_SET_BT_STATUS,
+    EVENT_SET_WIFI_STATUS,
     EVENT_SET_AMP_SKIN,
     EVENT_SAVE_USER_DATA,
     EVENT_SET_USER_TEXT,
@@ -126,6 +127,7 @@ typedef struct
     char PresetName[MAX_TEXT_LENGTH];
     uint32_t USBStatus;
     uint32_t BTStatus;
+    uint32_t WiFiStatus;
     tConfigData ConfigData;
 } tControlData;
 
@@ -212,6 +214,16 @@ static uint8_t process_control_command(tControlMessage* message)
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
             // update UI
             UI_SetBTStatus(ControlData.BTStatus);
+#endif
+        } break;
+
+        case EVENT_SET_WIFI_STATUS:
+        {
+            ControlData.WiFiStatus = message->Value;
+
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+            // update UI
+            UI_SetWiFiStatus(ControlData.WiFiStatus);
 #endif
         } break;
 
@@ -487,6 +499,29 @@ void control_set_bt_status(uint32_t status)
     if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
     {
         ESP_LOGE(TAG, "control_set_usb_status queue send failed!");            
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void control_set_wifi_status(uint32_t status)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_wifi_status");
+
+    message.Event = EVENT_SET_WIFI_STATUS;
+    message.Value = status;
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_wifi_status queue send failed!");            
     }
 }
 

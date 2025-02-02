@@ -14,6 +14,8 @@ SET(SOURCES screens/ui_Screen1.c
     images/ui_img_bt_disconn_png.c
     images/ui_img_usb_ok_png.c
     images/ui_img_usb_fail_png.c
+    images/ui_img_wifi_conn_png.c
+    images/ui_img_wifi_disconn_png.c
     images/ui_img_skin_jcm800_png.c
     images/ui_img_arrow_left_png.c
     images/ui_img_arrow_right_png.c

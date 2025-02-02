@@ -756,19 +756,20 @@ static esp_err_t ws_handler(httpd_req_t *req)
                     }                
                     else if (strcmp(str_val, "SETPARAM") == 0)
                     {
-                        uint16_t index;
+                        int index;
                         float value;
 
                         ESP_LOGI(TAG, "Set Param");
 
-                        if (json_obj_get_string(&pWebConfig->jctx, "INDEX", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        if (json_obj_get_int(&pWebConfig->jctx, "INDEX", &index) == OS_SUCCESS)
                         {
-                            index = atoi(str_val);
-
-                            if (json_obj_get_string(&pWebConfig->jctx, "VALUE", str_val, sizeof(str_val)) == OS_SUCCESS)
+                            if (json_obj_get_float(&pWebConfig->jctx, "VALUE", &value) == OS_SUCCESS)
                             {
-                                value = atof(str_val);
                                 usb_modify_parameter(index, value);
+                            }
+                            else
+                            {
+                                ESP_LOGW(TAG, "Could't find param value");
                             }
                         }
                     }
@@ -1037,12 +1038,15 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t e
         wifi_event_ap_staconnected_t* event = (wifi_event_ap_staconnected_t*) event_data;
         ESP_LOGI(TAG, "station "MACSTR" join, AID=%d", MAC2STR(event->mac), event->aid);
         client_connected = 1;
+
+        control_set_wifi_status(1);
     } 
     else if (event_id == WIFI_EVENT_AP_STADISCONNECTED) 
     {
         wifi_event_ap_stadisconnected_t* event = (wifi_event_ap_stadisconnected_t*) event_data;
         ESP_LOGI(TAG, "station "MACSTR" leave, AID=%d", MAC2STR(event->mac), event->aid);
         client_connected = 0;
+        control_set_wifi_status(0);
 
         ESP_LOGI(TAG, "Wifi config stopping");
         wifi_kill_all();
@@ -1064,6 +1068,7 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t e
             xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
         }
         wifi_connect_status = 0;
+        control_set_wifi_status(0);
         ESP_LOGI(TAG, "connect to the AP fail");
     }
     else if ((event_base == IP_EVENT) && (event_id == IP_EVENT_STA_GOT_IP))
@@ -1074,6 +1079,7 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t e
 
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
         wifi_connect_status = 1;
+        control_set_wifi_status(1);
     }
 }
 

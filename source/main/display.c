@@ -138,6 +138,7 @@ enum UIElements
 {
     UI_ELEMENT_USB_STATUS,
     UI_ELEMENT_BT_STATUS,
+    UI_ELEMENT_WIFI_STATUS,
     UI_ELEMENT_PRESET_NAME,
     UI_ELEMENT_AMP_SKIN,
     UI_ELEMENT_PRESET_DESCRIPTION,
@@ -954,6 +955,29 @@ void UI_SetBTStatus(uint8_t state)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+void UI_SetWiFiStatus(uint8_t state)
+{
+    tUIUpdate ui_update;
+
+    // build command
+    ui_update.ElementID = UI_ELEMENT_WIFI_STATUS;
+    ui_update.Action = UI_ACTION_SET_STATE;
+    ui_update.Value = state;
+
+    // send to queue
+    if (xQueueSend(ui_update_queue, (void*)&ui_update, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "UI Update queue send failed!");            
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 void UI_SetPresetLabel(char* text)
 {
     tUIUpdate ui_update;
@@ -1332,6 +1356,11 @@ static uint8_t update_ui_element(tUIUpdate* update)
         case UI_ELEMENT_BT_STATUS:
         {
             element_1 = ui_BTStatusConn;
+        } break;
+
+        case UI_ELEMENT_WIFI_STATUS:
+        {
+            element_1 = ui_WiFiStatusConn;
         } break;
 
         case UI_ELEMENT_PRESET_NAME:
@@ -2392,6 +2421,21 @@ static uint8_t update_ui_element(tUIUpdate* update)
                     // show the BT connected image
                     lv_obj_add_flag(ui_BTStatusDisconn, LV_OBJ_FLAG_HIDDEN);
                     lv_obj_clear_flag(ui_BTStatusConn, LV_OBJ_FLAG_HIDDEN);
+                }
+            }
+            else if (element_1 == ui_WiFiStatusConn)
+            {
+                if (update->Value == 0)
+                {
+                    // show the Wifi disconnected image
+                    lv_obj_add_flag(ui_WiFiStatusConn, LV_OBJ_FLAG_HIDDEN);
+                    lv_obj_clear_flag(ui_WiFiStatusDisconn, LV_OBJ_FLAG_HIDDEN);
+                }
+                else
+                {
+                    // show the WiFi connected image
+                    lv_obj_add_flag(ui_WiFiStatusDisconn, LV_OBJ_FLAG_HIDDEN);
+                    lv_obj_clear_flag(ui_WiFiStatusConn, LV_OBJ_FLAG_HIDDEN);
                 }
             }
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B            

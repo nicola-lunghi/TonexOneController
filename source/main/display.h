@@ -27,6 +27,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex);
 // thread-safe API for other tasks to update the UI
 void UI_SetUSBStatus(uint8_t state);
 void UI_SetBTStatus(uint8_t state);
+void UI_SetWiFiStatus(uint8_t state);
 void UI_SetPresetLabel(char* text);
 void UI_SetAmpSkin(uint16_t index);
 void UI_SetPresetDescription(char* text);

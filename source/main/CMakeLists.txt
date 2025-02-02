@@ -11,6 +11,7 @@ if(CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B)
                             "ui_generated/images/ui_img_smythbuilt_png.c" "ui_generated/screens/ui_Screen1.c" "ui_generated/screens/ui_Settings.c" "ui_generated/components/ui_comp_hook.c"
 			                "ui_generated/images/ui_img_usb_fail_png.c" "ui_generated/images/ui_img_next_png.c" "ui_generated/images/ui_img_previous_png.c" "ui_generated/images/ui_temporary_image.c"
                             "ui_generated/images/ui_img_usb_ok_png.c" "ui_generated/images/ui_img_next_down_png.c" "ui_generated/images/ui_img_previous_down_png.c" "ui_generated/images/ui_img_settings_png.c"
+                            "ui_generated/images/ui_img_wifi_conn_png.c" "ui_generated/images/ui_img_wifi_disconn_png.c"
                             "ui_generated/images/ui_img_skin_2001rb_png.c" "ui_generated/images/ui_img_skin_5150_png.c" 
                             "ui_generated/images/ui_img_skin_b18n_png.c" "ui_generated/images/ui_img_skin_bluesdeluxe_png.c"
                             "ui_generated/images/ui_img_skin_deville_png.c" "ui_generated/images/ui_img_skin_dualrectifier_png.c"
@@ -43,6 +44,7 @@ if(CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169)
    target_sources(${COMPONENT_LIB} PRIVATE "ui_generated_169/ui.c" "ui_generated_169/ui_helpers.c"
                             "ui_generated_169/images/ui_img_smythbuilt_png.c" "ui_generated_169/screens/ui_Screen1.c" "ui_generated_169/components/ui_comp_hook.c" "ui_generated_169/images/ui_img_usb_fail_png.c"
                             "ui_generated_169/images/ui_img_usb_ok_png.c"
+                            "ui_generated/images/ui_img_wifi_conn_png.c" "ui_generated/images/ui_img_wifi_disconn_png.c"
                             "ui_generated_169/images/ui_img_bt_conn_png.c" "ui_generated_169/images/ui_img_bt_disconn_png.c")
 endif()
 
@@ -52,6 +54,7 @@ if(CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R)
    target_sources(${COMPONENT_LIB} PRIVATE "ui_generated_085/ui.c" "ui_generated_085/ui_helpers.c"
                             "ui_generated_085/images/ui_img_smythbuilt_png.c" "ui_generated_085/screens/ui_Screen1.c" "ui_generated_085/components/ui_comp_hook.c" "ui_generated_085/images/ui_img_usb_fail_png.c"
                             "ui_generated_085/images/ui_img_usb_ok_png.c"
+                            "ui_generated/images/ui_img_wifi_conn_png.c" "ui_generated/images/ui_img_wifi_disconn_png.c"
                             "ui_generated_085/images/ui_img_bt_conn_png.c" "ui_generated_085/images/ui_img_bt_disconn_png.c")
 endif()
 

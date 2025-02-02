@@ -162,6 +162,26 @@ void ui_Screen1_screen_init(void)
     lv_obj_add_flag(ui_USBStatusFail, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_USBStatusFail, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
+    ui_WiFiStatusConn = lv_img_create(ui_TopPanel);
+    lv_img_set_src(ui_WiFiStatusConn, &ui_img_wifi_conn_png);
+    lv_obj_set_width(ui_WiFiStatusConn, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_WiFiStatusConn, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_WiFiStatusConn, 257);
+    lv_obj_set_y(ui_WiFiStatusConn, 0);
+    lv_obj_set_align(ui_WiFiStatusConn, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_WiFiStatusConn, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_clear_flag(ui_WiFiStatusConn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_WiFiStatusDisconn = lv_img_create(ui_TopPanel);
+    lv_img_set_src(ui_WiFiStatusDisconn, &ui_img_wifi_disconn_png);
+    lv_obj_set_width(ui_WiFiStatusDisconn, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_WiFiStatusDisconn, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_WiFiStatusDisconn, 257);
+    lv_obj_set_y(ui_WiFiStatusDisconn, 0);
+    lv_obj_set_align(ui_WiFiStatusDisconn, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_WiFiStatusDisconn, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_clear_flag(ui_WiFiStatusDisconn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
     ui_ProjectHeadingLabel = lv_label_create(ui_TopPanel);
     lv_obj_set_width(ui_ProjectHeadingLabel, 508);
     lv_obj_set_height(ui_ProjectHeadingLabel, 38);

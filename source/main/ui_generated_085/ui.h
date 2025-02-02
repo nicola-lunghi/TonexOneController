@@ -28,6 +28,8 @@ extern lv_obj_t * ui_USBStatusFail;
 extern lv_obj_t * ui_Logo;
 extern lv_obj_t * ui_BTStatusDisconn;
 extern lv_obj_t * ui_BTStatusConn;
+extern lv_obj_t * ui_WiFiStatusDisconn;
+extern lv_obj_t * ui_WiFiStatusConn;
 // CUSTOM VARIABLES
 
 // EVENTS
@@ -40,6 +42,8 @@ LV_IMG_DECLARE(ui_img_usb_fail_png);    // assets/usb_fail.png
 LV_IMG_DECLARE(ui_img_smythbuilt_png);    // assets/smythbuilt.png
 LV_IMG_DECLARE(ui_img_bt_disconn_png);    // assets/bt_disconn.png
 LV_IMG_DECLARE(ui_img_bt_conn_png);    // assets/bt_conn.png
+LV_IMG_DECLARE(ui_img_wifi_disconn_png);    // assets/wifi_disconn.png
+LV_IMG_DECLARE(ui_img_wifi_conn_png);    // assets/wifi_conn.png
 
 // UI INIT
 void ui_init(void);

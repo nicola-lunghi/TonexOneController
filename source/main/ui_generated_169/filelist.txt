@@ -7,3 +7,5 @@ images/ui_img_usb_fail_png.c
 images/ui_img_smythbuilt_png.c
 images/ui_img_bt_disconn_png.c
 images/ui_img_bt_conn_png.c
+images/ui_img_wifi_disconn_png.c
+images/ui_img_wifi_conn_png.c

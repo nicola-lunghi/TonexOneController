@@ -21,6 +21,8 @@ lv_obj_t * ui_USBStatusFail;
 lv_obj_t * ui_Logo;
 lv_obj_t * ui_BTStatusDisconn;
 lv_obj_t * ui_BTStatusConn;
+lv_obj_t * ui_WiFiStatusDisconn;
+lv_obj_t * ui_WiFiStatusConn;
 // CUSTOM VARIABLES
 
 // EVENTS

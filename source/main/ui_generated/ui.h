@@ -41,6 +41,8 @@ void ui_event_BTStatusDisconn(lv_event_t * e);
 extern lv_obj_t * ui_BTStatusDisconn;
 extern lv_obj_t * ui_USBStatusOK;
 extern lv_obj_t * ui_USBStatusFail;
+extern lv_obj_t * ui_WiFiStatusConn;
+extern lv_obj_t * ui_WiFiStatusDisconn;
 extern lv_obj_t * ui_ProjectHeadingLabel;
 extern lv_obj_t * ui_Skins;
 extern lv_obj_t * ui_SkinImage;
@@ -184,11 +186,9 @@ void ui_event_ModulationParam4Slider(lv_event_t * e);
 extern lv_obj_t * ui_ModulationParam4Slider;
 extern lv_obj_t * ui_ModulationParam4Label;
 extern lv_obj_t * ui_Delay;
-extern lv_obj_t * ui_DelayEnableGroup;
 void ui_event_DelayEnableSwitch(lv_event_t * e);
 extern lv_obj_t * ui_DelayEnableSwitch;
 extern lv_obj_t * ui_DelayEnableLabel;
-extern lv_obj_t * ui_DelayPostGroup;
 void ui_event_DelayPostSwitch(lv_event_t * e);
 extern lv_obj_t * ui_DelayPostSwitch;
 extern lv_obj_t * ui_DelayPostLabel;
@@ -245,6 +245,8 @@ LV_IMG_DECLARE(ui_img_bt_conn_png);    // assets/bt_conn.png
 LV_IMG_DECLARE(ui_img_bt_disconn_png);    // assets/bt_disconn.png
 LV_IMG_DECLARE(ui_img_usb_ok_png);    // assets/usb_ok.png
 LV_IMG_DECLARE(ui_img_usb_fail_png);    // assets/usb_fail.png
+LV_IMG_DECLARE(ui_img_wifi_conn_png);    // assets/wifi_conn.png
+LV_IMG_DECLARE(ui_img_wifi_disconn_png);    // assets/wifi_disconn.png
 LV_IMG_DECLARE(ui_img_skin_jcm800_png);    // assets/skin_jcm800.png
 LV_IMG_DECLARE(ui_img_arrow_left_png);    // assets/arrow_left.png
 LV_IMG_DECLARE(ui_img_arrow_right_png);    // assets/arrow_right.png
