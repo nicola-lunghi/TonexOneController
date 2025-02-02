@@ -77,7 +77,7 @@
           float: left;
           background-color: #2A2A2A;
           width: 25%;
-          min-width: 85px;
+          min-width: 70px;
           height: 660px;
         }
 
@@ -93,7 +93,7 @@
           text-align: left;
           cursor: pointer;
           transition: 0.3s;
-          font-size: 20px;
+          font-size: 16px;
         }
 
         /* Change background color of buttons on hover */
@@ -110,7 +110,7 @@
         /* Style the tab content */
         .tabcontent {
           float: left;
-          padding: 0px 12px;
+          padding: 0px 6px;
           width: 75%;
           border-left: none;
           height: 500px;
@@ -558,6 +558,8 @@
                                 break;
 
                             case TONEX_PARAM_EQ_BASS_FREQ:
+                                configureParamRange("eq_bassf", value, min, max);
+                                setParamData("eq_bassf", parseInt(key));                                
                                 break;
 
                             case TONEX_PARAM_EQ_MID:
@@ -566,9 +568,13 @@
                                 break;
 
                             case TONEX_PARAM_EQ_MIDQ:
+                                configureParamRange("eq_midq", value, min, max);
+                                setParamData("eq_midq", parseInt(key));                            
                                 break;
 
                             case TONEX_PARAM_EQ_MID_FREQ:
+                                configureParamRange("eq_midf", value, min, max);
+                                setParamData("eq_midf", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_EQ_TREBLE:
@@ -577,6 +583,8 @@
                                 break;
 
                             case TONEX_PARAM_EQ_TREBLE_FREQ:
+                                configureParamRange("eq_treblef", value, min, max);
+                                setParamData("eq_treblef", parseInt(key));
                                 break;
                             
                             //Model and VIR params
@@ -597,6 +605,8 @@
                                 break;
 
                             case TONEX_PARAM_MODEX_MIX:
+                                configureParamRange("am_mix", value, min, max);
+                                setParamData("am_mix", parseInt(key));                            
                                 break;
 
                             case TONEX_PARAM_UNKNOWN_3:
@@ -608,6 +618,8 @@
                                 break;
 
                             case TONEX_PARAM_DEPTH:
+                                configureParamRange("am_depth", value, min, max);
+                                setParamData("am_depth", parseInt(key));                            
                                 break;
 
                             case TONEX_PARAM_VIR_RESO:
@@ -1446,12 +1458,28 @@
                     <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_bass">
                 </div>
                 <div class="container">
+                    <label for="eq_bassf" class="form-label">Bass Freq</label>
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_bassf">
+                </div>
+                <div class="container">
                     <label for="eq_mid" class="form-label">Mid</label>
                     <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_mid">
                 </div>
                 <div class="container">
+                    <label for="eq_midf" class="form-label">Mid Freq</label>
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_midf">
+                </div>
+                <div class="container">
+                    <label for="eq_midq" class="form-label">Mid Q</label>
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_midq">
+                </div>
+                <div class="container">
                     <label for="eq_treble" class="form-label">Treble</label>
                     <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_treble">
+                </div>
+                <div class="container">
+                    <label for="eq_treblef" class="form-label">Treble Freq</label>
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="eq_treblef">
                 </div>
             </p>
         </div>
@@ -1653,8 +1681,16 @@
                     <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="am_volume">
                 </div>
                 <div class="container">
+                    <label for="am_mix" class="form-label">Mix</label>
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="am_mix">
+                </div>
+                <div class="container">
                     <label for="am_presence" class="form-label">Presence</label>
                     <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="am_presence">
+                </div>
+                <div class="container">
+                    <label for="am_depth" class="form-label">Depth</label>
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="am_depth">
                 </div>
             </p>
         </div>
@@ -1676,7 +1712,7 @@
                 <div class="container">
                     <div class="form-check form-switch">
                        <input class="form-check-input" type="checkbox" role="switch" value="on" id="mvavechoc" checked>
-                       <label class="form-check-label" for="mvavechoc">M-Vave Chocolate Series</label>
+                       <label class="form-check-label" for="mvavechoc">Chocolate Series</label>
                     </div>                            
                 </div>
                 <div class="container">
@@ -1699,7 +1735,7 @@
                 <div class="container">
                     <div class="form-check form-switch">
                        <input class="form-check-input" type="checkbox" role="switch" value="on" id="btmidicc">
-                       <label class="form-check-label" for="btmidicc">Midi CC over Bluetooth</label>
+                       <label class="form-check-label" for="btmidicc">Midi CC on BT</label>
                     </div> 
                 </div>
                 <br>
@@ -1734,7 +1770,7 @@
                 <div class="container">
                     <div class="form-check form-switch">
                        <input class="form-check-input" type="checkbox" role="switch" value="on" id="togglebypass">
-                       <label class="form-check-label" for="togglebypass">Preset Twice Toggles Bypass</label>
+                       <label class="form-check-label" for="togglebypass">Toggle Bypass</label>
                     </div> 
                 </div>
                 <br>
