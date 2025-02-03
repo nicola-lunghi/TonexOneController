@@ -36,7 +36,7 @@ The code could be adapted to run on other brand ESP32-S3 boards, but to make thi
 - "Zero" board with no display, is the smallest and cheapest option
 - "DevKit-C" board with no display
 - "Atom S3R" board with tiny LCD
-![meet_family](https://github.com/user-attachments/assets/a2f4ad41-d5b8-4b3d-b800-b53b116014e7)
+![meet_family](https://github.com/user-attachments/assets/b707b61a-ca2c-46b3-972f-cbeb59ffa2b2)
 
 
 ## ⭐ Key Features <a name="key_features"></a>
