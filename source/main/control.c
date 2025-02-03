@@ -73,7 +73,8 @@ enum CommandEvents
     EVENT_SET_CONFIG_ENABLE_BT_MIDI_CC,
     EVENT_SET_CONFIG_WIFI_MODE,
     EVENT_SET_CONFIG_WIFI_SSID,
-    EVENT_SET_CONFIG_WIFI_PASSWORD
+    EVENT_SET_CONFIG_WIFI_PASSWORD,
+    EVENT_SET_CONFIG_SCREEN_ROTATION
 };
 
 typedef struct
@@ -110,7 +111,8 @@ typedef struct __attribute__ ((packed))
 
     // general flags
     uint16_t GeneralDoublePressToggleBypass: 1;
-    uint16_t GeneralSpare: 15;
+    uint16_t GeneralScreenRotation: 2;
+    uint16_t GeneralSpare: 13;
 
     uint8_t FootswitchMode;
     char BTClientCustomName[MAX_BT_CUSTOM_NAME];
@@ -336,6 +338,12 @@ static uint8_t process_control_command(tControlMessage* message)
             strncpy(ControlData.ConfigData.WifiPassword, message->Text, MAX_WIFI_SSID_PW - 1);
             ControlData.ConfigData.WifiPassword[MAX_WIFI_SSID_PW - 1] = 0;
         } break;
+
+        case EVENT_SET_CONFIG_SCREEN_ROTATION:
+        {
+            ESP_LOGI(TAG, "Config set screen rotation %d", (int)message->Value);
+            ControlData.ConfigData.GeneralScreenRotation = (uint8_t)message->Value & 0x03;
+        } break;
     }
 
     return 1;
@@ -513,7 +521,7 @@ void control_set_wifi_status(uint32_t status)
 {
     tControlMessage message;
 
-    ESP_LOGI(TAG, "control_set_wifi_status");
+    ESP_LOGI(TAG, "control_set_wifi_status %d", (int)status);
 
     message.Event = EVENT_SET_WIFI_STATUS;
     message.Value = status;
@@ -877,6 +885,34 @@ void control_set_config_footswitch_mode(uint32_t mode)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+void control_set_screen_rotation(uint32_t rot)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_screen_rotation %d", (int)rot);
+
+    if (rot >= SCREEN_ROTATION_MAX)
+    {
+        rot = SCREEN_ROTATION_0;
+    }
+
+    message.Event = EVENT_SET_CONFIG_SCREEN_ROTATION;
+    message.Value = rot;
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_screen_rotation queue send failed!");            
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 void control_set_skin_next(void)
 {
     if (ControlData.ConfigData.UserData[ControlData.PresetIndex].SkinIndex < (SKIN_MAX - 1))
@@ -1066,6 +1102,18 @@ void control_get_config_wifi_password(char* name)
 * NAME:        
 * DESCRIPTION: 
 * PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+uint8_t control_get_config_screen_rotation(void)
+{
+    return ControlData.ConfigData.GeneralScreenRotation;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
@@ -1210,6 +1258,7 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config WiFi Mode: %d", (int)ControlData.ConfigData.WiFiMode);
     ESP_LOGI(TAG, "Config WiFi SSID: %s", ControlData.ConfigData.WifiSSID);
     ESP_LOGI(TAG, "Config WiFi Password: <hidden>");
+    ESP_LOGI(TAG, "Config Screen Rotation: %d", (int)ControlData.ConfigData.GeneralScreenRotation);
 
     // status    
     return result;
@@ -1237,6 +1286,7 @@ void control_set_default_config(void)
     ControlData.ConfigData.WiFiMode = WIFI_MODE_ACCESS_POINT_TIMED;
     strcpy(ControlData.ConfigData.WifiSSID, "TonexConfig");
     strcpy(ControlData.ConfigData.WifiPassword, "12345678");   
+    ControlData.ConfigData.GeneralScreenRotation = SCREEN_ROTATION_0;
 }
 
 /****************************************************************************
@@ -1314,7 +1364,7 @@ void control_load_config(void)
 void control_init(void)
 {
     // create queue for commands from other threads
-    control_input_queue = xQueueCreate(15, sizeof(tControlMessage));
+    control_input_queue = xQueueCreate(20, sizeof(tControlMessage));
     if (control_input_queue == NULL)
     {
         ESP_LOGE(TAG, "Failed to create control input queue!");

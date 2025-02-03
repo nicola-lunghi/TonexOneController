@@ -76,9 +76,9 @@
         .tab {
           float: left;
           background-color: #2A2A2A;
-          width: 25%;
+          width: 15%;
           min-width: 70px;
-          height: 660px;
+          height: 740px;
         }
 
         /* Style the buttons inside the tab */
@@ -421,7 +421,7 @@
         // Function that receives the message from the ESP32
         function onMessage(event) {
             var received_data = JSON.parse(event.data);
-            console.log(received_data);
+            //console.log(received_data);
             processReturnCmd(received_data);        
         }
 
@@ -1178,6 +1178,7 @@
                     configureParamSelect("wifimode", data['WIFI_MODE']);
                     setParamValue("wifiname", data['WIFI_SSID']);
                     setParamValue("wifipassword", data['WIFI_PW']);
+                    configureParamSelect("screenrot", data['SCREEN_ROT']);
                     break;   
                 
                 case 'GETPRESET':
@@ -1250,6 +1251,8 @@
                 var btmidicc = document.getElementById("btmidicc").checked;
                 var btmidiccen = btmidicc ? 1 : 0;
                                    
+                var screenrot = document.getElementById("screenrot").value;                
+
                 sendWS({"CMD": "SETCONFIG", 
                         "BT_MODE": parseInt(btmode),
                         "BT_CHOC_EN": mvavechocen, 
@@ -1260,7 +1263,8 @@
                         "S_MIDI_EN": midienableden,
                         "S_MIDI_CH": parseInt(midichannel),
                         "FOOTSW_MODE": parseInt(footmode),
-                        "BT_MIDI_CC": btmidiccen
+                        "BT_MIDI_CC": btmidiccen,
+                        "SCREEN_ROT": parseInt(screenrot)
                     });  
       
                 setToast('Settings saved.<br>Rebooting now');
@@ -1355,8 +1359,8 @@
       <button class="tablinks" onclick="openTab(event, 'Modulation')">Mod</button>
       <button class="tablinks" onclick="openTab(event, 'Delay')">Delay</button>
       <button class="tablinks" onclick="openTab(event, 'Amplifier')">Amp</button>
-      <button class="tablinks" onclick="openTab(event, 'Options')">Options</button>
-      <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
+      <button class="tablinks" onclick="openTab(event, 'Options')">Opt</button>
+      <button class="tablinks" onclick="openTab(event, 'Settings')">Sett</button>
     </div>
 
     <div id="NoiseGate" class="tabcontent">
@@ -1781,6 +1785,14 @@
                         <option value="1" class="style6">Quad Banked (not 4.3B)</option>
                         <option value="2" class="style6">Quad Binary (not 4.3B)</option>     
                     </select>            
+                </div>
+                <br>
+                <div class="container">
+                    <label class="form-check-label" for="screenrot">Screen Rotation</label>
+                    <select class="form-select select_style" id="screenrot">
+                        <option value="0" class="style6" selected>0 degrees</option>
+                        <option value="1" class="style6">180 degrees</option>
+                    </select>                           
                 </div>
                 <br>
                 <div class="container">

@@ -103,6 +103,16 @@ enum WiFiModes
     WIFI_MODE_ACCESS_POINT              // access point, no timeout
 };
 
+enum ScreenRotation
+{
+    SCREEN_ROTATION_0,
+    SCREEN_ROTATION_180,
+    // 90 and 270 one day maybe but needs big UI changes
+    //SCREEN_ROTATION_90,
+    //SCREEN_ROTATION_270,
+    SCREEN_ROTATION_MAX,
+};
+
 #define MAX_WIFI_SSID_PW       65   
 
 // thread safe public API
@@ -134,6 +144,7 @@ void control_set_config_enable_bt_midi_CC(uint32_t status);
 void control_set_config_wifi_mode(uint32_t mode);
 void control_set_config_wifi_ssid(char* name);
 void control_set_config_wifi_password(char* name);
+void control_set_screen_rotation(uint32_t rot);
 
 uint8_t control_get_config_bt_mode(void);
 uint8_t control_get_config_bt_mvave_choc_enable(void);
@@ -148,3 +159,4 @@ uint8_t control_get_config_enable_bt_midi_CC(void);
 uint8_t control_get_config_wifi_mode(void);
 void control_get_config_wifi_ssid(char* name);
 void control_get_config_wifi_password(char* name);
+uint8_t control_get_config_screen_rotation(void);

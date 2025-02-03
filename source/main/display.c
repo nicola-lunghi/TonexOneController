@@ -2427,12 +2427,16 @@ static uint8_t update_ui_element(tUIUpdate* update)
             {
                 if (update->Value == 0)
                 {
+                    ESP_LOGI(TAG, "Show WiFi disconn");
+
                     // show the Wifi disconnected image
                     lv_obj_add_flag(ui_WiFiStatusConn, LV_OBJ_FLAG_HIDDEN);
                     lv_obj_clear_flag(ui_WiFiStatusDisconn, LV_OBJ_FLAG_HIDDEN);
                 }
                 else
                 {
+                    ESP_LOGI(TAG, "Show WiFi conn");
+
                     // show the WiFi connected image
                     lv_obj_add_flag(ui_WiFiStatusDisconn, LV_OBJ_FLAG_HIDDEN);
                     lv_obj_clear_flag(ui_WiFiStatusConn, LV_OBJ_FLAG_HIDDEN);
@@ -2686,8 +2690,8 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
                 .mirror_y = 0,
             },
         };
-
-    /* Initialize touch */
+    
+    // Initialize touch
     ESP_LOGI(TAG, "Initialize touch controller GT911");
 
     // try a few times
@@ -2951,6 +2955,13 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     ESP_ERROR_CHECK(esp_timer_start_periodic(lvgl_tick_timer, DISPLAY_LVGL_TICK_PERIOD_MS * 1000));
 
     vTaskDelay(pdMS_TO_TICKS(10));
+
+    if (control_get_config_screen_rotation() == SCREEN_ROTATION_180)
+    {
+        disp_drv.rotated = LV_DISP_ROT_180;
+        // can only do software rotation, with a drop in frame rate
+        disp_drv.sw_rotate = 1;
+    }
 
     // init GUI
     ESP_LOGI(TAG, "Init scene");

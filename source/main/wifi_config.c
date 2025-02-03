@@ -68,16 +68,11 @@ static httpd_handle_t http_server = NULL;
 static httpd_config_t http_config = HTTPD_DEFAULT_CONFIG();
 static EventGroupHandle_t s_wifi_event_group;
 static QueueHandle_t wifi_input_queue;
-static const size_t max_clients = 3;
 
 static esp_err_t index_get_handler(httpd_req_t *req);
 static esp_err_t get_handler(httpd_req_t *req);
 static esp_err_t ws_handler(httpd_req_t *req);
 static void wifi_kill_all(void);
-static void send_params_async(void *arg);
-static void send_preset_async(void *arg);
-static void send_config_async(void *arg);
-static void ws_send_all_clients(httpd_handle_t* server, void (*functionPtr)(void* arg));
 static void wifi_build_params_json(void);
 static void wifi_build_config_json(void);
 static void wifi_build_preset_json(void);
@@ -240,139 +235,6 @@ void wifi_request_sync(uint8_t type, void* arg1, void* arg2)
 * RETURN:      none
 * NOTES:       none
 ****************************************************************************/
-static void send_params_async(void *arg)
-{
-    async_resp_arg* resp_arg = arg;
-    httpd_handle_t hd = resp_arg->hd;
-    int fd = resp_arg->fd;
-    httpd_ws_frame_t ws_pkt;
-
-    memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
-
-    // build params
-    wifi_build_params_json();
-
-    ws_pkt.payload = (uint8_t*)&pWebConfig->jstr;
-    ws_pkt.len = strlen((char*)ws_pkt.payload);
-    ws_pkt.type = HTTPD_WS_TYPE_TEXT;
-
-    httpd_ws_send_frame_async(hd, fd, &ws_pkt);
-    free(resp_arg);
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-static void send_preset_async(void *arg)
-{
-    async_resp_arg* resp_arg = arg;
-    httpd_handle_t hd = resp_arg->hd;
-    int fd = resp_arg->fd;
-    httpd_ws_frame_t ws_pkt;
-
-    memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
-
-    // build json
-    wifi_build_preset_json();
-
-    ws_pkt.payload = (uint8_t*)&pWebConfig->jstr;
-    ws_pkt.len = strlen((char*)ws_pkt.payload);
-    ws_pkt.type = HTTPD_WS_TYPE_TEXT;
-
-    httpd_ws_send_frame_async(hd, fd, &ws_pkt);
-    free(resp_arg);
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-static void send_config_async(void *arg)
-{
-    async_resp_arg* resp_arg = arg;
-    httpd_handle_t hd = resp_arg->hd;
-    int fd = resp_arg->fd;
-    httpd_ws_frame_t ws_pkt;
-
-    memset(&ws_pkt, 0, sizeof(httpd_ws_frame_t));
-
-    // build params
-    wifi_build_config_json();
-
-    ws_pkt.payload = (uint8_t*)&pWebConfig->jstr;
-    ws_pkt.len = strlen((char*)ws_pkt.payload);
-    ws_pkt.type = HTTPD_WS_TYPE_TEXT;
-
-    httpd_ws_send_frame_async(hd, fd, &ws_pkt);
-    free(resp_arg);
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-static void ws_send_all_clients(httpd_handle_t* server, void (*functionPtr)(void* arg))
-{
-    size_t clients = max_clients;
-    int client_fds[max_clients];
-
-    if ((wifi_connect_status == 0) && (client_connected == 0))
-    {
-        // no clients, no point in processing
-        return;
-    }
-
-    if (httpd_get_client_list(*server, &clients, client_fds) == ESP_OK) 
-    {
-        // loop all connected clients
-        for (size_t i = 0; i < clients; ++i) 
-        {
-            // get the socket
-            int sock = client_fds[i];
-
-            // get the fd info
-            if (httpd_ws_get_fd_info(*server, sock) == HTTPD_WS_CLIENT_WEBSOCKET) 
-            {
-                ESP_LOGI(TAG, "Active client (fd=%d) -> sending async message", sock);
-                async_resp_arg* resp_arg = heap_caps_malloc(sizeof(async_resp_arg), MALLOC_CAP_SPIRAM);
-
-                if (resp_arg == NULL)
-                {
-                    ESP_LOGE(TAG, "Failed to alloc memory for resp_arg");
-                    break;
-                }
-
-                resp_arg->hd = *server;
-                resp_arg->fd = sock;
-
-                // queue work via function pointer
-                if (httpd_queue_work(resp_arg->hd, *functionPtr, resp_arg) != ESP_OK) 
-                {
-                    ESP_LOGE(TAG, "httpd_queue_work failed!");
-                    break;
-                }
-            }
-        }
-    }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
 static esp_err_t build_send_ws_response_packet(httpd_req_t *req, char* payload)
 {
     esp_err_t ret;
@@ -486,6 +348,7 @@ static void wifi_build_config_json(void)
     json_gen_obj_set_int(&pWebConfig->jstr, "FOOTSW_MODE", control_get_config_footswitch_mode());
     json_gen_obj_set_int(&pWebConfig->jstr, "BT_MIDI_CC", control_get_config_enable_bt_midi_CC());
     json_gen_obj_set_int(&pWebConfig->jstr, "WIFI_MODE", control_get_config_wifi_mode());
+    json_gen_obj_set_int(&pWebConfig->jstr, "SCREEN_ROT", control_get_config_screen_rotation());
 
     control_get_config_wifi_ssid(str_val);
     json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_SSID", str_val);
@@ -500,7 +363,7 @@ static void wifi_build_config_json(void)
     // end generation
     json_gen_str_end(&pWebConfig->jstr);
 
-    ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
+    //debug ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
 }
 
 /****************************************************************************
@@ -531,7 +394,7 @@ static void wifi_build_preset_json(void)
     // end generation
     json_gen_str_end(&pWebConfig->jstr);
 
-    ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
+    //debug ESP_LOGI(TAG, "Json: %s", pWebConfig->TempBuffer);
 }
 
 /****************************************************************************
@@ -720,8 +583,11 @@ static esp_err_t ws_handler(httpd_req_t *req)
                             control_set_config_footswitch_mode(int_val);
                         }
 
-                        vTaskDelay(pdMS_TO_TICKS(250));
-                        stop_webserver();
+                        if (json_obj_get_int(&pWebConfig->jctx, "SCREEN_ROT", &int_val) == OS_SUCCESS)
+                        {
+                            control_set_screen_rotation(int_val);
+                        }
+
                         vTaskDelay(pdMS_TO_TICKS(250));
 
                         // save it and reboot after
@@ -747,8 +613,6 @@ static esp_err_t ws_handler(httpd_req_t *req)
                             control_set_config_wifi_password(str_val);
                         }
 
-                        vTaskDelay(pdMS_TO_TICKS(250));
-                        stop_webserver();
                         vTaskDelay(pdMS_TO_TICKS(250));
 
                         // save it and reboot after
