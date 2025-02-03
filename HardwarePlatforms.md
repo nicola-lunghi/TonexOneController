@@ -5,10 +5,11 @@
  2. [Hardware Platform 2 Waveshare Zero](#waveshare_zero)
  3. [Hardware Platform 3 Waveshare 1.69](#waveshare_169)
  4. [Hardware Platform 4 Espressif DevKit-C](#esp_devkitc)
- 5. [Wired Footswitches](#footswitches)
- 6. [Wired Midi](#midi)
- 7. [Cases](#cases)
- 8. [9 volt Power for Zero, 1.69 and Devkit-C](#9v_power)
+ 5. [Hardware Platform 5 M5Stack Atom S3R](#m5stack_atoms3r)
+ 6. [Wired Footswitches](#footswitches)
+ 7. [Wired Midi](#midi)
+ 8. [Cases](#cases)
+ 9. [9 volt Power for 5 volt models](#9v_power)
 
 Four hardware platforms are supported. Other ESP32-S3 platforms could be supported but would require code changes. 
 <br>
@@ -109,6 +110,26 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 ![wiring_devkitc](https://github.com/user-attachments/assets/0cf7c7f0-d597-41b4-967e-2e2ea810b26d)
 <br><br>
 
+# Hardware Platform 5: M5Stack Atom S3R <a name="m5stack_atoms3r"></a>
+This hardware platform uses the M5Stack Atom S3R board (8MB flash, 8 MB PSRAM version.) 
+
+This module is low cost, supports a tiny LCD display, and comes in a case. It requires a 5 volt DC power supply.
+Caution: do not directly connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!<br>
+If you do wish to use 9v power, refer to [9 volt Power for Zero, 1.69 and Devkit-C](#9v_power)
+
+### Connections
+Note: the controller code relies on the Tonex One pedal being set to Stomp mode. Code is in place to do this automatically.
+- Connect a DC jack to the PCB via the 4 pin connector, as shown below. Note the positive and negative polarity must match your power supply
+- Connect the OTG USB-C port on the board to the ToneX One USB-C port
+- Connect 5 volts DC to the power input jack that you connected in the first step
+- Switch on the power supply
+- The board USB port will power the Tonex One. Do not connect 9 volts to it!
+- Optional: for the Bluetooth Client version of code, switch on a M-Vave Chocolate Midi pedal (https://www.cuvave.com/productinfo/724103.html). After a few seconds it should connect and the Bluetooth icon should change from gray to blue
+- Optional: for the Bluetooth Server version of code, the controller will be available as a peripheral for you to connect to via a Bluetooth Midi device. The Bluetooth icon should change from gray to blue when connected.
+![wiring_atom_s3r](https://github.com/user-attachments/assets/0829c254-23bb-4ef6-8695-c5a8d363d817)
+
+<br><br>
+
 <br><br>
 ## Wired Footswitches <a name="footswitches"></a>
 Wired footswitches can optionally be used.
@@ -126,6 +147,7 @@ For the other platforms, with firmware version 1.0.5.2 or above, three modes are
 ![footswitches_waveshare_zero](https://github.com/user-attachments/assets/7f1110cc-6b27-4317-af04-880c098b839e)
 ![footswitches_waveshare_169](https://github.com/user-attachments/assets/93c0014e-db42-483d-9508-44a4478d2f75)
 ![footswitches_devkitc](https://github.com/user-attachments/assets/bbeb5898-8cb4-49ca-80a5-eb6f4dedb8fb)
+![footswitches_atoms3r](https://github.com/user-attachments/assets/e3c227f4-f3ba-480b-a41d-3ab54e3966d5)
 
 ## Wired Midi (firmware version V1.0.4.1 or above required) <a name="midi"></a>
 Note: Wired Midi is disabled by default. If it is enabled without the proper hardware (detailed below) being fitted, you may get "phantom" preset changes, due to the serial input "floating".
@@ -137,7 +159,7 @@ Wired Midi is supported on all platforms. A extra PCB is required for all platfo
 https://www.adafruit.com/product/4740 <br>
 This Midi board supports both 5-pin DIN sockets (included in kit) and 3.5mm jacks (not included in kit.)<br>
 <br>
-The Waveshare Zero and 1.69" LCD boards can directly connect to the Midi Featherwing PCB.<br>
+The Waveshare Zero, 1.69" LCD, and Atom S3R boards can directly connect to the Midi Featherwing PCB.<br>
 The Waveshare 4.3B, due to hardware limitations, requires another small interface. This a common, low cost "TTL to RS485" adaptor.<br>
 Typical examples of this PCB:
 https://www.amazon.com/HiLetgo-Reciprocal-Hardware-Automatic-Converter/dp/B082Y19KV9 
@@ -152,19 +174,17 @@ Midi Featherwing:<br>
 Waveshare Zero to Midi Featherwing:<br>
 ![midi_waveshare_zero](https://github.com/user-attachments/assets/8b49dc76-28e3-4bfd-9a68-63ca2e453aa0)
 
-
 Waveshare 1.69" to Midi Featherwing:<br>
 ![midi_waveshare_169](https://github.com/user-attachments/assets/f9c58088-8730-4ef9-908b-d7cda44d5c9c)
-
 
 Espressif Devkit-C to Midi Featherwing:<br>
 ![midi_devkitc](https://github.com/user-attachments/assets/8dde8924-ea4e-435f-b1ed-c2cb99568b2e)
 
-
 Waveshare 4.3B to Midi Featherwing via the TTL to RS485 adaptor:<br>
 ![midi_waveshare_43b](https://github.com/user-attachments/assets/61f27686-6097-4534-b7a8-9f42f3c1282c)
 
-
+M5Stack Atom S3R to Midi Featherwing:<br>
+![midi_atoms3r](https://github.com/user-attachments/assets/1663b487-5ce2-44ac-8cf8-6fb71c7622a3)
 
 ## Cases <a name="cases"></a>
 With the Zero and 1.69" boards being bare PCBs, a case of some type is useful to protect it. Here are some links to 3D printed options.
@@ -192,8 +212,8 @@ https://www.thingiverse.com/thing:6715828
 ![image](https://github.com/user-attachments/assets/f2271541-03e6-440f-91ce-e01776bbc3b7)
 
 <br><br>
-## 9 volt Power for Zero, 1.69 and Devkit-C<a name="9v_power"></a>
-The 4.3B model can accept the standard 9 volt pedalboard power, however the Zero, the 1.69", and the Devkit-C boards are a maximum of 5 volts input.
+## 9 volt Power for 5 volt Models<a name="9v_power"></a>
+The 4.3B model can accept the standard 9 volt pedalboard power, however the Zero, the 1.69", the Devkit-C, and the Atom S3R boards are a maximum of 5 volts input.
 <br>It is still possible however to run them from a 9 volt power supply, with the additional of another low cost off-the-shelf PCB.
 <br>**Caution:** This section requires some more advanced skills, such as using a multimeter to measure voltage. Incorrect voltage setting or polarity could cause damage to the PCB and/or your Tonex pedal.
 <br><br>Various electronic shops, and also suppliers like Amazon, often have low cost "switching regulators." These are a compact circuit that can convert the 9 volt pedalboard power down to the 5 volts required by the Zero and the 1.69. Sample photos are shown below.<br>
@@ -203,8 +223,8 @@ Some of these may be a fixed voltage, in which case you must select one with a 5
 - Connect the 9 volt input to the input terminals on the voltage regulator PCB. Ensure the positive and negative the right way around. The standard for pedal boards is usually negative to the centre pin of the DC jack, but this should be checked
 - Set the multimeter to measure DC voltage, then connect the multimeter probes to the voltage regulator output terminals
 - Adjust the trimpot on the voltage regulator PCB to achieve close to 5 volts. I doesn't have to be exactly 5 volts, but should be in the range of 4.95v to 5.05v
-- Once this has been achieved, connect the voltage regulator output terminals to the Waveshare Zero, 1.69" or Devkit-C board, in the same locations as shown in the prior wiring diagrams
-- Keep the Tonex pedal disconnected, and power on the Waveshare board. Check that it boots up and runs normally
+- Once this has been achieved, connect the voltage regulator output terminals to the Waveshare Zero, 1.69", Devkit-C, or Atom S3R board, in the same locations as shown in the prior wiring diagrams
+- Keep the Tonex pedal disconnected, and power on the board. Check that it boots up and runs normally
 - Once this test has passed, then you can connect the Tonex pedal
 ![image](https://github.com/user-attachments/assets/e59673c5-f741-4516-b471-5af0eb685d12)
 ![image](https://github.com/user-attachments/assets/472394d5-a2c9-492d-909c-792480abcb4c)
