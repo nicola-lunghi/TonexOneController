@@ -1,3 +1,3 @@
 Note: files in this directory are beta versions may contain bugs.
 <br><br>
-No beta releases at this time.
+V1.0.7.2 beta 1 release.
