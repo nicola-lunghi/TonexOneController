@@ -94,6 +94,13 @@ For more information about the firmware development and customisation, refer to 
 - https://github.com/vit3k/tonex_controller for great work on reverse engineering the Tonex One USB protocol
 
 ## Firmware Release Notes <a name="release_notes"></a>
+V1.0.7.2 (beta):
+- New WiFi options, now allowing connection to other access points.
+- Added WiFi status icon for platforms with displays
+- New web control feature, allows full remote control of all parameters and presets using WiFi/web. Fully cross platform with no apps needed, just a web browser
+- Added support for 180 degree screen rotation (via web config)
+- Added ability to reset the configuration to defaults, by holding down wired button 1 for 15 seconds
+
 V1.0.6.1:
 - Added support for M5Stack Atom S3R 
 - Added support for ESP Devkit-C with 16 MB flash/8MB PSRAM
