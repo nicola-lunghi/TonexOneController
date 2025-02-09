@@ -1408,6 +1408,7 @@ void ui_Settings_screen_init(void)
     lv_obj_set_y(ui_AmplifierPresenseLabel, -34);
     lv_obj_set_align(ui_AmplifierPresenseLabel, LV_ALIGN_LEFT_MID);
     lv_label_set_text(ui_AmplifierPresenseLabel, "Presence");
+    lv_obj_add_flag(ui_AmplifierPresenseLabel, LV_OBJ_FLAG_HIDDEN);     /// Flags
     lv_obj_set_style_text_font(ui_AmplifierPresenseLabel, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_AmplifierPresenseSlider = lv_slider_create(ui_Amplifier);
@@ -1420,6 +1421,7 @@ void ui_Settings_screen_init(void)
     lv_obj_set_x(ui_AmplifierPresenseSlider, 155);
     lv_obj_set_y(ui_AmplifierPresenseSlider, -34);
     lv_obj_set_align(ui_AmplifierPresenseSlider, LV_ALIGN_LEFT_MID);
+    lv_obj_add_flag(ui_AmplifierPresenseSlider, LV_OBJ_FLAG_HIDDEN);     /// Flags
     lv_obj_set_style_bg_color(ui_AmplifierPresenseSlider, lv_color_hex(0x424242), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_AmplifierPresenseSlider, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 

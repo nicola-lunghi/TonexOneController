@@ -25360,7 +25360,8 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "TABPAGE"
+                "saved_objtypeKey": "TABPAGE",
+                "tree_closed": true
               },
               {
                 "guid": "GUID43107140-201179S766411",
@@ -26227,6 +26228,12 @@
                         "InheritedType": 1
                       },
                       {
+                        "nid": 100,
+                        "strtype": "OBJECT/Hidden",
+                        "strval": "True",
+                        "InheritedType": 2
+                      },
+                      {
                         "nid": 110,
                         "strtype": "OBJECT/Clickable",
                         "strval": "False",
@@ -26366,6 +26373,12 @@
                         "flags": 1048576,
                         "strtype": "OBJECT/Flags",
                         "InheritedType": 1
+                      },
+                      {
+                        "nid": 100,
+                        "strtype": "OBJECT/Hidden",
+                        "strval": "True",
+                        "InheritedType": 2
                       },
                       {
                         "nid": 320,
@@ -27495,7 +27508,7 @@
     "uiExportFolderPath": "D:\\projects\\TonexController\\TonexOneController\\source\\main\\ui_generated",
     "projectExportFolderPath": "D:\\projects\\TonexController\\TonexOneController\\source\\main\\ui_generated",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 539,
+    "backup_cnt": 540,
     "autosave_cnt": 0,
     "lvgl_version": "8.3.11",
     "callfuncsexport": "C_FILE",

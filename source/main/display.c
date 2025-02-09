@@ -849,7 +849,7 @@ void ParameterChanged(lv_event_t * e)
     }
     else if (obj == ui_AmplifierPresenseSlider)
     {
-        usb_modify_parameter(TONEX_PARAM_PRESENCE, lv_slider_get_value(obj));
+        // unsupported for now  usb_modify_parameter(TONEX_PARAM_PRESENCE, lv_slider_get_value(obj));
     }
     else
     {
@@ -1534,12 +1534,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             // not exposed via UI    
                         } break;
                         
-                        case TONEX_PARAM_UNKNOWN_1:
+                        case TONEX_PARAM_MODEL_SW1:
                         {
                             // not exposed via UI
                         } break;
 
-                        case TONEX_PARAM_UNKNOWN_2:
+                        case TONEX_PARAM_MODEL_SW2:
                         {
                             // not exposed via UI
                         } break;
@@ -1561,21 +1561,26 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             // not exposed via UI
                         } break;
 
-                        case TONEX_PARAM_UNKNOWN_3:
-                        {
+                        //case TONEX_PARAM_AMP_ENABLE:
+                        //{
                             // not exposed via UI
-                        } break;
+                        //} break;
 
-                        case TONEX_PARAM_PRESENCE:
-                        {                            
-                            lv_slider_set_range(ui_AmplifierPresenseSlider, round(param_entry->Min), round(param_entry->Max));
-                            lv_slider_set_value(ui_AmplifierPresenseSlider, round(param_entry->Value), LV_ANIM_OFF);
-                        } break;
+                        // unsupported for now  case TONEX_PARAM_PRESENCE:
+                        //{                            
+                        //  lv_slider_set_range(ui_AmplifierPresenseSlider, round(param_entry->Min), round(param_entry->Max));
+                        //    lv_slider_set_value(ui_AmplifierPresenseSlider, round(param_entry->Value), LV_ANIM_OFF);
+                        //} break;
 
-                        case TONEX_PARAM_DEPTH:
-                        {
+                        //case TONEX_PARAM_CAB_ENABLE:
+                        //{
                             // not exposed via UI
-                        } break;
+                        //} break;
+
+                        // unsupported for now   case TONEX_PARAM_DEPTH:
+                        //{
+                            // not exposed via UI
+                        //} break;
 
                         case TONEX_PARAM_VIR_RESO:
                         {
