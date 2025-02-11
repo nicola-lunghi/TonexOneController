@@ -59,26 +59,21 @@ void ui_Settings_screen_init(void);
 lv_obj_t * ui_Settings;
 lv_obj_t * ui_SettingsTabview;
 lv_obj_t * ui_NoiseGateTab;
-lv_obj_t * ui_NoiseGateEnableGroup;
+lv_obj_t * ui_NoiseGateEnableLabel;
 void ui_event_NoiseGateSwitch(lv_event_t * e);
 lv_obj_t * ui_NoiseGateSwitch;
-lv_obj_t * ui_NoiseGateEnableLabel;
-lv_obj_t * ui_NoiseGatePostGroup;
 void ui_event_NoiseGatePostSwitch(lv_event_t * e);
 lv_obj_t * ui_NoiseGatePostSwitch;
 lv_obj_t * ui_NoiseGatePostLabel;
-lv_obj_t * ui_NoiseGateThresholdGroup;
+lv_obj_t * ui_NoiseGateThresholdLabel;
 void ui_event_NoiseGateThresholdSlider(lv_event_t * e);
 lv_obj_t * ui_NoiseGateThresholdSlider;
-lv_obj_t * ui_NoiseGateThresholdLabel;
-lv_obj_t * ui_NoiseGateReleaseGroup;
+lv_obj_t * ui_NoiseGateReleaseLabel;
 void ui_event_NoiseGateReleaseSlider(lv_event_t * e);
 lv_obj_t * ui_NoiseGateReleaseSlider;
-lv_obj_t * ui_NoiseGateReleaseLabel;
-lv_obj_t * ui_NoiseGateDepthGroup;
+lv_obj_t * ui_NoiseGateDepthLabel;
 void ui_event_NoiseGateDepthSlider(lv_event_t * e);
 lv_obj_t * ui_NoiseGateDepthSlider;
-lv_obj_t * ui_NoiseGateDepthLabel;
 lv_obj_t * ui_CompressorTab;
 lv_obj_t * ui_CompressorEnableGroup;
 void ui_event_CompressorEnableSwitch(lv_event_t * e);
@@ -101,22 +96,21 @@ void ui_event_CompressorGainSlider(lv_event_t * e);
 lv_obj_t * ui_CompressorGainSlider;
 lv_obj_t * ui_CompressorGateLabel;
 lv_obj_t * ui_EQTab;
-lv_obj_t * ui_EQPostGroup;
+lv_obj_t * ui_EQPostLabel;
 void ui_event_EQPostSwitch(lv_event_t * e);
 lv_obj_t * ui_EQPostSwitch;
-lv_obj_t * ui_EQPostLabel;
-lv_obj_t * ui_EQBassFreqGroup;
+lv_obj_t * ui_EQBassLabel;
 void ui_event_EQBassSlider(lv_event_t * e);
 lv_obj_t * ui_EQBassSlider;
-lv_obj_t * ui_EQBassLabel;
-lv_obj_t * ui_EQMidFreqGroup;
+lv_obj_t * ui_EQMidLabel;
 void ui_event_EQMidSlider(lv_event_t * e);
 lv_obj_t * ui_EQMidSlider;
-lv_obj_t * ui_EQMidLabel;
-lv_obj_t * ui_EQTrebleFreqGroup;
+lv_obj_t * ui_EQMidQLabel;
+void ui_event_EQMidQSlider(lv_event_t * e);
+lv_obj_t * ui_EQMidQSlider;
+lv_obj_t * ui_EQTrebleLabel;
 void ui_event_EQTrebleSlider(lv_event_t * e);
 lv_obj_t * ui_EQTrebleSlider;
-lv_obj_t * ui_EQTrebleLabel;
 lv_obj_t * ui_ReverbPage;
 lv_obj_t * ui_ReverbEnableGroup;
 void ui_event_ReverbEnableSwitch(lv_event_t * e);
@@ -212,6 +206,12 @@ lv_obj_t * ui_DelayMixSlider;
 lv_obj_t * ui_DelayMixLabel;
 lv_obj_t * ui_Amplifier;
 lv_obj_t * ui_AmplifierGainLabel;
+void ui_event_AmpEnableSwitch(lv_event_t * e);
+lv_obj_t * ui_AmpEnableSwitch;
+lv_obj_t * ui_AmpEnableLabel;
+lv_obj_t * ui_AmpCabLabel;
+void ui_event_AmpCabSwitch(lv_event_t * e);
+lv_obj_t * ui_AmpCabSwitch;
 void ui_event_AmplifierGainSlider(lv_event_t * e);
 lv_obj_t * ui_AmplifierGainSlider;
 lv_obj_t * ui_AmplifierVolumeLabel;
@@ -505,6 +505,15 @@ void ui_event_EQMidSlider(lv_event_t * e)
     }
 }
 
+void ui_event_EQMidQSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
 void ui_event_EQTrebleSlider(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -713,6 +722,24 @@ void ui_event_DelayFeedbackSlider(lv_event_t * e)
 }
 
 void ui_event_DelayMixSlider(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_AmpEnableSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_RELEASED) {
+        ParameterChanged(e);
+    }
+}
+
+void ui_event_AmpCabSwitch(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
 

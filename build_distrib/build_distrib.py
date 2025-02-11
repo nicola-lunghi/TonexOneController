@@ -9,7 +9,7 @@ from zipfile import ZipFile
 dirname = Path.cwd()
 
 # set version
-version = '1.0.7.2_beta_3'
+version = '1.0.7.2_beta_4'
 
 def delete_files_in_folder(directory):
     for filename in os.listdir(directory):
@@ -88,7 +88,7 @@ build_distribution('template_cust_partition', 'build_ws43b_ps', True, zip_name)
 
 # Build Waveshare Zero
 zip_name = 'TonexOneController_V' + version + '_Waveshare_Zero'
-build_distribution('template_def_partition', 'build_wszero', True, zip_name)
+build_distribution('template_cust_partition', 'build_wszero', True, zip_name)
 
 # Build Devkit C N8R2
 zip_name = 'TonexOneController_V' + version + '_DevKitC_N8R2'

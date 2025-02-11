@@ -594,6 +594,8 @@
                                 break;
 
                             case TONEX_PARAM_MODEL_SW1:
+                                configureParamSwitch("am_sw1", value);
+                                setParamData("am_sw1", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_MODEL_GAIN:
@@ -617,6 +619,8 @@
                             //    break;
 
                             case TONEX_PARAM_MODEL_SW2:
+                                configureParamSwitch("am_sw2", value);
+                                setParamData("am_sw2", parseInt(key));
                                 break;                            
 
                             case TONEX_PARAM_MODEL_CABINET:
@@ -1704,7 +1708,21 @@
                         <div class="col">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="am_caben">
-                                <label class="form-check-label" for="am_caben">Cab</label>
+                                <label class="form-check-label" for="am_caben">VIR Cab</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="am_sw1">
+                                <label class="form-check-label" for="am_sw1">SW1</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="am_sw2">
+                                <label class="form-check-label" for="am_sw2">SW2</label>
                             </div>
                         </div>
                     </div>

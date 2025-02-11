@@ -420,6 +420,10 @@ void ParameterChanged(lv_event_t * e)
     {
         usb_modify_parameter(TONEX_PARAM_EQ_MID, lv_slider_get_value(obj));
     }
+    else if (obj == ui_EQMidQSlider)
+    {
+        usb_modify_parameter(TONEX_PARAM_EQ_MIDQ, lv_slider_get_value(obj));
+    }
     else if (obj == ui_EQTrebleSlider)
     {
         usb_modify_parameter(TONEX_PARAM_EQ_TREBLE, lv_slider_get_value(obj));
@@ -838,6 +842,10 @@ void ParameterChanged(lv_event_t * e)
                 usb_modify_parameter(TONEX_PARAM_DELAY_TAPE_MIX, lv_slider_get_value(obj));
             } break;
         }     
+    }
+    else if (obj == ui_AmpEnableSwitch)
+    {
+        usb_modify_parameter(TONEX_PARAM_MODEL_AMP_ENABLE, lv_obj_has_state(obj, LV_STATE_CHECKED) ? 1 : 0);
     }
     else if (obj == ui_AmplifierGainSlider)
     {
@@ -1515,7 +1523,8 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
                         case TONEX_PARAM_EQ_MIDQ:
                         {
-                            // not exposed via UI
+                            lv_slider_set_range(ui_EQMidQSlider, round(param_entry->Min), round(param_entry->Max));
+                            lv_slider_set_value(ui_EQMidQSlider, round(param_entry->Value), LV_ANIM_OFF);                            
                         } break;
 
                         case TONEX_PARAM_EQ_MID_FREQ:
@@ -1534,6 +1543,18 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             // not exposed via UI    
                         } break;
                         
+                        case TONEX_PARAM_MODEL_AMP_ENABLE:
+                        {
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_AmpEnableSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_AmpEnableSwitch, LV_STATE_CHECKED);
+                            }
+                        } break;
+
                         case TONEX_PARAM_MODEL_SW1:
                         {
                             // not exposed via UI
@@ -1560,11 +1581,6 @@ static uint8_t update_ui_element(tUIUpdate* update)
                         {
                             // not exposed via UI
                         } break;
-
-                        //case TONEX_PARAM_AMP_ENABLE:
-                        //{
-                            // not exposed via UI
-                        //} break;
 
                         // unsupported for now  case TONEX_PARAM_PRESENCE:
                         //{                            
