@@ -328,8 +328,8 @@ void leds_handle(void)
 {    
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC    
     uint32_t red = 0;
-    uint32_t green = 0xFF;
-    uint32_t blue = 0;
+    uint32_t green = 0;
+    uint32_t blue = 10;
    
     switch (LedControl.state)
     {
