@@ -9,7 +9,7 @@ from zipfile import ZipFile
 dirname = Path.cwd()
 
 # set version
-version = '1.0.7.2_beta_5'
+version = '1.0.7.2_beta_6'
 
 def delete_files_in_folder(directory):
     for filename in os.listdir(directory):
@@ -77,6 +77,10 @@ def build_distribution(template, target_folder, include_ota, out_filename):
 # Build Waveshare 1.69" 
 zip_name = 'TonexOneController_V' + version + '_Waveshare_1_69'
 build_distribution('template_cust_partition', 'build_ws169', True, zip_name)
+
+# Build Waveshare 1.69" Touch
+zip_name = 'TonexOneController_V' + version + '_Waveshare_1_69_Touch'
+build_distribution('template_cust_partition', 'build_ws169t', True, zip_name)
 
 # Build Waveshare 4.3B with Amp skins
 zip_name = 'TonexOneController_V' + version + '_Waveshare_4_3B_Display_Amp_Skins'

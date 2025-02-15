@@ -54,7 +54,7 @@ limitations under the License.
 #include "esp_lcd_gc9107.h"
 #include "esp_intr_alloc.h"
 #include "main.h"
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
     #include "ui.h"
 #endif
 #include "usb/usb_host.h"
@@ -90,7 +90,7 @@ static const char *TAG = "app_display";
   
 #endif
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169TOUCH
     #define WAVESHARE_240_280_LCD_H_RES               (240)
     #define WAVESHARE_240_280_LCD_V_RES               (280)
 
@@ -164,7 +164,7 @@ static QueueHandle_t ui_update_queue;
 static SemaphoreHandle_t I2CMutexHandle;
 static SemaphoreHandle_t lvgl_mux = NULL;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
     static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
     static lv_disp_drv_t disp_drv;      // contains callback functions
 #endif
@@ -1057,7 +1057,7 @@ void UI_SetPresetDescription(char* text)
 *****************************************************************************/
 void UI_RefreshParameterValues(void)
 {
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R    
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
     tUIUpdate ui_update;
 
     // build command
@@ -1351,7 +1351,7 @@ static lv_obj_t* ui_get_skin_image(uint16_t index)
 *****************************************************************************/
 static uint8_t update_ui_element(tUIUpdate* update)
 {
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
     lv_obj_t* element_1 = NULL;
 
     switch (update->ElementID)
@@ -2476,7 +2476,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
         {
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
             lv_label_set_text(element_1, update->Text);
-#elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#elif CONFIG_TONEX_CONTROLLER_DISPLAY_SMALL
             if (element_1 == ui_PresetHeadingLabel)
             {
                 // split up preset into 2 text lines.
@@ -2800,7 +2800,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     }
 #endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169TOUCH
     gpio_config_t gpio_config_struct;
 
     // switch off the buzzer. 
@@ -2888,7 +2888,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
     lv_disp_t* __attribute__((unused)) disp = lv_disp_drv_register(&disp_drv);
 
-#endif //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
+#endif //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169TOUCH
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
     // LCD backlight on Led driver
@@ -2964,7 +2964,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     lv_disp_t* __attribute__((unused)) disp = lv_disp_drv_register(&disp_drv);
 #endif
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
     // Tick interface for LVGL (using esp_timer to generate 2ms periodic event)
     const esp_timer_create_args_t lvgl_tick_timer_args = {
         .callback = &display_increase_lvgl_tick,

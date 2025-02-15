@@ -1,7 +1,3 @@
-**Note: some Waveshare Zero users have experienced boot crashing with this version. It appears the cause is actually using power supplies that 
-do not provide sufficient current. If you are upgrading a Zero and run into troubles, please post to the Github issue section **
-<br>
-<br>
 Note: files in this directory are beta versions may contain bugs.
 <br><br>
 
@@ -28,4 +24,8 @@ Release of V1.0.7.2 beta 5.
 * added EQ MidQ to 4.3B UI 
 * added Amp and Cab enable switches to 4.3B UI, but note the cab switch does not appear to work properly, related to the above 2 unknown amp parameters 
 
+Release of V1.0.7.2 beta 6.
+* added official support for the Waveshare 1.69" Touch
+* fixed issue where Midi over Bluetooth did not check the midi channel
+* added new sdkconfig items to simplify the core code (e.g. HAS_LCD instead of 4.3 or 1.69 or 1.69T or Atom S3R etc)
 

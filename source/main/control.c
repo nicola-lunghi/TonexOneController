@@ -188,7 +188,7 @@ static uint8_t process_control_command(tControlMessage* message)
             memcpy((void*)ControlData.PresetName, (void*)message->Text, MAX_TEXT_LENGTH);
             ControlData.PresetName[MAX_TEXT_LENGTH - 1] = 0;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
             // update UI
             UI_SetPresetLabel(ControlData.PresetName);
             UI_SetAmpSkin(ControlData.ConfigData.UserData[ControlData.PresetIndex].SkinIndex);
@@ -203,7 +203,7 @@ static uint8_t process_control_command(tControlMessage* message)
         {
             ControlData.USBStatus = message->Value;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
             // update UI
             UI_SetUSBStatus(ControlData.USBStatus);
 #endif
@@ -213,7 +213,7 @@ static uint8_t process_control_command(tControlMessage* message)
         {
             ControlData.BTStatus = message->Value;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
             // update UI
             UI_SetBTStatus(ControlData.BTStatus);
 #endif
@@ -223,7 +223,7 @@ static uint8_t process_control_command(tControlMessage* message)
         {
             ControlData.WiFiStatus = message->Value;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
             // update UI
             UI_SetWiFiStatus(ControlData.WiFiStatus);
 #endif
@@ -233,7 +233,7 @@ static uint8_t process_control_command(tControlMessage* message)
         {
             ControlData.ConfigData.UserData[ControlData.PresetIndex].SkinIndex = message->Value;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+#if CONFIG_TONEX_CONTROLLER_HAS_DISPLAY
             // update UI
             UI_SetAmpSkin(ControlData.ConfigData.UserData[ControlData.PresetIndex].SkinIndex);
 #endif 

@@ -90,6 +90,30 @@ extern "C" {
     #define PIN_NUM_CLK         12
     #define PIN_NUM_CS          -1
 
+#elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169TOUCH
+    // direct IO pins
+    #define FOOTSWITCH_1		GPIO_NUM_3
+    #define FOOTSWITCH_2		GPIO_NUM_2
+    #define FOOTSWITCH_3		GPIO_NUM_44     // same as UART RX
+    #define FOOTSWITCH_4		-1              // not enough IO
+
+    // Midi
+    #define UART_RX_PIN         GPIO_NUM_18 
+    #define UART_TX_PIN         GPIO_NUM_17 
+
+    // leds
+    #define LED_OUTPUT_GPIO_NUM          -1
+
+    // LCD pins
+    #define WAVESHARE_240_280_LCD_GPIO_SCLK           (GPIO_NUM_6)
+    #define WAVESHARE_240_280_LCD_GPIO_MOSI           (GPIO_NUM_7)
+    #define WAVESHARE_240_280_LCD_GPIO_RST            (GPIO_NUM_8)
+    #define WAVESHARE_240_280_LCD_GPIO_DC             (GPIO_NUM_4)
+    #define WAVESHARE_240_280_LCD_GPIO_CS             (GPIO_NUM_5)
+    #define WAVESHARE_240_280_LCD_GPIO_BL             (GPIO_NUM_15)
+
+    #define WAVESHARE_240_280_BUZZER                  GPIO_NUM_42
+
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_16

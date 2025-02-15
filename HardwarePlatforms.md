@@ -64,7 +64,7 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 <br><br>
 
 
-# Hardware Platform 3: Waveshare ESP32-S3 1.69" Display board (no touch) <a name="waveshare_169"></a>
+# Hardware Platform 3: Waveshare ESP32-S3 1.69" Display board (no touch) and Touch<a name="waveshare_169"></a>
 This hardware platform uses this Waveshare ESP32-S3 1.69" LCD board.
 [https://www.waveshare.com/esp32-s3-lcd-1.69.htm](https://www.waveshare.com/esp32-s3-lcd-1.69.htm)
 
@@ -81,7 +81,8 @@ If you have already purchased and received a V1 (no V2 sticker on the USB-C port
 This module is low cost (around US$16) and supports an LCD display, about the same size as an Apple Watch. It requires a 5 volt DC power supply.
 Caution: do not directly connect a pedalboard 9v! If you do, you will probably blow up both the PCB and your Tonex One!<br>
 If you do wish to use 9v power, refer to [9 volt Power for Zero and 1.69](#9v_power)
-
+<br>
+Waveshare makes this board both with and without a touch screen. They are almost the same, except that the Touch version doesn't support footswitch four.
 ### Connections
 Note: the controller code relies on the Tonex One pedal being set to Stomp mode. Code is in place to do this automatically.
 - Solder a DC jack to the PCB, as shown below. Note the positive and negative polarity must match your power supply
@@ -136,7 +137,8 @@ Wired footswitches can optionally be used.
 The footswitch must be a "momentary" type that is only has its contacts closed when it is pressed.
 The common pin of the footswitch must connect to the Controller ground pin, and the other wires connected as shown.
 <br><br>
-For the Waveshare 4.3B, a maximum of 2 footswitches are supported, always in next/previous preset mode.
+For the Waveshare 4.3B, a maximum of 2 footswitches are supported, always in next/previous preset mode.<br>
+For the Waveshare 1.69" Touch, a maximum of 3 footswitches are supported.
 <br>
 For the other platforms, with firmware version 1.0.5.2 or above, three modes are supported, set using the web configuration, to one of:
 - 2 switches, doing Next/Previous preset
