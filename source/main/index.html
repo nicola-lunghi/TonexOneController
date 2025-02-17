@@ -366,6 +366,13 @@
             
             initWebSocket();
             pageTimer = setInterval("pageTimerEvent();", 750);
+
+   			inputs = document.getElementsByTagName('input');
+			for (i = 0; i < inputs.length; i++) {
+				if (inputs[i].type == "range") {
+					inputs[i].oninput = function(e){showValue(e.target);};
+				}
+            }	
         }
 
         function pageTimerEvent(){
@@ -425,13 +432,15 @@
             processReturnCmd(received_data);        
         }
 
-        function configureParamRange(objname, value, min, max) {
+        function configureParamRange(objname, value, min, max, step=1) {
             //console.log("configureParamRange");
             //console.log(objname);
             var paramrange = document.getElementById(objname);
             paramrange.min = min;
             paramrange.max = max;
             paramrange.value = value;
+            paramrange.step = step;
+			showValue(paramrange);
         }
 
         function configureParamSwitch(objname, value) {
@@ -532,7 +541,7 @@
                                 break;
 
                             case TONEX_PARAM_COMP_THRESHOLD:
-                                configureParamRange("cp_thresh", value, min, max);
+                                configureParamRange("cp_thresh", value, min, max, 0.5);
                                 setParamData("cp_thresh", parseInt(key));
                                 break;
 
@@ -553,37 +562,37 @@
                                 break;
 
                             case TONEX_PARAM_EQ_BASS:
-                                configureParamRange("eq_bass", value, min, max);
+                                configureParamRange("eq_bass", value, min, max, 0.1);
                                 setParamData("eq_bass", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_EQ_BASS_FREQ:
-                                configureParamRange("eq_bassf", value, min, max);
+                                configureParamRange("eq_bassf", value, min, max, 15);
                                 setParamData("eq_bassf", parseInt(key));                                
                                 break;
 
                             case TONEX_PARAM_EQ_MID:
-                                configureParamRange("eq_mid", value, min, max);
+                                configureParamRange("eq_mid", value, min, max, 0.1);
                                 setParamData("eq_mid", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_EQ_MIDQ:
-                                configureParamRange("eq_midq", value, min, max);
+                                configureParamRange("eq_midq", value, min, max, 0.05);
                                 setParamData("eq_midq", parseInt(key));                            
                                 break;
 
                             case TONEX_PARAM_EQ_MID_FREQ:
-                                configureParamRange("eq_midf", value, min, max);
+                                configureParamRange("eq_midf", value, min, max, 50);
                                 setParamData("eq_midf", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_EQ_TREBLE:
-                                configureParamRange("eq_treble", value, min, max);
+                                configureParamRange("eq_treble", value, min, max, 0.1);
                                 setParamData("eq_treble", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_EQ_TREBLE_FREQ:
-                                configureParamRange("eq_treblef", value, min, max);
+                                configureParamRange("eq_treblef", value, min, max, 100);
                                 setParamData("eq_treblef", parseInt(key));
                                 break;
                             
@@ -599,12 +608,12 @@
                                 break;
 
                             case TONEX_PARAM_MODEL_GAIN:
-                                configureParamRange("am_gain", value, min, max);
+                                configureParamRange("am_gain", value, min, max, 0.1);
                                 setParamData("am_gain", parseInt(key));
                                 break;
 
                             case TONEX_PARAM_MODEL_VOLUME:
-                                configureParamRange("am_volume", value, min, max);
+                                configureParamRange("am_volume", value, min, max, 0.1);
                                 setParamData("am_volume", parseInt(key));
                                 break;
 
@@ -684,14 +693,14 @@
 
                             case TONEX_PARAM_REVERB_SPRING1_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
-                                    configureParamRange("rv_time", value, min, max);
+                                    configureParamRange("rv_time", value, min, max, 0.5);
                                     setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING1_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_1) {
-                                    configureParamRange("rv_predelay", value, min, max);
+                                    configureParamRange("rv_predelay", value, min, max, 10);
                                     setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
@@ -712,14 +721,14 @@
 
                             case TONEX_PARAM_REVERB_SPRING2_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
-                                    configureParamRange("rv_time", value, min, max);
+                                    configureParamRange("rv_time", value, min, max, 0.5);
                                     setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING2_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_2) {
-                                    configureParamRange("rv_predelay", value, min, max);
+                                    configureParamRange("rv_predelay", value, min, max, 10);
                                     setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
@@ -740,14 +749,14 @@
 
                             case TONEX_PARAM_REVERB_SPRING3_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
-                                    configureParamRange("rv_time", value, min, max);
+                                    configureParamRange("rv_time", value, min, max, 0.5);
                                     setParamData("rv_time", parseInt(key));
                                 }
                                 break;
                             
                             case TONEX_PARAM_REVERB_SPRING3_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_3) {
-                                    configureParamRange("rv_predelay", value, min, max);
+                                    configureParamRange("rv_predelay", value, min, max, 10);
                                     setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
@@ -768,14 +777,14 @@
 
                             case TONEX_PARAM_REVERB_SPRING4_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
-                                    configureParamRange("rv_time", value, min, max);
+                                    configureParamRange("rv_time", value, min, max, 0.5);
                                     setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_SPRING4_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_SPRING_4) {
-                                    configureParamRange("rv_predelay", value, min, max);
+                                    configureParamRange("rv_predelay", value, min, max, 10);
                                     setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
@@ -796,14 +805,14 @@
 
                             case TONEX_PARAM_REVERB_ROOM_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
-                                    configureParamRange("rv_time", value, min, max);
+                                    configureParamRange("rv_time", value, min, max, 0.5);
                                     setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_ROOM_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_ROOM) {
-                                    configureParamRange("rv_predelay", value, min, max);
+                                    configureParamRange("rv_predelay", value, min, max, 10);
                                     setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
@@ -824,14 +833,14 @@
 
                             case TONEX_PARAM_REVERB_PLATE_TIME:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
-                                    configureParamRange("rv_time", value, min, max);
+                                    configureParamRange("rv_time", value, min, max, 0.5);
                                     setParamData("rv_time", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_REVERB_PLATE_PREDELAY:
                                 if (getSelectValue("rv_model") == TONEX_REVERB_PLATE) {
-                                    configureParamRange("rv_predelay", value, min, max);
+                                    configureParamRange("rv_predelay", value, min, max, 10);
                                     setParamData("rv_predelay", parseInt(key));
                                 }
                                 break;
@@ -923,7 +932,7 @@
 
                             case TONEX_PARAM_MODULATION_CHORUS_RATE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
-                                    configureParamRange("mo_param1", value, min, max);
+                                    configureParamRange("mo_param1", value, min, max, 0.02);
                                     setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
@@ -937,7 +946,7 @@
 
                             case TONEX_PARAM_MODULATION_CHORUS_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_CHORUS) {
-                                    configureParamRange("mo_param3", value, min, max);
+                                    configureParamRange("mo_param3", value, min, max, 0.1);
                                     setParamData("mo_param3", parseInt(key));
                                 }
                                 break;
@@ -954,14 +963,14 @@
 
                             case TONEX_PARAM_MODULATION_TREMOLO_RATE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
-                                    configureParamRange("mo_param1", value, min, max);
+                                    configureParamRange("mo_param1", value, min, max, 0.1);
                                     setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_TREMOLO_SHAPE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
-                                    configureParamRange("mo_param2", value, min, max);
+                                    configureParamRange("mo_param2", value, min, max, 0.1);
                                     setParamData("mo_param2", parseInt(key));
                                 }
                                 break;
@@ -975,7 +984,7 @@
 
                             case TONEX_PARAM_MODULATION_TREMOLO_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_TREMOLO) {
-                                    configureParamRange("mo_param4", value, min, max);
+                                    configureParamRange("mo_param4", value, min, max, 0.1);
                                     setParamData("mo_param4", parseInt(key));
                                 }
                                 break;
@@ -992,7 +1001,7 @@
 
                             case TONEX_PARAM_MODULATION_PHASER_RATE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
-                                    configureParamRange("mo_param1", value, min, max);
+                                    configureParamRange("mo_param1", value, min, max, 0.02);
                                     setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
@@ -1006,7 +1015,7 @@
 
                             case TONEX_PARAM_MODULATION_PHASER_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_PHASER) {
-                                    configureParamRange("mo_param3", value, min, max);
+                                    configureParamRange("mo_param3", value, min, max, 0.1);
                                     setParamData("mo_param3", parseInt(key));
                                 }
                                 break;
@@ -1023,7 +1032,7 @@
 
                             case TONEX_PARAM_MODULATION_FLANGER_RATE:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
-                                    configureParamRange("mo_param1", value, min, max);
+                                    configureParamRange("mo_param1", value, min, max, 0.02);
                                     setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
@@ -1044,7 +1053,7 @@
 
                             case TONEX_PARAM_MODULATION_FLANGER_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_FLANGER) {
-                                    configureParamRange("mo_param4", value, min, max);
+                                    configureParamRange("mo_param4", value, min, max, 0.1);
                                     setParamData("mo_param4", parseInt(key));
                                 }
                                 break;
@@ -1061,14 +1070,14 @@
 
                             case TONEX_PARAM_MODULATION_ROTARY_SPEED:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
-                                    configureParamRange("mo_param1", value, min, max);
+                                    configureParamRange("mo_param1", value, min, max, 5);
                                     setParamData("mo_param1", parseInt(key));
                                 }
                                 break;
 
                             case TONEX_PARAM_MODULATION_ROTARY_RADIUS:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
-                                    configureParamRange("mo_param2", value, min, max);
+                                    configureParamRange("mo_param2", value, min, max, 5);
                                     setParamData("mo_param2", parseInt(key));
                                 }
                                 break;
@@ -1082,7 +1091,7 @@
 
                             case TONEX_PARAM_MODULATION_ROTARY_LEVEL:
                                 if (getSelectValue("mo_model") == TONEX_MODULATION_ROTARY) {
-                                    configureParamRange("mo_param4", value, min, max);
+                                    configureParamRange("mo_param4", value, min, max, 0.1);
                                     setParamData("mo_param4", parseInt(key));
                                 }
                                 break;
@@ -1115,7 +1124,7 @@
 
                             case TONEX_PARAM_DELAY_DIGITAL_TIME:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_DIGITAL) {
-                                    configureParamRange("dl_time", value, min, max);
+                                    configureParamRange("dl_time", value, min, max, 10);
                                     setParamData("dl_time", parseInt(key));
                                 }
                                 break;
@@ -1153,7 +1162,7 @@
 
                             case TONEX_PARAM_DELAY_TAPE_TIME:
                                 if (getSelectValue("dl_model") == TONEX_DELAY_TAPE) {
-                                    configureParamRange("dl_time", value, min, max);
+                                    configureParamRange("dl_time", value, min, max, 10);
                                     setParamData("dl_time", parseInt(key));
                                 }
                                 break;
@@ -1337,6 +1346,15 @@
                         "VALUE": param_value});                        
             }
         }
+		function showValue(e) {
+			let s = e.previousElementSibling;
+			if (s.tagName == "LABEL") {
+                let t = s.innerText;
+                let i = t.indexOf(":");
+                if (i>0) s.innerText = t.substr(0, i);
+                s.innerText += " : " + parseFloat(e.value);	
+			}				
+		}
      
     </script>
         
@@ -1444,7 +1462,7 @@
                 <br>
                 <div class="container">
                     <label for="cp_thresh" class="form-label">Threshold</label>
-                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="cp_thresh">
+                    <input type="range" data-index-number="dummy" onchange="onParamChange(event)" class="form-range" id="cp_thresh"">
                 </div>
                 <div class="container">
                     <label for="cp_attack" class="form-label">Attack</label>
