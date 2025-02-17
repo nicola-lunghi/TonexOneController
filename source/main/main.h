@@ -31,12 +31,12 @@ extern "C" {
     #define I2C_MASTER_SDA_IO  GPIO_NUM_8       
 
     // IO expander
-    #define FOOTSWITCH_1		IO_EXPANDER_PIN_NUM_0
-    #define TOUCH_RESET 		IO_EXPANDER_PIN_NUM_1
-    #define LCD_BACKLIGHT		IO_EXPANDER_PIN_NUM_2
-    #define LCD_RESET    		IO_EXPANDER_PIN_NUM_3
-    #define SD_CS       		IO_EXPANDER_PIN_NUM_4
-    #define FOOTSWITCH_2		IO_EXPANDER_PIN_NUM_5
+    #define FOOTSWITCH_1		CH_IO_EXPANDER_PIN_NUM_0
+    #define TOUCH_RESET 		CH_IO_EXPANDER_PIN_NUM_1
+    #define LCD_BACKLIGHT		CH_IO_EXPANDER_PIN_NUM_2
+    #define LCD_RESET    		CH_IO_EXPANDER_PIN_NUM_3
+    #define SD_CS       		CH_IO_EXPANDER_PIN_NUM_4
+    #define FOOTSWITCH_2		CH_IO_EXPANDER_PIN_NUM_5
 
     // these 2 unsupported
     #define FOOTSWITCH_3		-1
@@ -91,6 +91,10 @@ extern "C" {
     #define PIN_NUM_CS          -1
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169TOUCH
+    // I2C bus
+    #define I2C_MASTER_SCL_IO  GPIO_NUM_10       
+    #define I2C_MASTER_SDA_IO  GPIO_NUM_11       
+
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_3
     #define FOOTSWITCH_2		GPIO_NUM_2
@@ -115,6 +119,10 @@ extern "C" {
     #define WAVESHARE_240_280_BUZZER                  GPIO_NUM_42
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
+    // I2C bus
+    #define I2C_MASTER_SCL_IO  GPIO_NUM_10       
+    #define I2C_MASTER_SDA_IO  GPIO_NUM_11       
+
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_16
     #define FOOTSWITCH_2		GPIO_NUM_3
@@ -141,6 +149,10 @@ extern "C" {
     #define WAVESHARE_240_280_BUZZER                  GPIO_NUM_42
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO
+    // I2C bus
+    #define I2C_MASTER_SCL_IO  GPIO_NUM_10       
+    #define I2C_MASTER_SDA_IO  GPIO_NUM_11       
+
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_4
     #define FOOTSWITCH_2		GPIO_NUM_6
@@ -155,6 +167,10 @@ extern "C" {
     #define LED_OUTPUT_GPIO_NUM    GPIO_NUM_21
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC
+    // I2C bus
+    #define I2C_MASTER_SCL_IO  GPIO_NUM_10       
+    #define I2C_MASTER_SDA_IO  GPIO_NUM_11       
+
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_4
     #define FOOTSWITCH_2		GPIO_NUM_6
@@ -169,6 +185,10 @@ extern "C" {
     #define LED_OUTPUT_GPIO_NUM   GPIO_NUM_48
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
+    // I2C bus
+    #define I2C_MASTER_SCL_IO  GPIO_NUM_1       
+    #define I2C_MASTER_SDA_IO  GPIO_NUM_2       
+
     // I2C bus
     #define I2C_MASTER_SCL_IO  GPIO_NUM_0       
     #define I2C_MASTER_SDA_IO  GPIO_NUM_45       

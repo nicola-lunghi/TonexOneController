@@ -23,13 +23,13 @@ limitations under the License.
 #include "esp_err.h"
 
 typedef enum {
-    IO_EXPANDER_PIN_NUM_0,
-    IO_EXPANDER_PIN_NUM_1,
-    IO_EXPANDER_PIN_NUM_2,
-    IO_EXPANDER_PIN_NUM_3,
-    IO_EXPANDER_PIN_NUM_4,
-    IO_EXPANDER_PIN_NUM_5
-} esp_io_expander_pin_num_t;
+    CH_IO_EXPANDER_PIN_NUM_0,
+    CH_IO_EXPANDER_PIN_NUM_1,
+    CH_IO_EXPANDER_PIN_NUM_2,
+    CH_IO_EXPANDER_PIN_NUM_3,
+    CH_IO_EXPANDER_PIN_NUM_4,
+    CH_IO_EXPANDER_PIN_NUM_5
+} ch_io_expander_pin_num_t;
 
 
 /*
@@ -66,9 +66,9 @@ Write function command
  */
 typedef enum 
 {
-    IO_EXPANDER_INPUT,          /*!< Input direction */
-    IO_EXPANDER_OUTPUT,         /*!< Output dircetion */
-} esp_io_expander_dir_t;
+    CH_IO_EXPANDER_INPUT,          /*!< Input direction */
+    CH_IO_EXPANDER_OUTPUT,         /*!< Output dircetion */
+} ch_io_expander_dir_t;
 
 esp_err_t CH422G_init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex);
 esp_err_t CH422G_reset(void);

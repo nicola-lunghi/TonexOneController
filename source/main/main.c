@@ -68,10 +68,10 @@ limitations under the License.
 #include "leds.h"
 #include "tonex_params.h"
 
-#define I2C_MASTER_NUM                  0       /*!< I2C master i2c port number, the number of i2c peripheral interfaces available will depend on the chip */
-#define I2C_MASTER_FREQ_HZ              400000                     /*!< I2C master clock frequency */
-#define I2C_MASTER_TX_BUF_DISABLE       0                          /*!< I2C master doesn't need buffer */
-#define I2C_MASTER_RX_BUF_DISABLE       0                          /*!< I2C master doesn't need buffer */
+#define I2C_MASTER_NUM                  0           /*!< I2C master i2c port number, the number of i2c peripheral interfaces available will depend on the chip */
+#define I2C_MASTER_FREQ_HZ              400000      /*!< I2C master clock frequency */
+#define I2C_MASTER_TX_BUF_DISABLE       0           /*!< I2C master doesn't need buffer */
+#define I2C_MASTER_RX_BUF_DISABLE       0           /*!< I2C master doesn't need buffer */
 
 #define I2C_CLR_BUS_SCL_NUM            (9)
 #define I2C_CLR_BUS_HALF_PERIOD_US     (5)
@@ -80,7 +80,6 @@ static const char *TAG = "app_main";
 
 static __attribute__((unused)) SemaphoreHandle_t I2CMutex;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
 static esp_err_t i2c_master_init(void);
 
 /****************************************************************************
@@ -166,7 +165,6 @@ static esp_err_t i2c_master_init(void)
     res = i2c_driver_install(I2C_MASTER_NUM, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
     return res;
 }
-#endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
 /****************************************************************************
@@ -185,11 +183,11 @@ static void InitIOExpander(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
         // For inputs, we will temporarily flip the mode
         CH422G_set_io_mode(1);
 
-        ESP_LOGI(TAG, "IO Expander init OK");
+        ESP_LOGI(TAG, "Onboard IO Expander init OK");
     }
     else
     {
-        ESP_LOGE(TAG, "Failed to init IO expander!");
+        ESP_LOGE(TAG, "Failed to init Onboard IO expander!");
     }
 }
 #endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
@@ -208,7 +206,6 @@ void app_main(void)
     // load the config first
     control_load_config();
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
     // create mutex for shared I2C bus
     I2CMutex = xSemaphoreCreateMutex();
     if (I2CMutex == NULL)
@@ -219,11 +216,10 @@ void app_main(void)
     // init I2C master
     ESP_ERROR_CHECK(i2c_master_init());
     ESP_LOGI(TAG, "I2C initialized successfully");
-#endif
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
-    // init IO expander
-    ESP_LOGI(TAG, "Init IO Expander");
+    // init onboard IO expander
+    ESP_LOGI(TAG, "Init Onboard IO Expander");
     InitIOExpander(I2C_MASTER_NUM, I2CMutex);
 #endif
 
@@ -261,7 +257,7 @@ void app_main(void)
 
     // init Footswitches
     ESP_LOGI(TAG, "Init footswitches");
-    footswitches_init();
+    footswitches_init(I2C_MASTER_NUM, I2CMutex);
 
     if (control_get_config_bt_mode() != BT_MODE_DISABLED)
     {

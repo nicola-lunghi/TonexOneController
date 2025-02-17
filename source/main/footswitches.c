@@ -40,12 +40,16 @@ limitations under the License.
 #include "usb_comms.h"
 #include "usb_tonex_one.h"
 #include "leds.h"
+#include "driver/i2c.h"
+#include "esp_io_expander_ht8574.h"
 
 #define FOOTSWITCH_TASK_STACK_SIZE          (3 * 1024)
 #define FOOTSWITCH_SAMPLE_COUNT             5       // 20 msec per sample
 #define BANK_MODE_BUTTONS                   4
 #define BANK_MAXIMUM                        (MAX_PRESETS / BANK_MODE_BUTTONS)
 #define BUTTON_FACTORY_RESET_TIME           500    // * 20 msec = 10 secs
+
+#define I2C_ADDRESS                         ESP_IO_EXPANDER_I2C_HT8574_ADDRESS_000
 
 enum FootswitchStates
 {
@@ -63,9 +67,46 @@ typedef struct
     uint8_t last_binary_val;
     uint8_t current_bank;
     uint8_t index_pending;
+    esp_io_expander_handle_t io_expander; 
+    uint8_t io_expander_ok;
 } tFootswitchControl;
 
 static tFootswitchControl FootswitchControl;
+static SemaphoreHandle_t I2CMutexHandle;
+static i2c_port_t i2cnum;
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+static uint8_t read_footswitch_input_expander(uint8_t number, uint8_t* switch_state)
+{
+    uint8_t result = false;
+
+    if (FootswitchControl.io_expander_ok)
+    {
+        uint32_t level_mask;
+        uint32_t pin_mask = IO_EXPANDER_PIN_NUM_0;
+
+        if (esp_io_expander_get_level(FootswitchControl.io_expander, pin_mask, &level_mask) == ESP_OK)
+        {            
+            result = true;
+            if ((level_mask & pin_mask) != 0)
+            {
+                *switch_state = 0;
+            }
+            else
+            {
+                *switch_state = 1;
+            }
+        }
+    }
+
+    return result;
+}
 
 /****************************************************************************
 * NAME:        
@@ -456,10 +497,15 @@ void footswitch_task(void *arg)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void footswitches_init(void)
+void footswitches_init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex)
 {	
     memset((void*)&FootswitchControl, 0, sizeof(FootswitchControl));
     FootswitchControl.state = FOOTSWITCH_IDLE;
+    FootswitchControl.io_expander = NULL;
+
+    // save handles
+    I2CMutexHandle = I2CMutex;
+	i2cnum = i2c_num;
 
 #if CONFIG_TONEX_CONTROLLER_GPIO_FOOTSWITCHES
     // init GPIO
@@ -472,6 +518,36 @@ void footswitches_init(void)
     gpio_config_struct.intr_type = GPIO_INTR_DISABLE;
     gpio_config(&gpio_config_struct);
 #endif
+
+    if (xSemaphoreTake(I2CMutexHandle, (TickType_t)300) == pdTRUE)
+    {
+        // try to init I2C IO expander
+        if (esp_io_expander_new_i2c_ht8574(i2c_num, I2C_ADDRESS, &FootswitchControl.io_expander) == ESP_OK)
+        {
+            ESP_LOGI(TAG, "Found 8574 IO Expander");
+
+            // init all pins to inputs
+            if (esp_io_expander_set_dir(FootswitchControl.io_expander, 0xFF, IO_EXPANDER_INPUT) == ESP_OK)
+            {
+                FootswitchControl.io_expander_ok = 1;
+            }
+            else
+            {
+                ESP_LOGE(TAG, "8574 IO Expander dir failed");
+            }
+        }
+        else
+        {
+            ESP_LOGI(TAG, "8574 IO Expander not found");
+        }
+
+        xSemaphoreGive(I2CMutexHandle);
+    }
+    else 
+    {
+        // failed to get mutex
+        ESP_LOGE(TAG, "8574 IO Expander I2C Mutex timeout");
+    }
 
     // init leds
     leds_init();
