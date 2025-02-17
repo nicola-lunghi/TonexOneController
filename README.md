@@ -1,6 +1,6 @@
 # Tonex One Controller: An open-source controller and display interface for the IK Multimedia Tonex One guitar pedal
 This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a bridge to the IK Multimedia Tonex One guitar pedal (which does not have native Midi capability.)
-<br>It allows selection of the 20 different presets in the pedal, by any or all of touch screen, wired footswitches, bluetooth footswitches, bluetooth servers, and midi programs.
+<br>It allows selection of the 20 different presets in the pedal, by any or all of touch screen, WiFi, wired footswitches, bluetooth footswitches, bluetooth servers, and midi programs.
 <br>A variety of hardware is supported, from a $6 board with no display, up to a $44 board with a 4.3" touch screen LCD and a pretty graphical user interface.
 
 **Note: this project is not endorsed by IK Multimedia. Amplifier skin images copyright is owned by IK Multimedia.**
@@ -94,12 +94,15 @@ For more information about the firmware development and customisation, refer to 
 - https://github.com/vit3k/tonex_controller for great work on reverse engineering the Tonex One USB protocol
 
 ## Firmware Release Notes <a name="release_notes"></a>
-V1.0.7.2 (beta):
+V1.0.7.2:
 - New WiFi options, now allowing connection to other access points.
 - Added WiFi status icon for platforms with displays
 - New web control feature, allows full remote control of all parameters and presets using WiFi/web. Fully cross platform with no apps needed, just a web browser
 - Added support for 180 degree screen rotation (via web config)
 - Added ability to reset the configuration to defaults, by holding down wired button 1 for 15 seconds
+- Added support for Waveshare ESP32-S3 1.69" Touch
+- Fixed some issues with parameter adjustments
+- Fixed issue where Bluetooth Midi commands did not check the Midi channel
 
 V1.0.6.1:
 - Added support for M5Stack Atom S3R 

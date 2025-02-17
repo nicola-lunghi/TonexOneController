@@ -73,21 +73,21 @@ static tTonexParameter TonexParameters[TONEX_PARAM_LAST] =
     {5,      0,      10,   "MDL GAIN"},           // TONEX_PARAM_MODEL_GAIN,
     {5,      0,      10,   "MDL VOL"},            // TONEX_PARAM_MODEL_VOLUME,
     {100,    0,      100,  "MDL MIX"},            // TONEX_PARAM_MODEX_MIX,
-    {0,      0,      1,    "MDL SW2"},            // TONEX_PARAM_MODEL_SW2
-    {0,      0,      1,    "MDL CAB"},            // TONEX_PARAM_MODEL_CABINET,
-
+    {0,      0,      1,    "MDL CAB"},            // TONEX_PARAM_MODEL_CABINET_ENABLE
+    
     // Virtual IR Cabinet
+    {0,      0,      1,    "VIR VCAB"},           // TONEX_PARAM_VIR_CABINET,
     {5,      0,      10,   "VIR_CMDL"},           // TONEX_PARAM_VIR_CABINET_MODEL,
     {0,      0,      10,   "VIR_RESO"},           // TONEX_PARAM_VIR_RESO,
-    {0,      0,      2,    "VIR_M1"},             // TONEX_PARAM_VIR_MIC_1,
-    {0,      0,      10,   "VIR_M1X"},            // TONEX_PARAM_VIR_MIC_1_X,
-    {0,      0,      10,   "VIR_M1Y"},            // TONEX_PARAM_VIR_MIC_1_Y,
-    {0,      0,      10,   "VIR_M1Z"},            // TONEX_PARAM_VIR_MIC_1_Z,
-    {0,      0,      2,    "VIR_M2"},             // TONEX_PARAM_VIR_MIC_2,
-    {0,      0,      10,   "VIR_M2X"},            // TONEX_PARAM_VIR_MIC_2_X,
-    {0,      0,      10,   "VIR_M2Y"},            // TONEX_PARAM_VIR_MIC_2_Y,
-    {0,      0,      10,   "VIR_M2Z"},            // TONEX_PARAM_VIR_MIC_2_Z,
-    {0,      -100,   100,  "VIR_BLEND"},          // TONEX_PARAM_VIR_BLEND,
+    {0,      0,      2,    "VIR M1"},             // TONEX_PARAM_VIR_MIC_1,
+    {0,      0,      10,   "VIR M1X"},            // TONEX_PARAM_VIR_MIC_1_X,
+    {0,      0,      10,   "VIR M1Y"},            // TONEX_PARAM_VIR_MIC_1_Y,
+    {0,      0,      10,   "VIR M1Z"},            // TONEX_PARAM_VIR_MIC_1_Z,
+    {0,      0,      2,    "VIR M2"},             // TONEX_PARAM_VIR_MIC_2,
+    {0,      0,      10,   "VIR M2X"},            // TONEX_PARAM_VIR_MIC_2_X,
+    {0,      0,      10,   "VIR M2Y"},            // TONEX_PARAM_VIR_MIC_2_Y,
+    {0,      0,      10,   "VIR M2Z"},            // TONEX_PARAM_VIR_MIC_2_Z,
+    {0,      -100,   100,  "VIR BLEND"},          // TONEX_PARAM_VIR_BLEND,
     
     // Reverb
     {0,      0,      1,    "RVB POS"},             // TONEX_PARAM_REVERB_POSITION,

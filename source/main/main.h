@@ -95,7 +95,7 @@ extern "C" {
     #define FOOTSWITCH_1		GPIO_NUM_3
     #define FOOTSWITCH_2		GPIO_NUM_2
     #define FOOTSWITCH_3		GPIO_NUM_44     // same as UART RX
-    #define FOOTSWITCH_4		-1              // not enough IO
+    #define FOOTSWITCH_4		GPIO_NUM_44     // not enough IO, dummy value
 
     // Midi
     #define UART_RX_PIN         GPIO_NUM_18 

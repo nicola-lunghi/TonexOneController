@@ -264,8 +264,8 @@
         const TONEX_PARAM_MODEL_GAIN = 20;
         const TONEX_PARAM_MODEL_VOLUME = 21;
         const TONEX_PARAM_MODEX_MIX = 22;
-        const TONEX_PARAM_MODEL_SW2 = 23;
-        const TONEX_PARAM_MODEL_CABINET = 24;
+        const TONEX_PARAM_MODEL_CABINET_ENABLE = 23;
+        const TONEX_PARAM_VIR_CABINET = 24;
         const TONEX_PARAM_VIR_CABINET_MODEL = 25;
         const TONEX_PARAM_VIR_RESO = 26;
         const TONEX_PARAM_VIR_MIC_1 = 27;
@@ -618,12 +618,12 @@
                             //    setParamData("am_presence", parseInt(key));
                             //    break;
 
-                            case TONEX_PARAM_MODEL_SW2:
+                            case TONEX_PARAM_MODEL_CABINET_ENABLE:
                                 configureParamSwitch("am_sw2", value);
                                 setParamData("am_sw2", parseInt(key));
                                 break;                            
 
-                            case TONEX_PARAM_MODEL_CABINET:
+                            case TONEX_PARAM_VIR_CABINET:
                                 configureParamSwitch("am_caben", value);
                                 setParamData("am_caben", parseInt(key));
                                 break;
@@ -1722,7 +1722,7 @@
                         <div class="col">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" data-index-number="dummy" onchange="onParamChange(event)" type="checkbox" role="switch" value="" id="am_sw2">
-                                <label class="form-check-label" for="am_sw2">??</label>
+                                <label class="form-check-label" for="am_sw2">Cab</label>
                             </div>
                         </div>
                     </div>

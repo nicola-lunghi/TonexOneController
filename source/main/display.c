@@ -1560,9 +1560,17 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             // not exposed via UI
                         } break;
 
-                        case TONEX_PARAM_MODEL_SW2:
+                        case TONEX_PARAM_MODEL_CABINET_ENABLE:
                         {
-                            // not exposed via UI
+                            if (param_entry->Value)
+                            {
+                                lv_obj_add_state(ui_AmpCabSwitch, LV_STATE_CHECKED);
+                            }
+                            else
+                            {
+                                lv_obj_clear_state(ui_AmpCabSwitch, LV_STATE_CHECKED);
+                            }
+
                         } break;
 
                         case TONEX_PARAM_MODEL_GAIN:
@@ -1588,7 +1596,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
                         //    lv_slider_set_value(ui_AmplifierPresenseSlider, round(param_entry->Value), LV_ANIM_OFF);
                         //} break;
 
-                        //case TONEX_PARAM_CAB_ENABLE:
+                        //case TONEX_PARAM_VIR_CABINET:
                         //{
                             // not exposed via UI
                         //} break;
