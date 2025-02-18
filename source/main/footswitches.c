@@ -58,6 +58,13 @@ enum FootswitchStates
     FOOTSWITCH_WAIT_RELEASE_2
 };
 
+enum FootswitchHandlers
+{
+    FOOTSWITCH_HANDLER_ONBOARD,
+    FOOTSWITCH_HANDLER_EXTERNAL,
+    FOOTSWITCH_HANDLER_MAX
+};
+
 static const char *TAG = "app_footswitches";
 
 typedef struct
@@ -67,6 +74,12 @@ typedef struct
     uint8_t last_binary_val;
     uint8_t current_bank;
     uint8_t index_pending;
+    uint8_t (*footswitch_reader)(uint8_t, uint8_t*);    
+} tFootswitchHandler;
+
+typedef struct
+{
+    tFootswitchHandler Handlers[FOOTSWITCH_HANDLER_MAX];
     esp_io_expander_handle_t io_expander; 
     uint8_t io_expander_ok;
 } tFootswitchControl;
@@ -85,23 +98,34 @@ static i2c_port_t i2cnum;
 static uint8_t read_footswitch_input_expander(uint8_t number, uint8_t* switch_state)
 {
     uint8_t result = false;
+    uint32_t level_mask;
+    uint32_t pin_mask = IO_EXPANDER_PIN_NUM_0;
 
     if (FootswitchControl.io_expander_ok)
-    {
-        uint32_t level_mask;
-        uint32_t pin_mask = IO_EXPANDER_PIN_NUM_0;
+    {       
+        if (xSemaphoreTake(I2CMutexHandle, (TickType_t)300) == pdTRUE)
+        {
+            if (esp_io_expander_get_level(FootswitchControl.io_expander, pin_mask, &level_mask) == ESP_OK)
+            {            
+                // debug
+                //ESP_LOGI(TAG, "Footswitch read %d", (int)level_mask);
 
-        if (esp_io_expander_get_level(FootswitchControl.io_expander, pin_mask, &level_mask) == ESP_OK)
-        {            
-            result = true;
-            if ((level_mask & pin_mask) != 0)
-            {
-                *switch_state = 0;
+                result = true;
+                if ((level_mask & pin_mask) != 0)
+                {
+                    *switch_state = 0;
+                }
+                else
+                {
+                    *switch_state = 1;
+                }
             }
-            else
-            {
-                *switch_state = 1;
-            }
+
+            xSemaphoreGive(I2CMutexHandle);
+        }
+        else
+        {
+            ESP_LOGW(TAG, "Footswitch read mutex timeout");
         }
     }
 
@@ -145,17 +169,17 @@ static uint8_t read_footswitch_input(uint8_t number, uint8_t* switch_state)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static void footswitch_handle_dual_mode(void)
+static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
 {
     uint8_t value;   
 
-    switch (FootswitchControl.state)
+    switch (handler->state)
     {
         case FOOTSWITCH_IDLE:
         default:
         {
             // read footswitches
-            if (read_footswitch_input(FOOTSWITCH_1, &value)) 
+            if (handler->footswitch_reader(FOOTSWITCH_1, &value)) 
             {
                 if (value == 0)
                 {
@@ -165,14 +189,14 @@ static void footswitch_handle_dual_mode(void)
                     control_request_preset_down();
 
                     // wait release	
-                    FootswitchControl.sample_counter = 0;
-                    FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
+                    handler->sample_counter = 0;
+                    handler->state = FOOTSWITCH_WAIT_RELEASE_1;
                 }
             }
 
-            if (FootswitchControl.state == FOOTSWITCH_IDLE)
+            if (handler->state == FOOTSWITCH_IDLE)
             {
-                if (read_footswitch_input(FOOTSWITCH_2, &value))
+                if (handler->footswitch_reader(FOOTSWITCH_2, &value))
                 {
                     if (value == 0)
                     {
@@ -182,8 +206,8 @@ static void footswitch_handle_dual_mode(void)
                         control_request_preset_up();
 
                         // wait release	
-                        FootswitchControl.sample_counter = 0;
-                        FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_2;
+                        handler->sample_counter = 0;
+                        handler->state = FOOTSWITCH_WAIT_RELEASE_2;
                     }
                 }
             }
@@ -192,21 +216,21 @@ static void footswitch_handle_dual_mode(void)
         case FOOTSWITCH_WAIT_RELEASE_1:
         {
             // read footswitch 1
-            if (read_footswitch_input(FOOTSWITCH_1, &value))
+            if (handler->footswitch_reader(FOOTSWITCH_1, &value))
             {
                 if (value != 0)
                 {
-                    FootswitchControl.sample_counter++;
-                    if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
+                    handler->sample_counter++;
+                    if (handler->sample_counter == FOOTSWITCH_SAMPLE_COUNT)
                     {
                         // foot switch released
-                        FootswitchControl.state = FOOTSWITCH_IDLE;		
+                        handler->state = FOOTSWITCH_IDLE;		
                     }
                 }
                 else
                 {
                     // reset counter
-                    FootswitchControl.sample_counter = 0;
+                    handler->sample_counter = 0;
                 }
             }
         } break;
@@ -214,21 +238,21 @@ static void footswitch_handle_dual_mode(void)
         case FOOTSWITCH_WAIT_RELEASE_2:
         {
             // read footswitch 2
-            if (read_footswitch_input(FOOTSWITCH_2, &value))
+            if (handler->footswitch_reader(FOOTSWITCH_2, &value))
             {
                 if (value != 0)
                 {
-                    FootswitchControl.sample_counter++;
-                    if (FootswitchControl.sample_counter == FOOTSWITCH_SAMPLE_COUNT)
+                    handler->sample_counter++;
+                    if (handler->sample_counter == FOOTSWITCH_SAMPLE_COUNT)
                     {
                         // foot switch released
-                        FootswitchControl.state = FOOTSWITCH_IDLE;
+                        handler->state = FOOTSWITCH_IDLE;
                     }                 
                 }
                 else
                 {
                     // reset counter
-                    FootswitchControl.sample_counter = 0;
+                    handler->sample_counter = 0;
                 }
             }
         } break;
@@ -242,38 +266,38 @@ static void footswitch_handle_dual_mode(void)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static void footswitch_handle_quad_banked(void)
+static void footswitch_handle_quad_banked(tFootswitchHandler* handler)
 {
     uint8_t value;
     uint8_t binary_val = 0;    
 
     // read all 4 switches (and swap so 1 is pressed)
-    read_footswitch_input(FOOTSWITCH_1, &value);
+    handler->footswitch_reader(FOOTSWITCH_1, &value);
     if (value == 0)
     {
         binary_val |= 1;
     }
 
-    read_footswitch_input(FOOTSWITCH_2, &value);
+    handler->footswitch_reader(FOOTSWITCH_2, &value);
     if (value == 0)
     {
         binary_val |= 2;
     }
 
-    read_footswitch_input(FOOTSWITCH_3, &value);
+    handler->footswitch_reader(FOOTSWITCH_3, &value);
     if (value == 0)
     {
         binary_val |= 4;
     }
 
-    read_footswitch_input(FOOTSWITCH_4, &value);
+    handler->footswitch_reader(FOOTSWITCH_4, &value);
     if (value == 0)
     {
         binary_val |= 8;
     }
     
     // handle state
-    switch (FootswitchControl.state)
+    switch (handler->state)
     {
         case FOOTSWITCH_IDLE:
         {
@@ -283,60 +307,60 @@ static void footswitch_handle_quad_banked(void)
                 // check if A+B is pressed
                 if (binary_val == 0x03)
                 {
-                    if (FootswitchControl.current_bank > 0)
+                    if (handler->current_bank > 0)
                     {
                         // bank down
-                        FootswitchControl.current_bank--;   
-                        ESP_LOGI(TAG, "Footswitch banked down %d", FootswitchControl.current_bank);
+                        handler->current_bank--;   
+                        ESP_LOGI(TAG, "Footswitch banked down %d", handler->current_bank);
                     }
 
-                    FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
+                    handler->state = FOOTSWITCH_WAIT_RELEASE_1;
                 }
                 // check if C+D is pressed
                 else if (binary_val == 0x0C)
                 {
-                    if (FootswitchControl.current_bank < BANK_MAXIMUM)
+                    if (handler->current_bank < BANK_MAXIMUM)
                     {
                         // bank up
-                        FootswitchControl.current_bank++;
-                        ESP_LOGI(TAG, "Footswitch banked up %d", FootswitchControl.current_bank);
+                        handler->current_bank++;
+                        ESP_LOGI(TAG, "Footswitch banked up %d", handler->current_bank);
                     }
 
-                    FootswitchControl.state = FOOTSWITCH_WAIT_RELEASE_1;
+                    handler->state = FOOTSWITCH_WAIT_RELEASE_1;
                 }
                 else
                 {
                     // single button pressed, just store it. Preset select only happens on button release
-                    FootswitchControl.index_pending = binary_val;
+                    handler->index_pending = binary_val;
                 }
             }
             else
             {
-                if (FootswitchControl.index_pending != 0)
+                if (handler->index_pending != 0)
                 {
-                    uint8_t new_preset = FootswitchControl.current_bank * BANK_MODE_BUTTONS;
+                    uint8_t new_preset = handler->current_bank * BANK_MODE_BUTTONS;
 
                     // get the index from the bit set
-                    if ((FootswitchControl.index_pending & 0x01) != 0)
+                    if ((handler->index_pending & 0x01) != 0)
                     {
                         // nothing needed
                     }
-                    else if ((FootswitchControl.index_pending & 0x02) != 0)
+                    else if ((handler->index_pending & 0x02) != 0)
                     {
                         new_preset += 1;
                     }
-                    else if ((FootswitchControl.index_pending & 0x04) != 0)
+                    else if ((handler->index_pending & 0x04) != 0)
                     {
                         new_preset += 2;
                     }
-                    else if ((FootswitchControl.index_pending & 0x08) != 0)
+                    else if ((handler->index_pending & 0x08) != 0)
                     {
                         new_preset += 3;
                     }
                     
                     // set the preset
                     control_request_preset_index(new_preset);
-                    FootswitchControl.index_pending = 0;
+                    handler->index_pending = 0;
 
                     // give a little debounce time
                     vTaskDelay(pdMS_TO_TICKS(100));
@@ -349,8 +373,8 @@ static void footswitch_handle_quad_banked(void)
             // check if all buttons released
             if (binary_val == 0)
             {
-                FootswitchControl.state = FOOTSWITCH_IDLE;
-                FootswitchControl.index_pending = 0;
+                handler->state = FOOTSWITCH_IDLE;
+                handler->index_pending = 0;
 
                 // give a little debounce time
                 vTaskDelay(pdMS_TO_TICKS(100));
@@ -366,40 +390,40 @@ static void footswitch_handle_quad_banked(void)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static void footswitch_handle_quad_binary(void)
+static void footswitch_handle_quad_binary(tFootswitchHandler* handler)
 {
     uint8_t value;
     uint8_t binary_val = 0;    
 
     // read all 4 switches (and swap so 1 is pressed)
-    read_footswitch_input(FOOTSWITCH_1, &value);
+    handler->footswitch_reader(FOOTSWITCH_1, &value);
     if (value == 0)
     {
         binary_val |= 1;
     }
 
-    read_footswitch_input(FOOTSWITCH_2, &value);
+    handler->footswitch_reader(FOOTSWITCH_2, &value);
     if (value == 0)
     {
         binary_val |= 2;
     }
 
-    read_footswitch_input(FOOTSWITCH_3, &value);
+    handler->footswitch_reader(FOOTSWITCH_3, &value);
     if (value == 0)
     {
         binary_val |= 4;
     }
 
-    read_footswitch_input(FOOTSWITCH_4, &value);
+    handler->footswitch_reader(FOOTSWITCH_4, &value);
     if (value == 0)
     {
         binary_val |= 8;
     }
 
     // has it changed?
-    if (binary_val != FootswitchControl.last_binary_val)
+    if (binary_val != handler->last_binary_val)
     {
-        FootswitchControl.last_binary_val = binary_val;
+        handler->last_binary_val = binary_val;
 
         // set preset
         control_request_preset_index(binary_val);
@@ -420,10 +444,11 @@ static void footswitch_handle_quad_binary(void)
 *****************************************************************************/
 void footswitch_task(void *arg)
 {    
-    uint8_t mode;   
+    uint8_t onboard_switch_mode;   
+    uint8_t external_switch_mode;
     uint8_t value;
     uint32_t reset_timer = 0;
- 
+
     ESP_LOGI(TAG, "Footswitch task start");
 
     // let things settle
@@ -431,34 +456,72 @@ void footswitch_task(void *arg)
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
     // 4.3B doesn't have enough IO, only supports dual mode
-    mode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
+    onboard_switch_mode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
 #else
     // others, get the currently configured mode from web config
-    mode = control_get_config_footswitch_mode();
+    onboard_switch_mode = control_get_config_footswitch_mode();
 #endif
+
+
+    // todo 
+    external_switch_mode = FOOTSWITCH_MODE_QUAD_BANKED;
+
+
+    // setup handler for onboard IO footswitches
+    FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD].footswitch_reader = &read_footswitch_input;
+
+    // setup handler for external IO Expander footswitches
+    FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL].footswitch_reader = &read_footswitch_input_expander;
 
     while (1)
     {
-        switch (mode) 
+        // handle onboard IO foot switches (direct GPIO and IO expander on main PCB)
+        switch (onboard_switch_mode) 
         {
             case FOOTSWITCH_MODE_DUAL_UP_DOWN:
             default:
             {
                 // run dual mode next/previous
-                footswitch_handle_dual_mode();
+                footswitch_handle_dual_mode(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD]);
             } break;
 
             case FOOTSWITCH_MODE_QUAD_BANKED:
             {
                 // run 4 switch with bank up/down
-                footswitch_handle_quad_banked();
+                footswitch_handle_quad_banked(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD]);
             } break;
 
             case FOOTSWITCH_MODE_QUAD_BINARY:
             {
                 // run 4 switch binary mode
-                footswitch_handle_quad_binary();
+                footswitch_handle_quad_binary(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD]);
             } break;
+        }
+
+        // did we find an IO expander on boot?
+        if (FootswitchControl.io_expander_ok)
+        {
+            switch (external_switch_mode) 
+            {
+                case FOOTSWITCH_MODE_DUAL_UP_DOWN:
+                default:
+                {
+                    // run dual mode next/previous
+                    footswitch_handle_dual_mode(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL]);
+                } break;
+    
+                case FOOTSWITCH_MODE_QUAD_BANKED:
+                {
+                    // run 4 switch with bank up/down
+                    footswitch_handle_quad_banked(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL]);
+                } break;
+    
+                case FOOTSWITCH_MODE_QUAD_BINARY:
+                {
+                    // run 4 switch binary mode
+                    footswitch_handle_quad_binary(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL]);
+                } break;
+            }
         }
 
         // check for button held for data reset
@@ -500,7 +563,6 @@ void footswitch_task(void *arg)
 void footswitches_init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex)
 {	
     memset((void*)&FootswitchControl, 0, sizeof(FootswitchControl));
-    FootswitchControl.state = FOOTSWITCH_IDLE;
     FootswitchControl.io_expander = NULL;
 
     // save handles
@@ -547,6 +609,16 @@ void footswitches_init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex)
     {
         // failed to get mutex
         ESP_LOGE(TAG, "8574 IO Expander I2C Mutex timeout");
+    }
+
+    // dump expander details
+    if (FootswitchControl.io_expander_ok)
+    {
+        if (xSemaphoreTake(I2CMutexHandle, (TickType_t)300) == pdTRUE)
+        {
+            esp_io_expander_print_state(FootswitchControl.io_expander);
+            xSemaphoreGive(I2CMutexHandle);
+        }        
     }
 
     // init leds
