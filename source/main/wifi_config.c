@@ -348,6 +348,7 @@ static void wifi_build_config_json(void)
     json_gen_obj_set_int(&pWebConfig->jstr, "FOOTSW_MODE", control_get_config_footswitch_mode());
     json_gen_obj_set_int(&pWebConfig->jstr, "BT_MIDI_CC", control_get_config_enable_bt_midi_CC());
     json_gen_obj_set_int(&pWebConfig->jstr, "WIFI_MODE", control_get_config_wifi_mode());
+    json_gen_obj_set_int(&pWebConfig->jstr, "WIFI_POWER", control_get_config_wifi_max_power());
     json_gen_obj_set_int(&pWebConfig->jstr, "SCREEN_ROT", control_get_config_screen_rotation());
 
     control_get_config_wifi_ssid(str_val);
@@ -592,7 +593,7 @@ static esp_err_t ws_handler(httpd_req_t *req)
                         {
                             control_set_screen_rotation(int_val);
                         }
-
+                                              
                         vTaskDelay(pdMS_TO_TICKS(250));
 
                         // save it and reboot after
@@ -616,6 +617,11 @@ static esp_err_t ws_handler(httpd_req_t *req)
                         if (json_obj_get_string(&pWebConfig->jctx, "WIFI_PW", str_val, sizeof(str_val)) == OS_SUCCESS)
                         {
                             control_set_config_wifi_password(str_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "WIFI_POWER", &int_val) == OS_SUCCESS)
+                        {
+                            control_set_config_wifi_max_power(int_val);
                         }
 
                         vTaskDelay(pdMS_TO_TICKS(250));
@@ -1173,6 +1179,35 @@ static void wifi_config_task(void *arg)
             wifi_init_softap();
         } break;
     }
+
+    // set the WiFi TX power. Some platforms seem to have stability issues on max power
+    switch (control_get_config_wifi_max_power())
+    {
+        case WIFI_TX_POWER_100:        
+        {
+            esp_wifi_set_max_tx_power(80);
+        } break;
+
+        case WIFI_TX_POWER_75:
+        {
+            esp_wifi_set_max_tx_power(66);
+        } break;
+
+        case WIFI_TX_POWER_50:
+        {
+            esp_wifi_set_max_tx_power(52);
+        } break;
+
+        case WIFI_TX_POWER_25:
+        default:
+        {
+            esp_wifi_set_max_tx_power(28);
+        } break;
+    }
+
+    int8_t power;
+    esp_wifi_get_max_tx_power(&power);
+    ESP_LOGI(TAG, "WiFi Tx power: %d dbm", (int)(power * 0.25f));
 
     start_mdns_service();
 

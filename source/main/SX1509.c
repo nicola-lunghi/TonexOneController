@@ -25,7 +25,7 @@
 /* 
 ** Defines
 */
-#define SX1509_IC2_ADDRESS           0x21
+#define SX1509_IC2_ADDRESS           0x71
 #define I2C_TIMEOUT_MS          	 10
 
 // Class flags
@@ -321,12 +321,12 @@ esp_err_t SX1509_Init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex)
 
         if (ret == ESP_OK)
         {
-            ESP_LOGI(TAG, "SX1509 init OK\n");
+            ESP_LOGI(TAG, "SX1509 init OK");
         }    
     }
     else
     {
-        ESP_LOGI(TAG, "SX1509 not detected\n");
+        ESP_LOGI(TAG, "SX1509 not detected");
     }
 
     return ret; 
@@ -364,7 +364,7 @@ esp_err_t SX1509_reset(void)
     }
     else
     {
-        ESP_LOGE(TAG,  "SX1509 reset failed\n");
+        ESP_LOGE(TAG,  "SX1509 reset failed");
     }
 
     return ret;
@@ -385,7 +385,7 @@ esp_err_t SX1509_refresh(void)
   
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG,  "SX1509 refresh failed\n");
+        ESP_LOGE(TAG,  "SX1509 refresh failed");
     }
 
     return ret;
@@ -423,7 +423,7 @@ esp_err_t SX1509_digitalWrite(uint8_t pin, uint8_t value)
   
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG,  "SX1509 digital write failed %d\n", ret);
+        ESP_LOGE(TAG,  "SX1509 digital write failed %d", ret);
     }
 
     return ret;
@@ -574,7 +574,7 @@ esp_err_t SX1509_gpioMode(uint8_t pin, uint8_t mode)
   
     if (ret != ESP_OK)
     {
-        ESP_LOGE(TAG,  "SX1509 gpio mode failed\n");
+        ESP_LOGE(TAG,  "SX1509 gpio mode failed");
     }
 
     return ret;

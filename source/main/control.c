@@ -74,7 +74,8 @@ enum CommandEvents
     EVENT_SET_CONFIG_WIFI_MODE,
     EVENT_SET_CONFIG_WIFI_SSID,
     EVENT_SET_CONFIG_WIFI_PASSWORD,
-    EVENT_SET_CONFIG_SCREEN_ROTATION
+    EVENT_SET_CONFIG_SCREEN_ROTATION,
+    EVENT_SET_CONFIG_WIFI_TX_POWER
 };
 
 typedef struct
@@ -118,7 +119,8 @@ typedef struct __attribute__ ((packed))
     char BTClientCustomName[MAX_BT_CUSTOM_NAME];
 
     // wifi
-    uint8_t WiFiMode;
+    uint8_t WiFiMode : 4;
+    uint8_t WifiTxPower : 4;
     char WifiSSID[MAX_WIFI_SSID_PW];
     char WifiPassword[MAX_WIFI_SSID_PW];
 } tConfigData;
@@ -337,6 +339,12 @@ static uint8_t process_control_command(tControlMessage* message)
             ESP_LOGI(TAG, "Config set WiFi password <hidden>");
             strncpy(ControlData.ConfigData.WifiPassword, message->Text, MAX_WIFI_SSID_PW - 1);
             ControlData.ConfigData.WifiPassword[MAX_WIFI_SSID_PW - 1] = 0;
+        } break;
+
+        case EVENT_SET_CONFIG_WIFI_TX_POWER:
+        {
+            ESP_LOGI(TAG, "Config set wifi tx power rotation %d", (int)message->Value);
+            ControlData.ConfigData.WifiTxPower = (uint8_t)message->Value & 0x0F;
         } break;
 
         case EVENT_SET_CONFIG_SCREEN_ROTATION:
@@ -816,6 +824,29 @@ void control_set_config_wifi_password(char* name)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+void control_set_config_wifi_max_power(uint8_t power)
+{
+    tControlMessage message;
+
+    ESP_LOGI(TAG, "control_set_config_wifi_max_power");
+
+    message.Event = EVENT_SET_CONFIG_WIFI_TX_POWER;
+    message.Value =power;
+
+    // send to queue
+    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    {
+        ESP_LOGE(TAG, "control_set_config_wifi_max_power queue send failed!");            
+    }
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 void control_set_config_toggle_bypass(uint32_t status)
 {
     tControlMessage message;
@@ -1105,6 +1136,18 @@ void control_get_config_wifi_password(char* name)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+uint8_t control_get_config_wifi_max_power(void)
+{
+    return ControlData.ConfigData.WifiTxPower;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 uint8_t control_get_config_screen_rotation(void)
 {
     return ControlData.ConfigData.GeneralScreenRotation;
@@ -1258,6 +1301,7 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config WiFi Mode: %d", (int)ControlData.ConfigData.WiFiMode);
     ESP_LOGI(TAG, "Config WiFi SSID: %s", ControlData.ConfigData.WifiSSID);
     ESP_LOGI(TAG, "Config WiFi Password: <hidden>");
+    ESP_LOGI(TAG, "Config WiFi TX Power: %d", ControlData.ConfigData.WifiTxPower);
     ESP_LOGI(TAG, "Config Screen Rotation: %d", (int)ControlData.ConfigData.GeneralScreenRotation);
 
     // status    
@@ -1286,6 +1330,7 @@ void control_set_default_config(void)
     ControlData.ConfigData.WiFiMode = WIFI_MODE_ACCESS_POINT_TIMED;
     strcpy(ControlData.ConfigData.WifiSSID, "TonexConfig");
     strcpy(ControlData.ConfigData.WifiPassword, "12345678");   
+    ControlData.ConfigData.WifiTxPower = WIFI_TX_POWER_25;
     ControlData.ConfigData.GeneralScreenRotation = SCREEN_ROTATION_0;
 }
 

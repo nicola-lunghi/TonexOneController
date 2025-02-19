@@ -1203,7 +1203,8 @@
                     configureParamSelect("midichannel", data['S_MIDI_CH']);
                     configureParamSelect("footmode", data['FOOTSW_MODE']);
                     configureParamSwitch("btmidicc", data['BT_MIDI_CC']);
-                    configureParamSelect("wifimode", data['WIFI_MODE']);
+                    configureParamSelect("wifimode", data['WIFI_MODE']);                    
+                    configureParamSelect("wifitxpower", data['WIFI_POWER']);                
                     setParamValue("wifiname", data['WIFI_SSID']);
                     setParamValue("wifipassword", data['WIFI_PW']);
                     configureParamSelect("screenrot", data['SCREEN_ROT']);
@@ -1303,6 +1304,7 @@
             if (SocketConnected === 1) {
                 // get values
                 var wifi_mode = document.getElementById("wifimode").value;
+                var wifitxpower = document.getElementById("wifitxpower").value;                
                 var wifi_ssid = document.getElementById("wifiname").value;
                 var wifi_pw = document.getElementById("wifipassword").value;
                 
@@ -1310,6 +1312,7 @@
                 
                 sendWS({"CMD": "SETWIFI", 
                         "WIFI_MODE": parseInt(wifi_mode),
+                        "WIFI_POWER": parseInt(wifitxpower),
                         "WIFI_SSID": wifi_ssid,
                         "WIFI_PW": wifi_pw});
                         
@@ -1915,6 +1918,16 @@
                         <option value="0" class="style6" selected>Access Point Timed</option>
                         <option value="1" class="style6">Station</option>
                         <option value="2" class="style6">Access Point</option>     
+                    </select>                           
+                </div>
+                <br>
+                <div class="container">
+                    <label class="form-check-label" for="wifitxpower">WiFi Transmit Power</label>
+                    <select class="form-select select_style" id="wifitxpower">
+                        <option value="0" class="style6" selected>25%</option>
+                        <option value="1" class="style6">50%</option>
+                        <option value="2" class="style6">75%</option>     
+                        <option value="3" class="style6">100%</option>     
                     </select>                           
                 </div>
                 <div class="container">

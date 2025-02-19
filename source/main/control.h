@@ -113,6 +113,14 @@ enum ScreenRotation
     SCREEN_ROTATION_MAX,
 };
 
+enum WiFiTxPower
+{
+    WIFI_TX_POWER_25,
+    WIFI_TX_POWER_50,
+    WIFI_TX_POWER_75,    
+    WIFI_TX_POWER_100
+};
+
 #define MAX_WIFI_SSID_PW       65   
 
 // thread safe public API
@@ -144,6 +152,7 @@ void control_set_config_enable_bt_midi_CC(uint32_t status);
 void control_set_config_wifi_mode(uint32_t mode);
 void control_set_config_wifi_ssid(char* name);
 void control_set_config_wifi_password(char* name);
+void control_set_config_wifi_max_power(uint8_t power);
 void control_set_screen_rotation(uint32_t rot);
 
 uint8_t control_get_config_bt_mode(void);
@@ -159,4 +168,5 @@ uint8_t control_get_config_enable_bt_midi_CC(void);
 uint8_t control_get_config_wifi_mode(void);
 void control_get_config_wifi_ssid(char* name);
 void control_get_config_wifi_password(char* name);
+uint8_t control_get_config_wifi_max_power(void);
 uint8_t control_get_config_screen_rotation(void);

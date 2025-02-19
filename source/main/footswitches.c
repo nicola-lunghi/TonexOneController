@@ -49,8 +49,6 @@ limitations under the License.
 #define BANK_MAXIMUM                        (MAX_PRESETS / BANK_MODE_BUTTONS)
 #define BUTTON_FACTORY_RESET_TIME           500    // * 20 msec = 10 secs
 
-#define I2C_ADDRESS                         0x71    
-
 enum FootswitchStates
 {
     FOOTSWITCH_IDLE,
