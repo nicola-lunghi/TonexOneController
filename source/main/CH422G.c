@@ -36,10 +36,10 @@ limitations under the License.
 #define DIR_IN_VALUE            (0xF00)
 
 // Register address 
-#define CH422G_REG_WR_SET       (0x48 >> 1)
-#define CH422G_REG_WR_OC        (0x46 >> 1)
-#define CH422G_REG_WR_IO        (0x70 >> 1)
-#define CH422G_REG_RD_IO        (0x4D >> 1)
+#define CH422G_REG_WR_SET       (0x48 >> 1)     // 0x24
+#define CH422G_REG_WR_OC        (0x46 >> 1)     // 0x23
+#define CH422G_REG_WR_IO        (0x70 >> 1)     // 0x38
+#define CH422G_REG_RD_IO        (0x4D >> 1)     // 0x26
 
 /* Default register value when reset */
 #define REG_WR_SET_DEFAULT_VAL  (0x01UL)    // Bit:        |  7  |  6  |  5  |  4  |    3    |    2    |    1     |    0    |

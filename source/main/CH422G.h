@@ -39,6 +39,7 @@ Set working mode
 Send slave address 0x24
 Write function command
 */
+
 #define CH422G_Mode          0x24
 #define CH422G_Mode_IO_OE    0x01 // Output enabled
 #define CH422G_Mode_A_SCAN   0x02 // Dynamic display automatic scanning enabled
