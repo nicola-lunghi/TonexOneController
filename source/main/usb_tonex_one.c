@@ -516,7 +516,7 @@ static esp_err_t usb_tonex_one_set_preset_in_slot(uint16_t preset, Slot newSlot,
     TonexData->Message.PedalData.StateData[14] = 1;
     
     // check if setting same preset twice will set bypass
-    if (control_get_config_double_toggle())
+    if (control_get_config_item_int(CONFIG_ITEM_TOGGLE_BYPASS))
     {
         if (selectSlot && (TonexData->Message.CurrentSlot == newSlot) && (preset == usb_tonex_one_get_current_active_preset()))
         {

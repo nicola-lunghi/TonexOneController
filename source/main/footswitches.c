@@ -45,8 +45,6 @@ limitations under the License.
 
 #define FOOTSWITCH_TASK_STACK_SIZE          (3 * 1024)
 #define FOOTSWITCH_SAMPLE_COUNT             5       // 20 msec per sample
-#define BANK_MODE_BUTTONS                   4
-#define BANK_MAXIMUM                        (MAX_PRESETS / BANK_MODE_BUTTONS)
 #define BUTTON_FACTORY_RESET_TIME           500    // * 20 msec = 10 secs
 
 enum FootswitchStates
@@ -72,7 +70,8 @@ typedef struct
     uint8_t last_binary_val;
     uint8_t current_bank;
     uint8_t index_pending;
-    uint8_t (*footswitch_reader)(uint8_t, uint8_t*);    
+    uint8_t (*footswitch_single_reader)(uint8_t, uint8_t*);    
+    uint8_t (*footswitch_multiple_reader)(uint8_t, uint16_t*);    
 } tFootswitchHandler;
 
 typedef struct
@@ -81,9 +80,31 @@ typedef struct
     uint8_t io_expander_ok;
 } tFootswitchControl;
 
+typedef struct
+{
+    uint8_t total_switches;
+    uint8_t presets_per_bank;
+    uint16_t bank_down_switch_mask;
+    uint16_t bank_up_switch_mask;
+} tFootswitchLayoutEntry;
+
 static tFootswitchControl FootswitchControl;
 static SemaphoreHandle_t I2CMutexHandle;
 static i2c_port_t i2cnum;
+
+static const __attribute__((unused)) tFootswitchLayoutEntry FootswitchLayouts[FOOTSWITCH_LAYOUT_LAST] = 
+{
+    //tot  ppb  bdm     bum
+    {3,    3,   0x03,   0x06},            // FOOTSWITCH_LAYOUT_1X3
+    {4,    4,   0x03,   0x0C},            // FOOTSWITCH_LAYOUT_1X4
+    {5,    5,   0x03,   0x18},            // FOOTSWITCH_LAYOUT_1X5
+    {6,    6,   0x03,   0x06},            // FOOTSWITCH_LAYOUT_2X3
+    {8,    8,   0x03,   0x0C},            // FOOTSWITCH_LAYOUT_2X4
+    {10,   10,  0x03,   0x18},            // FOOTSWITCH_LAYOUT_2X5A
+    {10,   8,   0x10,   0x200},           // FOOTSWITCH_LAYOUT_2X5B
+    {12,   12,  0x03,   0x30},            // FOOTSWITCH_LAYOUT_2X6A
+    {12,   10,  0x20,   0x800},           // FOOTSWITCH_LAYOUT_2X6B
+};
 
 /****************************************************************************
 * NAME:        
@@ -92,11 +113,76 @@ static i2c_port_t i2cnum;
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static uint8_t read_footswitch_input_expander(uint8_t number, uint8_t* switch_state)
+static uint8_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_state)
+{
+    uint8_t result = false;
+
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+    // display board uses onboard I2C IO expander
+    uint8_t value;
+
+    if (CH422G_read_input(number, &value) == ESP_OK)
+    {
+        result = true;
+        *switch_state = value;
+    }
+#else
+    // other boards can use direct IO pin
+    *switch_state = gpio_get_level(number);
+
+    result = true;
+#endif
+
+    return result;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+static uint8_t footswitch_read_multiple_onboard(uint8_t max, uint16_t* switch_state)
+{
+    uint8_t result = false;
+    *switch_state = 0;
+
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+    // display board uses onboard I2C IO expander
+    uint16_t values;
+
+    if (CH422G_read_all_input(&values) == ESP_OK)
+    {
+        result = true;
+        *switch_state = values;
+    }
+#else
+    uint8_t inputs[] = {FOOTSWITCH_1, FOOTSWITCH_2, FOOTSWITCH_3, FOOTSWITCH_4};
+
+    for (uint8_t loop = 0; loop < sizeof(inputs); loop++)
+    {
+        // other boards can use direct IO pin
+        *switch_state |= ((gpio_get_level(inputs[loop]) << loop));
+    }
+
+    result = true;
+#endif
+
+    return result;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+static uint8_t footswitch_read_single_offboard(uint8_t pin, uint8_t* switch_state)
 {
     uint8_t result = false;
     uint8_t level;
-    uint8_t pin = 1;
 
     if (FootswitchControl.io_expander_ok)
     {       
@@ -127,25 +213,19 @@ static uint8_t read_footswitch_input_expander(uint8_t number, uint8_t* switch_st
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static uint8_t read_footswitch_input(uint8_t number, uint8_t* switch_state)
+static uint8_t footswitch_read_multiple_offboard(uint8_t number, uint16_t* switch_states)
 {
     uint8_t result = false;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
-    // display board uses I2C IO expander
-    uint8_t value;
-
-    if (CH422G_read_input(number, &value) == ESP_OK)
-    {
-        result = true;
-        *switch_state = value;
+    if (FootswitchControl.io_expander_ok)
+    {       
+        if (SX1509_getPinValues(switch_states) == ESP_OK)
+        {            
+            // debug
+            //ESP_LOGI(TAG, "Footswitches read %d", (int)switch_states);
+            result = true;
+        }
     }
-#else
-    // other boards can use direct IO pin
-    *switch_state = gpio_get_level(number);
-
-    result = true;
-#endif
 
     return result;
 }
@@ -167,7 +247,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
         default:
         {
             // read footswitches
-            if (handler->footswitch_reader(FOOTSWITCH_1, &value)) 
+            if (handler->footswitch_single_reader(FOOTSWITCH_1, &value)) 
             {
                 if (value == 0)
                 {
@@ -184,7 +264,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
 
             if (handler->state == FOOTSWITCH_IDLE)
             {
-                if (handler->footswitch_reader(FOOTSWITCH_2, &value))
+                if (handler->footswitch_single_reader(FOOTSWITCH_2, &value))
                 {
                     if (value == 0)
                     {
@@ -204,7 +284,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
         case FOOTSWITCH_WAIT_RELEASE_1:
         {
             // read footswitch 1
-            if (handler->footswitch_reader(FOOTSWITCH_1, &value))
+            if (handler->footswitch_single_reader(FOOTSWITCH_1, &value))
             {
                 if (value != 0)
                 {
@@ -226,7 +306,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
         case FOOTSWITCH_WAIT_RELEASE_2:
         {
             // read footswitch 2
-            if (handler->footswitch_reader(FOOTSWITCH_2, &value))
+            if (handler->footswitch_single_reader(FOOTSWITCH_2, &value))
             {
                 if (value != 0)
                 {
@@ -254,31 +334,31 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static void footswitch_handle_quad_banked(tFootswitchHandler* handler)
+static void footswitch_handle_banked(tFootswitchHandler* handler, tFootswitchLayoutEntry* layout)
 {
     uint8_t value;
     uint8_t binary_val = 0;    
 
     // read all 4 switches (and swap so 1 is pressed)
-    handler->footswitch_reader(FOOTSWITCH_1, &value);
+    handler->footswitch_single_reader(FOOTSWITCH_1, &value);
     if (value == 0)
     {
         binary_val |= 1;
     }
 
-    handler->footswitch_reader(FOOTSWITCH_2, &value);
+    handler->footswitch_single_reader(FOOTSWITCH_2, &value);
     if (value == 0)
     {
         binary_val |= 2;
     }
 
-    handler->footswitch_reader(FOOTSWITCH_3, &value);
+    handler->footswitch_single_reader(FOOTSWITCH_3, &value);
     if (value == 0)
     {
         binary_val |= 4;
     }
 
-    handler->footswitch_reader(FOOTSWITCH_4, &value);
+    handler->footswitch_single_reader(FOOTSWITCH_4, &value);
     if (value == 0)
     {
         binary_val |= 8;
@@ -292,8 +372,8 @@ static void footswitch_handle_quad_banked(tFootswitchHandler* handler)
             // any buttons pressed?
             if (binary_val != 0)
             {
-                // check if A+B is pressed
-                if (binary_val == 0x03)
+                // check if bank down is pressed
+                if (binary_val == layout->bank_down_switch_mask)
                 {
                     if (handler->current_bank > 0)
                     {
@@ -304,10 +384,10 @@ static void footswitch_handle_quad_banked(tFootswitchHandler* handler)
 
                     handler->state = FOOTSWITCH_WAIT_RELEASE_1;
                 }
-                // check if C+D is pressed
-                else if (binary_val == 0x0C)
+                // check if bank up is pressed
+                else if (binary_val == layout->bank_up_switch_mask)
                 {
-                    if (handler->current_bank < BANK_MAXIMUM)
+                    if (handler->current_bank < (MAX_PRESETS / layout->presets_per_bank))
                     {
                         // bank up
                         handler->current_bank++;
@@ -326,7 +406,7 @@ static void footswitch_handle_quad_banked(tFootswitchHandler* handler)
             {
                 if (handler->index_pending != 0)
                 {
-                    uint8_t new_preset = handler->current_bank * BANK_MODE_BUTTONS;
+                    uint8_t new_preset = handler->current_bank * layout->presets_per_bank;
 
                     // get the index from the bit set
                     if ((handler->index_pending & 0x01) != 0)
@@ -384,25 +464,25 @@ static void footswitch_handle_quad_binary(tFootswitchHandler* handler)
     uint8_t binary_val = 0;    
 
     // read all 4 switches (and swap so 1 is pressed)
-    handler->footswitch_reader(FOOTSWITCH_1, &value);
+    handler->footswitch_single_reader(FOOTSWITCH_1, &value);
     if (value == 0)
     {
         binary_val |= 1;
     }
 
-    handler->footswitch_reader(FOOTSWITCH_2, &value);
+    handler->footswitch_single_reader(FOOTSWITCH_2, &value);
     if (value == 0)
     {
         binary_val |= 2;
     }
 
-    handler->footswitch_reader(FOOTSWITCH_3, &value);
+    handler->footswitch_single_reader(FOOTSWITCH_3, &value);
     if (value == 0)
     {
         binary_val |= 4;
     }
 
-    handler->footswitch_reader(FOOTSWITCH_4, &value);
+    handler->footswitch_single_reader(FOOTSWITCH_4, &value);
     if (value == 0)
     {
         binary_val |= 8;
@@ -447,19 +527,21 @@ void footswitch_task(void *arg)
     onboard_switch_mode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
 #else
     // others, get the currently configured mode from web config
-    onboard_switch_mode = control_get_config_footswitch_mode();
+    onboard_switch_mode = control_get_config_item_int(CONFIG_ITEM_FOOTSWITCH_MODE);
 #endif
 
 
     // todo 
-    external_switch_mode = FOOTSWITCH_MODE_QUAD_BANKED;
+    external_switch_mode = FOOTSWITCH_LAYOUT_1X4;
 
 
     // setup handler for onboard IO footswitches
-    FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD].footswitch_reader = &read_footswitch_input;
+    FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD].footswitch_single_reader = &footswitch_read_single_onboard;
+    FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD].footswitch_multiple_reader = &footswitch_read_multiple_onboard;
 
     // setup handler for external IO Expander footswitches
-    FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL].footswitch_reader = &read_footswitch_input_expander;
+    FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL].footswitch_single_reader = &footswitch_read_single_offboard;
+    FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL].footswitch_multiple_reader = &footswitch_read_multiple_offboard;
 
     while (1)
     {
@@ -476,7 +558,7 @@ void footswitch_task(void *arg)
             case FOOTSWITCH_MODE_QUAD_BANKED:
             {
                 // run 4 switch with bank up/down
-                footswitch_handle_quad_banked(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD]);
+                footswitch_handle_banked(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD], (tFootswitchLayoutEntry*)&FootswitchLayouts[FOOTSWITCH_LAYOUT_1X4]);
             } break;
 
             case FOOTSWITCH_MODE_QUAD_BINARY:
@@ -489,31 +571,11 @@ void footswitch_task(void *arg)
         // did we find an IO expander on boot?
         if (FootswitchControl.io_expander_ok)
         {
-            switch (external_switch_mode) 
-            {
-                case FOOTSWITCH_MODE_DUAL_UP_DOWN:
-                default:
-                {
-                    // run dual mode next/previous
-                    footswitch_handle_dual_mode(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL]);
-                } break;
-    
-                case FOOTSWITCH_MODE_QUAD_BANKED:
-                {
-                    // run 4 switch with bank up/down
-                    footswitch_handle_quad_banked(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL]);
-                } break;
-    
-                case FOOTSWITCH_MODE_QUAD_BINARY:
-                {
-                    // run 4 switch binary mode
-                    footswitch_handle_quad_binary(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL]);
-                } break;
-            }
+            footswitch_handle_banked(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL], (tFootswitchLayoutEntry*)&FootswitchLayouts[external_switch_mode]);
         }
 
         // check for button held for data reset
-        if (read_footswitch_input(FOOTSWITCH_1, &value))
+        if (footswitch_read_single_onboard(FOOTSWITCH_1, &value))
         {
             if (value == 0)
             {        

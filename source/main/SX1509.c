@@ -38,28 +38,45 @@
 #define SX1509_FLAG_SERIAL_MASK      0x000F  // Only these bits are serialized.
 
 
-// These are the i2c register indicies. NOT their addresses.
+// These are the i2c register indicies
 enum
 {
-    SX1509_REG_INPUT_DISABLE,
-    SX1509_REG_LONG_SLEW,
-    SX1509_REG_LOW_DRIVE,
-    SX1509_REG_PULLUP,
-    SX1509_REG_PULLDOWN,
-    SX1509_REG_OPEN_DRAIN,
-    SX1509_REG_POLARITY,
-    SX1509_REG_DIR,
-    SX1509_REG_DATA,
-    SX1509_REG_INTERRUPT_MASK,
-    SX1509_REG_SENSE_HIGH,
-    SX1509_REG_SENSE_LOW,
-    SX1509_REG_INTERRUPT_SOURCE,
-    SX1509_REG_EVENT_STATUS,
-    SX1509_REG_LEVEL_SHIFTER,
+    SX1509_REG_INPUT_DISABLE_B,
+    SX1509_REG_INPUT_DISABLE_A,
+    SX1509_REG_LONG_SLEW_B,
+    SX1509_REG_LONG_SLEW_A,
+    SX1509_REG_LOW_DRIVE_B,
+    SX1509_REG_LOW_DRIVE_A,
+    SX1509_REG_PULLUP_B,
+    SX1509_REG_PULLUP_A,
+    SX1509_REG_PULLDOWN_B,
+    SX1509_REG_PULLDOWN_A,
+    SX1509_REG_OPEN_DRAIN_B,
+    SX1509_REG_OPEN_DRAIN_A,
+    SX1509_REG_POLARITY_B,
+    SX1509_REG_POLARITY_A,
+    SX1509_REG_DIR_B,
+    SX1509_REG_DIR_A,
+    SX1509_REG_DATA_B,
+    SX1509_REG_DATA_A,
+    SX1509_REG_INTERRUPT_MASK_B,
+    SX1509_REG_INTERRUPT_MASK_A,
+    SX1509_REG_SENSE_HIGH_B,
+    SX1509_REG_SENSE_LOW_B,
+    SX1509_REG_SENSE_HIGH_A,
+    SX1509_REG_SENSE_LOW_A,
+    SX1509_REG_INTERRUPT_SOURCE_B,
+    SX1509_REG_INTERRUPT_SOURCE_A,
+    SX1509_REG_EVENT_STATUS_B,
+    SX1509_REG_EVENT_STATUS_A,
+    SX1509_REG_LEVEL_SHIFTER_1,
+    SX1509_REG_LEVEL_SHIFTER_2,
     SX1509_REG_CLOCK,
     SX1509_REG_MISC,
-    SX1509_REG_LED_DRIVER_ENABLE
+    SX1509_REG_LED_DRIVER_ENABLE_B,
+    SX1509_REG_LED_DRIVER_ENABLE_A,
 
+    LAST_USED_REGISTER
     // more regs for keypad and led driver, don't need them
 };
 
@@ -68,18 +85,10 @@ enum
 ** Static vars
 */
 static uint16_t _flags = 0;
-static uint8_t registers[31];
+static uint8_t registers[LAST_USED_REGISTER];
 static const char *TAG = "app_SX1509";
 static SemaphoreHandle_t I2CMutexHandle;
 static i2c_port_t i2cnum;
-
-// Real register addresses
-static const uint8_t SX1509_REG_ADDR[18] = 
-{
-    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-    0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-    0x10, 0x11
-};
 
 /****************************************************************************
 * NAME:        
@@ -186,7 +195,7 @@ static esp_err_t SX1509_write_register(uint8_t reg, uint8_t val)
     uint8_t outbuffer[5];
   
     // build address at start of buffer
-    outbuffer[0] = SX1509_REG_ADDR[reg];
+    outbuffer[0] = reg;
     outbuffer[1] = val;
 
     // do the transfer
@@ -214,13 +223,13 @@ static esp_err_t SX1509_write_register(uint8_t reg, uint8_t val)
 * RETURN:      none
 * NOTES:       none
 *****************************************************************************/
-static esp_err_t SX1509_write_registers(uint8_t reg, uint8_t* buf, uint8_t len) 
+static esp_err_t __attribute__((unused)) SX1509_write_registers(uint8_t reg, uint8_t* buf, uint8_t len) 
 {
     esp_err_t ret = ESP_FAIL;    
     uint8_t outbuffer[255];
   
     // build address at start of buffer
-    outbuffer[0] = SX1509_REG_ADDR[reg];
+    outbuffer[0] = reg;
     
     for (uint8_t i = 0; i < len; i++) 
     {
@@ -257,7 +266,7 @@ static esp_err_t SX1509_read_register(uint8_t reg, uint8_t len)
     uint8_t outbuffer[5];
     uint8_t inbuffer[255];
 
-    outbuffer[0] = SX1509_REG_ADDR[reg];
+    outbuffer[0] = reg;
 
     // do the transfer
     if (xSemaphoreTake(I2CMutexHandle, pdMS_TO_TICKS(200)) == pdTRUE)
@@ -292,19 +301,15 @@ static esp_err_t SX1509_read_register(uint8_t reg, uint8_t len)
 esp_err_t SX1509_Init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex)
 { 
     esp_err_t ret = ESP_FAIL;
-    uint8_t i;
     
     // save handles
     I2CMutexHandle = I2CMutex;
     i2cnum = i2c_num;
 
-    for (i = 0; i < sizeof(registers); i++) 
-    {
-        registers[i] = 0;
-    }
+    memset((void*)registers, 0, sizeof(registers));
 
     // check if chip is present by reading
-    ret = SX1509_read_register(SX1509_REG_INPUT_DISABLE, 1);
+    ret = SX1509_read_register(SX1509_REG_INPUT_DISABLE_B, 1);
 
     if (ret == ESP_OK)
     {
@@ -313,10 +318,7 @@ esp_err_t SX1509_Init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex)
         {
             SX1509_ll_pin_init();
         }
-    
-        // load default config  
-        ret = SX1509_reset();
-    
+        
         _sx_set_flags(SX1509_FLAG_INITIALIZED | SX1509_FLAG_DEVICE_PRESENT, (0 == ret));
 
         if (ret == ESP_OK)
@@ -339,49 +341,11 @@ esp_err_t SX1509_Init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex)
 * RETURN:      none
 * NOTES:       none
 *****************************************************************************/
-esp_err_t SX1509_reset(void) 
-{
-    esp_err_t ret = ESP_FAIL;
-
-    for (uint8_t i = 0; i < sizeof(registers); i++) 
-    {
-        registers[i] = 0;
-    }
-  
-    // Steamroll the registers with the default values.
-    uint8_t vals[18] = 
-    {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF,
-        0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00
-    };
-
-    ret = SX1509_write_registers(SX1509_REG_INPUT_DISABLE, &vals[0], 18);
-
-    if (ret == ESP_OK) 
-    {  
-        ret = SX1509_refresh();   
-    }
-    else
-    {
-        ESP_LOGE(TAG,  "SX1509 reset failed");
-    }
-
-    return ret;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  none
-* RETURN:      none
-* NOTES:       none
-*****************************************************************************/
 esp_err_t SX1509_refresh(void) 
 {
     esp_err_t ret;
 
-    ret = SX1509_read_register(SX1509_REG_INPUT_DISABLE, 18);
+    ret = SX1509_read_register(SX1509_REG_INPUT_DISABLE_B, LAST_USED_REGISTER);
   
     if (ret != ESP_OK)
     {
@@ -404,8 +368,8 @@ esp_err_t SX1509_digitalWrite(uint8_t pin, uint8_t value)
 
     if (pin < 8) 
     {
-        uint8_t reg0 = SX1509_REG_DATA;
-        uint8_t val0 = registers[SX1509_REG_DATA];
+        uint8_t reg0 = SX1509_REG_DATA_A;
+        uint8_t val0 = registers[SX1509_REG_DATA_A];
 
         if (value > 0)
         {
@@ -420,7 +384,24 @@ esp_err_t SX1509_digitalWrite(uint8_t pin, uint8_t value)
 
         ret = SX1509_write_register(reg0, val0);   
     }
-  
+    else if (pin < 16) 
+    {
+        uint8_t reg0 = SX1509_REG_DATA_B;
+        uint8_t val0 = registers[SX1509_REG_DATA_B];
+
+        if (value > 0)
+        {
+            // set bit
+            val0 |= (1 << (pin - 8));
+        }
+        else
+        {
+            // clear bit
+            val0 &= ~(1 << (pin- 8));
+        }
+
+        ret = SX1509_write_register(reg0, val0);   
+    }
     if (ret != ESP_OK)
     {
         ESP_LOGE(TAG,  "SX1509 digital write failed %d", ret);
@@ -440,11 +421,19 @@ esp_err_t SX1509_digitalRead(uint8_t pin, uint8_t* value)
 {
     esp_err_t ret = ESP_FAIL;
     
-    if (SX1509_read_register(SX1509_REG_DATA, 1) == ESP_OK)
+    if (pin < 8) 
     {
-        if (pin < 8) 
+        if (SX1509_read_register(SX1509_REG_DATA_A, 1) == ESP_OK)
         {
-            *value = (registers[SX1509_REG_DATA] >> pin) & 0x01;
+            *value = (registers[SX1509_REG_DATA_A] >> pin) & 0x01;
+            ret = ESP_OK;
+        }
+    }
+    else if (pin < 16) 
+    {
+        if (SX1509_read_register(SX1509_REG_DATA_B, 1) == ESP_OK)
+        {
+            *value = (registers[SX1509_REG_DATA_B] >> pin) & 0x01;
             ret = ESP_OK;
         }
     }
@@ -459,11 +448,25 @@ esp_err_t SX1509_digitalRead(uint8_t pin, uint8_t* value)
 * RETURN:      none
 * NOTES:       none
 *****************************************************************************/
-uint16_t SX1509_getPinValues(void) 
+esp_err_t SX1509_getPinValues(uint16_t* values)
 {
-    uint16_t ret0 = (uint16_t)registers[SX1509_REG_DATA];
+    esp_err_t ret = ESP_FAIL;
+    *values = 0;
+
+    // read first bank
+    if (SX1509_read_register(SX1509_REG_DATA_A, 1) == ESP_OK)
+    {
+        *values = (uint16_t)registers[SX1509_REG_DATA_A];
+
+        // read second bank
+        if (SX1509_read_register(SX1509_REG_DATA_B, 1) == ESP_OK)
+        {
+            *values |= ((uint16_t)registers[SX1509_REG_DATA_B] << 8);
+            ret = ESP_OK;
+        }
+    }
   
-    return ret0;
+    return ret;
 }
 
 /****************************************************************************
@@ -475,102 +478,125 @@ uint16_t SX1509_getPinValues(void)
 *****************************************************************************/
 esp_err_t SX1509_gpioMode(uint8_t pin, uint8_t mode) 
 {
-    esp_err_t ret = -1;
-  
+    esp_err_t ret = ESP_FAIL;
+    uint8_t reg0;
+    uint8_t reg1;
+    uint8_t reg2;
+    uint8_t reg3;
+    uint8_t val0;
+    uint8_t val1;
+    uint8_t val2;
+    uint8_t val3;
+
     if (pin < 8) 
     {
-        uint8_t reg0 = SX1509_REG_DIR;
-        uint8_t reg1 = SX1509_REG_PULLUP;
-        uint8_t reg2 = SX1509_REG_PULLDOWN;
-        uint8_t reg3 = SX1509_REG_INTERRUPT_MASK;
-
-        uint8_t val0 = registers[reg0];
-        uint8_t val1 = registers[reg1];
-        uint8_t val2 = registers[reg2];
-        uint8_t val3 = registers[reg3];
-
-        switch (mode) 
-        {
-            case EXPANDER_OUTPUT_PULLDOWN:
-            {
-                // clear input bit
-                val0 &= ~(1 << pin);
-
-                // clear pullup bit
-                val1 |= (1 << pin);
-
-                // set pulldown bit
-                val2 |= (1 << pin);                
-            } break;
-
-            case EXPANDER_OUTPUT_PULLUP:
-            {
-                // clear input bit
-                val0 &= ~(1 << pin);
-
-                // set pullup bit
-                val1 |= (1 << pin);
-
-                // clear pulldown bit
-                val2 &= ~(1 << pin);    
-            } break;
-
-            case EXPANDER_OUTPUT:
-            {
-                // clear input bit
-                val0 &= ~(1 << pin);
-
-                // clear pullup bit
-                val1 &= ~(1 << pin);
-
-                // clear pulldown bit
-                val2 &= ~(1 << pin);    
-            } break;
-
-            case EXPANDER_INPUT_PULLUP:
-            {
-                // set input bit
-                val0 |= (1 << pin);
-
-                // set pullup bit
-                val1 |= (1 << pin);
-
-                // clear pulldown bit
-                val2 &= ~(1 << pin);    
-            } break;
-
-            case EXPANDER_INPUT_PULLDOWN:
-            {
-                // set input bit
-                val0 |= (1 << pin);
-
-                // clear pullup bit
-                val1 &= ~(1 << pin);
-
-                // set pulldown bit
-                val2 |= (1 << pin);    
-            } break;
-            
-            case EXPANDER_INPUT:
-            default:
-            {
-                // set input bit
-                val0 |= (1 << pin);
-
-                // clear pullup bit
-                val1 &= ~(1 << pin);
-
-                // clear pulldown bit
-                val2 &= ~(1 << pin);    
-                break;
-            }
-        }
-
-        ret = SX1509_write_register(reg0, val0);   
-        ret = SX1509_write_register(reg1, val1);   
-        ret = SX1509_write_register(reg2, val2);   
-        ret = SX1509_write_register(reg3, val3);   
+        reg0 = SX1509_REG_DIR_A;
+        reg1 = SX1509_REG_PULLUP_A;
+        reg2 = SX1509_REG_PULLDOWN_A;
+        reg3 = SX1509_REG_INTERRUPT_MASK_A;
     }
+    else if (pin < 16) 
+    {
+        reg0 = SX1509_REG_DIR_B;
+        reg1 = SX1509_REG_PULLUP_B;
+        reg2 = SX1509_REG_PULLDOWN_B;
+        reg3 = SX1509_REG_INTERRUPT_MASK_B;
+
+        pin -= 8;
+    }
+    else
+    {
+        // invalid pin
+        ESP_LOGE(TAG,  "SX1509 gpio mode invalid pin");
+        return ret;
+    }
+
+    val0 = registers[reg0];
+    val1 = registers[reg1];
+    val2 = registers[reg2];
+    val3 = registers[reg3];
+
+    switch (mode) 
+    {
+        case EXPANDER_OUTPUT_PULLDOWN:
+        {
+            // clear input bit
+            val0 &= ~(1 << pin);
+
+            // clear pullup bit
+            val1 |= (1 << pin);
+
+            // set pulldown bit
+            val2 |= (1 << pin);                
+        } break;
+
+        case EXPANDER_OUTPUT_PULLUP:
+        {
+            // clear input bit
+            val0 &= ~(1 << pin);
+
+            // set pullup bit
+            val1 |= (1 << pin);
+
+            // clear pulldown bit
+            val2 &= ~(1 << pin);    
+        } break;
+
+        case EXPANDER_OUTPUT:
+        {
+            // clear input bit
+            val0 &= ~(1 << pin);
+
+            // clear pullup bit
+            val1 &= ~(1 << pin);
+
+            // clear pulldown bit
+            val2 &= ~(1 << pin);    
+        } break;
+
+        case EXPANDER_INPUT_PULLUP:
+        {
+            // set input bit
+            val0 |= (1 << pin);
+
+            // set pullup bit
+            val1 |= (1 << pin);
+
+            // clear pulldown bit
+            val2 &= ~(1 << pin);    
+        } break;
+
+        case EXPANDER_INPUT_PULLDOWN:
+        {
+            // set input bit
+            val0 |= (1 << pin);
+
+            // clear pullup bit
+            val1 &= ~(1 << pin);
+
+            // set pulldown bit
+            val2 |= (1 << pin);    
+        } break;
+        
+        case EXPANDER_INPUT:
+        default:
+        {
+            // set input bit
+            val0 |= (1 << pin);
+
+            // clear pullup bit
+            val1 &= ~(1 << pin);
+
+            // clear pulldown bit
+            val2 &= ~(1 << pin);    
+            break;
+        }
+    }
+
+    ret = SX1509_write_register(reg0, val0);   
+    ret = SX1509_write_register(reg1, val1);   
+    ret = SX1509_write_register(reg2, val2);   
+    ret = SX1509_write_register(reg3, val3);   
   
     if (ret != ESP_OK)
     {

@@ -334,28 +334,27 @@ static void wifi_build_config_json(void)
     json_gen_obj_set_string(&pWebConfig->jstr, "CMD", "GETCONFIG");
 
     // add config
-    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MODE", control_get_config_bt_mode());
-    json_gen_obj_set_int(&pWebConfig->jstr, "BT_CHOC_EN", control_get_config_bt_mvave_choc_enable());
-    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MD1_EN", control_get_config_bt_xvive_md1_enable());
-    json_gen_obj_set_int(&pWebConfig->jstr, "BT_CUST_EN", control_get_config_bt_custom_enable());
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MODE", control_get_config_item_int(CONFIG_ITEM_BT_MODE));
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_CHOC_EN", control_get_config_item_int(CONFIG_ITEM_MV_CHOC_ENABLE));
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MD1_EN", control_get_config_item_int(CONFIG_ITEM_XV_MD1_ENABLE));
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_CUST_EN", control_get_config_item_int(CONFIG_ITEM_CUSTOM_BT_ENABLE));
 
-    control_get_config_custom_bt_name(str_val);
+    control_get_config_item_string(CONFIG_ITEM_BT_CUSTOM_NAME, str_val);
     json_gen_obj_set_string(&pWebConfig->jstr, "BT_CUST_NAME", str_val);
 
-    json_gen_obj_set_int(&pWebConfig->jstr, "TOGGLE_BYPASS", control_get_config_double_toggle());
-    json_gen_obj_set_int(&pWebConfig->jstr, "S_MIDI_EN", control_get_config_midi_serial_enable());
-    json_gen_obj_set_int(&pWebConfig->jstr, "S_MIDI_CH", control_get_config_midi_channel());
-    json_gen_obj_set_int(&pWebConfig->jstr, "FOOTSW_MODE", control_get_config_footswitch_mode());
-    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MIDI_CC", control_get_config_enable_bt_midi_CC());
-    json_gen_obj_set_int(&pWebConfig->jstr, "WIFI_MODE", control_get_config_wifi_mode());
-    json_gen_obj_set_int(&pWebConfig->jstr, "WIFI_POWER", control_get_config_wifi_max_power());
-    json_gen_obj_set_int(&pWebConfig->jstr, "SCREEN_ROT", control_get_config_screen_rotation());
+    json_gen_obj_set_int(&pWebConfig->jstr, "TOGGLE_BYPASS", control_get_config_item_int(CONFIG_ITEM_TOGGLE_BYPASS));
+    json_gen_obj_set_int(&pWebConfig->jstr, "S_MIDI_EN", control_get_config_item_int(CONFIG_ITEM_MIDI_ENABLE));
+    json_gen_obj_set_int(&pWebConfig->jstr, "S_MIDI_CH", control_get_config_item_int(CONFIG_ITEM_MIDI_CHANNEL));
+    json_gen_obj_set_int(&pWebConfig->jstr, "FOOTSW_MODE", control_get_config_item_int(CONFIG_ITEM_FOOTSWITCH_MODE));
+    json_gen_obj_set_int(&pWebConfig->jstr, "BT_MIDI_CC", control_get_config_item_int(CONFIG_ITEM_ENABLE_BT_MIDI_CC));
+    json_gen_obj_set_int(&pWebConfig->jstr, "WIFI_MODE", control_get_config_item_int(CONFIG_ITEM_WIFI_MODE));
+    json_gen_obj_set_int(&pWebConfig->jstr, "WIFI_POWER", control_get_config_item_int(CONFIG_ITEM_WIFI_TX_POWER));
+    json_gen_obj_set_int(&pWebConfig->jstr, "SCREEN_ROT", control_get_config_item_int(CONFIG_ITEM_SCREEN_ROTATION));
 
-    control_get_config_wifi_ssid(str_val);
+    control_get_config_item_string(CONFIG_ITEM_WIFI_SSID, str_val);
     json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_SSID", str_val);
 
-    // might be best not to send password??
-    control_get_config_wifi_password(str_val);
+    control_get_config_item_string(CONFIG_ITEM_WIFI_PASSWORD, str_val);
     json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_PW", str_val);
 
     // add the }
@@ -541,57 +540,57 @@ static esp_err_t ws_handler(httpd_req_t *req)
 
                         if (json_obj_get_int(&pWebConfig->jctx, "S_MIDI_EN", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_serial_midi_enable(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_MIDI_ENABLE, int_val);
                         }
 
                         if (json_obj_get_int(&pWebConfig->jctx, "S_MIDI_CH", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_serial_midi_channel(int_val);        
+                            control_set_config_item_int(CONFIG_ITEM_MIDI_CHANNEL, int_val);        
                         }
 
                         if (json_obj_get_int(&pWebConfig->jctx, "TOGGLE_BYPASS", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_toggle_bypass(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_TOGGLE_BYPASS, int_val);
                         }
                         
                         if (json_obj_get_int(&pWebConfig->jctx, "BT_MODE", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_btmode(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_BT_MODE, int_val);
                         }
 
                         if (json_obj_get_int(&pWebConfig->jctx, "BT_CHOC_EN", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_mv_choc_enable(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_MV_CHOC_ENABLE, int_val);
                         }
 
                         if (json_obj_get_int(&pWebConfig->jctx, "BT_MD1_EN", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_xv_md1_enable(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_XV_MD1_ENABLE, int_val);
                         }
 
                         if (json_obj_get_int(&pWebConfig->jctx, "BT_CUST_EN", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_bt_custom_enable(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_CUSTOM_BT_ENABLE, int_val);
                         }
                         
                         if (json_obj_get_string(&pWebConfig->jctx, "BT_CUST_NAME", str_val, sizeof(str_val)) == OS_SUCCESS)
                         {
-                            control_set_config_custom_bt_name(str_val);
+                            control_set_config_item_string(CONFIG_ITEM_BT_CUSTOM_NAME, str_val);
                         }
 
                         if (json_obj_get_int(&pWebConfig->jctx, "BT_MIDI_CC", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_enable_bt_midi_CC(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_ENABLE_BT_MIDI_CC, int_val);
                         }
                         
                         if (json_obj_get_int(&pWebConfig->jctx, "FOOTSW_MODE", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_footswitch_mode(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_FOOTSWITCH_MODE, int_val);
                         }
 
                         if (json_obj_get_int(&pWebConfig->jctx, "SCREEN_ROT", &int_val) == OS_SUCCESS)
                         {
-                            control_set_screen_rotation(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_SCREEN_ROTATION, int_val);
                         }
                                               
                         vTaskDelay(pdMS_TO_TICKS(250));
@@ -606,22 +605,22 @@ static esp_err_t ws_handler(httpd_req_t *req)
 
                         if (json_obj_get_int(&pWebConfig->jctx, "WIFI_MODE", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_wifi_mode(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_WIFI_MODE, int_val);
                         }
 
                         if (json_obj_get_string(&pWebConfig->jctx, "WIFI_SSID", str_val, sizeof(str_val)) == OS_SUCCESS)
                         {
-                            control_set_config_wifi_ssid(str_val);
+                            control_set_config_item_string(CONFIG_ITEM_WIFI_SSID, str_val);
                         }
 
                         if (json_obj_get_string(&pWebConfig->jctx, "WIFI_PW", str_val, sizeof(str_val)) == OS_SUCCESS)
                         {
-                            control_set_config_wifi_password(str_val);
+                            control_set_config_item_string(CONFIG_ITEM_WIFI_PASSWORD, str_val);
                         }
 
                         if (json_obj_get_int(&pWebConfig->jctx, "WIFI_POWER", &int_val) == OS_SUCCESS)
                         {
-                            control_set_config_wifi_max_power(int_val);
+                            control_set_config_item_int(CONFIG_ITEM_WIFI_TX_POWER, int_val);
                         }
 
                         vTaskDelay(pdMS_TO_TICKS(250));
@@ -999,8 +998,8 @@ static void wifi_init_sta(void)
     };
 
     // get credentials from config
-    control_get_config_wifi_ssid(pWebConfig->wifi_ssid);
-    control_get_config_wifi_password(pWebConfig->wifi_password);
+    control_get_config_item_string(CONFIG_ITEM_WIFI_SSID, pWebConfig->wifi_ssid);
+    control_get_config_item_string(CONFIG_ITEM_WIFI_PASSWORD, pWebConfig->wifi_password);
 
     // set SSID and password
     strcpy((char*)wifi_config.sta.ssid, pWebConfig->wifi_ssid);
@@ -1071,8 +1070,8 @@ static void wifi_init_softap(void)
     };
     
     // get credentials from config
-    control_get_config_wifi_ssid(pWebConfig->wifi_ssid);
-    control_get_config_wifi_password(pWebConfig->wifi_password);
+    control_get_config_item_string(CONFIG_ITEM_WIFI_SSID, pWebConfig->wifi_ssid);
+    control_get_config_item_string(CONFIG_ITEM_WIFI_PASSWORD, pWebConfig->wifi_password);
 
     // set SSID and password
     strcpy((char*)wifi_config.ap.ssid, pWebConfig->wifi_ssid);
@@ -1140,7 +1139,7 @@ static void wifi_config_task(void *arg)
     tWiFiMessage message;
     uint32_t tick_timer;
     uint8_t wifi_kill_checked = 0;
-    uint8_t wifi_mode = control_get_config_wifi_mode();
+    uint8_t wifi_mode = control_get_config_item_int(CONFIG_ITEM_WIFI_MODE);
 
     ESP_LOGI(TAG, "Wifi config task start");
 
@@ -1181,7 +1180,7 @@ static void wifi_config_task(void *arg)
     }
 
     // set the WiFi TX power. Some platforms seem to have stability issues on max power
-    switch (control_get_config_wifi_max_power())
+    switch (control_get_config_item_int(CONFIG_ITEM_WIFI_TX_POWER))
     {
         case WIFI_TX_POWER_100:        
         {

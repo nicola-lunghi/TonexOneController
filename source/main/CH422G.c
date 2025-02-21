@@ -127,10 +127,40 @@ esp_err_t CH422G_enableAllIO_Input(void)
 *****************************************************************************/
 esp_err_t CH422G_read_input(uint8_t pin_bit, uint8_t* value)
 {
+    esp_err_t res = ESP_FAIL;
+    uint16_t values;
+
+    *value = 0;
+    res = CH422G_read_all_input(&values);
+
+    if (res == ESP_OK)
+    {
+        if ((values & (1 << pin_bit)) != 0)
+        {
+            *value = 1;
+        }
+    }
+    else
+    {
+        ESP_LOGE(TAG, "CH422G_read_input() failed");
+    }
+
+    return res;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+esp_err_t CH422G_read_all_input(uint16_t* values)
+{
     uint8_t temp = 0;
     uint8_t data;
     esp_err_t res = ESP_FAIL;
-    *value = 0;
+    *values = 0;
 
     if (xSemaphoreTake(I2CMutexHandle, (TickType_t)100) == pdTRUE)
     {
@@ -159,14 +189,11 @@ esp_err_t CH422G_read_input(uint8_t pin_bit, uint8_t* value)
     
     if (res == ESP_OK)
     {
-        if ((temp & (1 << pin_bit)) != 0)
-        {
-            *value = 1;
-        }
+        *values = (uint16_t)temp;
     }
     else
     {
-        ESP_LOGE(TAG, "CH422G_read_input_reg() failed");
+        ESP_LOGE(TAG, "CH422G_read_all_input() failed");
     }
 
     return res;

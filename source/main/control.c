@@ -61,21 +61,8 @@ enum CommandEvents
     EVENT_SET_AMP_SKIN,
     EVENT_SAVE_USER_DATA,
     EVENT_SET_USER_TEXT,
-    EVENT_SET_CONFIG_BT_MODE,
-    EVENT_SET_CONFIG_MV_CHOC_ENABLE,
-    EVENT_SET_CONFIG_XV_MD1_ENABLE,
-    EVENT_SET_CONFIG_CUSTOM_BT_ENABLE,
-    EVENT_SET_CONFIG_BT_CUSTOM_NAME,
-    EVENT_SET_CONFIG_MIDI_ENABLE,
-    EVENT_SET_CONFIG_MIDI_CHANNEL,
-    EVENT_SET_CONFIG_TOGGLE_BYPASS,
-    EVENT_SET_CONFIG_FOOTSWITCH_MODE,
-    EVENT_SET_CONFIG_ENABLE_BT_MIDI_CC,
-    EVENT_SET_CONFIG_WIFI_MODE,
-    EVENT_SET_CONFIG_WIFI_SSID,
-    EVENT_SET_CONFIG_WIFI_PASSWORD,
-    EVENT_SET_CONFIG_SCREEN_ROTATION,
-    EVENT_SET_CONFIG_WIFI_TX_POWER
+    EVENT_SET_CONFIG_ITEM_INT,
+    EVENT_SET_CONFIG_ITEM_STRING
 };
 
 typedef struct
@@ -83,6 +70,7 @@ typedef struct
     uint8_t Event;
     char Text[MAX_TEXT_LENGTH];
     uint32_t Value;
+    uint32_t Item;
 } tControlMessage;
 
 typedef struct __attribute__ ((packed)) 
@@ -260,97 +248,109 @@ static uint8_t process_control_command(tControlMessage* message)
             ControlData.ConfigData.UserData[ControlData.PresetIndex].PresetDescription[MAX_TEXT_LENGTH - 1] = 0;
         } break;
 
-        case EVENT_SET_CONFIG_BT_MODE:
+        case EVENT_SET_CONFIG_ITEM_INT:
         {
-            ESP_LOGI(TAG, "Config set BT mode %d", (int)message->Value);
-            ControlData.ConfigData.BTMode = (uint8_t)message->Value;
+            switch (message->Item)
+            {
+                case CONFIG_ITEM_BT_MODE:
+                {
+                    ESP_LOGI(TAG, "Config set BT mode %d", (int)message->Value);
+                    ControlData.ConfigData.BTMode = (uint8_t)message->Value;
+                } break;
+
+                case CONFIG_ITEM_MV_CHOC_ENABLE:
+                {
+                    ESP_LOGI(TAG, "Config set MV Choc enable %d", (int)message->Value);
+                    ControlData.ConfigData.BTClientMvaveChocolateEnable = (uint8_t)message->Value;
+                } break;
+
+                case CONFIG_ITEM_XV_MD1_ENABLE:
+                {
+                    ESP_LOGI(TAG, "Config set XV MD1 enable %d", (int)message->Value);
+                    ControlData.ConfigData.BTClientXviveMD1Enable = (uint8_t)message->Value;
+                } break;
+
+                case CONFIG_ITEM_CUSTOM_BT_ENABLE:
+                {
+                    ESP_LOGI(TAG, "Config set custom BT enable %d", (int)message->Value);
+                    ControlData.ConfigData.BTClientCustomEnable = (uint8_t)message->Value;
+                } break;
+                
+                case CONFIG_ITEM_MIDI_ENABLE:
+                {
+                    ESP_LOGI(TAG, "Config set Midi enable %d", (int)message->Value);
+                    ControlData.ConfigData.MidiSerialEnable = (uint8_t)message->Value;
+                } break;
+
+                case CONFIG_ITEM_MIDI_CHANNEL:
+                {
+                    ESP_LOGI(TAG, "Config set Midi channel %d", (int)message->Value);
+                    ControlData.ConfigData.MidiChannel = (uint8_t)message->Value;
+                } break;
+
+                case CONFIG_ITEM_TOGGLE_BYPASS:
+                {
+                    ESP_LOGI(TAG, "Config set Toggle Bypass %d", (int)message->Value);
+                    ControlData.ConfigData.GeneralDoublePressToggleBypass = (uint8_t)message->Value;
+                } break;
+
+                case CONFIG_ITEM_FOOTSWITCH_MODE:
+                {
+                    ESP_LOGI(TAG, "Config set Footswitch Mode %d", (int)message->Value);
+                    ControlData.ConfigData.FootswitchMode = (uint8_t)message->Value;
+                } break;
+
+                case CONFIG_ITEM_ENABLE_BT_MIDI_CC:
+                {
+                    ESP_LOGI(TAG, "Config set BT Midi CC enable %d", (int)message->Value);
+                    ControlData.ConfigData.EnableBTmidiCC = (uint8_t)message->Value;
+                } break;
+
+                case CONFIG_ITEM_WIFI_MODE:
+                {
+                    ESP_LOGI(TAG, "Config set WiFi modee %d", (int)message->Value);
+                    ControlData.ConfigData.WiFiMode = (uint8_t)message->Value;
+                } break;
+
+                case CONFIG_ITEM_SCREEN_ROTATION:
+                {
+                    ESP_LOGI(TAG, "Config set screen rotation %d", (int)message->Value);
+                    ControlData.ConfigData.GeneralScreenRotation = (uint8_t)message->Value & 0x03;
+                } break;
+
+                case CONFIG_ITEM_WIFI_TX_POWER:
+                {
+                    ESP_LOGI(TAG, "Config set wifi tx power %d", (int)message->Value);
+                    ControlData.ConfigData.WifiTxPower = (uint8_t)message->Value & 0x0F;
+                } break;
+            }
         } break;
 
-        case EVENT_SET_CONFIG_MV_CHOC_ENABLE:
+        case EVENT_SET_CONFIG_ITEM_STRING:
         {
-            ESP_LOGI(TAG, "Config set MV Choc enable %d", (int)message->Value);
-            ControlData.ConfigData.BTClientMvaveChocolateEnable = (uint8_t)message->Value;
-        } break;
+            switch (message->Item)
+            {
+                case CONFIG_ITEM_BT_CUSTOM_NAME:
+                {
+                    ESP_LOGI(TAG, "Config set custom BT name %s", message->Text);
+                    strncpy(ControlData.ConfigData.BTClientCustomName, message->Text, MAX_BT_CUSTOM_NAME - 1);
+                    ControlData.ConfigData.BTClientCustomName[MAX_BT_CUSTOM_NAME - 1] = 0;
+                } break;
 
-        case EVENT_SET_CONFIG_XV_MD1_ENABLE:
-        {
-            ESP_LOGI(TAG, "Config set XV MD1 enable %d", (int)message->Value);
-            ControlData.ConfigData.BTClientXviveMD1Enable = (uint8_t)message->Value;
-        } break;
+                case CONFIG_ITEM_WIFI_SSID:
+                {
+                    ESP_LOGI(TAG, "Config set WiFi SSID %s", message->Text);
+                    strncpy(ControlData.ConfigData.WifiSSID, message->Text, MAX_WIFI_SSID_PW - 1);
+                    ControlData.ConfigData.WifiSSID[MAX_WIFI_SSID_PW - 1] = 0;
+                } break;
 
-        case EVENT_SET_CONFIG_CUSTOM_BT_ENABLE:
-        {
-            ESP_LOGI(TAG, "Config set custom BT enable %d", (int)message->Value);
-            ControlData.ConfigData.BTClientCustomEnable = (uint8_t)message->Value;
-        } break;
-
-        case EVENT_SET_CONFIG_BT_CUSTOM_NAME:
-        {
-            ESP_LOGI(TAG, "Config set custom BT name %s", message->Text);
-            strncpy(ControlData.ConfigData.BTClientCustomName, message->Text, MAX_BT_CUSTOM_NAME - 1);
-            ControlData.ConfigData.BTClientCustomName[MAX_BT_CUSTOM_NAME - 1] = 0;
-        } break;
-
-        case EVENT_SET_CONFIG_MIDI_ENABLE:
-        {
-            ESP_LOGI(TAG, "Config set Midi enable %d", (int)message->Value);
-            ControlData.ConfigData.MidiSerialEnable = (uint8_t)message->Value;
-        } break;
-
-        case EVENT_SET_CONFIG_MIDI_CHANNEL:
-        {
-            ESP_LOGI(TAG, "Config set Midi channel %d", (int)message->Value);
-            ControlData.ConfigData.MidiChannel = (uint8_t)message->Value;
-        } break;
-
-        case EVENT_SET_CONFIG_TOGGLE_BYPASS:
-        {
-            ESP_LOGI(TAG, "Config set Toggle Bypass %d", (int)message->Value);
-            ControlData.ConfigData.GeneralDoublePressToggleBypass = (uint8_t)message->Value;
-        } break;
-
-        case EVENT_SET_CONFIG_FOOTSWITCH_MODE:
-        {
-            ESP_LOGI(TAG, "Config set Footswitch Mode %d", (int)message->Value);
-            ControlData.ConfigData.FootswitchMode = (uint8_t)message->Value;
-        } break;
-
-        case EVENT_SET_CONFIG_ENABLE_BT_MIDI_CC:
-        {
-            ESP_LOGI(TAG, "Config set BT Midi CC enable %d", (int)message->Value);
-            ControlData.ConfigData.EnableBTmidiCC = (uint8_t)message->Value;
-        } break;
-
-        case EVENT_SET_CONFIG_WIFI_MODE:
-        {
-            ESP_LOGI(TAG, "Config set WiFi modee %d", (int)message->Value);
-            ControlData.ConfigData.WiFiMode = (uint8_t)message->Value;
-        } break;
-
-        case EVENT_SET_CONFIG_WIFI_SSID:
-        {
-            ESP_LOGI(TAG, "Config set WiFi SSID %s", message->Text);
-            strncpy(ControlData.ConfigData.WifiSSID, message->Text, MAX_WIFI_SSID_PW - 1);
-            ControlData.ConfigData.WifiSSID[MAX_WIFI_SSID_PW - 1] = 0;
-        } break;
-
-        case EVENT_SET_CONFIG_WIFI_PASSWORD:
-        {
-            ESP_LOGI(TAG, "Config set WiFi password <hidden>");
-            strncpy(ControlData.ConfigData.WifiPassword, message->Text, MAX_WIFI_SSID_PW - 1);
-            ControlData.ConfigData.WifiPassword[MAX_WIFI_SSID_PW - 1] = 0;
-        } break;
-
-        case EVENT_SET_CONFIG_WIFI_TX_POWER:
-        {
-            ESP_LOGI(TAG, "Config set wifi tx power rotation %d", (int)message->Value);
-            ControlData.ConfigData.WifiTxPower = (uint8_t)message->Value & 0x0F;
-        } break;
-
-        case EVENT_SET_CONFIG_SCREEN_ROTATION:
-        {
-            ESP_LOGI(TAG, "Config set screen rotation %d", (int)message->Value);
-            ControlData.ConfigData.GeneralScreenRotation = (uint8_t)message->Value & 0x03;
+                case CONFIG_ITEM_WIFI_PASSWORD:
+                {
+                    ESP_LOGI(TAG, "Config set WiFi password <hidden>");
+                    strncpy(ControlData.ConfigData.WifiPassword, message->Text, MAX_WIFI_SSID_PW - 1);
+                    ControlData.ConfigData.WifiPassword[MAX_WIFI_SSID_PW - 1] = 0;
+                } break;
+            }
         } break;
     }
 
@@ -594,19 +594,20 @@ void control_set_amp_skin_index(uint32_t status)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void control_set_config_btmode(uint32_t status)
+void control_set_config_item_int(uint32_t item, uint32_t status)
 {
     tControlMessage message;
 
-    ESP_LOGI(TAG, "control_set_config_btmode");
+    ESP_LOGI(TAG, "control_set_config_item_int: %d %d", (int)item, (int)status);
 
-    message.Event = EVENT_SET_CONFIG_BT_MODE;
+    message.Event = EVENT_SET_CONFIG_ITEM_INT;
     message.Value = status;
+    message.Item = item;
 
     // send to queue
     if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
     {
-        ESP_LOGE(TAG, "control_set_config_btmode queue send failed!");            
+        ESP_LOGE(TAG, "control_set_config_item_int queue send failed!");            
     }
 }
 
@@ -617,19 +618,20 @@ void control_set_config_btmode(uint32_t status)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void control_set_config_mv_choc_enable(uint32_t status)
+void control_set_config_item_string(uint32_t item, char* name)
 {
     tControlMessage message;
 
-    ESP_LOGI(TAG, "control_set_config_mv_choc_enable");
+    ESP_LOGI(TAG, "control_set_config_item_string: %d", (int)item);
 
-    message.Event = EVENT_SET_CONFIG_MV_CHOC_ENABLE;
-    message.Value = status;
+    message.Event = EVENT_SET_CONFIG_ITEM_STRING;
+    strncpy(message.Text, name, MAX_TEXT_LENGTH - 1);
+    message.Item = item;
 
     // send to queue
     if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
     {
-        ESP_LOGE(TAG, "control_set_config_mv_choc_enable queue send failed!");            
+        ESP_LOGE(TAG, "control_set_config_item_string queue send failed!");            
     }
 }
 
@@ -640,20 +642,86 @@ void control_set_config_mv_choc_enable(uint32_t status)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void control_set_config_xv_md1_enable(uint32_t status)
+uint32_t control_get_config_item_int(uint32_t item)
 {
-    tControlMessage message;
+    uint32_t value = 0;
 
-    ESP_LOGI(TAG, "control_set_config_xv_md1_enable");
-
-    message.Event = EVENT_SET_CONFIG_XV_MD1_ENABLE;
-    message.Value = status;
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    switch (item)
     {
-        ESP_LOGE(TAG, "control_set_config_xv_md1_enable queue send failed!");            
+        case CONFIG_ITEM_BT_MODE:
+        {
+            value = ControlData.ConfigData.BTMode;
+        } break;
+
+        case CONFIG_ITEM_MV_CHOC_ENABLE:
+        {
+            value = ControlData.ConfigData.BTClientMvaveChocolateEnable;
+        } break;
+
+        case CONFIG_ITEM_XV_MD1_ENABLE:
+        {
+            value = ControlData.ConfigData.BTClientXviveMD1Enable;
+        } break;
+
+        case CONFIG_ITEM_CUSTOM_BT_ENABLE:
+        {
+            value = ControlData.ConfigData.BTClientCustomEnable;
+        } break;
+        
+        case CONFIG_ITEM_MIDI_ENABLE:
+        {
+            value = ControlData.ConfigData.MidiSerialEnable;
+        } break;
+
+        case CONFIG_ITEM_MIDI_CHANNEL:
+        {
+            value = ControlData.ConfigData.MidiChannel;
+        } break;
+
+        case CONFIG_ITEM_TOGGLE_BYPASS:
+        {
+            value = ControlData.ConfigData.GeneralDoublePressToggleBypass;
+        } break;
+
+        case CONFIG_ITEM_FOOTSWITCH_MODE:
+        {
+            value = ControlData.ConfigData.FootswitchMode;
+        } break;
+
+        case CONFIG_ITEM_ENABLE_BT_MIDI_CC:
+        {
+            value = ControlData.ConfigData.EnableBTmidiCC;
+        } break;
+
+        case CONFIG_ITEM_WIFI_MODE:
+        {
+            value = ControlData.ConfigData.WiFiMode;
+        } break;
+
+        case CONFIG_ITEM_SCREEN_ROTATION:
+        {
+            value = ControlData.ConfigData.GeneralScreenRotation;
+        } break;
+
+        case CONFIG_ITEM_WIFI_TX_POWER:
+        {
+            value = ControlData.ConfigData.WifiTxPower;
+        } break;
+
+        case CONFIG_ITEM_BT_CUSTOM_NAME:        // fallthrough
+        case CONFIG_ITEM_WIFI_SSID:             // fallthrough
+        case CONFIG_ITEM_WIFI_PASSWORD:
+        {
+            ESP_LOGE(TAG, "Param get is a string %d", (int)item);            
+        } break;
+
+        default:
+        {
+            ESP_LOGE(TAG, "Unkown parameter item %d", (int)item);            
+        } break;
     }
+
+    return value;
 }
 
 /****************************************************************************
@@ -663,277 +731,48 @@ void control_set_config_xv_md1_enable(uint32_t status)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-void control_set_config_bt_custom_enable(uint32_t status)
+void control_get_config_item_string(uint32_t item, char* name)
 {
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_bt_custom_enable");
-
-    message.Event = EVENT_SET_CONFIG_CUSTOM_BT_ENABLE;
-    message.Value = status;
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
+    switch (item)
     {
-        ESP_LOGE(TAG, "control_set_config_bt_custom_enable queue send failed!");            
-    }
-}
+        case CONFIG_ITEM_BT_CUSTOM_NAME:
+        {
+            strncpy(name, ControlData.ConfigData.BTClientCustomName, MAX_BT_CUSTOM_NAME - 1);
+            name[MAX_BT_CUSTOM_NAME - 1] = 0;
+        } break;
 
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_config_serial_midi_enable(uint32_t status)
-{
-    tControlMessage message;
+        case CONFIG_ITEM_WIFI_SSID:
+        {
+            strncpy(name, ControlData.ConfigData.WifiSSID, MAX_WIFI_SSID_PW - 1);
+            name[MAX_WIFI_SSID_PW - 1] = 0;
+        } break;
 
-    ESP_LOGI(TAG, "control_set_config_serial_midi_enable");
+        case CONFIG_ITEM_WIFI_PASSWORD:
+        {
+            strncpy(name, ControlData.ConfigData.WifiPassword, MAX_WIFI_SSID_PW - 1);
+            name[MAX_WIFI_SSID_PW - 1] = 0;            
+        } break;
 
-    message.Event = EVENT_SET_CONFIG_MIDI_ENABLE;
-    message.Value = status;
+        case CONFIG_ITEM_BT_MODE:               // fallthough
+        case CONFIG_ITEM_MV_CHOC_ENABLE:        // fallthough
+        case CONFIG_ITEM_XV_MD1_ENABLE:         // fallthough
+        case CONFIG_ITEM_CUSTOM_BT_ENABLE:      // fallthough
+        case CONFIG_ITEM_MIDI_ENABLE:           // fallthough    
+        case CONFIG_ITEM_MIDI_CHANNEL:          // fallthough
+        case CONFIG_ITEM_TOGGLE_BYPASS:         // fallthough
+        case CONFIG_ITEM_FOOTSWITCH_MODE:       // fallthough    
+        case CONFIG_ITEM_ENABLE_BT_MIDI_CC:     // fallthough
+        case CONFIG_ITEM_WIFI_MODE:             // fallthough
+        case CONFIG_ITEM_SCREEN_ROTATION:       // fallthough
+        case CONFIG_ITEM_WIFI_TX_POWER:         
+        {
+            ESP_LOGE(TAG, "Paramm get is an int %d", (int)item);      
+        } break;
 
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_serial_midi_enable queue send failed!");            
-    }
-}    
-    
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_config_serial_midi_channel(uint32_t status)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_serial_midi_channel");
-
-    message.Event = EVENT_SET_CONFIG_MIDI_CHANNEL;
-    message.Value = status;
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_serial_midi_channel queue send failed!");            
-    }
-}        
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_config_custom_bt_name(char* name)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_custom_bt_name");
-
-    message.Event = EVENT_SET_CONFIG_BT_CUSTOM_NAME;
-    strncpy(message.Text, name, MAX_BT_CUSTOM_NAME - 1);
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_custom_bt_name queue send failed!");            
-    }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_config_wifi_mode(uint32_t mode)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_wifi_mode");
-
-    message.Event = EVENT_SET_CONFIG_WIFI_MODE;
-    message.Value = mode;
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_wifi_mode queue send failed!");            
-    }
-}     
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_config_wifi_ssid(char* name)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_wifi_ssid: %s", name);
-
-    message.Event = EVENT_SET_CONFIG_WIFI_SSID;
-    strncpy(message.Text, name, MAX_WIFI_SSID_PW - 1);
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_wifi_ssid queue send failed!");            
-    }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_config_wifi_password(char* name)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_wifi_password");
-
-    message.Event = EVENT_SET_CONFIG_WIFI_PASSWORD;
-    strncpy(message.Text, name, MAX_WIFI_SSID_PW - 1);
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_wifi_password queue send failed!");            
-    }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_config_wifi_max_power(uint8_t power)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_wifi_max_power");
-
-    message.Event = EVENT_SET_CONFIG_WIFI_TX_POWER;
-    message.Value =power;
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_wifi_max_power queue send failed!");            
-    }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_config_toggle_bypass(uint32_t status)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_toggle_bypass");
-
-    message.Event = EVENT_SET_CONFIG_TOGGLE_BYPASS;
-    message.Value = status;
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_toggle_bypass queue send failed!");            
-    }
-}           
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-void control_set_config_enable_bt_midi_CC(uint32_t status)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_enable_bt_midi_CC");
-
-    message.Event = EVENT_SET_CONFIG_ENABLE_BT_MIDI_CC;
-    message.Value = status;
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_enable_bt_midi_CC queue send failed!");            
-    }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_config_footswitch_mode(uint32_t mode)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_config_footswitch_mode");
-
-    message.Event = EVENT_SET_CONFIG_FOOTSWITCH_MODE;
-    message.Value = mode;
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_config_footswitch_mode queue send failed!");            
-    }
-}        
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_set_screen_rotation(uint32_t rot)
-{
-    tControlMessage message;
-
-    ESP_LOGI(TAG, "control_set_screen_rotation %d", (int)rot);
-
-    if (rot >= SCREEN_ROTATION_MAX)
-    {
-        rot = SCREEN_ROTATION_0;
-    }
-
-    message.Event = EVENT_SET_CONFIG_SCREEN_ROTATION;
-    message.Value = rot;
-
-    // send to queue
-    if (xQueueSend(control_input_queue, (void*)&message, 0) != pdPASS)
-    {
-        ESP_LOGE(TAG, "control_set_screen_rotation queue send failed!");            
+        default:
+        {
+            ESP_LOGE(TAG, "Unkown parameter item %d", (int)item);            
+        } break;
     }
 }
 
@@ -968,189 +807,6 @@ void control_set_skin_previous(void)
     
         control_set_amp_skin_index(ControlData.ConfigData.UserData[ControlData.PresetIndex].SkinIndex);
     }
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_bt_mode(void)
-{
-    return ControlData.ConfigData.BTMode;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_bt_mvave_choc_enable(void)
-{
-    return ControlData.ConfigData.BTClientMvaveChocolateEnable;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_bt_xvive_md1_enable(void)
-{
-    return ControlData.ConfigData.BTClientXviveMD1Enable;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_bt_custom_enable(void)
-{
-    return ControlData.ConfigData.BTClientCustomEnable;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_get_config_custom_bt_name(char* name)
-{
-    strncpy(name, ControlData.ConfigData.BTClientCustomName, MAX_BT_CUSTOM_NAME - 1);
-    name[MAX_BT_CUSTOM_NAME - 1] = 0;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_double_toggle(void)
-{
-    return ControlData.ConfigData.GeneralDoublePressToggleBypass;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_midi_serial_enable(void)
-{
-    return ControlData.ConfigData.MidiSerialEnable;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_midi_channel(void)
-{
-    return ControlData.ConfigData.MidiChannel;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_footswitch_mode(void)
-{
-    return ControlData.ConfigData.FootswitchMode;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_enable_bt_midi_CC(void)
-{
-    return ControlData.ConfigData.EnableBTmidiCC;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      none
-* NOTES:       none
-****************************************************************************/
-uint8_t control_get_config_wifi_mode(void)
-{
-    return ControlData.ConfigData.WiFiMode;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_get_config_wifi_ssid(char* name)
-{
-    strncpy(name, ControlData.ConfigData.WifiSSID, MAX_WIFI_SSID_PW - 1);
-    name[MAX_WIFI_SSID_PW - 1] = 0;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-void control_get_config_wifi_password(char* name)
-{
-    strncpy(name, ControlData.ConfigData.WifiPassword, MAX_WIFI_SSID_PW - 1);
-    name[MAX_WIFI_SSID_PW - 1] = 0;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-uint8_t control_get_config_wifi_max_power(void)
-{
-    return ControlData.ConfigData.WifiTxPower;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-uint8_t control_get_config_screen_rotation(void)
-{
-    return ControlData.ConfigData.GeneralScreenRotation;
 }
 
 /****************************************************************************

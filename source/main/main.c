@@ -259,7 +259,7 @@ void app_main(void)
     ESP_LOGI(TAG, "Init footswitches");
     footswitches_init(I2C_MASTER_NUM, I2CMutex);
 
-    if (control_get_config_bt_mode() != BT_MODE_DISABLED)
+    if (control_get_config_item_int(CONFIG_ITEM_BT_MODE) != BT_MODE_DISABLED)
     {
         // init Midi Bluetooth
         ESP_LOGI(TAG, "Init MIDI BT");
@@ -270,7 +270,7 @@ void app_main(void)
         ESP_LOGI(TAG, "MIDI BT disabled");
     }
 
-    if (control_get_config_midi_serial_enable())
+    if (control_get_config_item_int(CONFIG_ITEM_MIDI_ENABLE))
     {
         // init Midi serial
         ESP_LOGI(TAG, "Init MIDI Serial");

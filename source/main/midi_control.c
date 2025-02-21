@@ -1126,7 +1126,7 @@ static void __attribute__((unused)) gattc_profile_a_event_handler(esp_gattc_cb_e
                         {
                             // note issue here with MVave chocolate pedal. Bank up/down sends 
                             // a control change message, which would modify a different parameter
-                            if (control_get_config_enable_bt_midi_CC())
+                            if (control_get_config_item_int(CONFIG_ITEM_ENABLE_BT_MIDI_CC))
                             {                        
                                 // control change
                                 uint8_t change_num = p_data->notify.value[3];
@@ -1496,7 +1496,7 @@ static void InitDeviceList(void)
     remote_device_names_length = 0;
 
     // build list of devices to scan for and connect to if found
-    if (control_get_config_bt_mvave_choc_enable())
+    if (control_get_config_item_int(CONFIG_ITEM_MV_CHOC_ENABLE))
     {
         // M-vave Chocolate device name is 'FootCtrl'
         strncpy(remote_device_names[remote_device_names_length], "FootCtrl", MAX_DEVICE_NAME_LENGTH);
@@ -1507,17 +1507,17 @@ static void InitDeviceList(void)
         remote_device_names_length++;
     }
 
-    if (control_get_config_bt_xvive_md1_enable())
+    if (control_get_config_item_int(CONFIG_ITEM_XV_MD1_ENABLE))
     {
         // Xvive Bluetooth Midi adaptor is 'Xvive MD1'
         strncpy(remote_device_names[remote_device_names_length], "Xvive MD1", MAX_DEVICE_NAME_LENGTH);
         remote_device_names_length++;
     }
 
-    if (control_get_config_bt_custom_enable())
+    if (control_get_config_item_int(CONFIG_ITEM_CUSTOM_BT_ENABLE))
     {
         // Custom Bluetooth device name
-        control_get_config_custom_bt_name(remote_device_names[remote_device_names_length]);
+        control_get_config_item_string(CONFIG_ITEM_BT_CUSTOM_NAME, remote_device_names[remote_device_names_length]);
         remote_device_names_length++;
     }
 
@@ -1538,7 +1538,7 @@ static void init_BLE(void)
     ESP_LOGI(TAG, "Midi BLE init start");
 
     // get the channel to use
-    midi_serial_channel = control_get_config_midi_channel();
+    midi_serial_channel = control_get_config_item_int(CONFIG_ITEM_MIDI_CHANNEL);
 
     // adjust to zero based indexing
     if (midi_serial_channel > 0)
@@ -1586,7 +1586,7 @@ static void init_BLE(void)
         return;
     }
 
-    if (control_get_config_bt_mode() == BT_MODE_CENTRAL)
+    if (control_get_config_item_int(CONFIG_ITEM_BT_MODE) == BT_MODE_CENTRAL)
     {
         // Client stuff
         ESP_LOGI(GATTC_TAG, "Enabling BT Client mode");
@@ -1608,7 +1608,7 @@ static void init_BLE(void)
             return;
         }
     }
-    else if (control_get_config_bt_mode() == BT_MODE_PERIPHERAL)
+    else if (control_get_config_item_int(CONFIG_ITEM_BT_MODE) == BT_MODE_PERIPHERAL)
     {
         // Server stuff
         ESP_LOGI(GATTS_TAG, "Enabling BT Server mode");

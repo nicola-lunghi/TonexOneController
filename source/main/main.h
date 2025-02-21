@@ -31,12 +31,12 @@ extern "C" {
     #define I2C_MASTER_SDA_IO  GPIO_NUM_8       
 
     // IO expander
-    #define FOOTSWITCH_1		CH_IO_EXPANDER_PIN_NUM_0
-    #define TOUCH_RESET 		CH_IO_EXPANDER_PIN_NUM_1
-    #define LCD_BACKLIGHT		CH_IO_EXPANDER_PIN_NUM_2
-    #define LCD_RESET    		CH_IO_EXPANDER_PIN_NUM_3
-    #define SD_CS       		CH_IO_EXPANDER_PIN_NUM_4
-    #define FOOTSWITCH_2		CH_IO_EXPANDER_PIN_NUM_5
+    #define FOOTSWITCH_1		IO_EXPANDER_PIN_1
+    #define TOUCH_RESET 		IO_EXPANDER_PIN_2
+    #define LCD_BACKLIGHT		IO_EXPANDER_PIN_3
+    #define LCD_RESET    		IO_EXPANDER_PIN_4
+    #define SD_CS       		IO_EXPANDER_PIN_5
+    #define FOOTSWITCH_2		IO_EXPANDER_PIN_6
 
     // these 2 unsupported
     #define FOOTSWITCH_3		-1

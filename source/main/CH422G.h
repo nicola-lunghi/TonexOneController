@@ -22,16 +22,6 @@ limitations under the License.
 #include "driver/i2c.h"
 #include "esp_err.h"
 
-typedef enum {
-    CH_IO_EXPANDER_PIN_NUM_0,
-    CH_IO_EXPANDER_PIN_NUM_1,
-    CH_IO_EXPANDER_PIN_NUM_2,
-    CH_IO_EXPANDER_PIN_NUM_3,
-    CH_IO_EXPANDER_PIN_NUM_4,
-    CH_IO_EXPANDER_PIN_NUM_5
-} ch_io_expander_pin_num_t;
-
-
 /*
 The chip does not have a slave address, the stated function register, used as an I2C slave address
 For example:
@@ -74,6 +64,7 @@ typedef enum
 esp_err_t CH422G_init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex);
 esp_err_t CH422G_reset(void);
 esp_err_t CH422G_read_input(uint8_t pin_bit, uint8_t* value);
+esp_err_t CH422G_read_all_input(uint16_t* values);
 esp_err_t CH422G_write_direction(uint8_t pin_bit, uint8_t value);
 esp_err_t CH422G_write_output(uint8_t pin_bit, uint8_t value);
 esp_err_t CH422G_set_io_mode(uint8_t output_mode);
