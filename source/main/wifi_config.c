@@ -357,6 +357,8 @@ static void wifi_build_config_json(void)
     control_get_config_item_string(CONFIG_ITEM_WIFI_PASSWORD, str_val);
     json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_PW", str_val);
 
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_PS_LAYOUT", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT));
+
     // add the }
     json_gen_end_object(&pWebConfig->jstr);
 
@@ -592,7 +594,12 @@ static esp_err_t ws_handler(httpd_req_t *req)
                         {
                             control_set_config_item_int(CONFIG_ITEM_SCREEN_ROTATION, int_val);
                         }
-                                              
+                                    
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_PS_LAYOUT", &int_val) == OS_SUCCESS)
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT, int_val);
+                        }
+
                         vTaskDelay(pdMS_TO_TICKS(250));
 
                         // save it and reboot after

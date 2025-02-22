@@ -71,7 +71,7 @@ typedef struct
     uint8_t current_bank;
     uint8_t index_pending;
     uint8_t (*footswitch_single_reader)(uint8_t, uint8_t*);    
-    uint8_t (*footswitch_multiple_reader)(uint8_t, uint16_t*);    
+    uint8_t (*footswitch_multiple_reader)(uint16_t*);    
 } tFootswitchHandler;
 
 typedef struct
@@ -143,7 +143,7 @@ static uint8_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_st
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static uint8_t footswitch_read_multiple_onboard(uint8_t max, uint16_t* switch_state)
+static uint8_t footswitch_read_multiple_onboard(uint16_t* switch_state)
 {
     uint8_t result = false;
     *switch_state = 0;
@@ -158,12 +158,25 @@ static uint8_t footswitch_read_multiple_onboard(uint8_t max, uint16_t* switch_st
         *switch_state = values;
     }
 #else
-    uint8_t inputs[] = {FOOTSWITCH_1, FOOTSWITCH_2, FOOTSWITCH_3, FOOTSWITCH_4};
-
-    for (uint8_t loop = 0; loop < sizeof(inputs); loop++)
+    // direct gpio
+    if (FOOTSWITCH_1 != -1)
     {
-        // other boards can use direct IO pin
-        *switch_state |= ((gpio_get_level(inputs[loop]) << loop));
+        *switch_state |= gpio_get_level(FOOTSWITCH_1);
+    }
+
+    if (FOOTSWITCH_2 != -1)
+    {
+        *switch_state |= (gpio_get_level(FOOTSWITCH_2) << 1);
+    }
+
+    if (FOOTSWITCH_3 != -1)
+    {
+        *switch_state |= (gpio_get_level(FOOTSWITCH_3) << 2);
+    }
+
+    if (FOOTSWITCH_4 != -1)
+    {
+        *switch_state |= (gpio_get_level(FOOTSWITCH_4) << 3);
     }
 
     result = true;
@@ -213,7 +226,7 @@ static uint8_t footswitch_read_single_offboard(uint8_t pin, uint8_t* switch_stat
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static uint8_t footswitch_read_multiple_offboard(uint8_t number, uint16_t* switch_states)
+static uint8_t footswitch_read_multiple_offboard(uint16_t* switch_states)
 {
     uint8_t result = false;
 
@@ -530,10 +543,8 @@ void footswitch_task(void *arg)
     onboard_switch_mode = control_get_config_item_int(CONFIG_ITEM_FOOTSWITCH_MODE);
 #endif
 
-
-    // todo 
-    external_switch_mode = FOOTSWITCH_LAYOUT_1X4;
-
+    // get preset switching layout for external footswitches
+    external_switch_mode = control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT);
 
     // setup handler for onboard IO footswitches
     FootswitchControl.Handlers[FOOTSWITCH_HANDLER_ONBOARD].footswitch_single_reader = &footswitch_read_single_onboard;
@@ -571,6 +582,7 @@ void footswitch_task(void *arg)
         // did we find an IO expander on boot?
         if (FootswitchControl.io_expander_ok)
         {
+            // handle external footswitches as banked
             footswitch_handle_banked(&FootswitchControl.Handlers[FOOTSWITCH_HANDLER_EXTERNAL], (tFootswitchLayoutEntry*)&FootswitchLayouts[external_switch_mode]);
         }
 

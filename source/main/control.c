@@ -111,6 +111,8 @@ typedef struct __attribute__ ((packed))
     uint8_t WifiTxPower : 4;
     char WifiSSID[MAX_WIFI_SSID_PW];
     char WifiPassword[MAX_WIFI_SSID_PW];
+
+    uint8_t ExternalFootswitchPresetLayout;
 } tConfigData;
 
 typedef struct 
@@ -322,6 +324,12 @@ static uint8_t process_control_command(tControlMessage* message)
                 {
                     ESP_LOGI(TAG, "Config set wifi tx power %d", (int)message->Value);
                     ControlData.ConfigData.WifiTxPower = (uint8_t)message->Value & 0x0F;
+                } break;
+
+                case CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT:
+                {
+                    ESP_LOGI(TAG, "Config set external footsw preset layout %d", (int)message->Value);
+                    ControlData.ConfigData.ExternalFootswitchPresetLayout = (uint8_t)message->Value;
                 } break;
             }
         } break;
@@ -707,12 +715,17 @@ uint32_t control_get_config_item_int(uint32_t item)
         {
             value = ControlData.ConfigData.WifiTxPower;
         } break;
-
+        
         case CONFIG_ITEM_BT_CUSTOM_NAME:        // fallthrough
         case CONFIG_ITEM_WIFI_SSID:             // fallthrough
         case CONFIG_ITEM_WIFI_PASSWORD:
         {
             ESP_LOGE(TAG, "Param get is a string %d", (int)item);            
+        } break;
+
+        case CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT:
+        {
+            value = ControlData.ConfigData.ExternalFootswitchPresetLayout;
         } break;
 
         default:
@@ -764,7 +777,8 @@ void control_get_config_item_string(uint32_t item, char* name)
         case CONFIG_ITEM_ENABLE_BT_MIDI_CC:     // fallthough
         case CONFIG_ITEM_WIFI_MODE:             // fallthough
         case CONFIG_ITEM_SCREEN_ROTATION:       // fallthough
-        case CONFIG_ITEM_WIFI_TX_POWER:         
+        case CONFIG_ITEM_WIFI_TX_POWER:         // fallthrough
+        case CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT:
         {
             ESP_LOGE(TAG, "Paramm get is an int %d", (int)item);      
         } break;
@@ -939,6 +953,13 @@ static uint8_t LoadUserData(void)
         save_needed = 1;
     }
 
+    if (ControlData.ConfigData.ExternalFootswitchPresetLayout >= FOOTSWITCH_LAYOUT_LAST)
+    {
+        ESP_LOGW(TAG, "Config External Footswitch preset layout invalid");
+        ControlData.ConfigData.ExternalFootswitchPresetLayout = FOOTSWITCH_LAYOUT_1X4;
+        save_needed = 1;
+    }
+
     if (save_needed)
     {
         SaveUserData();
@@ -959,7 +980,8 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config WiFi Password: <hidden>");
     ESP_LOGI(TAG, "Config WiFi TX Power: %d", ControlData.ConfigData.WifiTxPower);
     ESP_LOGI(TAG, "Config Screen Rotation: %d", (int)ControlData.ConfigData.GeneralScreenRotation);
-
+    ESP_LOGI(TAG, "Config Ext Footsw Prst Layout: %d", (int)ControlData.ConfigData.ExternalFootswitchPresetLayout);
+    
     // status    
     return result;
 }
@@ -988,6 +1010,7 @@ void control_set_default_config(void)
     strcpy(ControlData.ConfigData.WifiPassword, "12345678");   
     ControlData.ConfigData.WifiTxPower = WIFI_TX_POWER_25;
     ControlData.ConfigData.GeneralScreenRotation = SCREEN_ROTATION_0;
+    ControlData.ConfigData.ExternalFootswitchPresetLayout = FOOTSWITCH_LAYOUT_1X4;
 }
 
 /****************************************************************************
