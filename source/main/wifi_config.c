@@ -359,6 +359,27 @@ static void wifi_build_config_json(void)
 
     json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_PS_LAYOUT", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT));
 
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES1_SW", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT1_SW));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES1_CC", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT1_CC));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES1_V1", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT1_VAL1));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES1_V2", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT1_VAL2));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES2_SW", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT2_SW));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES2_CC", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT2_CC));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES2_V1", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT2_VAL1));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES2_V2", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT2_VAL2));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES3_SW", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT3_SW));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES3_CC", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT3_CC));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES3_V1", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT3_VAL1));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES3_V2", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT3_VAL2));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES4_SW", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT4_SW));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES4_CC", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT4_CC));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES4_V1", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT4_VAL1));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES4_V2", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT4_VAL2));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES5_SW", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT5_SW));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES5_CC", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT5_CC));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES5_V1", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT5_VAL1));
+    json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES5_V2", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT5_VAL2));
+
     // add the }
     json_gen_end_object(&pWebConfig->jstr);
 
@@ -570,6 +591,9 @@ static esp_err_t ws_handler(httpd_req_t *req)
                             control_set_config_item_int(CONFIG_ITEM_XV_MD1_ENABLE, int_val);
                         }
 
+                        // pause a little to allow control task a chance to process    
+                        vTaskDelay(pdMS_TO_TICKS(250));    
+
                         if (json_obj_get_int(&pWebConfig->jctx, "BT_CUST_EN", &int_val) == OS_SUCCESS)
                         {
                             control_set_config_item_int(CONFIG_ITEM_CUSTOM_BT_ENABLE, int_val);
@@ -598,6 +622,112 @@ static esp_err_t ws_handler(httpd_req_t *req)
                         if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_PS_LAYOUT", &int_val) == OS_SUCCESS)
                         {
                             control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES1_SW", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT1_SW, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES1_CC", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT1_CC, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES1_V1", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT1_VAL1, int_val);
+                        }
+
+                        // pause a little to allow control task a chance to process    
+                        vTaskDelay(pdMS_TO_TICKS(250));    
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES1_V2", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT1_VAL2, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES2_SW", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT2_SW, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx,  "EXTFS_ES2_CC", &int_val) == OS_SUCCESS)
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT2_CC, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES2_V1", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT2_VAL1, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES2_V2", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT2_VAL2, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES3_SW", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT3_SW, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES3_CC", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT3_CC, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES3_V1", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT3_VAL1, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES3_V2", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT3_VAL2, int_val);
+                        }
+
+                        // pause a little to allow control task a chance to process    
+                        vTaskDelay(pdMS_TO_TICKS(250));    
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES4_SW", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT4_SW, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES4_CC", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT4_CC, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES4_V1", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT4_VAL1, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES4_V2", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT4_VAL2, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES5_SW", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT5_SW, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES5_CC", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT5_CC, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES5_V1", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT5_VAL1, int_val);
+                        }
+
+                        if (json_obj_get_int(&pWebConfig->jctx, "EXTFS_ES5_V2", &int_val) == OS_SUCCESS) 
+                        {
+                            control_set_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT5_VAL2, int_val);
                         }
 
                         vTaskDelay(pdMS_TO_TICKS(250));

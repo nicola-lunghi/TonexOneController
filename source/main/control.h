@@ -98,7 +98,27 @@ enum ConfigItems
     CONFIG_ITEM_WIFI_PASSWORD,
     CONFIG_ITEM_SCREEN_ROTATION,
     CONFIG_ITEM_WIFI_TX_POWER,
-    CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT
+    CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT1_SW,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT1_CC,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT1_VAL1,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT1_VAL2,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT2_SW,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT2_CC,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT2_VAL1,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT2_VAL2,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT3_SW,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT3_CC,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT3_VAL1,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT3_VAL2,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT4_SW,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT4_CC,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT4_VAL1,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT4_VAL2,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT5_SW,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT5_CC,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT5_VAL1,
+    CONFIG_ITEM_EXT_FOOTSW_EFFECT5_VAL2
 };
 
 enum BluetoothModes
@@ -175,7 +195,17 @@ enum IOExpanderPins
     IO_EXPANDER_PIN_16
 };
 
-#define MAX_WIFI_SSID_PW       65   
+typedef struct __attribute__ ((packed)) 
+{
+    uint8_t Switch;
+    uint8_t CC;
+    uint8_t Value_1;
+    uint8_t Value_2;
+} tExternalFootswitchEffectConfig;
+
+#define MAX_WIFI_SSID_PW                        65   
+#define MAX_EXTERNAL_EFFECT_FOOTSWITCHES        5
+#define SWITCH_NOT_USED                         0xFF
 
 // thread safe public API
 void control_request_preset_up(void);
@@ -195,6 +225,8 @@ void control_set_user_text(char* text);
 void control_set_default_config(void);
 void control_set_config_item_int(uint32_t item, uint32_t status);
 void control_set_config_item_string(uint32_t item, char* name);
+void control_set_config_item_object(uint32_t item, void* object);
 
 uint32_t control_get_config_item_int(uint32_t item);
 void control_get_config_item_string(uint32_t item, char* name);
+void control_get_config_item_object(uint32_t item, void* object);
