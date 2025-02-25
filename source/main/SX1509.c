@@ -507,7 +507,7 @@ esp_err_t SX1509_gpioMode(uint8_t pin, uint8_t mode)
     else
     {
         // invalid pin
-        ESP_LOGE(TAG,  "SX1509 gpio mode invalid pin");
+        ESP_LOGE(TAG,  "SX1509 gpio mode invalid pin %d", (int)pin);
         return ret;
     }
 

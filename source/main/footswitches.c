@@ -139,7 +139,7 @@ static uint8_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_st
     }
 #else
     // other boards can use direct IO pin
-    *switch_state = gpio_get_level(number);
+    *switch_state = (gpio_get_level(number) == 0);
 
     result = true;
 #endif
@@ -177,17 +177,17 @@ static uint8_t footswitch_read_multiple_onboard(uint16_t* switch_state)
 
     if (FOOTSWITCH_2 != -1)
     {
-        *switch_state |= (((gpio_get_level(FOOTSWITCH_2) << 1) == 0) << 1);
+        *switch_state |= ((gpio_get_level(FOOTSWITCH_2) == 0) << 1);
     }
 
     if (FOOTSWITCH_3 != -1)
     {
-        *switch_state |= (((gpio_get_level(FOOTSWITCH_3) << 2) == 0) << 2);
+        *switch_state |= ((gpio_get_level(FOOTSWITCH_3) == 0) << 2);
     }
 
     if (FOOTSWITCH_4 != -1)
     {
-        *switch_state |= (((gpio_get_level(FOOTSWITCH_4) << 3) == 0) << 3);
+        *switch_state |= ((gpio_get_level(FOOTSWITCH_4) == 0) << 3);
     }
 
     result = true;
@@ -216,14 +216,7 @@ static uint8_t footswitch_read_single_offboard(uint8_t pin, uint8_t* switch_stat
             //ESP_LOGI(TAG, "Footswitch read %d", (int)level_mask);
 
             result = true;
-            if (level == 0)
-            {
-                *switch_state = 0;
-            }
-            else
-            {
-                *switch_state = 1;
-            }                
+            *switch_state = (level == 0);
         }
     }
 
@@ -247,6 +240,9 @@ static uint8_t footswitch_read_multiple_offboard(uint16_t* switch_states)
         {            
             // debug
             //ESP_LOGI(TAG, "Footswitches read %d", (int)switch_states);
+            // flip so 1 = switch pressed
+            *switch_states = ~(*switch_states);
+
             result = true;
         }
     }
@@ -273,7 +269,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
             // read footswitches
             if (handler->footswitch_single_reader(FOOTSWITCH_1, &value)) 
             {
-                if (value == 0)
+                if (value == 1)
                 {
                     ESP_LOGI(TAG, "Footswitch 1 pressed");
 
@@ -290,7 +286,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
             {
                 if (handler->footswitch_single_reader(FOOTSWITCH_2, &value))
                 {
-                    if (value == 0)
+                    if (value == 1)
                     {
                         ESP_LOGI(TAG, "Footswitch 2 pressed");
 
@@ -310,7 +306,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
             // read footswitch 1
             if (handler->footswitch_single_reader(FOOTSWITCH_1, &value))
             {
-                if (value != 0)
+                if (value == 0)
                 {
                     handler->sample_counter++;
                     if (handler->sample_counter == FOOTSWITCH_SAMPLE_COUNT)
@@ -332,7 +328,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
             // read footswitch 2
             if (handler->footswitch_single_reader(FOOTSWITCH_2, &value))
             {
-                if (value != 0)
+                if (value == 0)
                 {
                     handler->sample_counter++;
                     if (handler->sample_counter == FOOTSWITCH_SAMPLE_COUNT)
@@ -458,25 +454,25 @@ static void footswitch_handle_quad_binary(tFootswitchHandler* handler)
 
     // read all 4 switches (and swap so 1 is pressed)
     handler->footswitch_single_reader(FOOTSWITCH_1, &value);
-    if (value == 0)
+    if (value == 1)
     {
         binary_val |= 1;
     }
 
     handler->footswitch_single_reader(FOOTSWITCH_2, &value);
-    if (value == 0)
+    if (value == 1)
     {
         binary_val |= 2;
     }
 
     handler->footswitch_single_reader(FOOTSWITCH_3, &value);
-    if (value == 0)
+    if (value == 1)
     {
         binary_val |= 4;
     }
 
     handler->footswitch_single_reader(FOOTSWITCH_4, &value);
-    if (value == 0)
+    if (value == 1)
     {
         binary_val |= 8;
     }
@@ -666,7 +662,7 @@ void footswitch_task(void *arg)
         // check for button held for data reset
         if (footswitch_read_single_onboard(FOOTSWITCH_1, &value))
         {
-            if (value == 0)
+            if (value == 1)
             {        
                 reset_timer++;
 
@@ -725,9 +721,9 @@ void footswitches_init(i2c_port_t i2c_num, SemaphoreHandle_t I2CMutex)
         ESP_LOGI(TAG, "Found External IO Expander");
 
         // init all pins to inputs
-        for (uint8_t pins = 0; pins < 8; pins++)
+        for (uint8_t pin = 0; pin < 16; pin++)
         {
-            SX1509_gpioMode(1 << pins, EXPANDER_INPUT_PULLUP);
+            SX1509_gpioMode(pin, EXPANDER_INPUT_PULLUP);
         }
         FootswitchControl.io_expander_ok = 1;
     }
