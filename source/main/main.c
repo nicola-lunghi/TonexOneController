@@ -166,7 +166,7 @@ static esp_err_t i2c_master_init(void)
     return res;
 }
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
 /****************************************************************************
 * NAME:        
 * DESCRIPTION: 
@@ -190,7 +190,7 @@ static void InitIOExpander(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
         ESP_LOGE(TAG, "Failed to init Onboard IO expander!");
     }
 }
-#endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
 
 /****************************************************************************
 * NAME:        
@@ -217,7 +217,7 @@ void app_main(void)
     ESP_ERROR_CHECK(i2c_master_init());
     ESP_LOGI(TAG, "I2C initialized successfully");
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // init onboard IO expander
     ESP_LOGI(TAG, "Init Onboard IO Expander");
     InitIOExpander(I2C_MASTER_NUM, I2CMutex);
@@ -237,7 +237,7 @@ void app_main(void)
     ESP_LOGI(TAG, "Init Control");
     control_init();
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // init GUI
     ESP_LOGI(TAG, "Init 43.B display");
     display_init(I2C_MASTER_NUM, I2CMutex);

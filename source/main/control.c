@@ -112,6 +112,7 @@ typedef struct __attribute__ ((packed))
     uint8_t WifiTxPower : 4;
     char WifiSSID[MAX_WIFI_SSID_PW];
     char WifiPassword[MAX_WIFI_SSID_PW];
+    char MDNSName[MAX_MDNS_NAME];
 
     // external footswitches
     uint8_t ExternalFootswitchPresetLayout;
@@ -480,6 +481,13 @@ static uint8_t process_control_command(tControlMessage* message)
                     ESP_LOGI(TAG, "Config set WiFi password <hidden>");
                     strncpy(ControlData.ConfigData.WifiPassword, message->Text, MAX_WIFI_SSID_PW - 1);
                     ControlData.ConfigData.WifiPassword[MAX_WIFI_SSID_PW - 1] = 0;
+                } break;
+
+                case CONFIG_ITEM_MDNS_NAME:
+                {
+                    ESP_LOGI(TAG, "Config set MDNS name %s", message->Text);
+                    strncpy(ControlData.ConfigData.MDNSName, message->Text, MAX_MDNS_NAME - 1);
+                    ControlData.ConfigData.MDNSName[MAX_MDNS_NAME - 1] = 0;
                 } break;
             }
         } break;
@@ -982,6 +990,12 @@ void control_get_config_item_string(uint32_t item, char* name)
             name[MAX_WIFI_SSID_PW - 1] = 0;            
         } break;
 
+        case CONFIG_ITEM_MDNS_NAME:
+        {
+            strncpy(name, ControlData.ConfigData.MDNSName, MAX_MDNS_NAME - 1);
+            name[MAX_MDNS_NAME - 1] = 0;            
+        } break;
+
         default:
         {
             ESP_LOGE(TAG, "Unknown/Invalid string parameter item %d", (int)item);            
@@ -1177,6 +1191,7 @@ static uint8_t LoadUserData(void)
     ESP_LOGI(TAG, "Config WiFi Mode: %d", (int)ControlData.ConfigData.WiFiMode);
     ESP_LOGI(TAG, "Config WiFi SSID: %s", ControlData.ConfigData.WifiSSID);
     ESP_LOGI(TAG, "Config WiFi Password: <hidden>");
+    ESP_LOGI(TAG, "Config MDNS name: %s", ControlData.ConfigData.MDNSName);
     ESP_LOGI(TAG, "Config WiFi TX Power: %d", ControlData.ConfigData.WifiTxPower);
     ESP_LOGI(TAG, "Config Screen Rotation: %d", (int)ControlData.ConfigData.GeneralScreenRotation);
     ESP_LOGI(TAG, "Config Ext Footsw Prst Layout: %d", (int)ControlData.ConfigData.ExternalFootswitchPresetLayout);
@@ -1215,6 +1230,7 @@ void control_set_default_config(void)
     ControlData.ConfigData.WiFiMode = WIFI_MODE_ACCESS_POINT_TIMED;
     strcpy(ControlData.ConfigData.WifiSSID, "TonexConfig");
     strcpy(ControlData.ConfigData.WifiPassword, "12345678");   
+    strcpy(ControlData.ConfigData.MDNSName, "tonex");   
     ControlData.ConfigData.WifiTxPower = WIFI_TX_POWER_25;
     ControlData.ConfigData.GeneralScreenRotation = SCREEN_ROTATION_0;
     ControlData.ConfigData.ExternalFootswitchPresetLayout = FOOTSWITCH_LAYOUT_1X4;

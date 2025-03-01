@@ -98,6 +98,7 @@ enum ConfigItems
     CONFIG_ITEM_WIFI_PASSWORD,
     CONFIG_ITEM_SCREEN_ROTATION,
     CONFIG_ITEM_WIFI_TX_POWER,
+    CONFIG_ITEM_MDNS_NAME,
     CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT,
     CONFIG_ITEM_EXT_FOOTSW_EFFECT1_SW,
     CONFIG_ITEM_EXT_FOOTSW_EFFECT1_CC,
@@ -204,6 +205,7 @@ typedef struct __attribute__ ((packed))
 } tExternalFootswitchEffectConfig;
 
 #define MAX_WIFI_SSID_PW                        65   
+#define MAX_MDNS_NAME                           32
 #define MAX_EXTERNAL_EFFECT_FOOTSWITCHES        5
 #define SWITCH_NOT_USED                         0xFF
 

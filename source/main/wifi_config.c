@@ -357,6 +357,9 @@ static void wifi_build_config_json(void)
     control_get_config_item_string(CONFIG_ITEM_WIFI_PASSWORD, str_val);
     json_gen_obj_set_string(&pWebConfig->jstr, "WIFI_PW", str_val);
 
+    control_get_config_item_string(CONFIG_ITEM_MDNS_NAME, str_val);
+    json_gen_obj_set_string(&pWebConfig->jstr, "MDNS_NAME", str_val);
+
     json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_PS_LAYOUT", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_PRESET_LAYOUT));
 
     json_gen_obj_set_int(&pWebConfig->jstr, "EXTFS_ES1_SW", control_get_config_item_int(CONFIG_ITEM_EXT_FOOTSW_EFFECT1_SW));
@@ -758,6 +761,11 @@ static esp_err_t ws_handler(httpd_req_t *req)
                         if (json_obj_get_int(&pWebConfig->jctx, "WIFI_POWER", &int_val) == OS_SUCCESS)
                         {
                             control_set_config_item_int(CONFIG_ITEM_WIFI_TX_POWER, int_val);
+                        }
+
+                        if (json_obj_get_string(&pWebConfig->jctx, "MDNS_NAME", str_val, sizeof(str_val)) == OS_SUCCESS)
+                        {
+                            control_set_config_item_string(CONFIG_ITEM_MDNS_NAME, str_val);
                         }
 
                         vTaskDelay(pdMS_TO_TICKS(250));
@@ -1236,6 +1244,8 @@ static void wifi_init_softap(void)
 *****************************************************************************/
 void start_mdns_service()
 {
+    char mdns_name[MAX_MDNS_NAME];
+
     //initialize mDNS service
     esp_err_t err = mdns_init();
     if (err) 
@@ -1244,8 +1254,9 @@ void start_mdns_service()
         return;
     }
 
-    mdns_hostname_set("tonex");
-    mdns_instance_name_set("tonex");
+    control_get_config_item_string(CONFIG_ITEM_MDNS_NAME, mdns_name);
+    mdns_hostname_set(mdns_name);
+    mdns_instance_name_set(mdns_name);
     mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
 }
 

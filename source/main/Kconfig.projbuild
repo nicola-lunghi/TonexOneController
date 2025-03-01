@@ -20,7 +20,11 @@ menu "Tonex Controller Configuration"
             bool "Espressif DevKitC"
             
         config TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
-            bool "M5Stack AtomS3R"            
+            bool "M5Stack AtomS3R"   
+
+        config TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY            
+            bool "Waveshare 4.3 Development board"   
+        
     endchoice
 
     choice TONEX_CONTROLLER_SKINS

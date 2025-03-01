@@ -1251,7 +1251,9 @@
                     configureParamSelect("wifimode", data['WIFI_MODE']);                    
                     configureParamSelect("wifitxpower", data['WIFI_POWER']);                
                     setParamValue("wifiname", data['WIFI_SSID']);
-                    setParamValue("wifipassword", data['WIFI_PW']);
+                    setParamValue("wifipassword", data['WIFI_PW']);                    
+                    setParamValue("mdnsname", data['MDNS_NAME']);
+
                     configureParamSelect("screenrot", data['SCREEN_ROT']);
 
                     configureParamSelect("extfslay", data['EXTFS_PS_LAYOUT']);
@@ -1442,6 +1444,7 @@
                 var wifitxpower = document.getElementById("wifitxpower").value;                
                 var wifi_ssid = document.getElementById("wifiname").value;
                 var wifi_pw = document.getElementById("wifipassword").value;
+                var mdnsname = document.getElementById("mdnsname").value;                
                 
                 console.log('WiFi config send');
                 
@@ -1449,7 +1452,8 @@
                         "WIFI_MODE": parseInt(wifi_mode),
                         "WIFI_POWER": parseInt(wifitxpower),
                         "WIFI_SSID": wifi_ssid,
-                        "WIFI_PW": wifi_pw});
+                        "WIFI_PW": wifi_pw,
+                        "MDNS_NAME": mdnsname});
                         
                 setToast('WiFi Config Saved');
             }
@@ -2312,6 +2316,11 @@
                     <label class="form-check-label" for="wifipassword">WiFi Password</label>
                     <input type="password" id="wifipassword" name="wifipassword" class="form-control text_entry_style" maxlength="40" size="40" value="WiFi Password">
                 </div>
+                <br>
+                <div class="container">
+                    <label class="form-check-label" for="mdnsname">MDNS Name</label>
+                    <input type="text" id="mdnsname" name="mdnsname" class="form-control text_entry_style" maxlength="32" size="32" value="tonex">
+                </div>                
                 <br>
                 <br>
                 <div class="container">

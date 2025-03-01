@@ -72,7 +72,7 @@ static const char *TAG = "app_display";
 
 #define DISPLAY_TASK_STACK_SIZE   (6 * 1024)
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // LCD panel config
     #define DISPLAY_LCD_PIXEL_CLOCK_HZ     (18 * 1000 * 1000)
     #define DISPLAY_LCD_BK_LIGHT_ON_LEVEL  1
@@ -192,7 +192,7 @@ static void __attribute__((unused)) display_lvgl_flush_cb(lv_disp_drv_t *drv, co
     lv_disp_flush_ready(drv);
 }
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
 // we use two semaphores to sync the VSYNC event and the LVGL task, to avoid potential tearing effect
 #if CONFIG_DISPLAY_AVOID_TEAR_EFFECT_WITH_SEM
 SemaphoreHandle_t sem_vsync_end;
@@ -1071,7 +1071,7 @@ void UI_RefreshParameterValues(void)
 #endif    
 }
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY 
 
 /****************************************************************************
 * NAME:        
@@ -1378,21 +1378,21 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
         case UI_ELEMENT_AMP_SKIN:
         {
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
             element_1 = ui_SkinImage;
 #endif            
         } break;
 
         case UI_ELEMENT_PRESET_DESCRIPTION:
         {
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B            
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY            
             element_1 = ui_PresetDetailsTextArea;
 #endif            
         } break;
 
         case UI_ELEMENT_PARAMETERS:
         {
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B     
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY     
             ESP_LOGI(TAG, "Syncing params to UI");
 
             tTonexParameter* param_ptr;
@@ -2471,7 +2471,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
                     lv_obj_clear_flag(ui_WiFiStatusConn, LV_OBJ_FLAG_HIDDEN);
                 }
             }
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B            
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY            
             else if (element_1 == ui_SkinImage)
             {
                 // set skin
@@ -2482,7 +2482,7 @@ static uint8_t update_ui_element(tUIUpdate* update)
 
         case UI_ACTION_SET_LABEL_TEXT:
         {
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
             lv_label_set_text(element_1, update->Text);
 #elif CONFIG_TONEX_CONTROLLER_DISPLAY_SMALL
             if (element_1 == ui_PresetHeadingLabel)
@@ -2586,7 +2586,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
     lvgl_mux = xSemaphoreCreateRecursiveMutex();
     assert(lvgl_mux);
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B    
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY    
     uint8_t touch_ok = 0;
     esp_err_t ret = ESP_OK;
     gpio_config_t gpio_config_struct;
@@ -2806,7 +2806,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
 
         lv_indev_drv_register(&indev_drv);
     }
-#endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#endif  //CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169TOUCH
     gpio_config_t gpio_config_struct;
@@ -2839,7 +2839,7 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
         // however, the ESP framework uses multiples of 4092 for DMA (LLDESC_MAX_NUM_PER_DESC).
         // this theoretical number is 49.9 times the DMA size, which gets rounded down and ends up too small.
         // so instead, manually setting it to a little larger (50 rather than 49.9)
-        .max_transfer_sz = 50 * LLDESC_MAX_NUM_PER_DESC,
+        .max_transfer_sz = 6 * LLDESC_MAX_NUM_PER_DESC,   //50 * LLDESC_MAX_NUM_PER_DESC,
     };
     spi_bus_initialize(WAVESHARE_240_280_LCD_SPI_NUM, &buscfg, SPI_DMA_CH_AUTO);
 

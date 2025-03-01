@@ -206,5 +206,31 @@
       "postBuild": "",
       "postFlash": ""
     }
+  },
+  "WS43DEVONLY": {
+    "build": {
+      "compileArgs": [],
+      "ninjaArgs": [],
+      "buildDirectoryPath": "${workspaceFolder}/build_ws43devonly",
+      "sdkconfigDefaults": [
+        "sdkconfig.defaults",
+        "sdkconfig .ws43devonly"
+      ],
+      "sdkconfigFilePath": "${workspaceFolder}/build_ws43devonly"
+    },
+    "env": {},
+    "flashBaudRate": "",
+    "monitorBaudRate": "",
+    "openOCD": {
+      "debugLevel": 0,
+      "configs": [],
+      "args": []
+    },
+    "tasks": {
+      "preBuild": "",
+      "preFlash": "",
+      "postBuild": "",
+      "postFlash": ""
+    }
   }
 }

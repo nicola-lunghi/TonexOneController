@@ -128,7 +128,7 @@ static uint8_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_st
 {
     uint8_t result = false;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // display board uses onboard I2C IO expander
     uint8_t value;
 
@@ -159,7 +159,7 @@ static uint8_t footswitch_read_multiple_onboard(uint16_t* switch_state)
     uint8_t result = false;
     *switch_state = 0;
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // display board uses onboard I2C IO expander
     uint16_t values;
 
@@ -578,7 +578,7 @@ void footswitch_task(void *arg)
     // let things settle
     vTaskDelay(pdMS_TO_TICKS(1000));
 
-#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
+#if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // 4.3B doesn't have enough IO, only supports dual mode
     FootswitchControl.onboard_switch_mode = FOOTSWITCH_MODE_DUAL_UP_DOWN;
 #else
@@ -660,24 +660,27 @@ void footswitch_task(void *arg)
         }
 
         // check for button held for data reset
-        if (footswitch_read_single_onboard(FOOTSWITCH_1, &value))
+        if (FOOTSWITCH_1 != -1)
         {
-            if (value == 1)
-            {        
-                reset_timer++;
-
-                if (reset_timer > BUTTON_FACTORY_RESET_TIME)
-                {
-                    ESP_LOGI(TAG, "Config Reset to default");  
-                    control_set_default_config(); 
-
-                    // save and reboot
-                    control_save_user_data(1);
-                }
-            }
-            else
+            if (footswitch_read_single_onboard(FOOTSWITCH_1, &value))
             {
-                reset_timer = 0;
+                if (value == 1)
+                {        
+                    reset_timer++;
+
+                    if (reset_timer > BUTTON_FACTORY_RESET_TIME)
+                    {
+                        ESP_LOGI(TAG, "Config Reset to default");  
+                        control_set_default_config(); 
+
+                        // save and reboot
+                        control_save_user_data(1);
+                    }
+                }
+                else
+                {
+                    reset_timer = 0;
+                }
             }
         }
 
