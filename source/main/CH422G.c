@@ -130,15 +130,14 @@ esp_err_t CH422G_read_input(uint8_t pin_bit, uint8_t* value)
     esp_err_t res = ESP_FAIL;
     uint16_t values;
 
-    *value = 0;
+    // default to not pressed
+    *value = 1;
+
     res = CH422G_read_all_input(&values);
 
     if (res == ESP_OK)
     {
-        if ((values & (1 << pin_bit)) != 0)
-        {
-            *value = 1;
-        }
+        *value = (values >> pin_bit) & 0x01;
     }
     else
     {

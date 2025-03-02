@@ -69,9 +69,9 @@ typedef struct
 {
     uint8_t state;
     uint32_t sample_counter;
-    uint8_t last_binary_val;
-    uint8_t current_bank;
-    uint8_t index_pending;    
+    uint16_t last_binary_val;
+    uint16_t current_bank;
+    uint16_t index_pending;    
     uint8_t (*footswitch_single_reader)(uint8_t, uint8_t*);    
     uint8_t (*footswitch_multiple_reader)(uint16_t*);    
 } tFootswitchHandler;
@@ -106,15 +106,15 @@ static i2c_port_t i2cnum;
 static const __attribute__((unused)) tFootswitchLayoutEntry FootswitchLayouts[FOOTSWITCH_LAYOUT_LAST] = 
 {
     //tot  ppb  bdm     bum
-    {3,    3,   0x03,   0x06},            // FOOTSWITCH_LAYOUT_1X3
-    {4,    4,   0x03,   0x0C},            // FOOTSWITCH_LAYOUT_1X4
-    {5,    5,   0x03,   0x18},            // FOOTSWITCH_LAYOUT_1X5
-    {6,    6,   0x03,   0x06},            // FOOTSWITCH_LAYOUT_2X3
-    {8,    8,   0x03,   0x0C},            // FOOTSWITCH_LAYOUT_2X4
-    {10,   10,  0x03,   0x18},            // FOOTSWITCH_LAYOUT_2X5A
-    {10,   8,   0x10,   0x200},           // FOOTSWITCH_LAYOUT_2X5B
-    {12,   12,  0x03,   0x30},            // FOOTSWITCH_LAYOUT_2X6A
-    {12,   10,  0x20,   0x800},           // FOOTSWITCH_LAYOUT_2X6B
+    {3,    3,   0x0003,   0x0006},            // FOOTSWITCH_LAYOUT_1X3
+    {4,    4,   0x0003,   0x000C},            // FOOTSWITCH_LAYOUT_1X4
+    {5,    5,   0x0003,   0x0018},            // FOOTSWITCH_LAYOUT_1X5
+    {6,    6,   0x0003,   0x0006},            // FOOTSWITCH_LAYOUT_2X3
+    {8,    8,   0x0003,   0x000C},            // FOOTSWITCH_LAYOUT_2X4
+    {10,   10,  0x0003,   0x0018},            // FOOTSWITCH_LAYOUT_2X5A
+    {10,   8,   0x0100,   0x0200},            // FOOTSWITCH_LAYOUT_2X5B
+    {12,   12,  0x0003,   0x0030},            // FOOTSWITCH_LAYOUT_2X6A
+    {12,   10,  0x0400,   0x0800},            // FOOTSWITCH_LAYOUT_2X6B
 };
 
 /****************************************************************************
@@ -135,7 +135,7 @@ static uint8_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_st
     if (CH422G_read_input(number, &value) == ESP_OK)
     {
         result = true;
-        *switch_state = value;
+        *switch_state = (value == 0);
     }
 #else
     // other boards can use direct IO pin
@@ -238,10 +238,28 @@ static uint8_t footswitch_read_multiple_offboard(uint16_t* switch_states)
     {       
         if (SX1509_getPinValues(switch_states) == ESP_OK)
         {            
-            // debug
-            //ESP_LOGI(TAG, "Footswitches read %d", (int)switch_states);
             // flip so 1 = switch pressed
             *switch_states = ~(*switch_states);
+
+#if 0            
+            // debug code to dump footswitch states to log
+            char debug_text_1[50] = {0};
+            char debug_text_2[4] = {0};
+            for (uint8_t loop = 0; loop < 16; loop++)    
+            {
+                if (((*switch_states) & (1 << (15 - loop))) != 0)
+                {
+                    sprintf(debug_text_2, "1 ");
+                }
+                else
+                {
+                    sprintf(debug_text_2, "0 ");
+                }
+                strcat(debug_text_1, debug_text_2);
+            }
+            ESP_LOGI(TAG, "Footswitches read: %s", debug_text_1);
+            vTaskDelay(500);    
+#endif 
 
             result = true;
         }
