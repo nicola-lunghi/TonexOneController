@@ -433,7 +433,7 @@ esp_err_t SX1509_digitalRead(uint8_t pin, uint8_t* value)
     {
         if (SX1509_read_register(SX1509_REG_DATA_B, 1) == ESP_OK)
         {
-            *value = (registers[SX1509_REG_DATA_B] >> pin) & 0x01;
+            *value = (registers[SX1509_REG_DATA_B] >> (pin - 8)) & 0x01;
             ret = ESP_OK;
         }
     }

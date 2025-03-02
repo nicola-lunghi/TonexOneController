@@ -72,8 +72,8 @@ typedef struct
     uint16_t last_binary_val;
     uint16_t current_bank;
     uint16_t index_pending;    
-    uint8_t (*footswitch_single_reader)(uint8_t, uint8_t*);    
-    uint8_t (*footswitch_multiple_reader)(uint16_t*);    
+    esp_err_t (*footswitch_single_reader)(uint8_t, uint8_t*);    
+    esp_err_t (*footswitch_multiple_reader)(uint16_t*);    
 } tFootswitchHandler;
 
 typedef struct
@@ -124,9 +124,9 @@ static const __attribute__((unused)) tFootswitchLayoutEntry FootswitchLayouts[FO
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static uint8_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_state)
+static esp_err_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_state)
 {
-    uint8_t result = false;
+    esp_err_t result = ESP_FAIL;
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // display board uses onboard I2C IO expander
@@ -134,14 +134,14 @@ static uint8_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_st
 
     if (CH422G_read_input(number, &value) == ESP_OK)
     {
-        result = true;
+        result = ESP_OK;
         *switch_state = (value == 0);
     }
 #else
     // other boards can use direct IO pin
     *switch_state = (gpio_get_level(number) == 0);
 
-    result = true;
+    result = ESP_OK;
 #endif
 
     return result;
@@ -154,9 +154,9 @@ static uint8_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_st
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static uint8_t footswitch_read_multiple_onboard(uint16_t* switch_state)
+static esp_err_t footswitch_read_multiple_onboard(uint16_t* switch_state)
 {
-    uint8_t result = false;
+    esp_err_t result = ESP_FAIL;
     *switch_state = 0;
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
@@ -165,7 +165,7 @@ static uint8_t footswitch_read_multiple_onboard(uint16_t* switch_state)
 
     if (CH422G_read_all_input(&values) == ESP_OK)
     {
-        result = true;
+        result = ESP_OK;
         *switch_state = values;
     }
 #else
@@ -190,7 +190,7 @@ static uint8_t footswitch_read_multiple_onboard(uint16_t* switch_state)
         *switch_state |= ((gpio_get_level(FOOTSWITCH_4) == 0) << 3);
     }
 
-    result = true;
+    result = ESP_OK;
 #endif
 
     return result;
@@ -203,9 +203,9 @@ static uint8_t footswitch_read_multiple_onboard(uint16_t* switch_state)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static uint8_t footswitch_read_single_offboard(uint8_t pin, uint8_t* switch_state)
+static esp_err_t footswitch_read_single_offboard(uint8_t pin, uint8_t* switch_state)
 {
-    uint8_t result = false;
+    esp_err_t result = ESP_FAIL;
     uint8_t level;
 
     if (FootswitchControl.io_expander_ok)
@@ -215,7 +215,7 @@ static uint8_t footswitch_read_single_offboard(uint8_t pin, uint8_t* switch_stat
             // debug
             //ESP_LOGI(TAG, "Footswitch read %d", (int)level_mask);
 
-            result = true;
+            result = ESP_OK;
             *switch_state = (level == 0);
         }
     }
@@ -230,9 +230,9 @@ static uint8_t footswitch_read_single_offboard(uint8_t pin, uint8_t* switch_stat
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static uint8_t footswitch_read_multiple_offboard(uint16_t* switch_states)
+static esp_err_t footswitch_read_multiple_offboard(uint16_t* switch_states)
 {
-    uint8_t result = false;
+    esp_err_t result = ESP_FAIL;
 
     if (FootswitchControl.io_expander_ok)
     {       
@@ -261,7 +261,7 @@ static uint8_t footswitch_read_multiple_offboard(uint16_t* switch_states)
             vTaskDelay(500);    
 #endif 
 
-            result = true;
+            result = ESP_OK;
         }
     }
 
@@ -285,7 +285,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
         default:
         {
             // read footswitches
-            if (handler->footswitch_single_reader(FOOTSWITCH_1, &value)) 
+            if (handler->footswitch_single_reader(FOOTSWITCH_1, &value) == ESP_OK) 
             {
                 if (value == 1)
                 {
@@ -302,7 +302,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
 
             if (handler->state == FOOTSWITCH_IDLE)
             {
-                if (handler->footswitch_single_reader(FOOTSWITCH_2, &value))
+                if (handler->footswitch_single_reader(FOOTSWITCH_2, &value) == ESP_OK)
                 {
                     if (value == 1)
                     {
@@ -322,7 +322,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
         case FOOTSWITCH_WAIT_RELEASE_1:
         {
             // read footswitch 1
-            if (handler->footswitch_single_reader(FOOTSWITCH_1, &value))
+            if (handler->footswitch_single_reader(FOOTSWITCH_1, &value) == ESP_OK)
             {
                 if (value == 0)
                 {
@@ -344,7 +344,7 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
         case FOOTSWITCH_WAIT_RELEASE_2:
         {
             // read footswitch 2
-            if (handler->footswitch_single_reader(FOOTSWITCH_2, &value))
+            if (handler->footswitch_single_reader(FOOTSWITCH_2, &value) == ESP_OK)
             {
                 if (value == 0)
                 {
@@ -375,17 +375,32 @@ static void footswitch_handle_dual_mode(tFootswitchHandler* handler)
 static void footswitch_handle_banked(tFootswitchHandler* handler, tFootswitchLayoutEntry* layout)
 {
     uint16_t binary_val = 0;    
+    uint16_t loop;
+    uint16_t mask = 0;
 
     // read all footswitches
-    handler->footswitch_multiple_reader(&binary_val);
+    if (handler->footswitch_multiple_reader(&binary_val) != ESP_OK)
+    {
+        // failed
+        return;
+    }
     
+    // check if switch is outside of the used range
+    for (loop = 0; loop < layout->total_switches; loop++)
+    {
+        mask |= (1 << loop);
+    }
+
+    // mask off unused switches
+    binary_val &= mask;
+
     // handle state
     switch (handler->state)
     {
         case FOOTSWITCH_IDLE:
         {
             // any buttons pressed?
-            if (binary_val != 0)
+            if (binary_val != 0) 
             {
                 // check if bank down is pressed
                 if (binary_val == layout->bank_down_switch_mask)
@@ -526,6 +541,7 @@ static void footswitch_handle_efects(tFootswitchHandler* handler)
     switch (handler->state)
     {
          case FOOTSWITCH_IDLE:
+         default:
          {
             for (loop = 0; loop < MAX_EXTERNAL_EFFECT_FOOTSWITCHES; loop++)    
             {
@@ -541,11 +557,19 @@ static void footswitch_handle_efects(tFootswitchHandler* handler)
                             {
                                 // send first value
                                 midi_helper_adjust_param_via_midi(FootswitchControl.ExternalFootswitchEffectHandler[loop].config.CC, FootswitchControl.ExternalFootswitchEffectHandler[loop].config.Value_1);
+
+                                ESP_LOGI(TAG, "Footswitch Param change (1). Switch: %d. CC:%d. Value:%d", (int)FootswitchControl.ExternalFootswitchEffectHandler[loop].config.Switch, 
+                                                                                                          (int)FootswitchControl.ExternalFootswitchEffectHandler[loop].config.CC, 
+                                                                                                          (int)FootswitchControl.ExternalFootswitchEffectHandler[loop].config.Value_1);
                             }
                             else
                             {
                                 // send second value
                                 midi_helper_adjust_param_via_midi(FootswitchControl.ExternalFootswitchEffectHandler[loop].config.CC, FootswitchControl.ExternalFootswitchEffectHandler[loop].config.Value_2);
+
+                                ESP_LOGI(TAG, "Footswitch Param change (2). Switch: %d. CC:%d. Value:%d", (int)FootswitchControl.ExternalFootswitchEffectHandler[loop].config.Switch, 
+                                                                                                          (int)FootswitchControl.ExternalFootswitchEffectHandler[loop].config.CC, 
+                                                                                                          (int)FootswitchControl.ExternalFootswitchEffectHandler[loop].config.Value_2);
                             }
 
                             // flip toggle state
@@ -680,7 +704,7 @@ void footswitch_task(void *arg)
         // check for button held for data reset
         if (FOOTSWITCH_1 != -1)
         {
-            if (footswitch_read_single_onboard(FOOTSWITCH_1, &value))
+            if (footswitch_read_single_onboard(FOOTSWITCH_1, &value) == ESP_OK)
             {
                 if (value == 1)
                 {        
