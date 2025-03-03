@@ -847,6 +847,8 @@ static esp_err_t ws_handler(httpd_req_t *req)
                         }
                     }                    
                 }
+
+                json_parse_end(&pWebConfig->jctx);
             }
         }
 

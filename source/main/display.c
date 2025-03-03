@@ -2838,8 +2838,8 @@ void display_init(i2c_port_t I2CNum, SemaphoreHandle_t I2CMutex)
         // note here: this value needs to be: WAVESHARE_240_280_LCD_H_RES * WAVESHARE_240_280_LCD_DRAW_BUFF_HEIGHT * sizeof(uint16_t)
         // however, the ESP framework uses multiples of 4092 for DMA (LLDESC_MAX_NUM_PER_DESC).
         // this theoretical number is 49.9 times the DMA size, which gets rounded down and ends up too small.
-        // so instead, manually setting it to a little larger (50 rather than 49.9)
-        .max_transfer_sz = 6 * LLDESC_MAX_NUM_PER_DESC,   //50 * LLDESC_MAX_NUM_PER_DESC,
+        // so instead, manually setting it to a little larger
+        .max_transfer_sz = 6 * LLDESC_MAX_NUM_PER_DESC, 
     };
     spi_bus_initialize(WAVESHARE_240_280_LCD_SPI_NUM, &buscfg, SPI_DMA_CH_AUTO);
 
