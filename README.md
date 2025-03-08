@@ -52,7 +52,8 @@ The supported features vary a little depending on the chosen hardware platform.
 - Bluetooth server support. Pair your phone/tablet with the controller, and send standard Midi program changes, bridged through to the Tonex One pedal (note Server and Client cannot be used simultaneously)
 - USB host control of the Tonex pedal
 - Wired/Serial Midi support
-- New in V1.06: full control over all Tonex One parameters and effects, via LCD (4.3B only) and Midi (all platforms.)
+- New in V1.0.6: full control over all Tonex One parameters and effects, via LCD (4.3B only) and Midi (all platforms.)
+- New in V1.0.8: support for up to 16 footswitches, with configurable preset switching layouts, and up to 5 effect/parameter toggle switches
 
 ## Hardware Platforms and Wiring <a name="hardware_platforms"></a>
 For more information about the hardware platforms, refer to [Hardware Platforms](HardwarePlatforms.md)
@@ -94,6 +95,12 @@ For more information about the firmware development and customisation, refer to 
 - https://github.com/vit3k/tonex_controller for great work on reverse engineering the Tonex One USB protocol
 
 ## Firmware Release Notes <a name="release_notes"></a>
+V1.0.8.2:
+- Coming soon. Code complete but working on documentation and video
+- Fixed memory leak in web config that would eventually lead to malfunction
+- Added the ability to configure the WiFi transmit power
+- Added support for SX1509 IO expander, that allows up to 16 footswitches on all platforms. Preset switching options, and up to 5 footswitches that can toggle effects/parameters
+
 V1.0.7.2:
 - New WiFi options, now allowing connection to other access points.
 - Added WiFi status icon for platforms with displays
