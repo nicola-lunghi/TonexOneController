@@ -25,10 +25,23 @@ extern "C" {
 
 #define APP_VERSION		"1.0.8.2"
 
+#define I2C_MASTER_NUM_1                0          
+#define I2C_MASTER_NUM_2                1          
+
+extern SemaphoreHandle_t I2CMutex_1;
+extern SemaphoreHandle_t I2CMutex_2;
+
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B
-    // I2C bus
-    #define I2C_MASTER_SCL_IO  GPIO_NUM_9       
-    #define I2C_MASTER_SDA_IO  GPIO_NUM_8       
+    // I2C bus 1
+    #define I2C_MASTER_1_SCL_IO  GPIO_NUM_9       
+    #define I2C_MASTER_1_SDA_IO  GPIO_NUM_8       
+
+    // I2C bus 2
+    #define I2C_MASTER_2_SCL_IO  -1
+    #define I2C_MASTER_2_SDA_IO  -1
+
+    #define EXTERNAL_IO_EXPANDER_BUS       I2C_MASTER_NUM_1
+    #define EXTERNAL_IO_EXPANDER_MUTEX     I2CMutex_1 
 
     // IO expander
     #define FOOTSWITCH_1		IO_EXPANDER_PIN_1
@@ -93,9 +106,16 @@ extern "C" {
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // Waveshare 4.3 (not B) dual USB port board with resistor mod.
     // Development use only, not for release.
-    // I2C bus
-    #define I2C_MASTER_SCL_IO  GPIO_NUM_9       
-    #define I2C_MASTER_SDA_IO  GPIO_NUM_8       
+    // I2C bus 1
+    #define I2C_MASTER_1_SCL_IO  GPIO_NUM_9       
+    #define I2C_MASTER_1_SDA_IO  GPIO_NUM_8       
+
+    // I2C bus 2
+    #define I2C_MASTER_2_SCL_IO  -1
+    #define I2C_MASTER_2_SDA_IO  -1
+    
+    #define EXTERNAL_IO_EXPANDER_BUS       I2C_MASTER_NUM_1
+    #define EXTERNAL_IO_EXPANDER_MUTEX     I2CMutex_1 
 
     // IO expander
     #define FOOTSWITCH_1		-1
@@ -150,9 +170,16 @@ extern "C" {
     #define PIN_NUM_CS          -1
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169TOUCH
-    // I2C bus
-    #define I2C_MASTER_SCL_IO  GPIO_NUM_10       
-    #define I2C_MASTER_SDA_IO  GPIO_NUM_11       
+    // I2C bus 1
+    #define I2C_MASTER_1_SCL_IO  GPIO_NUM_10       
+    #define I2C_MASTER_1_SDA_IO  GPIO_NUM_11       
+
+    // I2C bus 2
+    #define I2C_MASTER_2_SCL_IO  -1
+    #define I2C_MASTER_2_SDA_IO  -1
+
+    #define EXTERNAL_IO_EXPANDER_BUS       I2C_MASTER_NUM_1
+    #define EXTERNAL_IO_EXPANDER_MUTEX     I2CMutex_1 
 
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_3
@@ -178,9 +205,16 @@ extern "C" {
     #define WAVESHARE_240_280_BUZZER                  GPIO_NUM_42
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169
-    // I2C bus
-    #define I2C_MASTER_SCL_IO  GPIO_NUM_10       
-    #define I2C_MASTER_SDA_IO  GPIO_NUM_11       
+    // I2C bus 1
+    #define I2C_MASTER_1_SCL_IO  GPIO_NUM_10       
+    #define I2C_MASTER_1_SDA_IO  GPIO_NUM_11       
+
+    // I2C bus 2
+    #define I2C_MASTER_2_SCL_IO  -1
+    #define I2C_MASTER_2_SDA_IO  -1
+
+    #define EXTERNAL_IO_EXPANDER_BUS       I2C_MASTER_NUM_1
+    #define EXTERNAL_IO_EXPANDER_MUTEX     I2CMutex_1 
 
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_16
@@ -208,9 +242,16 @@ extern "C" {
     #define WAVESHARE_240_280_BUZZER                  GPIO_NUM_42
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_ZERO
-    // I2C bus
-    #define I2C_MASTER_SCL_IO  GPIO_NUM_10       
-    #define I2C_MASTER_SDA_IO  GPIO_NUM_11       
+    // I2C bus 1
+    #define I2C_MASTER_1_SCL_IO  GPIO_NUM_10       
+    #define I2C_MASTER_1_SDA_IO  GPIO_NUM_11       
+
+    // I2C bus 2
+    #define I2C_MASTER_2_SCL_IO  -1
+    #define I2C_MASTER_2_SDA_IO  -1
+    
+    #define EXTERNAL_IO_EXPANDER_BUS       I2C_MASTER_NUM_1
+    #define EXTERNAL_IO_EXPANDER_MUTEX     I2CMutex_1 
 
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_4
@@ -226,9 +267,16 @@ extern "C" {
     #define LED_OUTPUT_GPIO_NUM    GPIO_NUM_21
 
 #elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_DEVKITC
-    // I2C bus
-    #define I2C_MASTER_SCL_IO  GPIO_NUM_10       
-    #define I2C_MASTER_SDA_IO  GPIO_NUM_11       
+    // I2C bus 1
+    #define I2C_MASTER_1_SCL_IO  GPIO_NUM_10       
+    #define I2C_MASTER_1_SDA_IO  GPIO_NUM_11       
+
+    // I2C bus 2
+    #define I2C_MASTER_2_SCL_IO  -1
+    #define I2C_MASTER_2_SDA_IO  -1
+    
+    #define EXTERNAL_IO_EXPANDER_BUS       I2C_MASTER_NUM_1
+    #define EXTERNAL_IO_EXPANDER_MUTEX     I2CMutex_1 
 
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_4
@@ -243,14 +291,17 @@ extern "C" {
     // leds
     #define LED_OUTPUT_GPIO_NUM   GPIO_NUM_48
 
-#elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
-    // I2C bus
-    #define I2C_MASTER_SCL_IO  GPIO_NUM_1       
-    #define I2C_MASTER_SDA_IO  GPIO_NUM_2       
+#elif CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R    
+    // I2C bus 1 
+    #define I2C_MASTER_1_SCL_IO  GPIO_NUM_0       
+    #define I2C_MASTER_1_SDA_IO  GPIO_NUM_45       
 
-    // I2C bus
-    #define I2C_MASTER_SCL_IO  GPIO_NUM_0       
-    #define I2C_MASTER_SDA_IO  GPIO_NUM_45       
+    // I2C bus 2
+    #define I2C_MASTER_2_SCL_IO  GPIO_NUM_1       
+    #define I2C_MASTER_2_SDA_IO  GPIO_NUM_2       
+    
+    #define EXTERNAL_IO_EXPANDER_BUS       I2C_MASTER_NUM_2
+    #define EXTERNAL_IO_EXPANDER_MUTEX     I2CMutex_2 
 
     // direct IO pins
     #define FOOTSWITCH_1		GPIO_NUM_5

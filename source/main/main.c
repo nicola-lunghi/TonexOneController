@@ -68,7 +68,6 @@ limitations under the License.
 #include "leds.h"
 #include "tonex_params.h"
 
-#define I2C_MASTER_NUM                  0           /*!< I2C master i2c port number, the number of i2c peripheral interfaces available will depend on the chip */
 #define I2C_MASTER_FREQ_HZ              400000      /*!< I2C master clock frequency */
 #define I2C_MASTER_TX_BUF_DISABLE       0           /*!< I2C master doesn't need buffer */
 #define I2C_MASTER_RX_BUF_DISABLE       0           /*!< I2C master doesn't need buffer */
@@ -78,9 +77,10 @@ limitations under the License.
 
 static const char *TAG = "app_main";
 
-static __attribute__((unused)) SemaphoreHandle_t I2CMutex;
+__attribute__((unused)) SemaphoreHandle_t I2CMutex_1;
+__attribute__((unused)) SemaphoreHandle_t I2CMutex_2;
 
-static esp_err_t i2c_master_init(void);
+static esp_err_t i2c_master_init(uint32_t port, uint32_t scl_pin, uint32_t sda_pin);
 
 /****************************************************************************
 * NAME:        
@@ -91,19 +91,19 @@ static esp_err_t i2c_master_init(void);
 *****************************************************************************/
 esp_err_t i2c_master_reset(void)
 {
-    int sda_io = I2C_MASTER_SDA_IO;
-    int scl_io = I2C_MASTER_SCL_IO;
+    int sda_io = I2C_MASTER_1_SDA_IO;
+    int scl_io = I2C_MASTER_1_SCL_IO;
     const int scl_half_period = I2C_CLR_BUS_HALF_PERIOD_US; // use standard 100kHz data rate
     int i = 0;
 
     ESP_LOGI(TAG, "I2C bus reset");
 
     // nuke it
-    i2c_reset_tx_fifo(I2C_MASTER_NUM);
-    i2c_reset_rx_fifo(I2C_MASTER_NUM);
+    i2c_reset_tx_fifo(I2C_MASTER_NUM_1);
+    i2c_reset_rx_fifo(I2C_MASTER_NUM_1);
     periph_module_disable(PERIPH_I2C0_MODULE);
     periph_module_enable(PERIPH_I2C0_MODULE);
-    i2c_driver_delete(I2C_MASTER_NUM);
+    i2c_driver_delete(I2C_MASTER_NUM_1);
 
     // manually clock the bus if SDA is stuck
     gpio_set_direction(scl_io, GPIO_MODE_OUTPUT_OD);
@@ -137,7 +137,7 @@ esp_err_t i2c_master_reset(void)
     gpio_set_level(sda_io, 1); // STOP, SDA low -> high while SCL is HIGH
 
     // init again
-    return i2c_master_init();
+    return i2c_master_init(I2C_MASTER_NUM_1, I2C_MASTER_1_SCL_IO, I2C_MASTER_1_SDA_IO);
 }
 
 /****************************************************************************
@@ -147,22 +147,22 @@ esp_err_t i2c_master_reset(void)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static esp_err_t i2c_master_init(void)
+static esp_err_t i2c_master_init(uint32_t port, uint32_t scl_pin, uint32_t sda_pin)
 {
     esp_err_t res;
 
     i2c_config_t conf = {
         .mode = I2C_MODE_MASTER,
-        .sda_io_num = I2C_MASTER_SDA_IO,
-        .scl_io_num = I2C_MASTER_SCL_IO,
+        .sda_io_num = sda_pin,
+        .scl_io_num = scl_pin,
         .sda_pullup_en = GPIO_PULLUP_ENABLE,
         .scl_pullup_en = GPIO_PULLUP_ENABLE,
         .master.clk_speed = I2C_MASTER_FREQ_HZ,
     };
 
-    i2c_param_config(I2C_MASTER_NUM, &conf);
+    i2c_param_config(port, &conf);
 
-    res = i2c_driver_install(I2C_MASTER_NUM, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
+    res = i2c_driver_install(port, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
     return res;
 }
 
@@ -206,27 +206,39 @@ void app_main(void)
     // load the config first
     control_load_config();
 
-    // create mutex for shared I2C bus
-    I2CMutex = xSemaphoreCreateMutex();
-    if (I2CMutex == NULL)
+    // create mutexes for shared I2C buses
+    I2CMutex_1 = xSemaphoreCreateMutex();
+    if (I2CMutex_1 == NULL)
     {
-        ESP_LOGE(TAG, "I2C Mutex create failed!");
+        ESP_LOGE(TAG, "I2C Mutex 1 create failed!");
+    }
+    
+    I2CMutex_2 = xSemaphoreCreateMutex();
+    if (I2CMutex_2 == NULL)
+    {
+        ESP_LOGE(TAG, "I2C Mutex 2 create failed!");
     }
 
-    // init I2C master
-    ESP_ERROR_CHECK(i2c_master_init());
-    ESP_LOGI(TAG, "I2C initialized successfully");
+    // init I2C master 1
+    ESP_ERROR_CHECK(i2c_master_init(I2C_MASTER_NUM_1, I2C_MASTER_1_SCL_IO, I2C_MASTER_1_SDA_IO));
+    ESP_LOGI(TAG, "I2C 1 initialized successfully");
+
+    if (I2C_MASTER_2_SCL_IO != -1)
+    {
+        ESP_ERROR_CHECK(i2c_master_init(I2C_MASTER_NUM_2, I2C_MASTER_2_SCL_IO, I2C_MASTER_2_SDA_IO));
+        ESP_LOGI(TAG, "I2C 2 initialized successfully");    
+    }
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // init onboard IO expander
     ESP_LOGI(TAG, "Init Onboard IO Expander");
-    InitIOExpander(I2C_MASTER_NUM, I2CMutex);
+    InitIOExpander(I2C_MASTER_NUM_1, I2CMutex_1);
 #endif
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
     // init LP5562 led driver
     ESP_LOGI(TAG, "Init LP5562 Led Driver");
-    LP5562_init(I2C_MASTER_NUM, I2CMutex);
+    LP5562_init(I2C_MASTER_NUM_1, I2CMutex_1);
 #endif
 
     // init parameters
@@ -240,24 +252,24 @@ void app_main(void)
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY
     // init GUI
     ESP_LOGI(TAG, "Init 43.B display");
-    display_init(I2C_MASTER_NUM, I2CMutex);
+    display_init(I2C_MASTER_NUM_1, I2CMutex_1);
 #endif
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169 || CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_169TOUCH 
     // init GUI
     ESP_LOGI(TAG, "Init 1.69 display");
-    display_init(I2C_MASTER_NUM, I2CMutex);
+    display_init(I2C_MASTER_NUM_1, I2CMutex_1);
 #endif
 
 #if CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_M5ATOMS3R
     // init GUI
     ESP_LOGI(TAG, "Init 0.85 display");
-    display_init(I2C_MASTER_NUM, I2CMutex);
+    display_init(I2C_MASTER_NUM_1, I2CMutex_1);
 #endif
 
     // init Footswitches
     ESP_LOGI(TAG, "Init footswitches");
-    footswitches_init(I2C_MASTER_NUM, I2CMutex);
+    footswitches_init(EXTERNAL_IO_EXPANDER_BUS, EXTERNAL_IO_EXPANDER_MUTEX);
 
     if (control_get_config_item_int(CONFIG_ITEM_BT_MODE) != BT_MODE_DISABLED)
     {
