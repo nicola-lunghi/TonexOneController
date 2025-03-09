@@ -6,10 +6,11 @@
  3. [Hardware Platform 3 Waveshare 1.69](#waveshare_169)
  4. [Hardware Platform 4 Espressif DevKit-C](#esp_devkitc)
  5. [Hardware Platform 5 M5Stack Atom S3R](#m5stack_atoms3r)
- 6. [Wired Footswitches](#footswitches)
- 7. [Wired Midi](#midi)
- 8. [Cases](#cases)
- 9. [9 volt Power for 5 volt models](#9v_power)
+ 6. [Wired Footswitches - onboard](#footswitches)
+ 7. [Wired Footswitches - external](#footswitches_ext)
+ 8. [Wired Midi](#midi)
+ 9. [Cases](#cases)
+ 10. [9 volt Power for 5 volt models](#9v_power)
 
 Four hardware platforms are supported. Other ESP32-S3 platforms could be supported but would require code changes. 
 <br>
@@ -132,8 +133,8 @@ Note: the controller code relies on the Tonex One pedal being set to Stomp mode.
 <br><br>
 
 <br><br>
-## Wired Footswitches <a name="footswitches"></a>
-Wired footswitches can optionally be used.
+## Wired Footswitches (onboard) <a name="footswitches"></a>
+Wired footswitches can optionally be used. These "onboard" switches connect directly to the controller with out needing any additional circuitry.<br>
 The footswitch must be a "momentary" type that is only has its contacts closed when it is pressed.
 The common pin of the footswitch must connect to the Controller ground pin, and the other wires connected as shown.
 <br><br>
@@ -150,6 +151,31 @@ For the other platforms, with firmware version 1.0.5.2 or above, three modes are
 ![footswitches_waveshare_169](https://github.com/user-attachments/assets/93c0014e-db42-483d-9508-44a4478d2f75)
 ![footswitches_devkitc](https://github.com/user-attachments/assets/bbeb5898-8cb4-49ca-80a5-eb6f4dedb8fb)
 ![footswitches_atoms3r](https://github.com/user-attachments/assets/e3c227f4-f3ba-480b-a41d-3ab54e3966d5)
+
+<br><br>
+## Wired Footswitches (external) <a name="footswitches_ext"></a>
+Starting from firmware version 1.0.8.2, with the use of an additional PCB, up to 16 footswitches can be connected.<br> 
+The footswitch must be a "momentary" type that is only has its contacts closed when it is pressed.
+<br>
+The additional PCB must use the "SX1509" chip. Thne recommeded one is the Sparkfun SX1509 breakout board:
+https://www.sparkfun.com/sparkfun-16-output-i-o-expander-breakout-sx1509.html
+<br>
+![image](https://github.com/user-attachments/assets/0575f0a0-1eb3-4aef-a7e2-c321876f7ed0)
+
+NOTE: other types of IO expander boards that use different chips are not supported and will not function. It must contain the SX1509 chip.
+
+Address Setting: The SX1509 PCB has a selectable address system. This must be set correctly in order for the board to function with the controller.
+
+
+The common pin of each footswitch must connect to the SX1509 ground pins. The labels "0", "1" etc are the individual switch inputs. Footswitch 1 connected to input 0. Footswitch 2 to input 1 etc.
+<br><br>
+Multiple modes are supported, configured using the web configuration.
+![external_waveshare_display](https://github.com/user-attachments/assets/0cfaa971-6afc-41d9-9ee7-74fc7572e22d)
+![external_waveshare_zero](https://github.com/user-attachments/assets/dfcdd4a2-199f-4045-a01f-b32459fd3f50)
+![external_waveshare_169](https://github.com/user-attachments/assets/3feb5ce3-fa6e-42c6-ac09-b5c4db784d1f)
+![external_devkitc](https://github.com/user-attachments/assets/d05c903a-fd8a-4bae-86be-006db2a4abfc)
+![external_atom_3sr](https://github.com/user-attachments/assets/2c5db1a0-b66a-4516-96fd-47d03f7526da)
+
 
 ## Wired Midi (firmware version V1.0.4.1 or above required) <a name="midi"></a>
 Note: Wired Midi is disabled by default. If it is enabled without the proper hardware (detailed below) being fitted, you may get "phantom" preset changes, due to the serial input "floating".
