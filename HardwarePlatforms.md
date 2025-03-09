@@ -156,15 +156,20 @@ For the other platforms, with firmware version 1.0.5.2 or above, three modes are
 ## Wired Footswitches (external) <a name="footswitches_ext"></a>
 Starting from firmware version 1.0.8.2, with the use of an additional PCB, up to 16 footswitches can be connected.<br> 
 The footswitch must be a "momentary" type that is only has its contacts closed when it is pressed.
-<br>
-The additional PCB must use the "SX1509" chip. Thne recommeded one is the Sparkfun SX1509 breakout board:
+<br><br>
+The additional PCB must use the "SX1509" chip. The recommeded one is the Sparkfun SX1509 breakout board:
 https://www.sparkfun.com/sparkfun-16-output-i-o-expander-breakout-sx1509.html
 <br>
 ![image](https://github.com/user-attachments/assets/0575f0a0-1eb3-4aef-a7e2-c321876f7ed0)
 
 NOTE: other types of IO expander boards that use different chips are not supported and will not function. It must contain the SX1509 chip.
 
-Address Setting: The SX1509 PCB has a selectable address system. This must be set correctly in order for the board to function with the controller.
+### Address Setting 
+The SX1509 PCB has a selectable address system. This must be set correctly in order for the board to function with the controller.
+- Using a sharp knife, carefully cut the thin tracks between the pads as shown below
+- Use solder to bridge the pads as shown below
+- This sets the SX1509 adress to "11" which avoids conflicting with other parts on the controller boards
+![sx1509_address](https://github.com/user-attachments/assets/84030e88-f6e7-4fc0-8230-3fff6dc1235a)
 
 
 The common pin of each footswitch must connect to the SX1509 ground pins. The labels "0", "1" etc are the individual switch inputs. Footswitch 1 connected to input 0. Footswitch 2 to input 1 etc.
