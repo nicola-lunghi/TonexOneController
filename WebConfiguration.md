@@ -5,7 +5,7 @@ This project uses a low-cost embedded controller (Espressif ESP32-S3) to form a 
 New in firmware version V1.0.7.2 is the ability to change all of the pedal parameters, change presets, and change controller options, all from a web page.
 <br>
 <br>
-![image](https://github.com/user-attachments/assets/566d668b-119d-4dda-b6c3-53679e46e0e1)
+![image](https://github.com/user-attachments/assets/84ee5aff-d9fe-46bc-8309-11099a25549a)
 
 # Changing Presets
 The current preset can be changed by clicking on the white box beneath the title. A list will be shown, from 1 to 20. Select a number to select the preset.
@@ -50,8 +50,8 @@ Miscellaneous settings are available from the Misc category on the left menu.
 - If this setting is disabled (default), then setting the same preset index multiple times will not have any effect. <br>
 - If this setting is enabled, then setting the same preset a second time will set the Tonex pedal to bypass mode. Setting it a third time will exit bypass mode.
 This setting is most suited to use with Pedal models, where it could for example enable/disable an overdrive pedal
-### Footswitch Mode
-This setting controls how directly wired footswitches will function. Note this has nothing to do with Bluetooth footswitch pedals.
+### Footswitch (onboard) Mode
+This setting controls how directly wired (onboard) footswitches will function. Note this has nothing to do with Bluetooth footswitch pedals, or the externally connecxted footswitches.
 - Dual Next/Previous: 2 footswitches that select preset next and previous
 - Quad Banked: 4 footswitches. 5 banks of 4 presets are controlled. 1+2 selects down a bank. 3+4 selects up a bank. Single switch selects the preset of ((bank * 4) + switch number)
 - Quad Binary: 4 switch inputs, intended for control by relays. The preset selected depends on the binary combination switch inputs, with switch 1 being the least significant bit, and switch 4 being the most significant bit. E.g. switch inputs 1,0,1,1 = preset 11
@@ -63,6 +63,54 @@ This setting controls how directly wired footswitches will function. Note this h
 ## Save and Reboot
 The Save and Reboot buttons on each configuration page will save all settings and reboot the controller for them to take affect.
 
+<br>
+
+## External Footswitches (Ext)
+New in V1.0.8.2. The External Footswitches category allows externally-connected footswitches to be configured.
+
+### Preset Switch Layout
+This controls how preset switching will be handled. Options are as follows.
+| Name | Total Switches | Arrangement | Bank Up | Bank Down | Notes
+|----------- | ------------ | ----------- | ----------- | ------------- | ------------------------- |
+| 1x3  | 3   |  1 row of 3 |  2 + 3 | 1 + 2 | |
+| 1x4  | 4   |  1 row of 4 |  3 + 4 | 1 + 2 | |
+| 1x5  | 5   |  1 row of 5 |  4 + 5 | 1 + 2 | |
+| 2x3  | 6   |  2 rows of 3 |  2 + 3 | 1 + 2 | |
+| 2x4  | 8   |  2 rows of 4 |  3 + 4 | 1 + 2 | |
+| 2x5A  | 10   |  2 rows of 5 |  4 + 5 | 1 + 2 | |
+| 2x5B  | 10   |  2 rows of 5 |  10 | 9 | Dedicated bank switches |
+| 2x6A  | 12   |  2 rows of 6 |  5 + 6 | 1 + 2 | |
+| 2x6B  | 12   |  2 rows of 6 |  12 | 11 | Dedicated bank switches |
+
+<br>
+
+### Effect Switching
+The effect switching configuration allows up to 5 footswitches to be dedicated to functions like enabling/disabling effects. 
+<br>
+As this is configured using Midi Control Change values, these buttons can also do things like changing the volume of an amplifier between two different levels, or changing the type of modulation.
+<br>
+Press the "FX" buttons to select which effect change you wish to modify. For each of the 5 FX, the parameters are:
+- Foot Switch Number. Footswitch 1 corresponds to the first switch, connected to the SX1509 PCB input 0
+- Control Change Number: the CC number of the effect you wish to change. Refer to the Tonex Pedal manual for a list of available numbers
+- Midi Value 1: the Midi value that will be sent to the above CC number, when the footswitch is first pressed
+- Midi Value 2: the Midi value that will be sent to the above CC number, when the footswitch is pressed a second time
+<br>
+
+Example FX values:
+- Delay on/off: CC 2. Value 1: 127. Value 2: 0
+- Modulation on/off: CC 32. Value 1: 127. Value 2: 0
+- Reverb on/off: CC 75. Value 1: 127. Value 2: 0
+
+<br>
+Each time the footswitch is pressed, the alternate Midi value will be sent, between value 1 and value 2. This allows for "toggling" of effects with a single switch.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/31b3e7a5-c897-4194-86e9-d8b97e479aad)
+
+<br><br>
+
+
 ## WiFi Settings
 The WiFi category allows the WiFi on the controller to be configured.
 ### WiFi Mode
@@ -71,9 +119,21 @@ The WiFi mode can be selected:
 - Station Mode: this option is similar to phone, in that it will connect to your home WiFi network, and can then be available to any phone/tablet/PC at any time
 - Access Point: Same as option one, except that there is no timer. The Access Point will be enabled permanently
 
+### WiFi Transmit power
+New in V1.0.8.2: this setting controls how powerful the WiFi transmission is. Setting this to higher values will allow for a longer distances/range, however some PCBs may experience a lowering of stability when the transmit power is set high.
+
 ### SSID and Password
 - For Access Point modes, these set the credentials of the Access Point
 - For Station Mode, enter the credentials of your WiFi network
+
+### MDNS name
+MDNS is a system that allows a WiFi device to be located by a name, instead of its address. This setting controls the name that is used.
+<br>
+The default name is "tonex" which means you can access the web page via "tonex.local".
+
+![image](https://github.com/user-attachments/assets/89c068a2-71aa-4034-829c-ee2478f5615a)
+
+<br>
 
 ## Entering Web Control
 For the first time, it is necessary to connect to the controller in Access Point mode. Once this has been done, the WiFi mode can be changed if desired.
@@ -89,6 +149,7 @@ To enter Web Control:
 - Once you have saved the settings (or if you don't want to change anything) you can close the web browser
 <br>
 
-![image](https://github.com/user-attachments/assets/45b4ab4d-e0ca-4ad8-8ee8-2be48d173d9b)
+
+
 
 
