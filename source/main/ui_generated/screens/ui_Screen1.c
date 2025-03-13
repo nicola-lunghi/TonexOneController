@@ -62,7 +62,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_clear_flag(ui_NextButton, LV_OBJ_FLAG_CLICKABLE);      /// Flags
 
     ui_IconGate = lv_img_create(ui_BottomPanel);
-    lv_img_set_src(ui_IconGate, &ui_img_effect_icon_gate_on_png);
+    lv_img_set_src(ui_IconGate, &ui_img_effect_icon_gate_off_png);
     lv_obj_set_width(ui_IconGate, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_IconGate, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_IconGate, -205);
@@ -72,7 +72,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_clear_flag(ui_IconGate, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconAmp = lv_img_create(ui_BottomPanel);
-    lv_img_set_src(ui_IconAmp, &ui_img_effect_icon_amp_on_png);
+    lv_img_set_src(ui_IconAmp, &ui_img_effect_icon_amp_off_png);
     lv_obj_set_width(ui_IconAmp, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_IconAmp, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_IconAmp, -135);
@@ -82,7 +82,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_clear_flag(ui_IconAmp, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconCab = lv_img_create(ui_BottomPanel);
-    lv_img_set_src(ui_IconCab, &ui_img_effect_icon_cab_on_png);
+    lv_img_set_src(ui_IconCab, &ui_img_effect_icon_cab_off_png);
     lv_obj_set_width(ui_IconCab, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_IconCab, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_IconCab, -65);
@@ -92,7 +92,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_clear_flag(ui_IconCab, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconComp = lv_img_create(ui_BottomPanel);
-    lv_img_set_src(ui_IconComp, &ui_img_effect_icon_comp_on_png);
+    lv_img_set_src(ui_IconComp, &ui_img_effect_icon_comp_off_png);
     lv_obj_set_width(ui_IconComp, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_IconComp, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(ui_IconComp, LV_ALIGN_CENTER);
@@ -100,7 +100,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_clear_flag(ui_IconComp, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconMod = lv_img_create(ui_BottomPanel);
-    lv_img_set_src(ui_IconMod, &ui_img_effect_icon_mod_on_png);
+    lv_img_set_src(ui_IconMod, &ui_img_effect_icon_mod_off_png);
     lv_obj_set_width(ui_IconMod, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_IconMod, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_IconMod, 65);
@@ -110,7 +110,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_clear_flag(ui_IconMod, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconDelay = lv_img_create(ui_BottomPanel);
-    lv_img_set_src(ui_IconDelay, &ui_img_effect_icon_delay_on_png);
+    lv_img_set_src(ui_IconDelay, &ui_img_effect_icon_delay_off_png);
     lv_obj_set_width(ui_IconDelay, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_IconDelay, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_IconDelay, 135);
@@ -120,7 +120,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_clear_flag(ui_IconDelay, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconReverb = lv_img_create(ui_BottomPanel);
-    lv_img_set_src(ui_IconReverb, &ui_img_effect_icon_reverb_on_png);
+    lv_img_set_src(ui_IconReverb, &ui_img_effect_icon_reverb_off_png);
     lv_obj_set_width(ui_IconReverb, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_IconReverb, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_IconReverb, 205);

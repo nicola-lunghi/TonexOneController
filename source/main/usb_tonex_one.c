@@ -513,7 +513,7 @@ static esp_err_t usb_tonex_one_set_preset_in_slot(uint16_t preset, Slot newSlot,
     message[7] = (TonexData->Message.PedalData.StateDataLength >> 8) & 0xFF;
 
     // force pedal to Stomp mode. 0 here = A/B mode, 1 = stomp mode
-    TonexData->Message.PedalData.StateData[14] = 1;
+    TonexData->Message.PedalData.StateData[14] = 0x88;  // was 1 in older f/w
     
     // check if setting same preset twice will set bypass
     if (control_get_config_item_int(CONFIG_ITEM_TOGGLE_BYPASS))
@@ -580,6 +580,9 @@ static esp_err_t usb_tonex_one_set_preset_in_slot(uint16_t preset, Slot newSlot,
 
     // do framing
     framed_length = addFraming(TxBuffer, sizeof(message) + TonexData->Message.PedalData.StateDataLength, FramedBuffer);
+
+    //ESP_LOGI(TAG, "State Data after changes - framed");
+    //ESP_LOG_BUFFER_HEXDUMP(TAG, FramedBuffer, framed_length, ESP_LOG_INFO);
 
     // send it
     return usb_tonex_one_transmit(FramedBuffer, framed_length);

@@ -1425,10 +1425,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             if (param_entry->Value)
                             {
                                 lv_obj_add_state(ui_NoiseGateSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconGate, (lv_obj_t*)&ui_img_effect_icon_gate_on_png);
                             }
                             else
                             {
                                 lv_obj_clear_state(ui_NoiseGateSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconGate, (lv_obj_t*)&ui_img_effect_icon_gate_off_png);
                             }
                         } break;
 
@@ -1467,10 +1469,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             if (param_entry->Value)
                             {
                                 lv_obj_add_state(ui_CompressorEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconComp, (lv_obj_t*)&ui_img_effect_icon_comp_on_png);
                             }
                             else
                             {
                                 lv_obj_clear_state(ui_CompressorEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconComp, (lv_obj_t*)&ui_img_effect_icon_comp_off_png);
                             }
                         } break;
 
@@ -1548,10 +1552,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             if (param_entry->Value)
                             {
                                 lv_obj_add_state(ui_AmpEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconAmp, (lv_obj_t*)&ui_img_effect_icon_amp_on_png);
                             }
                             else
                             {
                                 lv_obj_clear_state(ui_AmpEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconAmp, (lv_obj_t*)&ui_img_effect_icon_amp_off_png);
                             }
                         } break;
 
@@ -1565,10 +1571,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             if (param_entry->Value)
                             {
                                 lv_obj_add_state(ui_AmpCabSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconCab, (lv_obj_t*)&ui_img_effect_icon_cab_on_png);
                             }
                             else
                             {
                                 lv_obj_clear_state(ui_AmpCabSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconCab, (lv_obj_t*)&ui_img_effect_icon_cab_off_png);
                             }
 
                         } break;
@@ -1673,10 +1681,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             if (param_entry->Value)
                             {
                                 lv_obj_add_state(ui_ReverbEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconReverb, (lv_obj_t*)&ui_img_effect_icon_reverb_on_png);
                             }
                             else
                             {
                                 lv_obj_clear_state(ui_ReverbEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconReverb, (lv_obj_t*)&ui_img_effect_icon_reverb_off_png);
                             }
                         } break;
 
@@ -1918,10 +1928,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             if (param_entry->Value)
                             {
                                 lv_obj_add_state(ui_ModulationEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconMod, (lv_obj_t*)&ui_img_effect_icon_mod_on_png);
                             }
                             else
                             {
                                 lv_obj_clear_state(ui_ModulationEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconMod, (lv_obj_t*)&ui_img_effect_icon_mod_off_png);
                             }
                         } break;
 
@@ -2266,10 +2278,12 @@ static uint8_t update_ui_element(tUIUpdate* update)
                             if (param_entry->Value)
                             {
                                 lv_obj_add_state(ui_DelayEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconDelay, (lv_obj_t*)&ui_img_effect_icon_delay_on_png);
                             }
                             else
                             {
                                 lv_obj_clear_state(ui_DelayEnableSwitch, LV_STATE_CHECKED);
+                                lv_img_set_src(ui_IconDelay, (lv_obj_t*)&ui_img_effect_icon_delay_off_png);
                             }
                         } break;
 
