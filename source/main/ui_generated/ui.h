@@ -24,14 +24,17 @@ void ui_event_PreviousContainer(lv_event_t * e);
 extern lv_obj_t * ui_PreviousContainer;
 void ui_event_PreviousButton(lv_event_t * e);
 extern lv_obj_t * ui_PreviousButton;
-void ui_event_Footswitch1Label(lv_event_t * e);
-extern lv_obj_t * ui_Footswitch1Label;
 void ui_event_NextContainer(lv_event_t * e);
 extern lv_obj_t * ui_NextContainer;
 void ui_event_NextButton(lv_event_t * e);
 extern lv_obj_t * ui_NextButton;
-void ui_event_Footswitch2Label(lv_event_t * e);
-extern lv_obj_t * ui_Footswitch2Label;
+extern lv_obj_t * ui_IconGate;
+extern lv_obj_t * ui_IconAmp;
+extern lv_obj_t * ui_IconCab;
+extern lv_obj_t * ui_IconComp;
+extern lv_obj_t * ui_IconMod;
+extern lv_obj_t * ui_IconDelay;
+extern lv_obj_t * ui_IconReverb;
 void ui_event_SettingsImage(lv_event_t * e);
 extern lv_obj_t * ui_SettingsImage;
 extern lv_obj_t * ui_TopPanel;
@@ -81,26 +84,21 @@ extern lv_obj_t * ui_NoiseGateDepthLabel;
 void ui_event_NoiseGateDepthSlider(lv_event_t * e);
 extern lv_obj_t * ui_NoiseGateDepthSlider;
 extern lv_obj_t * ui_CompressorTab;
-extern lv_obj_t * ui_CompressorEnableGroup;
+extern lv_obj_t * ui_CompressorEnableLabel;
 void ui_event_CompressorEnableSwitch(lv_event_t * e);
 extern lv_obj_t * ui_CompressorEnableSwitch;
-extern lv_obj_t * ui_CompressorEnableLabel;
-extern lv_obj_t * ui_CompressorPostGroup;
+extern lv_obj_t * ui_CompressorPostLabel;
 void ui_event_CompressorPostSwitch(lv_event_t * e);
 extern lv_obj_t * ui_CompressorPostSwitch;
-extern lv_obj_t * ui_CompressorPostLabel;
-extern lv_obj_t * ui_CompressorThresholdGroup;
+extern lv_obj_t * ui_CompressorThresholdLabel;
 void ui_event_CompressorThresholdSlider(lv_event_t * e);
 extern lv_obj_t * ui_CompressorThresholdSlider;
-extern lv_obj_t * ui_CompressorThresholdLabel;
-extern lv_obj_t * ui_CompressorAttackGroup;
+extern lv_obj_t * ui_CompressorAttackLabel;
 void ui_event_CompresorAttackSlider(lv_event_t * e);
 extern lv_obj_t * ui_CompresorAttackSlider;
-extern lv_obj_t * ui_CompressorAttackLabel;
-extern lv_obj_t * ui_CompressorGainGroup;
+extern lv_obj_t * ui_CompressorGateLabel;
 void ui_event_CompressorGainSlider(lv_event_t * e);
 extern lv_obj_t * ui_CompressorGainSlider;
-extern lv_obj_t * ui_CompressorGateLabel;
 extern lv_obj_t * ui_EQTab;
 extern lv_obj_t * ui_EQPostLabel;
 void ui_event_EQPostSwitch(lv_event_t * e);
@@ -239,6 +237,13 @@ LV_IMG_DECLARE(ui_img_previous_png);    // assets/previous.png
 LV_IMG_DECLARE(ui_img_previous_down_png);    // assets/previous_down.png
 LV_IMG_DECLARE(ui_img_next_png);    // assets/next.png
 LV_IMG_DECLARE(ui_img_next_down_png);    // assets/next_down.png
+LV_IMG_DECLARE(ui_img_effect_icon_gate_on_png);    // assets/effect_icon_gate_on.png
+LV_IMG_DECLARE(ui_img_effect_icon_amp_on_png);    // assets/effect_icon_amp_on.png
+LV_IMG_DECLARE(ui_img_effect_icon_cab_on_png);    // assets/effect_icon_cab_on.png
+LV_IMG_DECLARE(ui_img_effect_icon_comp_on_png);    // assets/effect_icon_comp_on.png
+LV_IMG_DECLARE(ui_img_effect_icon_mod_on_png);    // assets/effect_icon_mod_on.png
+LV_IMG_DECLARE(ui_img_effect_icon_delay_on_png);    // assets/effect_icon_delay_on.png
+LV_IMG_DECLARE(ui_img_effect_icon_reverb_on_png);    // assets/effect_icon_reverb_on.png
 LV_IMG_DECLARE(ui_img_settings_png);    // assets/settings.png
 LV_IMG_DECLARE(ui_img_smythbuilt_png);    // assets/smythbuilt.png
 LV_IMG_DECLARE(ui_img_bt_conn_png);    // assets/bt_conn.png
@@ -251,6 +256,13 @@ LV_IMG_DECLARE(ui_img_skin_jcm800_png);    // assets/skin_jcm800.png
 LV_IMG_DECLARE(ui_img_arrow_left_png);    // assets/arrow_left.png
 LV_IMG_DECLARE(ui_img_arrow_right_png);    // assets/arrow_right.png
 LV_IMG_DECLARE(ui_img_tick_png);    // assets/tick.png
+LV_IMG_DECLARE(ui_img_effect_icon_amp_off_png);    // assets/effect_icon_amp_off.png
+LV_IMG_DECLARE(ui_img_effect_icon_cab_off_png);    // assets/effect_icon_cab_off.png
+LV_IMG_DECLARE(ui_img_effect_icon_comp_off_png);    // assets/effect_icon_comp_off.png
+LV_IMG_DECLARE(ui_img_effect_icon_delay_off_png);    // assets/effect_icon_delay_off.png
+LV_IMG_DECLARE(ui_img_effect_icon_gate_off_png);    // assets/effect_icon_gate_off.png
+LV_IMG_DECLARE(ui_img_effect_icon_mod_off_png);    // assets/effect_icon_mod_off.png
+LV_IMG_DECLARE(ui_img_effect_icon_reverb_off_png);    // assets/effect_icon_reverb_off.png
 LV_IMG_DECLARE(ui_img_pskin_arion_png);    // assets/pskin_arion.png
 LV_IMG_DECLARE(ui_img_pskin_bigmuff_png);    // assets/pskin_bigmuff.png
 LV_IMG_DECLARE(ui_img_pskin_darkglass_png);    // assets/pskin_darkglass.png

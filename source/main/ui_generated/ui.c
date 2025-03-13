@@ -17,14 +17,17 @@ void ui_event_PreviousContainer(lv_event_t * e);
 lv_obj_t * ui_PreviousContainer;
 void ui_event_PreviousButton(lv_event_t * e);
 lv_obj_t * ui_PreviousButton;
-void ui_event_Footswitch1Label(lv_event_t * e);
-lv_obj_t * ui_Footswitch1Label;
 void ui_event_NextContainer(lv_event_t * e);
 lv_obj_t * ui_NextContainer;
 void ui_event_NextButton(lv_event_t * e);
 lv_obj_t * ui_NextButton;
-void ui_event_Footswitch2Label(lv_event_t * e);
-lv_obj_t * ui_Footswitch2Label;
+lv_obj_t * ui_IconGate;
+lv_obj_t * ui_IconAmp;
+lv_obj_t * ui_IconCab;
+lv_obj_t * ui_IconComp;
+lv_obj_t * ui_IconMod;
+lv_obj_t * ui_IconDelay;
+lv_obj_t * ui_IconReverb;
 void ui_event_SettingsImage(lv_event_t * e);
 lv_obj_t * ui_SettingsImage;
 lv_obj_t * ui_TopPanel;
@@ -75,26 +78,21 @@ lv_obj_t * ui_NoiseGateDepthLabel;
 void ui_event_NoiseGateDepthSlider(lv_event_t * e);
 lv_obj_t * ui_NoiseGateDepthSlider;
 lv_obj_t * ui_CompressorTab;
-lv_obj_t * ui_CompressorEnableGroup;
+lv_obj_t * ui_CompressorEnableLabel;
 void ui_event_CompressorEnableSwitch(lv_event_t * e);
 lv_obj_t * ui_CompressorEnableSwitch;
-lv_obj_t * ui_CompressorEnableLabel;
-lv_obj_t * ui_CompressorPostGroup;
+lv_obj_t * ui_CompressorPostLabel;
 void ui_event_CompressorPostSwitch(lv_event_t * e);
 lv_obj_t * ui_CompressorPostSwitch;
-lv_obj_t * ui_CompressorPostLabel;
-lv_obj_t * ui_CompressorThresholdGroup;
+lv_obj_t * ui_CompressorThresholdLabel;
 void ui_event_CompressorThresholdSlider(lv_event_t * e);
 lv_obj_t * ui_CompressorThresholdSlider;
-lv_obj_t * ui_CompressorThresholdLabel;
-lv_obj_t * ui_CompressorAttackGroup;
+lv_obj_t * ui_CompressorAttackLabel;
 void ui_event_CompresorAttackSlider(lv_event_t * e);
 lv_obj_t * ui_CompresorAttackSlider;
-lv_obj_t * ui_CompressorAttackLabel;
-lv_obj_t * ui_CompressorGainGroup;
+lv_obj_t * ui_CompressorGateLabel;
 void ui_event_CompressorGainSlider(lv_event_t * e);
 lv_obj_t * ui_CompressorGainSlider;
-lv_obj_t * ui_CompressorGateLabel;
 lv_obj_t * ui_EQTab;
 lv_obj_t * ui_EQPostLabel;
 void ui_event_EQPostSwitch(lv_event_t * e);
@@ -267,15 +265,6 @@ void ui_event_PreviousButton(lv_event_t * e)
     }
 }
 
-void ui_event_Footswitch1Label(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-
-    if(event_code == LV_EVENT_CLICKED) {
-        PreviousClicked(e);
-    }
-}
-
 void ui_event_NextContainer(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -286,15 +275,6 @@ void ui_event_NextContainer(lv_event_t * e)
 }
 
 void ui_event_NextButton(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-
-    if(event_code == LV_EVENT_CLICKED) {
-        NextClicked(e);
-    }
-}
-
-void ui_event_Footswitch2Label(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
 
