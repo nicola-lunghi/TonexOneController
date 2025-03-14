@@ -295,6 +295,209 @@ void NextClicked(lv_event_t * e)
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
+void toggle_effect_gate(lv_event_t * e)
+{
+    tTonexParameter* param_ptr;
+    float value;
+
+    // called from LVGL 
+    ESP_LOGI(TAG, "UI Toggle gate");
+    
+    tonex_params_get_locked_access(&param_ptr);
+    if (param_ptr[TONEX_PARAM_NOISE_GATE_ENABLE].Value == 0.0f)
+    {
+        value = 1.0f;
+    }
+    else
+    {
+        value = 0.0f;
+    }
+    tonex_params_release_locked_access();
+
+    usb_modify_parameter(TONEX_PARAM_NOISE_GATE_ENABLE, value);   
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void toggle_effect_amp(lv_event_t * e)
+{
+    tTonexParameter* param_ptr;
+    float value;
+
+    // called from LVGL 
+    ESP_LOGI(TAG, "UI Toggle amp");
+    
+    tonex_params_get_locked_access(&param_ptr);
+    if (param_ptr[TONEX_PARAM_MODEL_AMP_ENABLE].Value == 0.0f)
+    {
+        value = 1.0f;
+    }
+    else
+    {
+        value = 0.0f;
+    }
+    tonex_params_release_locked_access();
+
+    usb_modify_parameter(TONEX_PARAM_MODEL_AMP_ENABLE, value);   
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void toggle_effect_cab(lv_event_t * e)
+{
+    tTonexParameter* param_ptr;
+    float value;
+
+    // called from LVGL 
+    ESP_LOGI(TAG, "UI Toggle cab");
+    
+    tonex_params_get_locked_access(&param_ptr);
+    if (param_ptr[TONEX_PARAM_MODEL_CABINET_ENABLE].Value == 0.0f)
+    {
+        value = 1.0f;
+    }
+    else
+    {
+        value = 0.0f;
+    }
+    tonex_params_release_locked_access();
+
+    usb_modify_parameter(TONEX_PARAM_MODEL_CABINET_ENABLE, value);   
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void toggle_effect_comp(lv_event_t * e)
+{
+    tTonexParameter* param_ptr;
+    float value;
+
+    // called from LVGL 
+    ESP_LOGI(TAG, "UI Toggle comp");
+    
+    tonex_params_get_locked_access(&param_ptr);
+    if (param_ptr[TONEX_PARAM_COMP_ENABLE].Value == 0.0f)
+    {
+        value = 1.0f;
+    }
+    else
+    {
+        value = 0.0f;
+    }
+    tonex_params_release_locked_access();
+
+    usb_modify_parameter(TONEX_PARAM_COMP_ENABLE, value);   
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void toggle_effect_mod(lv_event_t * e)
+{
+    tTonexParameter* param_ptr;
+    float value;
+
+    // called from LVGL 
+    ESP_LOGI(TAG, "UI Toggle mod");
+    
+    tonex_params_get_locked_access(&param_ptr);
+    if (param_ptr[TONEX_PARAM_MODULATION_ENABLE].Value == 0.0f)
+    {
+        value = 1.0f;
+    }
+    else
+    {
+        value = 0.0f;
+    }
+    tonex_params_release_locked_access();
+
+    usb_modify_parameter(TONEX_PARAM_MODULATION_ENABLE, value);   
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void toggle_effect_delay(lv_event_t * e)
+{
+    tTonexParameter* param_ptr;
+    float value;
+
+    // called from LVGL 
+    ESP_LOGI(TAG, "UI Toggle delay");
+   
+    tonex_params_get_locked_access(&param_ptr);
+    if (param_ptr[TONEX_PARAM_DELAY_ENABLE].Value == 0.0f)
+    {
+        value = 1.0f;
+    }
+    else
+    {
+        value = 0.0f;
+    }
+    tonex_params_release_locked_access();
+
+    usb_modify_parameter(TONEX_PARAM_DELAY_ENABLE, value);   
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+void toggle_effect_reverb(lv_event_t * e)
+{
+    tTonexParameter* param_ptr;
+    float value;
+
+    // called from LVGL 
+    ESP_LOGI(TAG, "UI Toggle reverb");
+
+    tonex_params_get_locked_access(&param_ptr);
+    if (param_ptr[TONEX_PARAM_REVERB_ENABLE].Value == 0.0f)
+    {
+        value = 1.0f;
+    }
+    else
+    {
+        value = 0.0f;
+    }
+    tonex_params_release_locked_access();
+
+    usb_modify_parameter(TONEX_PARAM_REVERB_ENABLE, value);   
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
 void AmpSkinPrevious(lv_event_t * e)
 {
     control_set_skin_previous();

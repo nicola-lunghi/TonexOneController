@@ -21,12 +21,19 @@ void ui_event_NextContainer(lv_event_t * e);
 lv_obj_t * ui_NextContainer;
 void ui_event_NextButton(lv_event_t * e);
 lv_obj_t * ui_NextButton;
+void ui_event_IconGate(lv_event_t * e);
 lv_obj_t * ui_IconGate;
+void ui_event_IconAmp(lv_event_t * e);
 lv_obj_t * ui_IconAmp;
+void ui_event_IconCab(lv_event_t * e);
 lv_obj_t * ui_IconCab;
+void ui_event_IconComp(lv_event_t * e);
 lv_obj_t * ui_IconComp;
+void ui_event_IconMod(lv_event_t * e);
 lv_obj_t * ui_IconMod;
+void ui_event_IconDelay(lv_event_t * e);
 lv_obj_t * ui_IconDelay;
+void ui_event_IconReverb(lv_event_t * e);
 lv_obj_t * ui_IconReverb;
 void ui_event_SettingsImage(lv_event_t * e);
 lv_obj_t * ui_SettingsImage;
@@ -280,6 +287,69 @@ void ui_event_NextButton(lv_event_t * e)
 
     if(event_code == LV_EVENT_CLICKED) {
         NextClicked(e);
+    }
+}
+
+void ui_event_IconGate(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        toggle_effect_gate(e);
+    }
+}
+
+void ui_event_IconAmp(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        toggle_effect_amp(e);
+    }
+}
+
+void ui_event_IconCab(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        toggle_effect_cab(e);
+    }
+}
+
+void ui_event_IconComp(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        toggle_effect_comp(e);
+    }
+}
+
+void ui_event_IconMod(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        toggle_effect_mod(e);
+    }
+}
+
+void ui_event_IconDelay(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        toggle_effect_delay(e);
+    }
+}
+
+void ui_event_IconReverb(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        toggle_effect_reverb(e);
     }
 }
 

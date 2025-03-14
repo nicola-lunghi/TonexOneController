@@ -38,3 +38,31 @@ def BTBondsClearRequest(event_struct):
 def ParameterChanged(event_struct):
     return
 
+
+def toggle_effect_gate(event_struct):
+    return
+
+
+def toggle_effect_amp(event_struct):
+    return
+
+
+def toggle_effect_cab(event_struct):
+    return
+
+
+def toggle_effect_comp(event_struct):
+    return
+
+
+def toggle_effect_mod(event_struct):
+    return
+
+
+def toggle_effect_delay(event_struct):
+    return
+
+
+def toggle_effect_reverb(event_struct):
+    return
+

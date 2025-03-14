@@ -68,7 +68,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_IconGate, -205);
     lv_obj_set_y(ui_IconGate, 0);
     lv_obj_set_align(ui_IconGate, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_IconGate, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_add_flag(ui_IconGate, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_IconGate, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconAmp = lv_img_create(ui_BottomPanel);
@@ -78,7 +78,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_IconAmp, -135);
     lv_obj_set_y(ui_IconAmp, 0);
     lv_obj_set_align(ui_IconAmp, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_IconAmp, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_add_flag(ui_IconAmp, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_IconAmp, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconCab = lv_img_create(ui_BottomPanel);
@@ -88,7 +88,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_IconCab, -65);
     lv_obj_set_y(ui_IconCab, 0);
     lv_obj_set_align(ui_IconCab, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_IconCab, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_add_flag(ui_IconCab, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_IconCab, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconComp = lv_img_create(ui_BottomPanel);
@@ -96,7 +96,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_width(ui_IconComp, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_IconComp, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(ui_IconComp, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_IconComp, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_add_flag(ui_IconComp, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_IconComp, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconMod = lv_img_create(ui_BottomPanel);
@@ -106,7 +106,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_IconMod, 65);
     lv_obj_set_y(ui_IconMod, 0);
     lv_obj_set_align(ui_IconMod, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_IconMod, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_add_flag(ui_IconMod, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_IconMod, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconDelay = lv_img_create(ui_BottomPanel);
@@ -116,7 +116,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_IconDelay, 135);
     lv_obj_set_y(ui_IconDelay, 0);
     lv_obj_set_align(ui_IconDelay, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_IconDelay, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_add_flag(ui_IconDelay, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_IconDelay, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_IconReverb = lv_img_create(ui_BottomPanel);
@@ -126,7 +126,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_IconReverb, 205);
     lv_obj_set_y(ui_IconReverb, 0);
     lv_obj_set_align(ui_IconReverb, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_IconReverb, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_add_flag(ui_IconReverb, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
     lv_obj_clear_flag(ui_IconReverb, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_SettingsImage = lv_img_create(ui_BottomPanel);
@@ -325,6 +325,13 @@ void ui_Screen1_screen_init(void)
     lv_obj_add_event_cb(ui_PreviousContainer, ui_event_PreviousContainer, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_NextButton, ui_event_NextButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_NextContainer, ui_event_NextContainer, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_IconGate, ui_event_IconGate, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_IconAmp, ui_event_IconAmp, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_IconCab, ui_event_IconCab, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_IconComp, ui_event_IconComp, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_IconMod, ui_event_IconMod, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_IconDelay, ui_event_IconDelay, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_IconReverb, ui_event_IconReverb, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_SettingsImage, ui_event_SettingsImage, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_BTStatusDisconn, ui_event_BTStatusDisconn, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_PresetHeadingLabel, ui_event_PresetHeadingLabel, LV_EVENT_ALL, NULL);

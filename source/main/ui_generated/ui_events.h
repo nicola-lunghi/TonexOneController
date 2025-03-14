@@ -12,6 +12,13 @@ extern "C" {
 
 void PreviousClicked(lv_event_t * e);
 void NextClicked(lv_event_t * e);
+void toggle_effect_gate(lv_event_t * e);
+void toggle_effect_amp(lv_event_t * e);
+void toggle_effect_cab(lv_event_t * e);
+void toggle_effect_comp(lv_event_t * e);
+void toggle_effect_mod(lv_event_t * e);
+void toggle_effect_delay(lv_event_t * e);
+void toggle_effect_reverb(lv_event_t * e);
 void BTBondsClearRequest(lv_event_t * e);
 void AmpSkinPrevious(lv_event_t * e);
 void AmpSkinNext(lv_event_t * e);

@@ -71,7 +71,7 @@ static const uint8_t ToneOnePresetByteMarker[] = {0xB9, 0x04, 0xB9, 0x02, 0xBC, 
 #define TONEX_ONE_CDC_INTERFACE_INDEX               0
 
 // Tonex One can send quite large data quickly, so make a generous receive buffer
-#define RX_TEMP_BUFFER_SIZE                         32704   // even multiple of 64 CDC transfer size
+#define RX_TEMP_BUFFER_SIZE                         8192   // even multiple of 64 CDC transfer size
 #define MAX_INPUT_BUFFERS                           2
 #define USB_TX_BUFFER_SIZE                          8192 
 
@@ -102,7 +102,8 @@ typedef enum Type
     TYPE_STATE_UPDATE,
     TYPE_HELLO,
     TYPE_STATE_PRESET_DETAILS,
-    TYPE_STATE_PRESET_DETAILS_FULL
+    TYPE_STATE_PRESET_DETAILS_FULL,
+    TYPE_PARAM_CHANGED
 } Type;
 
 typedef enum Slot
@@ -129,11 +130,6 @@ typedef struct __attribute__ ((packed))
     uint8_t PresetData[MAX_SHORT_PRESET_DATA];
     uint16_t PresetDataLength;
     uint16_t PresetParameterStartOffset;
-
-    // storage for current preset details data (full version)
-    uint8_t FullPresetData[MAX_FULL_PRESET_DATA];
-    uint16_t FullPresetDataLength;
-    uint16_t FullPresetParameterStartOffset;
 } tPedalData;
 
 typedef struct __attribute__ ((packed)) 
@@ -420,23 +416,30 @@ static esp_err_t __attribute__((unused)) usb_tonex_one_request_full_preset_detai
 * RETURN:      
 * NOTES:       
 *****************************************************************************/
-static esp_err_t usb_tonex_one_send_parameters(void)
+static esp_err_t usb_tonex_one_send_single_parameter(uint16_t index, float value)
 {
     uint16_t framed_length;
 
-    // Build message, length to 0 for now                      len LSB  len MSB
-    uint8_t message[] = {0xb9, 0x03, 0x81, 0x03, 0x03, 0x82, 0,       0,       0x80, 0x0B, 0x03};
+    // NOTE: only supported in newer Pedal firmware that came with Editor support!
 
-    // set length 
-    message[6] = TonexData->Message.PedalData.FullPresetDataLength & 0xFF;
-    message[7] = (TonexData->Message.PedalData.FullPresetDataLength >> 8) & 0xFF;
+    // Build message                                         len LSB  len MSB
+    uint8_t message[] = {0xb9, 0x03, 0x81, 0x09, 0x03, 0x82, 0x0A,     0x00, 0x80, 0x0B, 0x03};
+
+    // payload           unknown                 param index             4 byte float value
+    uint8_t payload[] = {0xB9, 0x04, 0x02, 0x00, 0x00,             0x88, 0x00, 0x00, 0x00, 0x00 };
+
+    // set param index
+    payload[4] = index;
+
+    // set param value
+    memcpy((void*)&payload[6], (void*)&value, sizeof(value));
 
     // build total message
     memcpy((void*)TxBuffer, (void*)message, sizeof(message));
-    memcpy((void*)&TxBuffer[sizeof(message)], (void*)TonexData->Message.PedalData.FullPresetData, TonexData->Message.PedalData.FullPresetDataLength);
+    memcpy((void*)&TxBuffer[sizeof(message)], (void*)payload, sizeof(payload));
 
     // add framing
-    framed_length = addFraming(TxBuffer, sizeof(message) + TonexData->Message.PedalData.FullPresetDataLength, FramedBuffer);
+    framed_length = addFraming(TxBuffer, sizeof(message) + sizeof(payload), FramedBuffer);
 
     // debug
     //ESP_LOG_BUFFER_HEXDUMP(TAG, FramedBuffer, framed_length, ESP_LOG_INFO);
@@ -682,8 +685,6 @@ static esp_err_t usb_tonex_one_transmit(uint8_t* tx_data, uint16_t tx_len)
 *****************************************************************************/
 static esp_err_t usb_tonex_one_modify_parameter(uint16_t index, float value)
 {
-    uint32_t byte_offset;
-    uint8_t* temp_ptr;
     tTonexParameter* param_ptr = NULL;
     esp_err_t res = ESP_FAIL;
      
@@ -696,38 +697,12 @@ static esp_err_t usb_tonex_one_modify_parameter(uint16_t index, float value)
     if (tonex_params_get_locked_access(&param_ptr) == ESP_OK)
     {
         ESP_LOGI(TAG, "usb_tonex_one_modify_parameter index: %d name: %s value: %02f", (int)index, param_ptr[index].Name, value);  
-    
-        // modify the param in the full data, as we have to send this back to the pedal
-        // calculate the offset to the parameter. +1 for the 0x88 marker
-        byte_offset = TonexData->Message.PedalData.FullPresetParameterStartOffset + (index * (sizeof(float) + 1));
-        temp_ptr = &TonexData->Message.PedalData.FullPresetData[byte_offset];
-        
-        // safety check on the index
-        if (*temp_ptr == 0x88)
-        {
-            // skip the marker
-            temp_ptr++;
 
-            // update the local copy
-            memcpy((void*)&param_ptr[index].Value, (void*)&value, sizeof(float));
+        // update the local copy
+        memcpy((void*)&param_ptr[index].Value, (void*)&value, sizeof(float));
 
-            // update the raw data
-            memcpy((void*)temp_ptr, (void*)&value, sizeof(float));
-
-            tonex_params_release_locked_access();
-
-            // debug
-            //tonex_dump_parameters();
-
-            res = ESP_OK;
-        }
-        else
-        {
-            tonex_params_release_locked_access();
-
-            ESP_LOGE(TAG, "usb_tonex_one_modify_parameters invalid ptr. Offset %d Value %d", (int)byte_offset, (int)*temp_ptr);   
-            res = ESP_FAIL;
-        }        
+        tonex_params_release_locked_access();
+        res = ESP_OK;
     }
 
     return res;
@@ -818,46 +793,6 @@ static Status usb_tonex_one_parse_preset_details(uint8_t* unframed, uint16_t len
     // debug
     //ESP_LOGI(TAG, "Preset Data Rx: %d %d", (int)length, (int)index);
     //ESP_LOG_BUFFER_HEXDUMP(TAG, TonexData->Message.PedalData.PresetData, TonexData->Message.PedalData.PresetDataLength, ESP_LOG_INFO);
-
-    return STATUS_OK;
-}
-
-/****************************************************************************
-* NAME:        
-* DESCRIPTION: 
-* PARAMETERS:  
-* RETURN:      
-* NOTES:       
-*****************************************************************************/
-static Status usb_tonex_one_parse_preset_full_details(uint8_t* unframed, uint16_t length, uint16_t index)
-{
-    uint8_t param_start_marker[] = {0xBA, 0x03, 0xBA, 0x6D}; 
-
-    TonexData->Message.Header.type = TYPE_STATE_PRESET_DETAILS_FULL;
-
-    TonexData->Message.PedalData.FullPresetDataLength = length - index;
-    memcpy((void*)TonexData->Message.PedalData.FullPresetData, (void*)&unframed[index], TonexData->Message.PedalData.FullPresetDataLength);
-    ESP_LOGI(TAG, "Saved Full Preset Details: %d", TonexData->Message.PedalData.FullPresetDataLength);
-    
-    // try to locate the start of the first parameter block 
-    uint8_t* temp_ptr = memmem((void*)TonexData->Message.PedalData.FullPresetData, TonexData->Message.PedalData.FullPresetDataLength, (void*)param_start_marker, sizeof(param_start_marker));
-    if (temp_ptr != NULL)
-    {
-        // skip the start marker
-        temp_ptr += sizeof(param_start_marker);
-
-        // save the offset where the parameters start
-        TonexData->Message.PedalData.FullPresetParameterStartOffset = temp_ptr - TonexData->Message.PedalData.FullPresetData;
-        ESP_LOGI(TAG, "Found start of preset params in full data at %d", TonexData->Message.PedalData.FullPresetParameterStartOffset);
-    }
-    else
-    {
-        ESP_LOGW(TAG, "Could not find start of preset parameters in full data!");
-    }
-    
-    // debug
-    //ESP_LOGI(TAG, "Full Preset Data Rx: %d %d", (int)length, (int)index);
-    //ESP_LOG_BUFFER_HEXDUMP(TAG, TonexData->Message.PedalData.FullPresetData, TonexData->Message.PedalData.FullPresetDataLength, ESP_LOG_INFO);
 
     return STATUS_OK;
 }
@@ -1013,6 +948,11 @@ static Status usb_tonex_one_parse(uint8_t* message, uint16_t inlength)
             header.type = TYPE_HELLO;
         } break;
 
+        case 0x0309:
+        {           
+            header.type = TYPE_PARAM_CHANGED;
+        } break;
+
         default:
         {
             ESP_LOGI(TAG, "Unknown type %d", (int)type);            
@@ -1056,8 +996,15 @@ static Status usb_tonex_one_parse(uint8_t* message, uint16_t inlength)
 
         case TYPE_STATE_PRESET_DETAILS_FULL:
         {
-            return usb_tonex_one_parse_preset_full_details(FramedBuffer, out_len, index);
+            // don't need to process this anymore, thanks to IK new parameter comms :)
+            return STATUS_OK;
         }
+
+        case TYPE_PARAM_CHANGED:
+        {
+            ESP_LOGI(TAG, "Param change confirmation");
+            return STATUS_OK;
+        } break;
 
         default:
         {
@@ -1181,9 +1128,6 @@ static esp_err_t usb_tonex_one_process_single_message(uint8_t* data, uint16_t le
 
                     // debug dump parameters
                     //tonex_dump_parameters();
-
-                    // request full parameter details
-                    usb_tonex_one_request_full_preset_details(current_preset);
                 } break;
 
                 case TYPE_HELLO:
@@ -1303,7 +1247,7 @@ void usb_tonex_one_handle(class_driver_t* driver_obj)
                     case USB_COMMAND_MODIFY_PARAMETER:
                     {
                         usb_tonex_one_modify_parameter(message.Payload, message.PayloadFloat);
-                        usb_tonex_one_send_parameters();
+                        usb_tonex_one_send_single_parameter(message.Payload, message.PayloadFloat);
                     } break;
                 }
             }
