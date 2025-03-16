@@ -95,12 +95,15 @@ For more information about the firmware development and customisation, refer to 
 - https://github.com/vit3k/tonex_controller for great work on reverse engineering the Tonex One USB protocol
 
 ## Firmware Release Notes <a name="release_notes"></a>
-V1.0.8.2 (beta 2):
+V1.0.8.2 (beta 4):
 - Changes to make the controller work with the latest Tonex editor release
 - Fixed memory leak in web config that would eventually lead to malfunction
 - Added the ability to configure the WiFi transmit power
 - Added support for SX1509 IO expander, that allows up to 16 footswitches on all platforms. Preset switching options, and up to 5 footswitches that can toggle effects/parameters
-- Added icons to 4.3B screen, indicating the status of the effects
+- Added icons to 4.3B screen, indicating the status of the effects, which can be pressed to toggle the effect 
+- Fixed issue where Stomp mode was not set by code, requiring it to be set manually (was broken by latest Ik changes)
+- Fixed issue where the new external footswitch effect toggles didn't take into account the current state, resulting in needing multiple presses in some cases
+- Changed communications to use the new messages that IK added. Much faster effect switching, and reduced ram usage
 
 V1.0.7.2:
 - New WiFi options, now allowing connection to other access points.
