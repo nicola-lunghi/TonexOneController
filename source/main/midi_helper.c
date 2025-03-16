@@ -160,7 +160,13 @@ esp_err_t midi_helper_adjust_param_via_midi(uint8_t change_num, uint8_t midi_val
         } break;
 
         // 9 tuner
-        // 10: tap tempo
+        
+        //case 10: 
+        //{
+            //tap tempo
+            //to do
+        //} break;
+
         // 11: expression pedal
         // 12: preset on/off
         
@@ -846,4 +852,545 @@ esp_err_t midi_helper_adjust_param_via_midi(uint8_t change_num, uint8_t midi_val
     usb_modify_parameter(param, value);
 
     return ESP_OK;
+}
+
+/****************************************************************************
+* NAME:        
+* DESCRIPTION: 
+* PARAMETERS:  
+* RETURN:      
+* NOTES:       
+*****************************************************************************/
+uint16_t midi_helper_get_param_for_change_num(uint8_t change_num)
+{
+    uint16_t param = 0xFFFF;
+
+    // Midi mapping done to match the big Tonex pedal
+    switch (change_num)
+    {
+        // 0: midi patch bank on big tonex
+
+        case 1:
+        {
+            param = TONEX_PARAM_DELAY_POST;       
+        } break;
+
+        case 2:
+        {
+            param = TONEX_PARAM_DELAY_ENABLE;
+        } break;
+
+        case 3:
+        {
+            param = TONEX_PARAM_DELAY_MODEL;
+        } break;        
+
+        case 4:
+        {
+            param = TONEX_PARAM_DELAY_DIGITAL_SYNC;
+        } break;
+
+        case 5:
+        {
+            param = TONEX_PARAM_DELAY_DIGITAL_TIME;
+        } break;
+
+        case 6:
+        {
+            param = TONEX_PARAM_DELAY_DIGITAL_FEEDBACK;
+        } break;
+
+        case 7:
+        { 
+            param = TONEX_PARAM_DELAY_DIGITAL_MODE;
+        } break;        
+        
+        case 8:
+        {
+            param = TONEX_PARAM_DELAY_DIGITAL_MIX;
+        } break;
+
+        // 9 tuner
+        
+        case 10: 
+        {
+            //tap tempo
+            //to do
+        } break;
+
+        // 11: expression pedal
+        // 12: preset on/off
+        
+        case 13:
+        {
+            param = TONEX_PARAM_NOISE_GATE_POST;
+        } break;
+
+        case 14:
+        {
+            param = TONEX_PARAM_NOISE_GATE_ENABLE;
+        } break;
+
+        case 15:
+        {
+            param = TONEX_PARAM_NOISE_GATE_THRESHOLD;
+        } break;
+
+        case 16:
+        {
+            param = TONEX_PARAM_NOISE_GATE_RELEASE;
+        } break;
+
+        case 17:
+        {
+            param = TONEX_PARAM_NOISE_GATE_DEPTH;
+        } break;
+
+        case 18:
+        {
+            param = TONEX_PARAM_COMP_ENABLE;
+        } break;
+
+        case 19:             
+        { 
+            param = TONEX_PARAM_COMP_THRESHOLD;
+        } break;
+
+        case 20:
+        {
+            param = TONEX_PARAM_COMP_MAKE_UP;
+        } break;
+
+        case 21:
+        {
+            param = TONEX_PARAM_COMP_ATTACK;
+        } break;
+
+        case 22:
+        {
+            param = TONEX_PARAM_COMP_POST;
+        } break;
+
+        case 23:
+        {
+            param = TONEX_PARAM_EQ_BASS;
+        } break;
+
+        case 24:
+        {
+            param = TONEX_PARAM_EQ_BASS_FREQ;
+        } break;
+
+        case 25:
+        {
+            param = TONEX_PARAM_EQ_MID;
+        } break;
+
+        case 26:
+        {
+            param = TONEX_PARAM_EQ_MIDQ;
+        } break;
+
+        case 27:
+        {
+            param = TONEX_PARAM_EQ_MID_FREQ;
+        } break;
+
+        case 28:
+        {
+            param = TONEX_PARAM_EQ_TREBLE;
+        } break;
+
+        case 29:
+        {
+            param = TONEX_PARAM_EQ_TREBLE_FREQ;
+        } break;
+
+        case 30:
+        {
+            param = TONEX_PARAM_EQ_POST;
+        } break;
+
+        case 31:
+        {
+            param = TONEX_PARAM_MODULATION_POST;
+        } break;
+
+        case 32:
+        {       
+            param = TONEX_PARAM_MODULATION_ENABLE;
+        } break;
+
+        case 33:
+        {
+            param = TONEX_PARAM_MODULATION_MODEL;
+        } break;
+
+        case 34:
+        {
+            param = TONEX_PARAM_MODULATION_CHORUS_SYNC;
+        } break;
+
+        case 35:
+        {
+            param = TONEX_PARAM_MODULATION_CHORUS_RATE;
+        } break;
+
+        case 36:
+        {
+            param = TONEX_PARAM_MODULATION_CHORUS_DEPTH;
+        } break;
+
+        case 37:
+        {
+            param = TONEX_PARAM_MODULATION_CHORUS_LEVEL;
+        } break;
+
+        case 38:
+        {
+            param = TONEX_PARAM_MODULATION_TREMOLO_SYNC;
+        } break;
+
+        case 39:
+        {
+            param = TONEX_PARAM_MODULATION_TREMOLO_RATE;
+        } break;
+
+        case 40:
+        {
+            param = TONEX_PARAM_MODULATION_TREMOLO_SHAPE;
+        } break;
+
+        case 41:
+        {
+            param = TONEX_PARAM_MODULATION_TREMOLO_SPREAD;
+        } break;
+
+        case 42:
+        {
+            param = TONEX_PARAM_MODULATION_TREMOLO_LEVEL;
+        } break;
+
+        case 43:
+        {
+            param = TONEX_PARAM_MODULATION_PHASER_SYNC;
+        } break;
+
+        case 44:
+        {
+            param = TONEX_PARAM_MODULATION_PHASER_RATE;
+        } break;
+
+        case 45:
+        {
+            param = TONEX_PARAM_MODULATION_PHASER_DEPTH;
+        } break;
+
+        case 46:
+        {
+            param = TONEX_PARAM_MODULATION_PHASER_LEVEL;
+        } break;
+
+        case 47:
+        {
+            param = TONEX_PARAM_MODULATION_FLANGER_SYNC;
+        } break;
+
+        case 48:
+        {
+            param = TONEX_PARAM_MODULATION_FLANGER_RATE;
+        } break;
+
+        case 49:
+        {
+            param = TONEX_PARAM_MODULATION_FLANGER_DEPTH;
+        } break;
+
+        case 50:
+        {
+            param = TONEX_PARAM_MODULATION_FLANGER_FEEDBACK;
+        } break;
+
+        case 51:
+        {
+            param = TONEX_PARAM_MODULATION_FLANGER_LEVEL;
+        } break;
+
+        case 52:
+        {
+            param = TONEX_PARAM_MODULATION_ROTARY_SYNC;
+        } break;
+
+        case 53:
+        {
+            param = TONEX_PARAM_MODULATION_ROTARY_SPEED;
+        } break;
+        
+        case 54:
+        {
+            param = TONEX_PARAM_MODULATION_ROTARY_RADIUS;
+        } break;
+
+        case 55:
+        {
+            param = TONEX_PARAM_MODULATION_ROTARY_SPREAD;
+        } break;
+
+        case 56:
+        {
+            param = TONEX_PARAM_MODULATION_ROTARY_LEVEL;
+        } break;
+
+        // 57 - 58 not used
+
+        case 59: 
+        {
+            param = TONEX_PARAM_REVERB_SPRING1_TIME;
+        } break;
+
+        case 60:
+        {
+            param = TONEX_PARAM_REVERB_SPRING1_PREDELAY;
+        } break;
+
+        case 61:
+        {
+            param = TONEX_PARAM_REVERB_SPRING1_COLOR;
+        } break;
+
+        case 62:
+        {
+            param = TONEX_PARAM_REVERB_SPRING1_MIX;
+        } break;
+
+        case 63:
+        {
+            param = TONEX_PARAM_REVERB_SPRING2_TIME;
+        } break;
+
+        case 64:
+        {
+            param = TONEX_PARAM_REVERB_SPRING2_PREDELAY;
+        } break;
+
+        case 65:
+        {
+            param = TONEX_PARAM_REVERB_SPRING2_COLOR;
+        } break;
+
+        case 66:
+        {
+            param = TONEX_PARAM_REVERB_SPRING2_MIX;
+        } break;
+
+        case 67:
+        {
+            param = TONEX_PARAM_REVERB_SPRING3_TIME;
+        } break;
+
+        case 68:
+        {
+            param = TONEX_PARAM_REVERB_SPRING3_PREDELAY;
+        } break;
+
+        case 69:
+        {
+            param = TONEX_PARAM_REVERB_SPRING3_COLOR;
+        } break;
+
+        case 70:
+        {
+            param = TONEX_PARAM_REVERB_SPRING3_MIX;
+        } break;
+
+        case 71:
+        {
+            param = TONEX_PARAM_REVERB_ROOM_TIME;
+        } break;
+
+        case 72:
+        {
+            param = TONEX_PARAM_REVERB_ROOM_PREDELAY;
+        } break;
+
+        case 73:
+        {
+            param = TONEX_PARAM_REVERB_ROOM_COLOR;
+        } break;
+
+        case 74:
+        {
+            param = TONEX_PARAM_REVERB_ROOM_MIX;
+        } break;
+
+        case 75:
+        {
+            param = TONEX_PARAM_REVERB_ENABLE;
+        } break;
+
+        case 76:
+        {
+            param = TONEX_PARAM_REVERB_PLATE_TIME;
+        } break;
+
+        case 77:
+        {
+            param = TONEX_PARAM_REVERB_PLATE_PREDELAY;
+        } break;
+
+        case 78:
+        {
+            param = TONEX_PARAM_REVERB_PLATE_COLOR;
+        } break;
+
+        case 79: 
+        {
+            param = TONEX_PARAM_REVERB_PLATE_MIX;
+        } break;
+
+        case 80:
+        {
+            param = TONEX_PARAM_REVERB_SPRING4_TIME;
+        } break;
+
+        case 81:
+        {
+            param = TONEX_PARAM_REVERB_SPRING4_PREDELAY;
+        } break;
+
+        case 82:
+        {
+            param = TONEX_PARAM_REVERB_SPRING4_COLOR;
+        } break;
+
+        case 83:
+        {
+            param = TONEX_PARAM_REVERB_SPRING4_MIX;
+        } break;
+
+        case 84:
+        {
+            param = TONEX_PARAM_REVERB_POSITION;
+        } break;
+
+        case 85:
+        {
+            param = TONEX_PARAM_REVERB_MODEL;
+        } break;
+
+        case 86: 
+        {
+            //preset down
+        } break;
+
+        case 87:
+        {
+            //preset up
+        } break;
+
+        // 88: bpm
+        // 89: bank down
+        // 90: bank up    
+
+        case 91:
+        {
+            param = TONEX_PARAM_DELAY_TAPE_SYNC;
+        } break;
+
+        case 92:
+        {
+            param = TONEX_PARAM_DELAY_TAPE_TIME;
+        } break;
+
+        case 93:
+        {    
+            param = TONEX_PARAM_DELAY_TAPE_FEEDBACK;
+        } break;
+
+        case 94:
+        {
+            param = TONEX_PARAM_DELAY_TAPE_MODE;
+        } break;
+
+        case 95:
+        {
+            param = TONEX_PARAM_DELAY_TAPE_MIX;
+        } break;
+
+        // 96 to 101 not used       
+
+        case 102:
+        {
+            param = TONEX_PARAM_MODEL_GAIN;
+        } break;
+
+        case 103:
+        {
+            param = TONEX_PARAM_MODEL_VOLUME;
+        } break;
+        
+        case 104:
+        {
+            param = TONEX_PARAM_MODEX_MIX;
+        } break;
+
+        // 105 not used
+
+        // next 2 unsupported until I can figure out where they are in param block
+        //case 106:
+        //{
+        //    param = TONEX_PARAM_PRESENCE;
+        //    value = midi_helper_scale_midi_to_float(param, midi_value);
+        //    value = tonex_params_clamp_value(param, value);
+        //} break;
+
+        //case 107:
+        //{ 
+        //    param = TONEX_PARAM_DEPTH;
+        //    value = midi_helper_scale_midi_to_float(param, midi_value);
+        //    value = tonex_params_clamp_value(param, value);
+        //} break;
+
+        case 108:
+        {
+            param = TONEX_PARAM_VIR_RESO;
+        } break;
+
+        case 109:
+        {
+            param = TONEX_PARAM_VIR_MIC_1;
+        } break;
+
+        case 110:
+        {
+            param = TONEX_PARAM_VIR_MIC_1_X;
+        } break;
+
+        case 111:
+        {
+            param = TONEX_PARAM_VIR_MIC_1_Z;
+        } break;
+
+        case 112:
+        {
+            param = TONEX_PARAM_VIR_MIC_2;
+        } break;
+
+        case 113:
+        {
+            param = TONEX_PARAM_VIR_MIC_2_X;
+        } break;
+
+        case 114:
+        {
+            param = TONEX_PARAM_VIR_MIC_2_Z;
+        } break;
+
+        case 115:
+        {
+            param = TONEX_PARAM_VIR_BLEND;
+        } break;
+    }
+
+    return param;
 }
