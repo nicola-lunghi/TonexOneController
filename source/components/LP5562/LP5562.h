@@ -12,15 +12,16 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- 
+
 */
 
 #pragma once
 
-#include <stdint.h>
-
-#include "driver/i2c.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
+#include "driver/i2c_master.h"
 #include "esp_err.h"
+#include <stdint.h>
 
 esp_err_t LP5562_set_color(uint8_t red, uint8_t blue, uint8_t green, uint8_t white);
 esp_err_t LP5562_set_engine(uint8_t r, uint8_t g, uint8_t b);
