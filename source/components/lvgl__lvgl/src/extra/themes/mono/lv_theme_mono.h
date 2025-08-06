@@ -7,7 +7,8 @@
 #define LV_USE_THEME_MONO_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -17,36 +18,36 @@ extern "C" {
 
 #if LV_USE_THEME_MONO
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Initialize the theme
- * @param color_primary the primary color of the theme
- * @param color_secondary the secondary color for the theme
- * @param font pointer to a font to use.
- * @return a pointer to reference this theme later
- */
-lv_theme_t * lv_theme_mono_init(lv_disp_t * disp, bool dark_bg, const lv_font_t * font);
+    /**
+     * Initialize the theme
+     * @param color_primary the primary color of the theme
+     * @param color_secondary the secondary color for the theme
+     * @param font pointer to a font to use.
+     * @return a pointer to reference this theme later
+     */
+    lv_theme_t* lv_theme_mono_init(lv_disp_t* disp, bool dark_bg, const lv_font_t* font);
 
-/**
-* Check if the theme is initialized
-* @return true if default theme is initialized, false otherwise
-*/
-bool lv_theme_mono_is_inited(void);
+    /**
+     * Check if the theme is initialized
+     * @return true if default theme is initialized, false otherwise
+     */
+    bool lv_theme_mono_is_inited(void);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif
 

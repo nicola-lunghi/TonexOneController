@@ -35,29 +35,30 @@
 #define _LV_PRINTF_H_
 
 #if defined(__has_include)
-    #if __has_include(<inttypes.h>)
-        #include <inttypes.h>
-        /* platform-specific printf format for int32_t, usually "d" or "ld" */
-        #define LV_PRId32 PRId32
-        #define LV_PRIu32 PRIu32
-        #define LV_PRIx32 PRIx32
-        #define LV_PRIX32 PRIX32
-    #else
-        #define LV_PRId32 "d"
-        #define LV_PRIu32 "u"
-        #define LV_PRIx32 "x"
-        #define LV_PRIX32 "X"
-    #endif
+#if __has_include(<inttypes.h>)
+#include <inttypes.h>
+/* platform-specific printf format for int32_t, usually "d" or "ld" */
+#define LV_PRId32 PRId32
+#define LV_PRIu32 PRIu32
+#define LV_PRIx32 PRIx32
+#define LV_PRIX32 PRIX32
 #else
-    /* hope this is correct for ports without __has_include or without inttypes.h */
-    #define LV_PRId32 "d"
-    #define LV_PRIu32 "u"
-    #define LV_PRIx32 "x"
-    #define LV_PRIX32 "X"
+#define LV_PRId32 "d"
+#define LV_PRIu32 "u"
+#define LV_PRIx32 "x"
+#define LV_PRIX32 "X"
+#endif
+#else
+/* hope this is correct for ports without __has_include or without inttypes.h */
+#define LV_PRId32 "d"
+#define LV_PRIu32 "u"
+#define LV_PRIx32 "x"
+#define LV_PRIX32 "X"
 #endif
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include "../lv_conf_internal.h"
@@ -69,23 +70,24 @@ extern "C" {
 
 #include "lv_types.h"
 
-typedef struct {
-    const char * fmt;
-    va_list * va;
-} lv_vaformat_t;
+    typedef struct
+    {
+        const char* fmt;
+        va_list*    va;
+    } lv_vaformat_t;
 
-/**
- * Tiny snprintf/vsnprintf implementation
- * \param buffer A pointer to the buffer where to store the formatted string
- * \param count The maximum number of characters to store in the buffer, including a terminating null character
- * \param format A string that specifies the format of the output
- * \param va A value identifying a variable arguments list
- * \return The number of characters that COULD have been written into the buffer, not counting the terminating
- *         null character. A value equal or larger than count indicates truncation. Only when the returned value
- *         is non-negative and less than count, the string has been completely written.
- */
-int  lv_snprintf(char * buffer, size_t count, const char * format, ...) LV_FORMAT_ATTRIBUTE(3, 4);
-int lv_vsnprintf(char * buffer, size_t count, const char * format, va_list va) LV_FORMAT_ATTRIBUTE(3, 0);
+    /**
+     * Tiny snprintf/vsnprintf implementation
+     * \param buffer A pointer to the buffer where to store the formatted string
+     * \param count The maximum number of characters to store in the buffer, including a terminating null character
+     * \param format A string that specifies the format of the output
+     * \param va A value identifying a variable arguments list
+     * \return The number of characters that COULD have been written into the buffer, not counting the terminating
+     *         null character. A value equal or larger than count indicates truncation. Only when the returned value
+     *         is non-negative and less than count, the string has been completely written.
+     */
+    int lv_snprintf(char* buffer, size_t count, const char* format, ...) LV_FORMAT_ATTRIBUTE(3, 4);
+    int lv_vsnprintf(char* buffer, size_t count, const char* format, va_list va) LV_FORMAT_ATTRIBUTE(3, 0);
 
 #else
 #include LV_SPRINTF_INCLUDE
@@ -95,4 +97,4 @@ int lv_vsnprintf(char * buffer, size_t count, const char * format, va_list va) L
 } /*extern "C"*/
 #endif
 
-#endif  // _LV_PRINTF_H_
+#endif // _LV_PRINTF_H_

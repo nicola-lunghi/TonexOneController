@@ -9,38 +9,39 @@
 #define LV_CONF_SUPPRESS_DEFINE_CHECK 1
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/*********************
- *      INCLUDES
- *********************/
+    /*********************
+     *      INCLUDES
+     *********************/
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
 #define LV_USE_TINY_TTF 1
 
-void lv_test_assert_fail(void);
+    void lv_test_assert_fail(void);
 #define LV_ASSERT_HANDLER lv_test_assert_fail();
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-uint32_t custom_tick_get(void);
+    uint32_t custom_tick_get(void);
 #define LV_TICK_CUSTOM_SYS_TIME_EXPR custom_tick_get()
 
-typedef void * lv_user_data_t;
+    typedef void* lv_user_data_t;
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #ifdef __cplusplus
 } /*extern "C"*/

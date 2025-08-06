@@ -7,35 +7,36 @@
 #define LV_OTHERS_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
  *      INCLUDES
  *********************/
-#include "snapshot/lv_snapshot.h"
-#include "monkey/lv_monkey.h"
-#include "gridnav/lv_gridnav.h"
 #include "fragment/lv_fragment.h"
-#include "imgfont/lv_imgfont.h"
-#include "msg/lv_msg.h"
+#include "gridnav/lv_gridnav.h"
 #include "ime/lv_ime_pinyin.h"
+#include "imgfont/lv_imgfont.h"
+#include "monkey/lv_monkey.h"
+#include "msg/lv_msg.h"
+#include "snapshot/lv_snapshot.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #ifdef __cplusplus
 } /*extern "C"*/

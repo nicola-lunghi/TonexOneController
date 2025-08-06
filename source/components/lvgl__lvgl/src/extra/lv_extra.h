@@ -7,12 +7,13 @@
 #define LV_EXTRA_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/*********************
- *      INCLUDES
- *********************/
+    /*********************
+     *      INCLUDES
+     *********************/
 
 #include "layouts/lv_layouts.h"
 #include "libs/lv_libs.h"
@@ -20,26 +21,26 @@ extern "C" {
 #include "themes/lv_themes.h"
 #include "widgets/lv_widgets.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Initialize the extra components
- */
-void lv_extra_init(void);
+    /**
+     * Initialize the extra components
+     */
+    void lv_extra_init(void);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #ifdef __cplusplus
 } /*extern "C"*/

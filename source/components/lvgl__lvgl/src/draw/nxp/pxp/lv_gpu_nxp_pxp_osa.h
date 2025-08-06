@@ -31,43 +31,44 @@
 #define LV_GPU_NXP_PXP_OSA_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/*********************
- *      INCLUDES
- *********************/
+    /*********************
+     *      INCLUDES
+     *********************/
 
 #include "../../../lv_conf_internal.h"
 
 #if LV_USE_GPU_NXP_PXP && LV_USE_GPU_NXP_PXP_AUTO_INIT
 #include "lv_gpu_nxp_pxp.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * PXP device interrupt handler. Used to check PXP task completion status.
- */
-void PXP_IRQHandler(void);
+    /**
+     * PXP device interrupt handler. Used to check PXP task completion status.
+     */
+    void PXP_IRQHandler(void);
 
-/**
- * Helper function to get the PXP default configuration.
- */
-lv_nxp_pxp_cfg_t * lv_gpu_nxp_pxp_get_cfg(void);
+    /**
+     * Helper function to get the PXP default configuration.
+     */
+    lv_nxp_pxp_cfg_t* lv_gpu_nxp_pxp_get_cfg(void);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif /*LV_USE_GPU_NXP_PXP && LV_USE_GPU_NXP_PXP_AUTO_INIT*/
 

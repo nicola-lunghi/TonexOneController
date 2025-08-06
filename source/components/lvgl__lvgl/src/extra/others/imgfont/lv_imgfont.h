@@ -7,7 +7,8 @@
 #define LV_IMGFONT_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -17,39 +18,39 @@ extern "C" {
 
 #if LV_USE_IMGFONT
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/* gets the image path name of this character */
-typedef bool (*lv_get_imgfont_path_cb_t)(const lv_font_t * font, void * img_src,
-                                         uint16_t len, uint32_t unicode, uint32_t unicode_next);
+    /* gets the image path name of this character */
+    typedef bool (*lv_get_imgfont_path_cb_t)(
+        const lv_font_t* font, void* img_src, uint16_t len, uint32_t unicode, uint32_t unicode_next);
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Creates a image font with info parameter specified.
- * @param height font size
- * @param path_cb a function to get the image path name of character.
- * @return pointer to the new imgfont or NULL if create error.
- */
-lv_font_t * lv_imgfont_create(uint16_t height, lv_get_imgfont_path_cb_t path_cb);
+    /**
+     * Creates a image font with info parameter specified.
+     * @param height font size
+     * @param path_cb a function to get the image path name of character.
+     * @return pointer to the new imgfont or NULL if create error.
+     */
+    lv_font_t* lv_imgfont_create(uint16_t height, lv_get_imgfont_path_cb_t path_cb);
 
-/**
- * Destroy a image font that has been created.
- * @param font pointer to image font handle.
- */
-void lv_imgfont_destroy(lv_font_t * font);
+    /**
+     * Destroy a image font that has been created.
+     * @param font pointer to image font handle.
+     */
+    void lv_imgfont_destroy(lv_font_t* font);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif /*LV_USE_IMGFONT*/
 

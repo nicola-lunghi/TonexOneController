@@ -7,7 +7,8 @@
 #define LV_SPINNER_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -22,24 +23,24 @@ extern "C" {
 #error "lv_spinner: lv_arc is required. Enable it in lv_conf.h (LV_USE_ARC  1) "
 #endif
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
-extern const lv_obj_class_t lv_spinner_class;
+    /**********************
+     *      TYPEDEFS
+     **********************/
+    extern const lv_obj_class_t lv_spinner_class;
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-lv_obj_t * lv_spinner_create(lv_obj_t * parent, uint32_t time, uint32_t arc_length);
+    lv_obj_t* lv_spinner_create(lv_obj_t* parent, uint32_t time, uint32_t arc_length);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif /*LV_USE_SPINNER*/
 

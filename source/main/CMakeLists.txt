@@ -1,17 +1,19 @@
 
-idf_component_register(SRCS "midi_control.c" "control.c" "footswitches.c" "CH422G.c" "display.c" "main.c" "tonex_params.c" "SX1509.c"
-                            "usb_comms.c" "usb_tonex_one.c" "usb_tonex_common.c" "usb_tonex.c" "CH422G.c" "midi_serial.c" "wifi_config.c" "leds.c" "midi_helper.c" "LP5562.c"
+idf_component_register(SRCS "midi_control.c" "control.c" "footswitches.c" "display.c" "main.c" "tonex_params.c" "SX1509.c"
+                            "usb_comms.c" "usb_tonex_one.c" "usb_tonex_common.c" "usb_tonex.c" "midi_serial.c" "wifi_config.c" "leds.c" "midi_helper.c"
                             "platform_devkitc.c" "platform_lgtdisps3.c" "platform_m5atoms3r.c" "platform_ws19t.c" "platform_ws43.c" "platform_wszero.c" "platform_ws169.c" 
                             "platform_ws35b.c" "platform_jc3248w.c"
-                            EMBED_TXTFILES index.html 
-                            INCLUDE_DIRS "." "./")
-                                                       
+                            EMBED_TXTFILES index.html
+                            INCLUDE_DIRS "." "./"
+                            REQUIRES CH422G LP5562
+)
+
 if(CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43B OR CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_43DEVONLY)
     target_include_directories(${COMPONENT_LIB} PRIVATE include "ui_generated")
 
     target_sources(${COMPONENT_LIB} PRIVATE "ui_generated/ui.c" "ui_generated/ui_helpers.c"
                             "ui_generated/images/ui_img_smythbuilt_png.c" "ui_generated/screens/ui_Screen1.c" "ui_generated/screens/ui_Settings.c" "ui_generated/components/ui_comp_hook.c"
-			                "ui_generated/images/ui_img_usb_fail_png.c" "ui_generated/images/ui_img_next_png.c" "ui_generated/images/ui_img_previous_png.c" "ui_generated/images/ui_temporary_image.c"
+                         "ui_generated/images/ui_img_usb_fail_png.c" "ui_generated/images/ui_img_next_png.c" "ui_generated/images/ui_img_previous_png.c" "ui_generated/images/ui_temporary_image.c"
                             "ui_generated/images/ui_img_usb_ok_png.c" "ui_generated/images/ui_img_next_down_png.c" "ui_generated/images/ui_img_previous_down_png.c" "ui_generated/images/ui_img_settings_png.c"
                             "ui_generated/images/ui_img_wifi_conn_png.c" "ui_generated/images/ui_img_wifi_disconn_png.c"
                            "ui_generated/images/ui_img_effect_icon_amp_off_png.c" "ui_generated/images/ui_img_effect_icon_amp_on_png.c" 
@@ -56,7 +58,7 @@ if(CONFIG_TONEX_CONTROLLER_HARDWARE_PLATFORM_WAVESHARE_35B OR CONFIG_TONEX_CONTR
 
     target_sources(${COMPONENT_LIB} PRIVATE "ui_generated_480x320land/ui.c" "ui_generated_480x320land/ui_helpers.c"
                             "ui_generated_480x320land/images/ui_img_smythbuilt_png.c" "ui_generated_480x320land/screens/ui_Screen1.c" "ui_generated_480x320land/screens/ui_Settings.c" "ui_generated_480x320land/components/ui_comp_hook.c"
-			                "ui_generated_480x320land/images/ui_img_usb_fail_png.c" "ui_generated_480x320land/images/ui_img_next_png.c" "ui_generated_480x320land/images/ui_img_previous_png.c" 
+                         "ui_generated_480x320land/images/ui_img_usb_fail_png.c" "ui_generated_480x320land/images/ui_img_next_png.c" "ui_generated_480x320land/images/ui_img_previous_png.c" 
                             "ui_generated_480x320land/images/ui_img_usb_ok_png.c" "ui_generated_480x320land/images/ui_img_next_down_png.c" "ui_generated_480x320land/images/ui_img_previous_down_png.c" "ui_generated_480x320land/images/ui_img_settings_png.c"
                             "ui_generated_480x320land/images/ui_img_wifi_conn_png.c" "ui_generated_480x320land/images/ui_img_wifi_disconn_png.c"
                            "ui_generated_480x320land/images/ui_img_effect_icon_amp_off_png.c" "ui_generated_480x320land/images/ui_img_effect_icon_amp_on_png.c" 

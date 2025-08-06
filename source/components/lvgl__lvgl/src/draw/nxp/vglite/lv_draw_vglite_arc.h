@@ -31,7 +31,8 @@
 #define LV_DRAW_VGLITE_ARC_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -42,37 +43,37 @@ extern "C" {
 #if LV_USE_GPU_NXP_VG_LITE
 #include "lv_vglite_utils.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Draw arc shape with effects
- *
- * @param[in] center Arc center with relative coordinates
- * @param[in] radius Radius of external arc
- * @param[in] start_angle Starting angle in degrees
- * @param[in] end_angle Ending angle in degrees
- * @param[in] clip_area Clipping area with relative coordinates to dest buff
- * @param[in] dsc Arc description structure (width, rounded ending, opacity)
- *
- * @retval LV_RES_OK Draw completed
- * @retval LV_RES_INV Error occurred (\see LV_GPU_NXP_VG_LITE_LOG_ERRORS)
- */
-lv_res_t lv_gpu_nxp_vglite_draw_arc(const lv_point_t * center, int32_t radius, int32_t start_angle, int32_t end_angle,
-                                    const lv_area_t * clip_area, const lv_draw_arc_dsc_t * dsc);
+    /**
+     * Draw arc shape with effects
+     *
+     * @param[in] center Arc center with relative coordinates
+     * @param[in] radius Radius of external arc
+     * @param[in] start_angle Starting angle in degrees
+     * @param[in] end_angle Ending angle in degrees
+     * @param[in] clip_area Clipping area with relative coordinates to dest buff
+     * @param[in] dsc Arc description structure (width, rounded ending, opacity)
+     *
+     * @retval LV_RES_OK Draw completed
+     * @retval LV_RES_INV Error occurred (\see LV_GPU_NXP_VG_LITE_LOG_ERRORS)
+     */
+    lv_res_t lv_gpu_nxp_vglite_draw_arc(const lv_point_t* center, int32_t radius, int32_t start_angle,
+        int32_t end_angle, const lv_area_t* clip_area, const lv_draw_arc_dsc_t* dsc);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif /*LV_USE_GPU_NXP_VG_LITE*/
 

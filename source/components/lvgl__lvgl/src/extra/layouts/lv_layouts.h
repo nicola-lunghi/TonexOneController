@@ -7,7 +7,8 @@
 #define LV_LAYOUTS_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -32,9 +33,9 @@ extern "C" {
  *      MACROS
  **********************/
 #if LV_USE_LOG && LV_LOG_TRACE_LAYOUT
-#  define LV_TRACE_LAYOUT(...) LV_LOG_TRACE(__VA_ARGS__)
+#define LV_TRACE_LAYOUT(...) LV_LOG_TRACE(__VA_ARGS__)
 #else
-#  define LV_TRACE_LAYOUT(...)
+#define LV_TRACE_LAYOUT(...)
 #endif
 
 #ifdef __cplusplus

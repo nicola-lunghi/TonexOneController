@@ -31,12 +31,13 @@
 #define LV_GPU_NXP_PXP_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/*********************
- *      INCLUDES
- *********************/
+    /*********************
+     *      INCLUDES
+     *********************/
 
 #include "../../../lv_conf_internal.h"
 
@@ -66,94 +67,102 @@ extern "C" {
 #define LV_GPU_NXP_PXP_LOG_TRACES 0
 #endif
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**
- * NXP PXP device configuration - call-backs used for
- * interrupt init/wait/deinit.
- */
-typedef struct {
-    /** Callback for PXP interrupt initialization*/
-    lv_res_t (*pxp_interrupt_init)(void);
+    /**
+     * NXP PXP device configuration - call-backs used for
+     * interrupt init/wait/deinit.
+     */
+    typedef struct
+    {
+        /** Callback for PXP interrupt initialization*/
+        lv_res_t (*pxp_interrupt_init)(void);
 
-    /** Callback for PXP interrupt de-initialization*/
-    void (*pxp_interrupt_deinit)(void);
+        /** Callback for PXP interrupt de-initialization*/
+        void (*pxp_interrupt_deinit)(void);
 
-    /** Callback for PXP start*/
-    void (*pxp_run)(void);
+        /** Callback for PXP start*/
+        void (*pxp_run)(void);
 
-    /** Callback for waiting of PXP completion*/
-    void (*pxp_wait)(void);
-} lv_nxp_pxp_cfg_t;
+        /** Callback for waiting of PXP completion*/
+        void (*pxp_wait)(void);
+    } lv_nxp_pxp_cfg_t;
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Reset and initialize PXP device. This function should be called as a part
- * of display init sequence.
- *
- * @retval LV_RES_OK PXP init completed
- * @retval LV_RES_INV Error occurred (\see LV_GPU_NXP_PXP_LOG_ERRORS)
- */
-lv_res_t lv_gpu_nxp_pxp_init(void);
+    /**
+     * Reset and initialize PXP device. This function should be called as a part
+     * of display init sequence.
+     *
+     * @retval LV_RES_OK PXP init completed
+     * @retval LV_RES_INV Error occurred (\see LV_GPU_NXP_PXP_LOG_ERRORS)
+     */
+    lv_res_t lv_gpu_nxp_pxp_init(void);
 
-/**
- * Disable PXP device. Should be called during display deinit sequence.
- */
-void lv_gpu_nxp_pxp_deinit(void);
+    /**
+     * Disable PXP device. Should be called during display deinit sequence.
+     */
+    void lv_gpu_nxp_pxp_deinit(void);
 
-/**
- * Reset PXP device.
- */
-void lv_gpu_nxp_pxp_reset(void);
+    /**
+     * Reset PXP device.
+     */
+    void lv_gpu_nxp_pxp_reset(void);
 
-/**
- * Clear cache and start PXP.
- */
-void lv_gpu_nxp_pxp_run(void);
+    /**
+     * Clear cache and start PXP.
+     */
+    void lv_gpu_nxp_pxp_run(void);
 
-/**
- * Wait for PXP completion.
- */
-void lv_gpu_nxp_pxp_wait(void);
+    /**
+     * Wait for PXP completion.
+     */
+    void lv_gpu_nxp_pxp_wait(void);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
-#define PXP_COND_STOP(cond, txt)              \
-    do {                                      \
-        if (cond) {                           \
-            LV_LOG_ERROR("%s. STOP!", txt);   \
-            for ( ; ; );                      \
-        }                                     \
-    } while(0)
+#define PXP_COND_STOP(cond, txt)                                                                                       \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (cond)                                                                                                      \
+        {                                                                                                              \
+            LV_LOG_ERROR("%s. STOP!", txt);                                                                            \
+            for (;;)                                                                                                   \
+                ;                                                                                                      \
+        }                                                                                                              \
+    } while (0)
 
 #if LV_GPU_NXP_PXP_LOG_ERRORS
-#define PXP_RETURN_INV(fmt, ...)              \
-    do {                                      \
-        LV_LOG_ERROR(fmt, ##__VA_ARGS__);     \
-        return LV_RES_INV;                    \
+#define PXP_RETURN_INV(fmt, ...)                                                                                       \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        LV_LOG_ERROR(fmt, ##__VA_ARGS__);                                                                              \
+        return LV_RES_INV;                                                                                             \
     } while (0)
 #else
-#define PXP_RETURN_INV(fmt, ...)              \
-    do {                                      \
-        return LV_RES_INV;                    \
-    }while(0)
+#define PXP_RETURN_INV(fmt, ...)                                                                                       \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        return LV_RES_INV;                                                                                             \
+    } while (0)
 #endif /*LV_GPU_NXP_PXP_LOG_ERRORS*/
 
 #if LV_GPU_NXP_PXP_LOG_TRACES
-#define PXP_LOG_TRACE(fmt, ...)               \
-    do {                                      \
-        LV_LOG(fmt, ##__VA_ARGS__);     \
+#define PXP_LOG_TRACE(fmt, ...)                                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        LV_LOG(fmt, ##__VA_ARGS__);                                                                                    \
     } while (0)
 #else
-#define PXP_LOG_TRACE(fmt, ...)               \
-    do {                                      \
+#define PXP_LOG_TRACE(fmt, ...)                                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
     } while (0)
 #endif /*LV_GPU_NXP_PXP_LOG_TRACES*/
 
