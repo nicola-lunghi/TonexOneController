@@ -12,24 +12,23 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- 
-*/
 
+*/
 
 #ifndef _USB_TONEX_H
 #define _USB_TONEX_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-#define MAX_PRESETS_TONEX               150
+#define MAX_PRESETS_TONEX 150
 
-
-void usb_tonex_handle(class_driver_t* driver_obj);
-void usb_tonex_init(class_driver_t* driver_obj, QueueHandle_t comms_queue);
-void usb_tonex_deinit(void);
-void usb_tonex_preallocate_memory(void);
+    void usb_tonex_handle(class_driver_t* driver_obj);
+    void usb_tonex_init(class_driver_t* driver_obj, QueueHandle_t comms_queue);
+    void usb_tonex_deinit(void);
+    void usb_tonex_preallocate_memory(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/

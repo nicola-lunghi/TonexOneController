@@ -6,9 +6,9 @@
 #ifndef LV_DRAW_SDL_H
 #define LV_DRAW_SDL_H
 
-
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -20,12 +20,12 @@ extern "C" {
 
 #include LV_GPU_SDL_INCLUDE_PATH
 
-#include "../lv_draw.h"
 #include "../../core/lv_disp.h"
+#include "../lv_draw.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 #define LV_DRAW_SDL_TEXTURE_FORMAT SDL_PIXELFORMAT_ARGB8888
@@ -33,59 +33,61 @@ extern "C" {
 #define LV_DRAW_SDL_TEXTURE_FORMAT SDL_PIXELFORMAT_RGBA8888
 #endif
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-struct lv_draw_sdl_context_internals_t;
+    struct lv_draw_sdl_context_internals_t;
 
-typedef struct {
+    typedef struct
+    {
+        /**
+         * Render for display driver
+         */
+        SDL_Renderer* renderer;
+        void*         user_data;
+    } lv_draw_sdl_drv_param_t;
+
+    typedef struct
+    {
+        lv_draw_ctx_t                           base_draw;
+        SDL_Renderer*                           renderer;
+        struct lv_draw_sdl_context_internals_t* internals;
+    } lv_draw_sdl_ctx_t;
+
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
+
+    void lv_draw_sdl_init_ctx(lv_disp_drv_t* disp_drv, lv_draw_ctx_t* draw_ctx);
+
     /**
-     * Render for display driver
+     * @brief Free caches
+     *
      */
-    SDL_Renderer * renderer;
-    void * user_data;
-} lv_draw_sdl_drv_param_t;
+    void lv_draw_sdl_deinit_ctx(lv_disp_drv_t* disp_drv, lv_draw_ctx_t* draw_ctx);
 
-typedef struct {
-    lv_draw_ctx_t base_draw;
-    SDL_Renderer * renderer;
-    struct lv_draw_sdl_context_internals_t * internals;
-} lv_draw_sdl_ctx_t;
+    SDL_Texture* lv_draw_sdl_create_screen_texture(SDL_Renderer* renderer, lv_coord_t hor, lv_coord_t ver);
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /*======================
+     * Add/remove functions
+     *=====================*/
 
-void lv_draw_sdl_init_ctx(lv_disp_drv_t * disp_drv, lv_draw_ctx_t * draw_ctx);
+    /*=====================
+     * Setter functions
+     *====================*/
 
-/**
- * @brief Free caches
- *
- */
-void lv_draw_sdl_deinit_ctx(lv_disp_drv_t * disp_drv, lv_draw_ctx_t * draw_ctx);
+    /*=====================
+     * Getter functions
+     *====================*/
 
-SDL_Texture * lv_draw_sdl_create_screen_texture(SDL_Renderer * renderer, lv_coord_t hor, lv_coord_t ver);
+    /*=====================
+     * Other functions
+     *====================*/
 
-/*======================
- * Add/remove functions
- *=====================*/
-
-/*=====================
- * Setter functions
- *====================*/
-
-/*=====================
- * Getter functions
- *====================*/
-
-/*=====================
- * Other functions
- *====================*/
-
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif /*LV_USE_GPU_SDL*/
 

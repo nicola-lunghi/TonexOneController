@@ -12,7 +12,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- 
+
 */
 
 #pragma once
@@ -22,7 +22,7 @@ void control_load_config(void);
 
 enum Skins
 {
-#if CONFIG_TONEX_CONTROLLER_SKINS_AMP    
+#if CONFIG_TONEX_CONTROLLER_SKINS_AMP
     // Amps
     AMP_SKIN_JCM,
     AMP_SKIN_SILVERFACE,
@@ -78,9 +78,9 @@ enum Skins
     PEDAL_SKIN_MXRSINGLEWHITE,
     PEDAL_SKIN_MXRSINGLEYELLOW,
     PEDAL_SKIN_RATYELLOW,
-#endif 
+#endif
 
-    SKIN_MAX        // must be last
+    SKIN_MAX // must be last
 };
 
 enum ConfigItems
@@ -163,9 +163,9 @@ enum BluetoothModes
 
 enum WiFiModes
 {
-    WIFI_MODE_ACCESS_POINT_TIMED,       // access point for 1 minute on boot
-    WIFI_MODE_STATION,                  // station mode
-    WIFI_MODE_ACCESS_POINT              // access point, no timeout
+    WIFI_MODE_ACCESS_POINT_TIMED, // access point for 1 minute on boot
+    WIFI_MODE_STATION, // station mode
+    WIFI_MODE_ACCESS_POINT // access point, no timeout
 };
 
 enum ScreenRotation
@@ -173,8 +173,8 @@ enum ScreenRotation
     SCREEN_ROTATION_0,
     SCREEN_ROTATION_180,
     // 90 and 270 one day maybe but needs big UI changes
-    //SCREEN_ROTATION_90,
-    //SCREEN_ROTATION_270,
+    // SCREEN_ROTATION_90,
+    // SCREEN_ROTATION_270,
     SCREEN_ROTATION_MAX,
 };
 
@@ -190,7 +190,7 @@ enum WiFiTxPower
 {
     WIFI_TX_POWER_25,
     WIFI_TX_POWER_50,
-    WIFI_TX_POWER_75,    
+    WIFI_TX_POWER_75,
     WIFI_TX_POWER_100
 };
 
@@ -208,22 +208,22 @@ enum ConfigTabs43B
 
 enum FootswitchLayouts
 {
-    FOOTSWITCH_LAYOUT_1X2,                // next/previous
-    FOOTSWITCH_LAYOUT_1X3,                // 1 row of 3 switches, bank via 1+2 and 2+3
-    FOOTSWITCH_LAYOUT_1X4,                // 1 row of 4 switches, bank via 1+2 and 3+4
-    FOOTSWITCH_LAYOUT_1X5A,               // 1 row of 5 switches, bank via 1+2 and 4+5
-    FOOTSWITCH_LAYOUT_1X5B,               // 1 row of 5 switches, bank via last 2
-    FOOTSWITCH_LAYOUT_1X6A,               // 1 row of 6 switches, bank via 1+2 and 5+6  
-    FOOTSWITCH_LAYOUT_1X6B,               // 1 row of 6 switches, bank via last 2
-    FOOTSWITCH_LAYOUT_1X7A,               // 1 row of 7 switches, bank via 1+2 and 6+7  
-    FOOTSWITCH_LAYOUT_1X7B,               // 1 row of 7 switches, bank via last 2
-    FOOTSWITCH_LAYOUT_2X3,                // 2 row2 of 3 switches, bank via 1+2 and 2+3
-    FOOTSWITCH_LAYOUT_2X4,                // 2 rows of 4 switches, bank via 1+2 and 3+4
-    FOOTSWITCH_LAYOUT_2X5A,               // 2 rows of 5 switches, bank via 1+2 and 4+5
-    FOOTSWITCH_LAYOUT_2X5B,               // 2 rows of 5 switches, bank via last 2
-    FOOTSWITCH_LAYOUT_2X6A,               // 2 rows of 6 switches, bank via 1+2 and 5+6
-    FOOTSWITCH_LAYOUT_2X6B,               // 2 rows of 6 switches, bank via last 2
-    FOOTSWITCH_LAYOUT_1X4_BINARY,         // 4 bit binary 
+    FOOTSWITCH_LAYOUT_1X2, // next/previous
+    FOOTSWITCH_LAYOUT_1X3, // 1 row of 3 switches, bank via 1+2 and 2+3
+    FOOTSWITCH_LAYOUT_1X4, // 1 row of 4 switches, bank via 1+2 and 3+4
+    FOOTSWITCH_LAYOUT_1X5A, // 1 row of 5 switches, bank via 1+2 and 4+5
+    FOOTSWITCH_LAYOUT_1X5B, // 1 row of 5 switches, bank via last 2
+    FOOTSWITCH_LAYOUT_1X6A, // 1 row of 6 switches, bank via 1+2 and 5+6
+    FOOTSWITCH_LAYOUT_1X6B, // 1 row of 6 switches, bank via last 2
+    FOOTSWITCH_LAYOUT_1X7A, // 1 row of 7 switches, bank via 1+2 and 6+7
+    FOOTSWITCH_LAYOUT_1X7B, // 1 row of 7 switches, bank via last 2
+    FOOTSWITCH_LAYOUT_2X3, // 2 row2 of 3 switches, bank via 1+2 and 2+3
+    FOOTSWITCH_LAYOUT_2X4, // 2 rows of 4 switches, bank via 1+2 and 3+4
+    FOOTSWITCH_LAYOUT_2X5A, // 2 rows of 5 switches, bank via 1+2 and 4+5
+    FOOTSWITCH_LAYOUT_2X5B, // 2 rows of 5 switches, bank via last 2
+    FOOTSWITCH_LAYOUT_2X6A, // 2 rows of 6 switches, bank via 1+2 and 5+6
+    FOOTSWITCH_LAYOUT_2X6B, // 2 rows of 6 switches, bank via last 2
+    FOOTSWITCH_LAYOUT_1X4_BINARY, // 4 bit binary
     FOOTSWITCH_LAYOUT_LAST,
     FOOTSWITCH_LAYOUT_DISABLED = 0xFF
 };
@@ -248,7 +248,7 @@ enum IOExpanderPins
     IO_EXPANDER_PIN_16
 };
 
-typedef struct __attribute__ ((packed)) 
+typedef struct __attribute__((packed))
 {
     uint8_t Switch;
     uint8_t CC;
@@ -256,34 +256,34 @@ typedef struct __attribute__ ((packed))
     uint8_t Value_2;
 } tExternalFootswitchEffectConfig;
 
-#define MAX_WIFI_SSID_PW                        65   
-#define MAX_MDNS_NAME                           32
-#define MAX_EXTERNAL_EFFECT_FOOTSWITCHES        8
-#define MAX_INTERNAL_EFFECT_FOOTSWITCHES        4
-#define SWITCH_NOT_USED                         0xFF
-#define MAX_SUPPORTED_PRESETS                   150
-#define MAX_PRESET_NAME_LENGTH                  33
+#define MAX_WIFI_SSID_PW 65
+#define MAX_MDNS_NAME 32
+#define MAX_EXTERNAL_EFFECT_FOOTSWITCHES 8
+#define MAX_INTERNAL_EFFECT_FOOTSWITCHES 4
+#define SWITCH_NOT_USED 0xFF
+#define MAX_SUPPORTED_PRESETS 150
+#define MAX_PRESET_NAME_LENGTH 33
 
 // thread safe public API
-void control_request_preset_up(void);
-void control_request_preset_down(void);
-void control_request_preset_index(uint8_t index);
-void control_request_bank_index(uint8_t index);
-void control_set_usb_status(uint32_t status);
-void control_set_bt_status(uint32_t status);
-void control_set_wifi_status(uint32_t status);
-void control_set_amp_skin_index(uint32_t status);
-void control_set_skin_next(void);
-void control_set_skin_previous(void);
-void control_save_user_data(uint8_t reboot);
-void control_sync_preset_name(uint16_t index, char* name);
-void control_sync_preset_details(uint16_t index, char* name);
-void control_set_user_text(char* text);
-void control_trigger_tap_tempo(void);
-void control_set_preset_order(uint8_t* order);
+void     control_request_preset_up(void);
+void     control_request_preset_down(void);
+void     control_request_preset_index(uint8_t index);
+void     control_request_bank_index(uint8_t index);
+void     control_set_usb_status(uint32_t status);
+void     control_set_bt_status(uint32_t status);
+void     control_set_wifi_status(uint32_t status);
+void     control_set_amp_skin_index(uint32_t status);
+void     control_set_skin_next(void);
+void     control_set_skin_previous(void);
+void     control_save_user_data(uint8_t reboot);
+void     control_sync_preset_name(uint16_t index, char* name);
+void     control_sync_preset_details(uint16_t index, char* name);
+void     control_set_user_text(char* text);
+void     control_trigger_tap_tempo(void);
+void     control_set_preset_order(uint8_t* order);
 uint8_t* control_get_preset_order(void);
-void control_set_sync_complete(void);
-uint8_t control_get_sync_complete(void);
+void     control_set_sync_complete(void);
+uint8_t  control_get_sync_complete(void);
 
 // config API
 void control_set_default_config(void);
@@ -292,5 +292,5 @@ void control_set_config_item_string(uint32_t item, char* name);
 void control_set_config_item_object(uint32_t item, void* object);
 
 uint32_t control_get_config_item_int(uint32_t item);
-void control_get_config_item_string(uint32_t item, char* name);
-void control_get_config_item_object(uint32_t item, void* object);
+void     control_get_config_item_string(uint32_t item, char* name);
+void     control_get_config_item_object(uint32_t item, void* object);

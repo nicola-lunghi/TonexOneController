@@ -7,7 +7,8 @@
 #define LV_SWITCH_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -26,31 +27,32 @@ extern "C" {
 /** Switch knob extra area correction factor */
 #define _LV_SWITCH_KNOB_EXT_AREA_CORRECTION 2
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-typedef struct {
-    lv_obj_t obj;
-    int32_t anim_state;
-} lv_switch_t;
+    typedef struct
+    {
+        lv_obj_t obj;
+        int32_t  anim_state;
+    } lv_switch_t;
 
-extern const lv_obj_class_t lv_switch_class;
+    extern const lv_obj_class_t lv_switch_class;
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Create a switch object
- * @param parent pointer to an object, it will be the parent of the new switch
- * @return pointer to the created switch
- */
-lv_obj_t * lv_switch_create(lv_obj_t * parent);
+    /**
+     * Create a switch object
+     * @param parent pointer to an object, it will be the parent of the new switch
+     * @return pointer to the created switch
+     */
+    lv_obj_t* lv_switch_create(lv_obj_t* parent);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif /*LV_USE_SWITCH*/
 

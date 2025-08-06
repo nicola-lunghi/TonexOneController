@@ -12,12 +12,12 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- 
+
 */
 
 #pragma once
 
 void platform_init(i2c_master_bus_handle_t bus_handle, SemaphoreHandle_t I2CMutex, lv_disp_drv_t* pdisp_drv);
 void platform_adjust_touch_coords(lv_coord_t* x, lv_coord_t* y);
-void platform_adjust_display_flush_area(lv_area_t *area);
+void platform_adjust_display_flush_area(lv_area_t* area);
 void platform_get_icon_coords(int16_t* dest, uint8_t max_entries);

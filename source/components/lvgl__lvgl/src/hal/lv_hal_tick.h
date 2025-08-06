@@ -7,7 +7,8 @@
 #define LV_HAL_TICK_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -15,8 +16,8 @@ extern "C" {
  *********************/
 #include "../lv_conf_internal.h"
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 /*********************
  *      DEFINES
@@ -25,42 +26,42 @@ extern "C" {
 #define LV_ATTRIBUTE_TICK_INC
 #endif
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-//! @cond Doxygen_Suppress
+    //! @cond Doxygen_Suppress
 
 #if !LV_TICK_CUSTOM
-/**
- * You have to call this function periodically
- * @param tick_period the call period of this function in milliseconds
- */
-void /* LV_ATTRIBUTE_TICK_INC */ lv_tick_inc(uint32_t tick_period);
+    /**
+     * You have to call this function periodically
+     * @param tick_period the call period of this function in milliseconds
+     */
+    void /* LV_ATTRIBUTE_TICK_INC */ lv_tick_inc(uint32_t tick_period);
 #endif
 
-//! @endcond
+    //! @endcond
 
-/**
- * Get the elapsed milliseconds since start up
- * @return the elapsed milliseconds
- */
-uint32_t lv_tick_get(void);
+    /**
+     * Get the elapsed milliseconds since start up
+     * @return the elapsed milliseconds
+     */
+    uint32_t lv_tick_get(void);
 
-/**
- * Get the elapsed milliseconds since a previous time stamp
- * @param prev_tick a previous time stamp (return value of lv_tick_get() )
- * @return the elapsed milliseconds since 'prev_tick'
- */
-uint32_t lv_tick_elaps(uint32_t prev_tick);
+    /**
+     * Get the elapsed milliseconds since a previous time stamp
+     * @param prev_tick a previous time stamp (return value of lv_tick_get() )
+     * @return the elapsed milliseconds since 'prev_tick'
+     */
+    uint32_t lv_tick_elaps(uint32_t prev_tick);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #ifdef __cplusplus
 } /*extern "C"*/

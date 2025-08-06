@@ -14,7 +14,8 @@
 #define LV_TEMPL_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -26,51 +27,52 @@ extern "C" {
 
 #include "../core/lv_obj.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
-/*Data of template*/
-typedef struct {
-    lv_ANCESTOR_t ancestor; /*The ancestor widget, e.g. lv_slider_t slider*/
-    /*New data for this type*/
-} lv_templ_t;
+    /**********************
+     *      TYPEDEFS
+     **********************/
+    /*Data of template*/
+    typedef struct
+    {
+        lv_ANCESTOR_t ancestor; /*The ancestor widget, e.g. lv_slider_t slider*/
+        /*New data for this type*/
+    } lv_templ_t;
 
-extern const lv_obj_class_t lv_templ_class;
+    extern const lv_obj_class_t lv_templ_class;
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Create a templ object
- * @param parent    pointer to an object, it will be the parent of the new templ
- * @return          pointer to the created bar
- */
-lv_obj_t * lv_templ_create(lv_obj_t * parent);
+    /**
+     * Create a templ object
+     * @param parent    pointer to an object, it will be the parent of the new templ
+     * @return          pointer to the created bar
+     */
+    lv_obj_t* lv_templ_create(lv_obj_t* parent);
 
-/*======================
- * Add/remove functions
- *=====================*/
+    /*======================
+     * Add/remove functions
+     *=====================*/
 
-/*=====================
- * Setter functions
- *====================*/
+    /*=====================
+     * Setter functions
+     *====================*/
 
-/*=====================
- * Getter functions
- *====================*/
+    /*=====================
+     * Getter functions
+     *====================*/
 
-/*=====================
- * Other functions
- *====================*/
+    /*=====================
+     * Other functions
+     *====================*/
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif /*LV_USE_TEMPL*/
 

@@ -12,57 +12,57 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- 
-*/
 
+*/
 
 #ifndef _USB_COMMS_H
 #define _USB_COMMS_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-#define IK_MULTIMEDIA_USB_VENDOR        0x1963
-#define TONEX_ONE_PRODUCT_ID            0x00D1
-#define TONEX_PRODUCT_ID                0x0068
+#define IK_MULTIMEDIA_USB_VENDOR 0x1963
+#define TONEX_ONE_PRODUCT_ID 0x00D1
+#define TONEX_PRODUCT_ID 0x0068
 
-// Amp Modeller types
-enum AmpModellers
-{
-    AMP_MODELLER_NONE,
-    AMP_MODELLER_TONEX_ONE,
-    AMP_MODELLER_TONEX,     // full size pedal with 3 footswitches
-};
+    // Amp Modeller types
+    enum AmpModellers
+    {
+        AMP_MODELLER_NONE,
+        AMP_MODELLER_TONEX_ONE,
+        AMP_MODELLER_TONEX, // full size pedal with 3 footswitches
+    };
 
-enum USB_Commands
-{
-    USB_COMMAND_SET_PRESET,
-    USB_COMMAND_MODIFY_PARAMETER
-};
+    enum USB_Commands
+    {
+        USB_COMMAND_SET_PRESET,
+        USB_COMMAND_MODIFY_PARAMETER
+    };
 
-typedef struct 
-{
-    usb_host_client_handle_t client_hdl;
-    uint8_t dev_addr;
-    usb_device_handle_t dev_hdl;
-    uint32_t actions;
-} class_driver_t;
+    typedef struct
+    {
+        usb_host_client_handle_t client_hdl;
+        uint8_t                  dev_addr;
+        usb_device_handle_t      dev_hdl;
+        uint32_t                 actions;
+    } class_driver_t;
 
-typedef struct 
-{
-    uint8_t Command;
-    uint32_t Payload;
-    float PayloadFloat;
-} tUSBMessage;
+    typedef struct
+    {
+        uint8_t  Command;
+        uint32_t Payload;
+        float    PayloadFloat;
+    } tUSBMessage;
 
-void init_usb_comms(void);
+    void init_usb_comms(void);
 
-// thread safe public API
-void usb_set_preset(uint32_t preset);
-void usb_modify_parameter(uint16_t index, float value);
-uint8_t usb_get_max_presets_for_connected_modeller(void);
-uint8_t usb_get_first_preset_index_for_connected_modeller(void);
+    // thread safe public API
+    void    usb_set_preset(uint32_t preset);
+    void    usb_modify_parameter(uint16_t index, float value);
+    uint8_t usb_get_max_presets_for_connected_modeller(void);
+    uint8_t usb_get_first_preset_index_for_connected_modeller(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/

@@ -7,38 +7,39 @@
 #define LV_LIBS_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
  *      INCLUDES
  *********************/
 #include "bmp/lv_bmp.h"
-#include "fsdrv/lv_fsdrv.h"
-#include "png/lv_png.h"
-#include "gif/lv_gif.h"
-#include "qrcode/lv_qrcode.h"
-#include "sjpg/lv_sjpg.h"
-#include "freetype/lv_freetype.h"
-#include "rlottie/lv_rlottie.h"
 #include "ffmpeg/lv_ffmpeg.h"
+#include "freetype/lv_freetype.h"
+#include "fsdrv/lv_fsdrv.h"
+#include "gif/lv_gif.h"
+#include "png/lv_png.h"
+#include "qrcode/lv_qrcode.h"
+#include "rlottie/lv_rlottie.h"
+#include "sjpg/lv_sjpg.h"
 #include "tiny_ttf/lv_tiny_ttf.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #ifdef __cplusplus
 } /*extern "C"*/

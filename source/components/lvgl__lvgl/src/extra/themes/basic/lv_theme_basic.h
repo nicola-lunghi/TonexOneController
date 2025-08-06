@@ -7,7 +7,8 @@
 #define LV_THEME_BASIC_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -17,34 +18,34 @@ extern "C" {
 
 #if LV_USE_THEME_BASIC
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Initialize the theme
- * @param disp pointer to display to attach the theme
- * @return a pointer to reference this theme later
- */
-lv_theme_t * lv_theme_basic_init(lv_disp_t * disp);
+    /**
+     * Initialize the theme
+     * @param disp pointer to display to attach the theme
+     * @return a pointer to reference this theme later
+     */
+    lv_theme_t* lv_theme_basic_init(lv_disp_t* disp);
 
-/**
-* Check if the theme is initialized
-* @return true if default theme is initialized, false otherwise
-*/
-bool lv_theme_basic_is_inited(void);
+    /**
+     * Check if the theme is initialized
+     * @return true if default theme is initialized, false otherwise
+     */
+    bool lv_theme_basic_is_inited(void);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif
 

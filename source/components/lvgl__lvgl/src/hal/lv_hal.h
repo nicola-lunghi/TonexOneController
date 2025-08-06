@@ -7,7 +7,8 @@
 #define LV_HAL_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -26,20 +27,20 @@ extern "C" {
  * 1 dip is 2 px on a 320 DPI screen
  * https://stackoverflow.com/questions/2025282/what-is-the-difference-between-px-dip-dp-and-sp
  */
-#define _LV_DPX_CALC(dpi, n)   ((n) == 0 ? 0 :LV_MAX((( (dpi) * (n) + 80) / 160), 1)) /*+80 for rounding*/
-#define LV_DPX(n)   _LV_DPX_CALC(lv_disp_get_dpi(NULL), n)
+#define _LV_DPX_CALC(dpi, n) ((n) == 0 ? 0 : LV_MAX((((dpi) * (n) + 80) / 160), 1)) /*+80 for rounding*/
+#define LV_DPX(n) _LV_DPX_CALC(lv_disp_get_dpi(NULL), n)
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #ifdef __cplusplus
 } /*extern "C"*/

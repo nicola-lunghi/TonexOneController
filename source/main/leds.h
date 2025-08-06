@@ -12,18 +12,19 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- 
+
 */
 
 #ifndef _LEDS_H
 #define _LEDS_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-void leds_init(void);
-void leds_handle(void);
+    void leds_init(void);
+    void leds_handle(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/

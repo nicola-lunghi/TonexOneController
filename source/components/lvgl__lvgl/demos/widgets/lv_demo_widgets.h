@@ -7,7 +7,8 @@
 #define LV_DEMO_WIDGETS_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -15,23 +16,23 @@ extern "C" {
  *********************/
 #include "../lv_demos.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
-void lv_demo_widgets(void);
-void lv_demo_widgets_close(void);
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
+    void lv_demo_widgets(void);
+    void lv_demo_widgets_close(void);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #ifdef __cplusplus
 } /* extern "C" */

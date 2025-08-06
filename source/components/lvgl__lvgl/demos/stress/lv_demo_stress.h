@@ -7,7 +7,8 @@
 #define LV_DEMO_STRESS_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -15,26 +16,26 @@ extern "C" {
  *********************/
 #include "../lv_demos.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-#define LV_DEMO_STRESS_TIME_STEP    50
+#define LV_DEMO_STRESS_TIME_STEP 50
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
-void lv_demo_stress(void);
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
+    void lv_demo_stress(void);
 
-void lv_demo_stress_close(void);
+    void lv_demo_stress_close(void);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #ifdef __cplusplus
 } /* extern "C" */

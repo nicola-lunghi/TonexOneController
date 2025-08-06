@@ -44,47 +44,48 @@
 #include <stddef.h>
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
-/* lv_tlsf_t: a TLSF structure. Can contain 1 to N pools. */
-/* lv_pool_t: a block of memory that TLSF can manage. */
-typedef void * lv_tlsf_t;
-typedef void * lv_pool_t;
+    /* lv_tlsf_t: a TLSF structure. Can contain 1 to N pools. */
+    /* lv_pool_t: a block of memory that TLSF can manage. */
+    typedef void* lv_tlsf_t;
+    typedef void* lv_pool_t;
 
-/* Create/destroy a memory pool. */
-lv_tlsf_t lv_tlsf_create(void * mem);
-lv_tlsf_t lv_tlsf_create_with_pool(void * mem, size_t bytes);
-void lv_tlsf_destroy(lv_tlsf_t tlsf);
-lv_pool_t lv_tlsf_get_pool(lv_tlsf_t tlsf);
+    /* Create/destroy a memory pool. */
+    lv_tlsf_t lv_tlsf_create(void* mem);
+    lv_tlsf_t lv_tlsf_create_with_pool(void* mem, size_t bytes);
+    void      lv_tlsf_destroy(lv_tlsf_t tlsf);
+    lv_pool_t lv_tlsf_get_pool(lv_tlsf_t tlsf);
 
-/* Add/remove memory pools. */
-lv_pool_t lv_tlsf_add_pool(lv_tlsf_t tlsf, void * mem, size_t bytes);
-void lv_tlsf_remove_pool(lv_tlsf_t tlsf, lv_pool_t pool);
+    /* Add/remove memory pools. */
+    lv_pool_t lv_tlsf_add_pool(lv_tlsf_t tlsf, void* mem, size_t bytes);
+    void      lv_tlsf_remove_pool(lv_tlsf_t tlsf, lv_pool_t pool);
 
-/* malloc/memalign/realloc/free replacements. */
-void * lv_tlsf_malloc(lv_tlsf_t tlsf, size_t bytes);
-void * lv_tlsf_memalign(lv_tlsf_t tlsf, size_t align, size_t bytes);
-void * lv_tlsf_realloc(lv_tlsf_t tlsf, void * ptr, size_t size);
-size_t lv_tlsf_free(lv_tlsf_t tlsf, const void * ptr);
+    /* malloc/memalign/realloc/free replacements. */
+    void*  lv_tlsf_malloc(lv_tlsf_t tlsf, size_t bytes);
+    void*  lv_tlsf_memalign(lv_tlsf_t tlsf, size_t align, size_t bytes);
+    void*  lv_tlsf_realloc(lv_tlsf_t tlsf, void* ptr, size_t size);
+    size_t lv_tlsf_free(lv_tlsf_t tlsf, const void* ptr);
 
-/* Returns internal block size, not original request size */
-size_t lv_tlsf_block_size(void * ptr);
+    /* Returns internal block size, not original request size */
+    size_t lv_tlsf_block_size(void* ptr);
 
-/* Overheads/limits of internal structures. */
-size_t lv_tlsf_size(void);
-size_t lv_tlsf_align_size(void);
-size_t lv_tlsf_block_size_min(void);
-size_t lv_tlsf_block_size_max(void);
-size_t lv_tlsf_pool_overhead(void);
-size_t lv_tlsf_alloc_overhead(void);
+    /* Overheads/limits of internal structures. */
+    size_t lv_tlsf_size(void);
+    size_t lv_tlsf_align_size(void);
+    size_t lv_tlsf_block_size_min(void);
+    size_t lv_tlsf_block_size_max(void);
+    size_t lv_tlsf_pool_overhead(void);
+    size_t lv_tlsf_alloc_overhead(void);
 
-/* Debugging. */
-typedef void (*lv_tlsf_walker)(void * ptr, size_t size, int used, void * user);
-void lv_tlsf_walk_pool(lv_pool_t pool, lv_tlsf_walker walker, void * user);
-/* Returns nonzero if any internal consistency check fails. */
-int lv_tlsf_check(lv_tlsf_t tlsf);
-int lv_tlsf_check_pool(lv_pool_t pool);
+    /* Debugging. */
+    typedef void (*lv_tlsf_walker)(void* ptr, size_t size, int used, void* user);
+    void lv_tlsf_walk_pool(lv_pool_t pool, lv_tlsf_walker walker, void* user);
+    /* Returns nonzero if any internal consistency check fails. */
+    int lv_tlsf_check(lv_tlsf_t tlsf);
+    int lv_tlsf_check_pool(lv_pool_t pool);
 
 #if defined(__cplusplus)
 };

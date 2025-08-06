@@ -7,7 +7,8 @@
 #define LV_BTN_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -18,34 +19,35 @@ extern "C" {
 #if LV_USE_BTN != 0
 #include "../core/lv_obj.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-typedef struct {
-    lv_obj_t obj;
-} lv_btn_t;
+    typedef struct
+    {
+        lv_obj_t obj;
+    } lv_btn_t;
 
-extern const lv_obj_class_t lv_btn_class;
+    extern const lv_obj_class_t lv_btn_class;
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Create a button object
- * @param parent    pointer to an object, it will be the parent of the new button
- * @return          pointer to the created button
- */
-lv_obj_t * lv_btn_create(lv_obj_t * parent);
+    /**
+     * Create a button object
+     * @param parent    pointer to an object, it will be the parent of the new button
+     * @return          pointer to the created button
+     */
+    lv_obj_t* lv_btn_create(lv_obj_t* parent);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif /*LV_USE_BTN*/
 

@@ -7,52 +7,53 @@
 #define LV_ASYNC_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/*********************
- *      INCLUDES
- *********************/
+    /*********************
+     *      INCLUDES
+     *********************/
 
 #include "lv_types.h"
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**
- * Type for async callback.
- */
-typedef void (*lv_async_cb_t)(void *);
+    /**
+     * Type for async callback.
+     */
+    typedef void (*lv_async_cb_t)(void*);
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Call an asynchronous function the next time lv_timer_handler() is run. This function is likely to return
- * **before** the call actually happens!
- * @param async_xcb a callback which is the task itself.
- *                 (the 'x' in the argument name indicates that it's not a fully generic function because it not follows
- *                  the `func_name(object, callback, ...)` convention)
- * @param user_data custom parameter
- */
-lv_res_t lv_async_call(lv_async_cb_t async_xcb, void * user_data);
+    /**
+     * Call an asynchronous function the next time lv_timer_handler() is run. This function is likely to return
+     * **before** the call actually happens!
+     * @param async_xcb a callback which is the task itself.
+     *                 (the 'x' in the argument name indicates that it's not a fully generic function because it not
+     * follows the `func_name(object, callback, ...)` convention)
+     * @param user_data custom parameter
+     */
+    lv_res_t lv_async_call(lv_async_cb_t async_xcb, void* user_data);
 
-/**
- * Cancel an asynchronous function call
- * @param async_xcb a callback which is the task itself.
- * @param user_data custom parameter
- */
-lv_res_t lv_async_call_cancel(lv_async_cb_t async_xcb, void * user_data);
+    /**
+     * Cancel an asynchronous function call
+     * @param async_xcb a callback which is the task itself.
+     * @param user_data custom parameter
+     */
+    lv_res_t lv_async_call_cancel(lv_async_cb_t async_xcb, void* user_data);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #ifdef __cplusplus
 } /*extern "C"*/

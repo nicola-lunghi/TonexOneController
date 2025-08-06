@@ -7,7 +7,8 @@
 #define LV_PNG_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /*********************
@@ -16,26 +17,26 @@ extern "C" {
 #include "../../../lv_conf_internal.h"
 #if LV_USE_PNG
 
-/*********************
- *      DEFINES
- *********************/
+    /*********************
+     *      DEFINES
+     *********************/
 
-/**********************
- *      TYPEDEFS
- **********************/
+    /**********************
+     *      TYPEDEFS
+     **********************/
 
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
+    /**********************
+     * GLOBAL PROTOTYPES
+     **********************/
 
-/**
- * Register the PNG decoder functions in LVGL
- */
-void lv_png_init(void);
+    /**
+     * Register the PNG decoder functions in LVGL
+     */
+    void lv_png_init(void);
 
-/**********************
- *      MACROS
- **********************/
+    /**********************
+     *      MACROS
+     **********************/
 
 #endif /*LV_USE_PNG*/
 
