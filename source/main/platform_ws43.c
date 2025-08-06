@@ -96,6 +96,7 @@ static const char *TAG = "platform_ws43";
 #define I2C_MASTER_TIMEOUT_MS           1000
 
 static SemaphoreHandle_t I2CMutexHandle;
+static CH422G_t *CH422G_handle = NULL;
 static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
 static lv_disp_drv_t* disp_drv;      // contains callback functions
 static esp_lcd_touch_handle_t tp = NULL;
@@ -112,11 +113,11 @@ static lv_indev_drv_t indev_drv;    // Input device driver (Touch)
 static void InitIOExpander(i2c_master_bus_handle_t bus_handle, SemaphoreHandle_t I2CMutex)
 {
     // init IO expander
-    if (CH422G_init(bus_handle, I2CMutex) == ESP_OK)
+    if (CH422G_new(bus_handle, I2CMutex, &CH422G_handle) == ESP_OK)
     {
         // set IO expander to output mode. Can't do mixed pins
         // For inputs, we will temporarily flip the mode
-        if (CH422G_set_io_mode(1) == ESP_OK)
+        if (CH422G_set_io_mode(CH422G_handle, 1) == ESP_OK)
         {
             ESP_LOGI(TAG, "Onboard IO Expander init OK");
         }
@@ -284,7 +285,7 @@ void platform_init(i2c_master_bus_handle_t bus_handle, SemaphoreHandle_t I2CMute
     gpio_config(&gpio_config_struct);
 
     // reset low
-	CH422G_write_output(TOUCH_RESET, 0);
+    CH422G_write_output(CH422G_handle, TOUCH_RESET, 0);
     esp_rom_delay_us(100 * 1000);
 
     // set Int to low/output
@@ -292,7 +293,7 @@ void platform_init(i2c_master_bus_handle_t bus_handle, SemaphoreHandle_t I2CMute
     esp_rom_delay_us(100 * 1000);
 
     // release reset
-    CH422G_write_output(TOUCH_RESET, 1);
+    CH422G_write_output(CH422G_handle, TOUCH_RESET, 1);
     esp_rom_delay_us(200 * 1000);
 
     // set interrupt to tristate

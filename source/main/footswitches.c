@@ -104,6 +104,7 @@ typedef struct
 
 static tFootswitchControl FootswitchControl;
 static SemaphoreHandle_t I2CMutexHandle;
+static CH422G_t *CH422G_handle = NULL;
 
 static const __attribute__((unused)) tFootswitchLayoutEntry FootswitchLayouts[FOOTSWITCH_LAYOUT_LAST] = 
 {
@@ -186,7 +187,7 @@ static esp_err_t footswitch_read_single_onboard(uint8_t number, uint8_t* switch_
     // display board uses onboard I2C IO expander
     uint8_t value;
 
-    if (CH422G_read_input((uint8_t)button_index, &value) == ESP_OK)
+    if (CH422G_read_input(CH422G_handle, (uint8_t)button_index, &value) == ESP_OK)
     {
         result = ESP_OK;
         *switch_state = (value == 0);
@@ -217,7 +218,7 @@ static esp_err_t footswitch_read_multiple_onboard(uint16_t* switch_state)
     // display board uses onboard I2C IO expander
     uint16_t values;
 
-    if (CH422G_read_all_input(&values) == ESP_OK)
+    if (CH422G_read_all_input(CH422G_handle, &values) == ESP_OK)
     {
         result = ESP_OK;
         *switch_state = values;
@@ -972,12 +973,16 @@ void footswitches_init(i2c_master_bus_handle_t bus_handle, SemaphoreHandle_t I2C
     gpio_config(&gpio_config_struct);
 #endif
 
-    // try to init I2C IO expander
-    if (SX1509_Init(bus_handle, I2CMutex) == ESP_OK)
+    // try to init onboard I2C IO expander (CH422G)
+    if (CH422G_new(bus_handle, I2CMutex, &CH422G_handle) == ESP_OK)
     {
-        ESP_LOGI(TAG, "Found External IO Expander");
-
-        // init all pins to inputs
+        ESP_LOGI(TAG, "Found onboard IO Expander (CH422G)");
+        CH422G_set_all_input(CH422G_handle);
+        FootswitchControl.io_expander_ok = 1;
+    }
+    else if (SX1509_Init(bus_handle, I2CMutex) == ESP_OK)
+    {
+        ESP_LOGI(TAG, "Found External IO Expander (SX1509)");
         for (uint8_t pin = 0; pin < 16; pin++)
         {
             SX1509_gpioMode(pin, EXPANDER_INPUT_PULLUP);
@@ -986,7 +991,7 @@ void footswitches_init(i2c_master_bus_handle_t bus_handle, SemaphoreHandle_t I2C
     }
     else
     {
-        ESP_LOGI(TAG, "External IO Expander not found");
+        ESP_LOGI(TAG, "No IO Expander found");
     }
 
     // init leds
